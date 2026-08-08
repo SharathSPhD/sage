@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T19:12:43+00:00",
+  "generated_at": "2026-08-08T19:20:37+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -13,7 +13,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T18:09:11+00:00"
+      "checked_at": "2026-08-08T19:20:37+00:00"
     },
     "finite.response.reciprocity": {
       "unit": "finite.response.reciprocity",
@@ -27,7 +27,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T18:52:20+00:00"
+      "checked_at": "2026-08-08T19:20:35+00:00"
     },
     "dynamics.exact": {
       "unit": "dynamics.exact",
@@ -41,7 +41,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T19:12:43+00:00"
+      "checked_at": "2026-08-08T19:20:02+00:00"
     }
   }
 }
