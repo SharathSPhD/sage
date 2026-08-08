@@ -1,12 +1,12 @@
 # Progress
 
-*Generated 2026-08-08T20:41:01+00:00 from gate state of 2026-08-08T20:40:16+00:00. Regenerated on every merge — if this page is stale, the gate is not green.*
+*Generated 2026-08-08T21:48:59+00:00 from gate state of 2026-08-08T21:48:49+00:00. Regenerated on every merge — if this page is stale, the gate is not green.*
 
 === "Plain language"
 
     **What this project is doing.** Building measuring instruments for strategic systems — how sharply players respond to incentives (<abbr title="logit precision: how strongly payoff differences translate into choice probabilities">λ</abbr>), how far a system is from the "well-behaved" regime where everything settles down (<abbr title="harmonic fraction of the **normalised** game: ‖u^H‖/(‖u^P‖+‖u^H‖) ∈ [0,1] from the Candogan flow decomposition">α</abbr>), and whether give-and-take between players is balanced (<abbr title="‖χ^eq − χ^eqᵀ‖_F / ‖χ^eq + χ^eqᵀ‖_F">ℛ</abbr>) — then pointing those instruments at road networks, pricing data, electricity markets and game experiments.
 
-    **What works now.** 9 work unit(s) fully closed (every closure includes an adversarial review by a hostile reviewer who never sees the authors' reasoning). Claim ledger: 8 established results implemented, 4 results of our own, 2 open conjectures each with a stated way to be proven wrong.
+    **What works now.** 11 work unit(s) fully closed (every closure includes an adversarial review by a hostile reviewer who never sees the authors' reasoning). Claim ledger: 8 established results implemented, 4 results of our own, 2 open conjectures each with a stated way to be proven wrong.
 
     **The map.** Each dot is a system we point the instruments at; green means that system's anchor is in place.
 
@@ -19,12 +19,12 @@
     | A · Engine 1 core | healthy — 1 unit(s) closed |
     | B · Calibration | healthy — 3 unit(s) closed |
     | C · Empirics | not started |
-    | D · Product | not started |
+    | D · Product | healthy — 1 unit(s) closed |
     | Foundation | healthy — 1 unit(s) closed |
 
     **What's next.** The first new artefact in the world: the reciprocity meter reading exactly zero on a road-congestion game and clearly positive on rock-paper-scissors — the same measurement, two systems, opposite readings. Everything else follows from that working.
 
-    **Anomalies logged:** 6 (anomalies are the product — each gets chased).
+    **Anomalies logged:** 7 (anomalies are the product — each gets chased).
 
 === "Technical"
 
@@ -32,11 +32,13 @@
 
     | Unit | code | domain | statistical | documentation | adversarial | Overall |
     |---|---|---|---|---|---|---|
+    | `api.core` | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
     | `domains.blotto` | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
     | `domains.congestion` | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
     | `dynamics.exact` | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
     | `finite.response.reciprocity` | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
     | `population.core` | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
+    | `science.decoupling` | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
     | `science.phase_map` | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
     | `solve.advanced` | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
     | `solve.branch` | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
@@ -50,6 +52,7 @@
     - `branch_agreement` (correctness) — passed, unit `solve.branch`
     - `chain_comovement` (statistical) — passed, unit `dynamics.exact`
     - `chi_fd_agreement` (correctness) — passed, unit `finite.response.reciprocity`
+    - `decoupling_mechanism` (statistical) — passed, unit `science.decoupling`
     - `equilibrium_reads_zero` (correctness) — passed, unit `dynamics.exact`
     - `gambit_agreement` (correctness) — passed, unit `solve.advanced`
     - `gibbs_agreement` (correctness) — passed, unit `dynamics.exact`
