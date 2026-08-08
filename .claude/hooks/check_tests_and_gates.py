@@ -63,13 +63,14 @@ GREEN = {"green", "passed", "pass", True}
 
 
 def flatten_status(obj: object, prefix: str = "") -> dict[str, object]:
+    """Flatten to scalar leaves only — lists (e.g. failure arrays) are not gate verdicts."""
     out: dict[str, object] = {}
     if isinstance(obj, dict):
         for key, value in obj.items():
             path = f"{prefix}.{key}" if prefix else str(key)
             if isinstance(value, dict):
                 out.update(flatten_status(value, path))
-            else:
+            elif isinstance(value, (bool, str)):
                 out[path] = value
     return out
 

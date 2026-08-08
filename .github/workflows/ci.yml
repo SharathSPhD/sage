@@ -46,11 +46,17 @@ jobs:
           if [ "$EVENT_NAME" = "pull_request" ]; then
             git fetch origin "$BASE_REF" --depth=1
             BASE="origin/$BASE_REF"
+            git diff --name-only --diff-filter=ACMR "$BASE"...HEAD > changed.txt
           else
-            BASE="$BEFORE_SHA"
+            # On the first push to a branch, `before` is the zero SHA; diff
+            # against the empty tree so every file counts as changed.
+            if [ -n "$BEFORE_SHA" ] && git cat-file -e "$BEFORE_SHA" 2>/dev/null; then
+              BASE="$BEFORE_SHA"
+            else
+              BASE=$(git hash-object -t tree /dev/null)
+            fi
+            git diff --name-only --diff-filter=ACMR "$BASE" HEAD > changed.txt
           fi
-          git diff --name-only --diff-filter=ACMR "$BASE"...HEAD > changed.txt \
-            || git diff --name-only HEAD~1 HEAD > changed.txt
           cat changed.txt
       - name: Plugin boundary (domains never touch core)
         run: xargs -a changed.txt -r python3 .claude/hooks/check_boundary.py

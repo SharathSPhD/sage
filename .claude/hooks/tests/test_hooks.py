@@ -156,3 +156,17 @@ class TestSecretScan:
         f = tmp_path / "clean.py"
         f.write_text('API_KEY = os.environ["STRATAQ_API_KEY"]\n')
         assert run("check_secrets.py", args=[str(f)]).returncode == 0
+
+
+class TestGateRegressionFlatten:
+    def test_flatten_skips_list_values(self) -> None:
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("ctg", HOOKS / "check_tests_and_gates.py")
+        assert spec and spec.loader
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        flat = mod.flatten_status(
+            {"units": {"stage0": {"green": True, "sections": {"code": ["a failure"]}}}}
+        )
+        assert flat == {"units.stage0.green": True}
