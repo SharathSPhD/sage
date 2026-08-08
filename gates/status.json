@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T19:31:24+00:00",
+  "generated_at": "2026-08-08T19:44:22+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -56,6 +56,20 @@
         "adversarial": []
       },
       "checked_at": "2026-08-08T19:31:24+00:00"
+    },
+    "domains.blotto": {
+      "unit": "domains.blotto",
+      "claim": "Blotto is a five-object plugin on Engine 1 with budgets as a live conjugate field; the instruments read high alpha, positive reciprocity defect and positive dissipation on non-degenerate instances, and exact zero on the degenerate constant-payoff instance",
+      "tier": "exact",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-08T19:44:22+00:00"
     }
   }
 }

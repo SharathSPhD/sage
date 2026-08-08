@@ -48,3 +48,11 @@ Entry format:
 - Expected / observed: C1 expected tight co-movement of dissipation and reciprocity defect. Observed: the marginal ρ(EPR, ℛ) = 0.993 is driven by α. **Conditional on α**, coupling is strong (+0.80..+0.88) for α ≤ 0.65, degrades through 0.75 (+0.61) and 0.85 (+0.32), and **reverses to −0.355 at α = 0.95**: among near-pure-harmonic games, higher reciprocity defect associates with LOWER dissipation.
 - Chase status: **chasing — this is the programme's first genuine discovery.** Working hypothesis (unverified): at α → 1, ℛ's denominator ‖χ+χᵀ‖ is dominated by the vanishing symmetric response, so ℛ measures the *smallness of the residual potential sliver* rather than circulation strength, while EPR tracks actual current magnitudes — two meters that agree in the mixed regime part company when the symmetric part underflows. If right, ℛ and EPR are complementary instruments, not substitutes, and the high-α regime needs both.
 - Resolution / follow-up: (1) test the hypothesis by tracking numerator and denominator of ℛ separately along α; (2) check whether an EPR-normalised or numerator-only variant restores coupling at high α; (3) verify on N=3 and larger m; (4) this belongs in p3_noneq as a result, with C1's falsifier status stated plainly.
+
+## F-0005 — Blotto is mixed, not pure harmonic: α = 0.69 on the symmetric budget-3 game
+
+- Date: 2026-08-08
+- Instrument / experiment: `alpha` via `experiments/blotto_calibration.py` (seed 20260808)
+- Expected / observed: DOMAINS v1 called Blotto "non-potential (harmonic-ish)"; the meter reads α = 0.694 (budget 3, k = 3) and 0.711 (budget 4) — a genuine ~30% potential component survives normalisation despite the game being zero-sum. Zero-sum ⇏ harmonic-pure: the normalised Blotto game has real gradient structure (allocation dominance relations) alongside its circulation.
+- Chase status: parked (consistent with theory; RPS by contrast reads exactly 1). Worth revisiting when the α > 0 anchor is used quantitatively: the bracket's right end sits at ~0.7, not 1.0.
+- Resolution / follow-up: use RPS for the α = 1 extreme and Blotto for a *realistic* high-α strategic system; note in p1_instruments.

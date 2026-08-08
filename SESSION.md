@@ -62,3 +62,13 @@
 - pygambit 16.7 installed (dev dep); label-based outcome API quirk documented in validate.py.
 
 **Next**: homotopy/branch tracer (solve.branch) OR open Stage 2 calibration bracket (population engine + TNTP, blotto plugin) and Stage 4 Learn scaffold. Priority per DOMAINS v1: the calibration bracket.
+
+---
+
+## 2026-08-08 (cont.) — domains.blotto closed: first plugin through the contract
+
+- **Gate domains.blotto GREEN** (red-team: zero objections): BlottoOracle + allocation grid + budgets-as-ConjugateFieldSpec + LearnPageSpec, loader honestly None. α = 0.69 / ℛ = 0.12 (budget-3 symmetric), EPR = 0.098 on asymmetric 2-field, **exact zero** on the degenerate constant-payoff instance (kept as regression).
+- **F-0005**: Blotto is mixed (α ≈ 0.7), not pure harmonic — zero-sum ⇏ harmonic-pure. RPS stays the α = 1 extreme; Blotto is the realistic high-α anchor.
+- Boundary hook verified live on real plugin files.
+
+**Stage state**: Stage 1 units all green (core, hodge, reciprocity, dynamics, solve.advanced). Stage 2 opened with the α > 0 anchor. **Next**: population engine + Fisk/Beckmann + TNTP loader (unit population.core + domains.congestion — the α = 0 anchor with real network data), then homotopy branch tracer, thermo estimators, Learn scaffold (Track D in wt/product).

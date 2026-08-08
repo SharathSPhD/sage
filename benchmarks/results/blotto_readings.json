@@ -1,0 +1,23 @@
+{
+  "benchmark_id": "blotto_readings",
+  "unit": "domains.blotto",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "alpha_b3_k3": 0.6939824873659469,
+    "R_b3_k3": 0.11809781461174602,
+    "epr_b2_k2_asym": 0.0982933622271984,
+    "max_current_b2_k2_asym": 0.02075556730594592,
+    "epr_degenerate_null": 5.392603844284259e-32,
+    "R_b4_k3": 0.1119883172694081,
+    "alpha_b4_k3": 0.7107125242008556
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260808,
+  "config_ref": null,
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T19:40:56+00:00",
+  "notes": "The alpha > 0 anchor with free payoffs: high alpha and positive R on symmetric Blotto; positive dissipation/circulation on the asymmetric 2-field instance; EXACT zero on the degenerate equal-values budget-2 instance (constant payoffs); budget field moves the grid and the readings."
+}

@@ -1,0 +1,33 @@
+unit: domains.blotto
+claim: "Blotto is a five-object plugin on Engine 1 with budgets as a live conjugate field; the instruments read high alpha, positive reciprocity defect and positive dissipation on non-degenerate instances, and exact zero on the degenerate constant-payoff instance"
+tier: exact   # constructions and readings, no estimation
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.90
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/domains/blotto/__init__.py
+      - packages/strataq/strataq/domains/blotto/oracle.py
+      - packages/strataq/tests/domains/test_blotto.py
+
+  domain:
+    - id: blotto_readings
+      spec: "alpha > 0.6 and R > 0.1 on symmetric budget-3 Blotto; EPR > 1e-4 on the asymmetric 2-field instance; EPR < 1e-12 on the degenerate equal-values instance; readings live under budget shifts"
+      artifact: benchmarks/results/blotto_readings.json
+
+  statistical:
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/domains/blotto.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: true    # granted 2026-08-08: contract, oracle, readings and hygiene attacks all held; alpha<1 confirmed structurally correct
+    objections: []
