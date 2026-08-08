@@ -1,12 +1,12 @@
 # Progress
 
-*Generated 2026-08-08T20:30:15+00:00 from gate state of 2026-08-08T20:29:21+00:00. Regenerated on every merge — if this page is stale, the gate is not green.*
+*Generated 2026-08-08T20:41:01+00:00 from gate state of 2026-08-08T20:40:16+00:00. Regenerated on every merge — if this page is stale, the gate is not green.*
 
 === "Plain language"
 
     **What this project is doing.** Building measuring instruments for strategic systems — how sharply players respond to incentives (<abbr title="logit precision: how strongly payoff differences translate into choice probabilities">λ</abbr>), how far a system is from the "well-behaved" regime where everything settles down (<abbr title="harmonic fraction of the **normalised** game: ‖u^H‖/(‖u^P‖+‖u^H‖) ∈ [0,1] from the Candogan flow decomposition">α</abbr>), and whether give-and-take between players is balanced (<abbr title="‖χ^eq − χ^eqᵀ‖_F / ‖χ^eq + χ^eqᵀ‖_F">ℛ</abbr>) — then pointing those instruments at road networks, pricing data, electricity markets and game experiments.
 
-    **What works now.** 8 work unit(s) fully closed (every closure includes an adversarial review by a hostile reviewer who never sees the authors' reasoning). Claim ledger: 8 established results implemented, 4 results of our own, 2 open conjectures each with a stated way to be proven wrong.
+    **What works now.** 9 work unit(s) fully closed (every closure includes an adversarial review by a hostile reviewer who never sees the authors' reasoning). Claim ledger: 8 established results implemented, 4 results of our own, 2 open conjectures each with a stated way to be proven wrong.
 
     **The map.** Each dot is a system we point the instruments at; green means that system's anchor is in place.
 
@@ -39,6 +39,7 @@
     | `population.core` | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
     | `science.phase_map` | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
     | `solve.advanced` | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
+    | `solve.branch` | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
     | `stage0` | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
 
     **Claims ledger** — 8 `exact` · 4 `derived` · 2 `conjectured` · 2 `speculative` — [full ledger](https://github.com/SharathSPhD/sage/blob/main/memory/claims.md)
@@ -46,6 +47,7 @@
     **Benchmark results**
 
     - `blotto_readings` (correctness) — passed, unit `domains.blotto`
+    - `branch_agreement` (correctness) — passed, unit `solve.branch`
     - `chain_comovement` (statistical) — passed, unit `dynamics.exact`
     - `chi_fd_agreement` (correctness) — passed, unit `finite.response.reciprocity`
     - `equilibrium_reads_zero` (correctness) — passed, unit `dynamics.exact`
