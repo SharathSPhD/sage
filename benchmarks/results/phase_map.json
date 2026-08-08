@@ -1,0 +1,21 @@
+{
+  "benchmark_id": "phase_map",
+  "unit": "science.phase_map",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "alpha0_max_R": 4.763406278397479e-17,
+    "alpha0_max_epr": 2.185181025959981e-22,
+    "max_rho": 6.890558044492662,
+    "n_cells": 99.0,
+    "games_per_cell": 5.0
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260808,
+  "config_ref": "config/experiments/phase_map.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T20:24:44+00:00",
+  "notes": "Median surface over seeded 3x3 families (games_per_cell=5 — a coarse first map, no per-cell claims; FDR control would be needed for any). Correctness leg: the alpha=0 row must read ~0 on R and EPR at every lambda. CAVEAT (red-team O-2): in cells with rho >= 1 the resolvent (I - SB) is near-singular, so R medians there are magnitude-unreliable (direction/order only); supercritical_frac marks those cells. Wedge onset stated precisely: median game crosses rho = 1 from alpha = 0.5 (lambda >= 8.5); a 0.2 fraction of games crosses already at alpha = 0.4. Full surface in phase_map_surface.json."
+}

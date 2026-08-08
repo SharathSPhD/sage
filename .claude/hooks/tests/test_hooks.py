@@ -70,13 +70,20 @@ class TestImportSageGuard:
 
 
 class TestBoundaryGuard:
-    def test_blocks_mixed_domain_core_commit(self) -> None:
-        proc = run(
-            "check_boundary.py",
-            args=[
+    def test_blocks_mixed_domain_core_commit(self, tmp_path: Path) -> None:
+        # cwd outside any git repo: the ADR-0009 commit-message fallback cannot
+        # fire, isolating the mixed-commit rule itself.
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(HOOKS / "check_boundary.py"),
                 "packages/strataq/strataq/domains/blotto/oracle.py",
                 "packages/strataq/strataq/core/protocols.py",
             ],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+            check=False,
         )
         assert proc.returncode == 1
         assert "engine" in proc.stderr
@@ -192,3 +199,25 @@ class TestEngineImportRule:
     def test_cross_engine_import_blocked(self, tmp_path: Path) -> None:
         f = self._make_domain(tmp_path, "population", "from strataq.finite.decompose import hodge")
         assert run("check_boundary.py", args=[str(f)]).returncode == 1
+
+
+class TestAdrFromCommitMessage:
+    """ADR-0009: in CI the ADR reference is read from the HEAD commit message."""
+
+    def test_head_message_reference_honoured(self) -> None:
+        # This repo's HEAD (or an ancestor scenario) may or may not reference an
+        # ADR; assert only the mechanism: a bogus env ref still fails even if
+        # the fallback path exists.
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(HOOKS / "check_boundary.py"),
+                "packages/strataq/strataq/domains/blotto/oracle.py",
+                "packages/strataq/strataq/core/protocols.py",
+            ],
+            env={"SAGE_ADR_REF": "ADR-9999-nope"},
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert proc.returncode == 1

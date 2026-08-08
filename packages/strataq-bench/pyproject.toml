@@ -17,3 +17,4 @@ Repository = "https://github.com/SharathSPhD/sage"
 
 [tool.hatch.build.targets.wheel]
 packages = ["strataq_bench"]
+artifacts = ["strataq_bench/py.typed"]

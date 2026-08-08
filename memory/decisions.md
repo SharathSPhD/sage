@@ -57,3 +57,9 @@ Format per entry: Context · Options · Decision · Consequences · Date. Includ
 - **Decision**: `check_boundary.py` reads the domain's declared `ENGINE` and allows imports from that engine's package only. Cross-engine imports and cross-domain imports remain blocked; commits touching both domains and core still require an ADR reference.
 - **Consequences**: The contract's real invariant — "a domain that needs core *changes* is an engine" — is unchanged and still enforced by the mixed-commit check.
 - **Date**: 2026-08-08
+
+## ADR-0009 — ADR escape hatch readable from commit messages in CI
+
+- **Context**: CI re-runs the boundary check on pushed commits, where the local `SAGE_ADR_REF` env var no longer exists; the calibration-bracket merge (legitimately referencing ADR-0008) failed CI's guard.
+- **Decision**: `check_boundary.py` falls back to scanning the HEAD commit message for `ADR-\d{4}` tokens that exist in `memory/decisions.md`. Same strictness (the ADR must exist), better auditability (the override is recorded in history, not a transient env var).
+- **Date**: 2026-08-08

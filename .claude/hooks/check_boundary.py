@@ -14,6 +14,7 @@ Two checks, pre-commit mode (staged files as argv):
 
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -22,12 +23,23 @@ REPO = Path(__file__).resolve().parents[2]
 
 
 def adr_ref_valid() -> bool:
-    """SAGE_ADR_REF is honoured only if the referenced ADR actually exists (O-2)."""
-    ref = os.environ.get("SAGE_ADR_REF", "")
-    if not ref:
-        return False
+    """An ADR reference is honoured only if the ADR actually exists (O-2).
+
+    Sources, in order: the SAGE_ADR_REF env var (local commits), else the HEAD
+    commit message (CI re-checks pushed commits, where the env var is gone but
+    the reference is recorded in history — same strictness, auditable).
+    """
     decisions = REPO / "memory" / "decisions.md"
-    return decisions.exists() and ref in decisions.read_text()
+    if not decisions.exists():
+        return False
+    known = decisions.read_text()
+    ref = os.environ.get("SAGE_ADR_REF", "")
+    if ref:
+        return ref in known
+    head = subprocess.run(
+        ["git", "log", "-1", "--format=%B"], capture_output=True, text=True, check=False
+    ).stdout
+    return any(m in known for m in re.findall(r"ADR-\d{4}", head))
 
 
 CORE_MARK = re.compile(r"strataq/(core|finite|population)/")

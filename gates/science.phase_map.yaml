@@ -1,0 +1,26 @@
+unit: science.phase_map
+claim: "The (lambda, alpha) phase surface is measured: the alpha=0 row reads zero on R and EPR at every lambda (calibration holds across the map); the MEDIAN game first crosses rho=1 at alpha=0.5; separately, a 0.2 fraction of individual games crosses at alpha=0.4; the frontier descends in alpha; on potential games rho(SB) is non-monotone in lambda (criticality escape via equilibrium concentration, F-0006). R inside the supercritical wedge is direction-only (near-singular resolvent)"
+tier: exact   # the surface is a measurement; interpretations are logged as findings, not claims
+
+gates:
+  code:
+    tests_pass: true
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - experiments/phase_map.py
+  domain:
+    - id: phase_map
+      spec: "alpha=0 row: max R < 1e-8 and max EPR < 1e-10 across all lambdas; surface + SVG regenerable from seed"
+      artifact: benchmarks/results/phase_map.json
+  statistical:
+    seeds_fixed_and_recorded: true
+  documentation:
+    files:
+      - docs/progress/phase_map.svg
+    claims_ledger_updated: true
+    changelog_entry: true
+  adversarial:
+    red_team_signoff: true    # granted 2026-08-08 after O-1 wording + O-2 supercritical caveat verified; mechanism probe held
+    objections: []

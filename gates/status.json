@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T20:15:31+00:00",
+  "generated_at": "2026-08-08T20:29:21+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -98,6 +98,20 @@
         "adversarial": []
       },
       "checked_at": "2026-08-08T20:15:31+00:00"
+    },
+    "science.phase_map": {
+      "unit": "science.phase_map",
+      "claim": "The (lambda, alpha) phase surface is measured: the alpha=0 row reads zero on R and EPR at every lambda (calibration holds across the map); the MEDIAN game first crosses rho=1 at alpha=0.5; separately, a 0.2 fraction of individual games crosses at alpha=0.4; the frontier descends in alpha; on potential games rho(SB) is non-monotone in lambda (criticality escape via equilibrium concentration, F-0006). R inside the supercritical wedge is direction-only (near-singular resolvent)",
+      "tier": "exact",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-08T20:29:21+00:00"
     }
   }
 }

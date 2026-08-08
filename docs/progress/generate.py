@@ -226,6 +226,10 @@ def main() -> None:
 
 {indent(objections_md, 4)}
 
+    **The (λ, α) phase map** — the money figure, filling in
+
+    <img src="phase_map.svg" alt="phase map heat maps" style="max-width:100%"/>
+
     **Gate flow** — what "closed" means
 
     ```mermaid

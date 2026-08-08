@@ -1,0 +1,13 @@
+# The alpha x lambda phase map — Stage 5's money figure.
+defaults:
+  - _self_
+
+seed: 20260808
+lambdas: [0.2, 0.35, 0.6, 1.0, 1.7, 3.0, 5.0, 8.5, 15.0]
+alphas: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+games_per_cell: 5
+shape: [3, 3]
+scale: 2.0
+solver:
+  tol: 1.0e-11
+  max_iter: 200000

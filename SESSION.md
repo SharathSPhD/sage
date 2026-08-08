@@ -83,3 +83,15 @@
 - **The α axis now has anchors at both ends with free payoffs**: congestion (α = 0, real data, ℛ = 0) and Blotto (α ≈ 0.7 synthetic, ℛ > 0.1), with RPS as the α = 1 extreme. DOMAINS v1 §8's "much stronger position" reached.
 
 **Next**: Learn scaffold + dashboard visuals (Track D), homotopy branch tracer, thermo trajectory estimators, then Stage 3 (pricing/ERCOT) and the α×λ phase map (Stage 5).
+
+---
+
+## 2026-08-08 (cont.) — science.phase_map closed: the money figure exists
+
+- **Gate science.phase_map GREEN** (red-team two-round: wedge-onset wording precision + supercritical-R caveat enforced): 9λ × 11α × 5-game median surface of ρ(SB), ℛ, EPR + supercritical fraction; SVG on the dashboard.
+- **F-0006 — criticality escape**: on potential games ρ(SB) is non-monotone in λ (peak 0.51 at λ=1.7, → 0 at λ=15): high-λ QRE concentrates on strict equilibria, C → 0 kills S = λC. Mechanism verified by red-team (σ 99.99999% pure, converged). The supercritical wedge: median game crosses ρ=1 from α=0.5 (0.2 game-fraction at 0.4), frontier descends to λ_c ≈ 3 by α=0.8. F-0004's decoupling regime sits inside the wedge — connection flagged for chase.
+- ADR-0009: boundary-hook ADR escape hatch now also reads the HEAD commit message (CI-compatible, auditable) — fixes the CI guards failure on the bracket merge.
+- py.typed markers added to strataq/strataq-bench (real packaging gap found by gate mypy).
+
+**Open gates**: none. Nine units green: stage0, finite.core*, finite.decompose.hodge*, finite.response.reciprocity, dynamics.exact, solve.advanced, domains.blotto, population.core, domains.congestion, science.phase_map (*covered under reciprocity gate paths).
+**Next**: Learn scaffold (Track D, wt/product), homotopy branch tracer, thermo trajectory estimators, Stage 3 empirics (DreamPrice port, ERCOT).
