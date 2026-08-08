@@ -17,18 +17,9 @@ from __future__ import annotations
 import jax.numpy as jnp
 from jax import Array
 
+from strataq.core.linalg import helmert_basis
 
-def helmert_basis(m: int) -> Array:
-    """Orthonormal basis of the mean-zero subspace of R^m, as an (m, m−1) matrix.
-
-    Column k (k = 1..m−1) is (1,...,1, −k, 0,...,0)/√(k(k+1)) — the Helmert
-    construction: deterministic, exactly orthogonal to 1, QᵀQ = I.
-    """
-    cols = []
-    for k in range(1, m):
-        v = jnp.zeros(m).at[:k].set(1.0).at[k].set(-float(k))
-        cols.append(v / jnp.sqrt(float(k * (k + 1))))
-    return jnp.stack(cols, axis=1)
+__all__ = ["block_basis", "from_tangent", "helmert_basis", "to_tangent"]
 
 
 def block_basis(num_actions: tuple[int, ...]) -> Array:
