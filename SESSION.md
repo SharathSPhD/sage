@@ -28,3 +28,5 @@
 **Next action**: finish Stage 0 close (task list in session), then open `wt/engine1` (Stage 1 Track A: core/types → games → solvers) and `wt/product` (Stage 4 Track D: Learn scaffold). First Stage 1 milestone: `reciprocity_defect()` reading 0 on a congestion game and > 0 on RPS, gate green including adversarial sign-off, visible on the dashboard.
 
 **Open gates**: none. `stage0` — **GREEN** (all five sections, red-team sign-off granted 2026-08-08).
+
+**Shipped**: pushed to `origin/main`; CI (3.11/3.12/3.13 + guards), Gates and Docs workflows all green; Pages live at https://sharathsphd.github.io/sage/ with /progress rendering; branch protection on `main` requires the five checks. Worktrees open: `~/projects/sage-wt/engine1` (`wt/engine1`), `~/projects/sage-wt/product` (`wt/product`).
