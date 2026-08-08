@@ -1,6 +1,6 @@
 # Progress
 
-*Generated 2026-08-08T19:13:27+00:00 from gate state of 2026-08-08T19:12:43+00:00. Regenerated on every merge — if this page is stale, the gate is not green.*
+*Generated 2026-08-08T19:31:24+00:00 from gate state of 2026-08-08T19:20:37+00:00. Regenerated on every merge — if this page is stale, the gate is not green.*
 
 === "Plain language"
 
