@@ -28,6 +28,7 @@ dev = [
     "mkdocstrings[python]>=0.25",
     "types-pyyaml>=6.0.12.20260724",
     "pygambit>=16.7.0",
+    "matplotlib>=3.11.1",
 ]
 
 [tool.ruff]

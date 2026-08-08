@@ -48,3 +48,10 @@ data/raw/
 *.pem
 *.key
 site/
+# LaTeX build artifacts (PDF is committed; aux junk is not)
+papers/**/*.aux
+papers/**/*.log
+papers/**/*.out
+papers/**/*.toc
+papers/**/*.bbl
+papers/**/*.blg

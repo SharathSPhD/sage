@@ -1,0 +1,34 @@
+unit: science.decoupling
+claim: "Measured on the chain_comovement families (paired design): R's within-level variation at alpha=0.95 is denominator-driven (rho(R, 1/den) = 0.993); the numerator ||chi - chi^T|| also loses its EPR coupling there (rho = -0.37, 95% CI excluding 0), refuting the corrected-meter hypothesis that was proposed post-hoc to explain F-0004; coupling holds (rho >= 0.55) for alpha <= 0.65 at lambda = 1.2 on 3x3 two-player families. The 'distinct mathematical objects' reading (local fixed-point derivative vs joint-chain flux functional) is interpretation - argued, not proved"
+tier: derived   # the measured correlations; the interpretation sentence is explicitly flagged as argument
+
+# EPISTEMIC DISCLOSURE (red-team O-1): the domain gate below was specified AFTER
+# the measurement, as a REGRESSION contract on discovered facts - it certifies
+# reproducibility of the finding, not a prediction. The original prediction (H1)
+# failed and is recorded as such in F-0007 and the artifact notes.
+
+gates:
+  code:
+    tests_pass: true
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - experiments/decoupling_mechanism.py
+  domain:
+    - id: decoupling_mechanism
+      spec: "regression-encodes the measured facts: rho(R,1/den) > 0.9 at alpha=0.95; |rho(num,EPR)| < 0.5 there; rho(num,EPR) > 0.55 for alpha <= 0.65"
+      artifact: benchmarks/results/decoupling_mechanism.json
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+  documentation:
+    files:
+      - docs/instruments/dissipation.md
+    claims_ledger_updated: true
+    changelog_entry: true
+  adversarial:
+    red_team_signoff: true    # granted 2026-08-08 after epistemic-disclosure round (post-hoc gate recoding disclosed, interpretation flagged, H1 provenance stated)
+    objections: []

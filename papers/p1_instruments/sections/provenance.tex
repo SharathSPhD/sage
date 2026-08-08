@@ -1,0 +1,35 @@
+Every quantitative statement in this paper maps to a machine-readable artifact
+in \texttt{benchmarks/results/} (JSON, schema \texttt{strataq\_bench.BenchmarkResult}:
+metrics, effect sizes with intervals, seed, config reference, library version,
+timestamp). All regenerate with \texttt{make reproduce} (seed 20260808 unless
+stated). The gate records in \texttt{gates/*.yaml} carry, for each unit, the
+claim, the section-by-section pass state, and the adversarial reviewer's
+objections with their dispositions --- including the two rounds on
+Finding~3's unit, whose gate discloses on its face that its thresholds were
+specified post-measurement as a regression contract.
+
+\begin{center}\small
+\begin{tabular}{ll}
+\toprule
+Statement in text & Artifact \\
+\midrule
+Calibration table (Table~\ref{tab:calib}) & the ten artifacts named in its rows \\
+$\rho(\R,\alpha)=0.982$, $n{=}2000$ & \texttt{reciprocity\_alpha\_sweep.json} \\
+$\rho(\EPR,\alpha)=0.990$; $\rho(\EPR,\R)=0.993$; within-level reversal & \texttt{chain\_comovement.json} \\
+Phase surface; wedge onset; criticality escape & \texttt{phase\_map.json}, \texttt{phase\_map\_surface.json} \\
+Finding 3 (H2 confirmed, H1 refuted, CIs) & \texttt{decoupling\_mechanism.json} \\
+Solver agreements (damped/mirror/Gambit/implicit/branch) & \texttt{solver\_cross\_agreement.json}, \texttt{gambit\_agreement.json}, \\
+& \texttt{implicit\_chi\_agreement.json}, \texttt{branch\_agreement.json} \\
+Sioux Falls calibration; UE diagnostic honesty note & \texttt{sioux\_falls\_calibration.json} \\
+Engine-2 identities (Beckmann gradient, KKT, $DF$, toll-$\chi$) & \texttt{population\_identities.json} \\
+Blotto readings incl.\ the degenerate null & \texttt{blotto\_readings.json} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The findings log (\texttt{memory/findings.md}, entries F-0001--F-0007) records
+each anomaly with the config that produced it, its chase status, and its
+resolution --- including the refuted hypothesis of Finding~3 and the
+provenance of its post-hoc origin. The claim ledger
+(\texttt{memory/claims.md}) carries every scientific claim's confidence tier
+and history, including downgrades.

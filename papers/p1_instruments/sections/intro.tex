@@ -1,0 +1,37 @@
+Quantal response equilibrium \citep{mckelvey1995} replaced exact best response
+with logit response, and in doing so imported the entire apparatus of Gibbs
+statistical mechanics into strategic analysis: the logit choice rule is the
+Gibbs variational principle, its log-partition function is a cumulant generating
+function, and in potential games \citep{monderer1996} the induced Glauber
+dynamics are reversible with stationary measure $\pi\propto e^{\lambda\Phi}$
+\citep{blume1993}. What the QRE literature has largely not done is treat this
+correspondence \emph{instrumentally} --- as licensing a set of measuring devices
+whose readings are meaningful whether or not they match a prediction.
+
+This paper describes such a set of devices and what happened when we pointed
+them at things. The stance is deliberate: this is not a hypothesis-testing
+exercise. We built a susceptibility meter, a reciprocity meter, an
+entropy-production meter, and a phase locator; we calibrated each on systems
+where the correct reading is known analytically; and then we swept them across
+a one-parameter family of strategic environments --- the harmonic fraction
+$\alpha$ of the Candogan decomposition \citep{candogan2011} --- and wrote down
+what they read. Three of the readings surprised us, and one of them refuted a
+correction we had proposed to our own instrument. All of it is reported,
+including the refutation.
+
+Two disciplines make this more than a metaphor. First, every claim carries a
+confidence tier --- \emph{exact} (proved identity, implemented and verified to
+$10^{-12}$--$10^{-16}$), \emph{derived} (proved in-house, numerically checked),
+\emph{conjectured} (with a stated falsifier), or \emph{speculative} --- and the
+tier is visible in the code's docstrings, the project's claim ledger, and this
+paper. Second, every number below regenerates from a fixed seed by one command;
+Appendix~A maps each to its machine-readable artifact, and each artifact was
+closed under an adversarial review whose objections and dispositions are part
+of the public record.
+
+The library is \texttt{strataq}; the umbrella project is SAGE (Strategic Agent
+Game Engine). The research programme it instruments --- non-equilibrium
+thermodynamics of strategic systems, with empirical estimation across pricing,
+energy, congestion and allocation domains --- is described in the repository's
+research documents; this paper is the toolkit paper, written first because the
+toolkit is, we believe, the most immediately useful artifact.

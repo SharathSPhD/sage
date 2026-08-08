@@ -6,6 +6,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 ## [Unreleased]
 
 ### Added
+- Paper p1_instruments (papers/p1_instruments): 9-page manuscript with all measured calibration numbers, the three findings (lambda-scaling of R, criticality escape + wedge, response/dissipation decoupling incl. the refuted repair), results digest mapping every number to its artifact, and figures regenerated from benchmark JSONs.
+- Decoupling mechanism experiment (unit: science.decoupling, F-0007): at alpha=0.95 R is denominator-driven (rho=0.993) AND the numerator decouples from EPR (rho=-0.37) — the response and dissipation layers are structurally distinct observables; corrected-meter hypothesis refuted and recorded plainly.
 - Pseudo-arclength branch tracer (unit: solve.branch): Euler predictor + Newton corrector on the augmented system in tangent-logit coordinates, fold detection via lambda-direction reversal, rho(SB) recorded along the branch; agreement with fixed-lambda solver 1e-8 and Gambit 1e-7.
 - The alpha-lambda phase map (unit: science.phase_map): 9x11 median surface of rho(SB), R, EPR + supercritical fraction over seeded families; SVG on the dashboard. F-0006: criticality escape on potential games (rho non-monotone in lambda); supercritical wedge from alpha ~ 0.4.
 - Engine 2 + congestion plugin (units: population.core, domains.congestion): routing population games, Fisk SUE via damped Newton on the convex Beckmann-entropy program, DF-symmetry potentiality test, toll susceptibility with FD oracle check; TNTP loader (Sioux Falls, cached fetch), k-shortest route sets, BPR oracle. Calibration on real data: R = 5.7e-17, DF defect 0, KKT 7e-15. Boundary rule refined (ADR-0008): plugins may import their own declared engine.

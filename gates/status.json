@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T20:40:16+00:00",
+  "generated_at": "2026-08-08T21:34:10+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -126,6 +126,20 @@
         "adversarial": []
       },
       "checked_at": "2026-08-08T20:40:16+00:00"
+    },
+    "science.decoupling": {
+      "unit": "science.decoupling",
+      "claim": "Measured on the chain_comovement families (paired design): R's within-level variation at alpha=0.95 is denominator-driven (rho(R, 1/den) = 0.993); the numerator ||chi - chi^T|| also loses its EPR coupling there (rho = -0.37, 95% CI excluding 0), refuting the corrected-meter hypothesis that was proposed post-hoc to explain F-0004; coupling holds (rho >= 0.55) for alpha <= 0.65 at lambda = 1.2 on 3x3 two-player families. The 'distinct mathematical objects' reading (local fixed-point derivative vs joint-chain flux functional) is interpretation - argued, not proved",
+      "tier": "derived",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-08T21:34:10+00:00"
     }
   }
 }
