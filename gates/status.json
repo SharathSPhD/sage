@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T21:51:04+00:00",
+  "generated_at": "2026-08-08T22:07:23+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -13,7 +13,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T21:51:04+00:00"
+      "checked_at": "2026-08-08T22:07:23+00:00"
     },
     "finite.response.reciprocity": {
       "unit": "finite.response.reciprocity",
@@ -27,7 +27,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T21:50:19+00:00"
+      "checked_at": "2026-08-08T22:06:38+00:00"
     },
     "dynamics.exact": {
       "unit": "dynamics.exact",
@@ -41,7 +41,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T21:49:46+00:00"
+      "checked_at": "2026-08-08T22:06:05+00:00"
     },
     "solve.advanced": {
       "unit": "solve.advanced",
@@ -55,7 +55,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T21:50:46+00:00"
+      "checked_at": "2026-08-08T22:07:04+00:00"
     },
     "domains.blotto": {
       "unit": "domains.blotto",
@@ -69,7 +69,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T21:49:26+00:00"
+      "checked_at": "2026-08-08T22:05:45+00:00"
     },
     "population.core": {
       "unit": "population.core",
@@ -83,7 +83,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T21:50:33+00:00"
+      "checked_at": "2026-08-08T22:06:51+00:00"
     },
     "domains.congestion": {
       "unit": "domains.congestion",
@@ -97,7 +97,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T21:49:36+00:00"
+      "checked_at": "2026-08-08T22:05:55+00:00"
     },
     "science.phase_map": {
       "unit": "science.phase_map",
@@ -111,7 +111,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T21:50:33+00:00"
+      "checked_at": "2026-08-08T22:06:51+00:00"
     },
     "solve.branch": {
       "unit": "solve.branch",
@@ -125,7 +125,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T21:51:03+00:00"
+      "checked_at": "2026-08-08T22:07:21+00:00"
     },
     "science.decoupling": {
       "unit": "science.decoupling",
@@ -139,7 +139,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T21:50:33+00:00"
+      "checked_at": "2026-08-08T22:06:51+00:00"
     },
     "api.core": {
       "unit": "api.core",
@@ -153,7 +153,21 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T21:49:16+00:00"
+      "checked_at": "2026-08-08T22:05:36+00:00"
+    },
+    "web.scaffold": {
+      "unit": "web.scaffold",
+      "claim": "SAGE Labs exists as a buildable Next.js app: Learn renders the single-source docs/theory explainers (three authored: softmax/lambda, reciprocity, the one-price objection stated honestly); the Lab reads all three meters live from the API with a lambda slider and the reproduce-in-Python funnel; next build passes with 9 static pages",
+      "tier": "exact",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-08T22:07:23+00:00"
     }
   }
 }

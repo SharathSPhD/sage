@@ -55,3 +55,6 @@ papers/**/*.out
 papers/**/*.toc
 papers/**/*.bbl
 papers/**/*.blg
+apps/web/node_modules/
+apps/web/.next/
+apps/web/next-env.d.ts

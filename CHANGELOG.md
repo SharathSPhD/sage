@@ -6,6 +6,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 ## [Unreleased]
 
 ### Added
+- SAGE Labs app (unit: web.scaffold, apps/web): Next.js 15 with Learn (single-source rendering of docs/theory — explainers 01 softmax/lambda, 07 reciprocity, 09 the one-price objection) and a live Lab (game selector, lambda slider, all three meters from the API, reproduce-in-Python funnel). next build: 9 static pages. Theory explainers referenced by web.scaffold gate.
 - API (unit: api.core, services/api): FastAPI surface over the instruments — solve/decompose/response/dynamics/branch with provenance + honesty warnings (near-criticality, supercritical direction-only R), size guards, calibration-parity tests through HTTP; Dockerfile + render.yaml (deployment awaits provisioning approval). api.core referenced in memory/claims.md scope note.
 - Paper p1_instruments (papers/p1_instruments): 9-page manuscript with all measured calibration numbers, the three findings (lambda-scaling of R, criticality escape + wedge, response/dissipation decoupling incl. the refuted repair), results digest mapping every number to its artifact, and figures regenerated from benchmark JSONs.
 - Decoupling mechanism experiment (unit: science.decoupling, F-0007): at alpha=0.95 R is denominator-driven (rho=0.993) AND the numerator decouples from EPR (rho=-0.37) — the response and dissipation layers are structurally distinct observables; corrected-meter hypothesis refuted and recorded plainly.

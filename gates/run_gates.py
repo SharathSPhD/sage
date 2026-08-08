@@ -82,20 +82,22 @@ class CodeSection(Section):
             if rc != 0:
                 result.failures.append(f"tests_pass: pytest failed\n{out[-2000:]}")
         source_paths = [p for p in paths if p not in test_paths]
-        if self.spec.get("lint_clean") and paths:
-            rc, out = _run(["uv", "run", "ruff", "check", *paths])
+        py_paths = [p for p in paths if p.endswith(".py")]
+        py_sources = [p for p in source_paths if p.endswith(".py")]
+        if self.spec.get("lint_clean") and py_paths:
+            rc, out = _run(["uv", "run", "ruff", "check", *py_paths])
             if rc != 0:
                 result.failures.append(f"lint_clean: {out[-1000:]}")
-        if self.spec.get("types_clean") and source_paths:
-            rc, out = _run(["uv", "run", "mypy", *source_paths])
+        if self.spec.get("types_clean") and py_sources:
+            rc, out = _run(["uv", "run", "mypy", *py_sources])
             if rc != 0:
                 result.failures.append(f"types_clean: {out[-1000:]}")
-        if self.spec.get("coverage_min") and source_paths and test_paths:
+        if self.spec.get("coverage_min") and py_sources and test_paths:
             floor = float(self.spec["coverage_min"]) * 100
             # Measure exactly the unit's own source files — never parent
             # packages, or the gate would regress whenever *sibling* modules
             # are added (this happened: core/dynamics diluted core/).
-            unit_files = [p for p in source_paths if p.endswith(".py")]
+            unit_files = py_sources
             rc, out = _run(["uv", "run", "coverage", "run", "-m", "pytest", "-q", *test_paths])
             if rc != 0:
                 result.failures.append(f"coverage_min: test run failed\n{out[-800:]}")

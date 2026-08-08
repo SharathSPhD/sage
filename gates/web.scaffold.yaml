@@ -1,0 +1,27 @@
+unit: web.scaffold
+claim: "SAGE Labs exists as a buildable Next.js app: Learn renders the single-source docs/theory explainers (three authored: softmax/lambda, reciprocity, the one-price objection stated honestly); the Lab reads all three meters live from the API with a lambda slider and the reproduce-in-Python funnel; next build passes with 9 static pages"
+tier: exact
+
+gates:
+  code:
+    tests_pass: true          # library+api suites guard everything the app consumes
+    types_clean: true         # via `next build` (tsc strict) — recorded here, run in the unit
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - docs/theory/01-softmax-and-lambda.md
+      - docs/theory/07-reciprocity.md
+      - docs/theory/09-the-one-price-objection.md
+  domain:
+    - id: app_builds_and_reads
+      spec: "next build exit 0 with /learn/* static pages; live smoke: /v1/response returns R=0.866 on RPS through HTTP (recorded in session log; app is a shim over gate-closed API)"
+      artifact: benchmarks/results/blotto_readings.json   # anchor: the app adds no numerics; build+smoke are the checks
+  statistical: {}
+  documentation:
+    files:
+      - apps/web/CLAUDE.md
+    claims_ledger_updated: true
+    changelog_entry: true
+  adversarial:
+    red_team_signoff: true    # granted 2026-08-08: build 9/9 pages, single-source rule verified, explainers 07/09 honesty checked vs ledger, Lab surfaces warnings, zero objections
+    objections: []

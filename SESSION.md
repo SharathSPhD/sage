@@ -117,3 +117,14 @@
 - CINS reference reviewed (github.com/SharathSPhD/CINS): paper+digest / app / site / gates pattern matched and extended (adversarial record, claim tiers, findings log are beyond-CINS elements).
 
 **Open gates**: none — twelve green. **Next**: Next.js app (Learn 01–10 authored in docs/theory + Lab against the API), thermo trajectory estimators, Stage 3 (DreamPrice port, ERCOT), deployment provisioning (ask PI), p3_noneq draft seeded from F-0004/F-0006/F-0007.
+
+---
+
+## 2026-08-08 (cont.) — web.scaffold closed: the full artifact suite exists
+
+- **Gate web.scaffold GREEN** (red-team: zero objections — build 9/9 pages, single-source rule, explainer honesty vs ledger, Lab surfaces warnings): Next.js 15 app with Learn (rendering docs/theory 01/07/09 via symlink — 07 carries the measured facts incl. the refuted repair; 09 concedes the one-price objection outright) and a live Lab (three meters + λ slider + reproduce-in-Python funnel). E2E smoke: API served R = 0.866 on RPS through HTTP.
+- Gate runner fix: types/lint checks now apply to .py paths only (markdown paths in gate specs no longer break mypy).
+
+**Thirteen gates green. The CINS-parity suite is complete and exceeded**: library (strataq, 100+ tests) · paper (p1_main.pdf + results digest) · API (FastAPI + Docker + render.yaml) · app (Next.js Learn+Lab) · Pages dashboard with live phase map · claim ledger with tier history · findings log F-0001..F-0007 · adversarial record on every unit.
+
+**Next session**: remaining Learn explainers (02-06, 08, 10); deployment provisioning (Render/Vercel — ask PI); thermo trajectory estimators; Stage 3 empirics (DreamPrice JAX port, ERCOT loader, λ estimators); p3_noneq draft from F-0004/6/7; finer wedge-frontier sweep.
