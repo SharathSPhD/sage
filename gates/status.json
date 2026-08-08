@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T19:44:22+00:00",
+  "generated_at": "2026-08-08T20:15:31+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -70,6 +70,34 @@
         "adversarial": []
       },
       "checked_at": "2026-08-08T19:44:22+00:00"
+    },
+    "population.core": {
+      "unit": "population.core",
+      "claim": "Engine 2 exists and is exact: Fisk SUE solves the Beckmann-entropy convex program (KKT to 1e-10), the Beckmann gradient IS the route cost (autodiff, 1e-12), DF is symmetric for separable BPR costs, and toll susceptibility matches finite differences with zero reciprocity defect",
+      "tier": "exact",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-08T20:15:22+00:00"
+    },
+    "domains.congestion": {
+      "unit": "domains.congestion",
+      "claim": "Congestion is a five-object plugin on Engine 2 with link tolls as an exactly linear conjugate field; on real Sioux Falls data the meters read their theoretical values: R = 0, DF symmetric, Fisk KKT satisfied",
+      "tier": "exact",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-08T20:15:31+00:00"
     }
   }
 }

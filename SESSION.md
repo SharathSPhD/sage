@@ -72,3 +72,14 @@
 - Boundary hook verified live on real plugin files.
 
 **Stage state**: Stage 1 units all green (core, hodge, reciprocity, dynamics, solve.advanced). Stage 2 opened with the α > 0 anchor. **Next**: population engine + Fisk/Beckmann + TNTP loader (unit population.core + domains.congestion — the α = 0 anchor with real network data), then homotopy branch tracer, thermo estimators, Learn scaffold (Track D in wt/product).
+
+---
+
+## 2026-08-08 (cont.) — THE CALIBRATION BRACKET IS CLOSED
+
+- **Gates population.core + domains.congestion GREEN** (combined red-team review, zero objections): Engine 2 (routing population games, Fisk SUE via damped Newton on the convex Beckmann-entropy program — the damped logit map two-cycles on Braess, documented), DF-symmetry potentiality, toll susceptibility (χ vs FD 2.8e-9, sign verified by re-solve), TNTP loader (Sioux Falls fetch/cache, offline-safe parser tests), k-shortest route sets.
+- **Readings on real Sioux Falls data: ℛ = 5.7e-17, DF defect = 0, KKT = 7e-15.** The meters read exactly zero where theory says zero, on real network data. UE link-flow gap 0.73 explicitly diagnostic-only (route-set/OD-subset restriction documented).
+- ADR-0008: boundary rule refined — plugins may import their own declared engine (hook reads ENGINE declaration; cross-engine and cross-domain still blocked, both directions tested).
+- **The α axis now has anchors at both ends with free payoffs**: congestion (α = 0, real data, ℛ = 0) and Blotto (α ≈ 0.7 synthetic, ℛ > 0.1), with RPS as the α = 1 extreme. DOMAINS v1 §8's "much stronger position" reached.
+
+**Next**: Learn scaffold + dashboard visuals (Track D), homotopy branch tracer, thermo trajectory estimators, then Stage 3 (pricing/ERCOT) and the α×λ phase map (Stage 5).

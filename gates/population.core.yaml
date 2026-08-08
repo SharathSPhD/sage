@@ -1,0 +1,30 @@
+unit: population.core
+claim: "Engine 2 exists and is exact: Fisk SUE solves the Beckmann-entropy convex program (KKT to 1e-10), the Beckmann gradient IS the route cost (autodiff, 1e-12), DF is symmetric for separable BPR costs, and toll susceptibility matches finite differences with zero reciprocity defect"
+tier: exact
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.90
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/population/games/routing.py
+      - packages/strataq/strataq/population/response/susceptibility.py
+      - packages/strataq/strataq/core/linalg.py
+      - packages/strataq/tests/population/test_routing.py
+  domain:
+    - id: population_identities
+      spec: "Beckmann grad = route costs (1e-12); Fisk KKT (1e-10); DF symmetry (1e-14); toll-chi vs FD (1e-5); R = 0 (1e-10) on the Braess diamond"
+      artifact: benchmarks/results/population_identities.json
+  statistical:
+    seeds_fixed_and_recorded: true
+  documentation:
+    files:
+      - docs/domains/congestion.md
+    claims_ledger_updated: true
+    changelog_entry: true
+  adversarial:
+    red_team_signoff: true    # granted 2026-08-08 combined review: solver, identities, chi sign, TNTP, ADR-0008 attacks all held
+    objections: []

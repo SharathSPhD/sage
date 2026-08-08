@@ -50,3 +50,10 @@ Format per entry: Context · Options · Decision · Consequences · Date. Includ
 - **Context**: Prior-art sweep (2026-08-08, theory-verifier, `literature-nearest-live-work.md`): the similarity argument is sound and unpublished for logit; Hommes–Ochea 2012 supports the contrapositive.
 - **Decision**: N3 recorded as `derived` in `claims.md`, with numerical verification explicitly outstanding (α-sweep). A cycle at α = 0 reverts the tier hard and is a headline finding.
 - **Date**: 2026-08-08
+
+## ADR-0008 — Boundary rule refinement: plugins may import their own engine
+
+- **Context**: The original hook blocked every `strataq.finite/population` import from `domains/`. The congestion plugin cannot exist without the population engine's `RoutingNetwork` — a plugin *runs on* an engine (DOMAINS v1 §5.3 says plugins sit on engines; it forbids plugins needing NEW core machinery, not using existing engine objects).
+- **Decision**: `check_boundary.py` reads the domain's declared `ENGINE` and allows imports from that engine's package only. Cross-engine imports and cross-domain imports remain blocked; commits touching both domains and core still require an ADR reference.
+- **Consequences**: The contract's real invariant — "a domain that needs core *changes* is an engine" — is unchanged and still enforced by the mixed-commit check.
+- **Date**: 2026-08-08

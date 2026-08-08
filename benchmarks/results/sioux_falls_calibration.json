@@ -1,0 +1,22 @@
+{
+  "benchmark_id": "sioux_falls_calibration",
+  "unit": "domains.congestion",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "reciprocity_defect": 5.648638508839636e-17,
+    "df_symmetry_defect": 0.0,
+    "fisk_kkt_spread": 7.105427357601002e-15,
+    "n_od_pairs": 8.0,
+    "n_routes": 24.0,
+    "ue_link_flow_rel_gap_diagnostic": 0.7350669103789285
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260808,
+  "config_ref": null,
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T20:11:47+00:00",
+  "notes": "The calibration standard: R = 0 and DF symmetric on real Sioux Falls data (top-8 OD pairs, k=3 route sets). The UE link-flow gap vs the repo's best-known flows is a DIAGNOSTIC ONLY: our restricted route sets and OD subset make exact agreement impossible by construction; the number contextualises scale, it does not certify."
+}

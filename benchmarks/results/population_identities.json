@@ -1,0 +1,21 @@
+{
+  "benchmark_id": "population_identities",
+  "unit": "population.core",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "beckmann_grad_gap": 0.0,
+    "fisk_kkt_spread": 0.0,
+    "df_symmetry_defect": 0.0,
+    "toll_chi_fd_gap": 2.82535536633155e-9,
+    "reciprocity_braess": 0.0
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260808,
+  "config_ref": null,
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T20:11:45+00:00",
+  "notes": "Engine 2 exact identities on the Braess diamond (K8 tier)."
+}

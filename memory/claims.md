@@ -15,7 +15,7 @@ Source: PROGRAMME v3 §3; updated by the prior-art sweep of 2026-08-08 (`literat
 | K5 | Hodge/flow decomposition: 𝒢 = 𝒢_pot ⊕ 𝒢_harm ⊕ 𝒢_nonstrat, orthogonal; nonstrategic components do not affect QRE | Candogan–Menache–Ozdaglar–Parrilo, *MOR* 2011 |
 | K6 | λ has a rational-inattention foundation: inverse shadow price of Shannon information | Matějka–McKay *AER* 2015; Fosgerau et al. *IER* 2020 |
 | K7 | Partial susceptibility χ^part = λC (static FDT, opponents frozen) | K2 + differentiation |
-| K8 | Logit route choice in congestion games = Fisk (1980) SUE, convex potential Σₐ∫cₐ + λ⁻¹Σ xₐlog xₐ | Fisk 1980; Beckmann 1956; Rosenthal 1973 |
+| K8 | Logit route choice in congestion games = Fisk (1980) SUE, convex potential Σₐ∫cₐ + λ⁻¹Σ xₐlog xₐ | Fisk 1980; Beckmann 1956; Rosenthal 1973. **Implemented and verified 2026-08-08** (units population.core, domains.congestion): ∇Beckmann ≡ route costs to 1e-12 by autodiff; KKT to 7e-15; ℛ = 5.7e-17 on real Sioux Falls data |
 
 **History note:** v2 of the programme claimed the symmetry⟺potentiality characterisation as new. It is textbook (K4). Downgraded during the v3 sanity check — the precedent for how this ledger works.
 

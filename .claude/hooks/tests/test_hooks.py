@@ -170,3 +170,25 @@ class TestGateRegressionFlatten:
             {"units": {"stage0": {"green": True, "sections": {"code": ["a failure"]}}}}
         )
         assert flat == {"units.stage0.green": True}
+
+
+class TestEngineImportRule:
+    """ADR-0008: a domain may import its own declared engine, nothing else."""
+
+    def _make_domain(self, tmp_path: Path, engine: str, import_line: str) -> Path:
+        d = tmp_path / "strataq" / "domains" / "fake"
+        d.mkdir(parents=True)
+        (d / "__init__.py").write_text(f'ENGINE = "{engine}"\n')
+        f = d / "oracle.py"
+        f.write_text(import_line + "\n")
+        return f
+
+    def test_own_engine_import_allowed(self, tmp_path: Path) -> None:
+        f = self._make_domain(
+            tmp_path, "population", "from strataq.population.games.routing import RoutingNetwork"
+        )
+        assert run("check_boundary.py", args=[str(f)]).returncode == 0
+
+    def test_cross_engine_import_blocked(self, tmp_path: Path) -> None:
+        f = self._make_domain(tmp_path, "population", "from strataq.finite.decompose import hodge")
+        assert run("check_boundary.py", args=[str(f)]).returncode == 1

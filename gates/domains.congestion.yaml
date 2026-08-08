@@ -1,0 +1,29 @@
+unit: domains.congestion
+claim: "Congestion is a five-object plugin on Engine 2 with link tolls as an exactly linear conjugate field; on real Sioux Falls data the meters read their theoretical values: R = 0, DF symmetric, Fisk KKT satisfied"
+tier: exact
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.85   # network-fetch branches (offline skip paths) excluded from local runs
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/domains/congestion/__init__.py
+      - packages/strataq/strataq/domains/congestion/tntp.py
+      - packages/strataq/tests/domains/test_congestion.py
+  domain:
+    - id: sioux_falls_calibration
+      spec: "R < 1e-10, DF defect < 1e-12, KKT < 1e-8 on Sioux Falls (top-8 OD, k=3 routes); UE link-flow gap reported as diagnostic only"
+      artifact: benchmarks/results/sioux_falls_calibration.json
+  statistical:
+    seeds_fixed_and_recorded: true
+  documentation:
+    files:
+      - docs/domains/congestion.md
+    claims_ledger_updated: true
+    changelog_entry: true
+  adversarial:
+    red_team_signoff: true    # granted 2026-08-08 combined review: solver, identities, chi sign, TNTP, ADR-0008 attacks all held
+    objections: []

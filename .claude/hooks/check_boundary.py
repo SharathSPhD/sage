@@ -7,9 +7,9 @@ Two checks, pre-commit mode (staged files as argv):
    core changes means the "domain" is really an engine, which requires an ADR.
    Escape hatch: SAGE_ADR_REF=<adr-id> in the environment (used for deliberate,
    recorded engine work that happens to touch both).
-2. Domain code may import ``strataq.core.*`` (it implements the contract) but
-   never ``strataq.finite.*`` / ``strataq.population.*`` internals or another
-   domain.
+2. Domain code may import ``strataq.core.*`` (the contract) and its OWN
+   declared engine's modules (a plugin runs ON an engine — ADR-0008), but
+   never the other engine and never another domain.
 """
 
 import os
@@ -34,6 +34,17 @@ CORE_MARK = re.compile(r"strataq/(core|finite|population)/")
 ENGINE_OR_DOMAIN_IMPORT = re.compile(
     r"^\s*(?:from|import)\s+(strataq\.(?:finite|population|domains)[\w.]*)", re.MULTILINE
 )
+ENGINE_DECL = re.compile(r"^ENGINE\s*=\s*[\"\'](finite|population|bayesian)[\"\']", re.MULTILINE)
+
+
+def declared_engine(domain_file: str) -> str | None:
+    """The ENGINE declared in the domain's __init__.py, if resolvable."""
+    marker = domain_file.split(DOMAIN_MARK, 1)
+    init = Path(marker[0] + DOMAIN_MARK + marker[1].split("/", 1)[0]) / "__init__.py"
+    if not init.is_file():
+        return None
+    m = ENGINE_DECL.search(init.read_text())
+    return m.group(1) if m else None
 
 
 def main() -> int:
@@ -60,9 +71,15 @@ def main() -> int:
             continue  # deleted files in a commit have no content to scan
         own = f.split(DOMAIN_MARK, 1)[1].split("/", 1)[0]
         own_prefix = f"strataq.domains.{own}"
+        engine = declared_engine(f)
+        engine_prefix = f"strataq.{engine}" if engine else None
         for module in ENGINE_OR_DOMAIN_IMPORT.findall(Path(f).read_text()):
-            # A domain importing its own package is fine; anything else is not.
+            # Own package: fine. Own declared engine: fine (ADR-0008).
             if module == own_prefix or module.startswith(own_prefix + "."):
+                continue
+            if engine_prefix and (
+                module == engine_prefix or module.startswith(engine_prefix + ".")
+            ):
                 continue
             bad.append(f"{f} imports {module}")
             break
