@@ -1,0 +1,18 @@
+{
+  "benchmark_id": "implicit_chi_agreement",
+  "unit": "solve.advanced",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "max_abs_gap": 5.551115123125783e-17,
+    "n_games": 20.0
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260808,
+  "config_ref": null,
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T19:24:39+00:00",
+  "notes": "Custom-VJP Jacobian of the solved QRE equals the Result 1 resolvent (one operator, implemented once, reused)."
+}

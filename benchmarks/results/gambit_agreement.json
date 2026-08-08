@@ -1,0 +1,18 @@
+{
+  "benchmark_id": "gambit_agreement",
+  "unit": "solve.advanced",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "max_profile_gap": 1.228146917497952e-9,
+    "n_games": 64.0
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260808,
+  "config_ref": null,
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T19:24:36+00:00",
+  "notes": "Fixed-lambda QRE matches pygambit's homotopy tracer to 1e-8 (32 games x 2 lambdas, incl. harmonic anchors)."
+}

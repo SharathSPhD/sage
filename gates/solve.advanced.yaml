@@ -1,0 +1,39 @@
+unit: solve.advanced
+claim: "Mirror descent, damped iteration and Gambit's homotopy agree on the QRE; implicit differentiation through the fixed point reproduces the Result 1 resolvent exactly"
+tier: exact   # solver engineering against established oracles
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.90
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/core/solve/mirror.py
+      - packages/strataq/strataq/core/solve/implicit.py
+      - packages/strataq/tests/finite/test_solve_advanced.py
+
+  domain:
+    - id: gambit_agreement
+      spec: "fixed-lambda QRE matches pygambit logit_solve_lambda to 1e-8 on 32 games x 2 lambdas"
+      artifact: benchmarks/results/gambit_agreement.json
+    - id: solver_cross_agreement
+      spec: "damped and mirror land on the same QRE to 1e-9 on 30 random games x 2 lambdas"
+      artifact: benchmarks/results/solver_cross_agreement.json
+    - id: implicit_chi_agreement
+      spec: "jacrev through qre_sigma equals chi_equilibrium to 1e-8 on 20 random games"
+      artifact: benchmarks/results/implicit_chi_agreement.json
+
+  statistical:
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/instruments/reciprocity.md   # implicit diff documented alongside the resolvent it shares
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: true    # granted 2026-08-08: zero objections; fixed-point, off-origin VJP, uniqueness and determinism probes all held
+    objections: []

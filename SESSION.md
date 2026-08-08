@@ -53,3 +53,12 @@
 - Red-team round: O-1/O-2 (stratified honesty) addressed with permanent per-level artifact metrics; O-4 floor param removed. Verification granted.
 
 **Next**: homotopy/branch + pygambit validation (solve.branch unit), mirror descent, implicit diff; then trajectory estimators (thermo.estimators); population engine + TNTP (Stage 2 bracket); Learn scaffold (Track D).
+
+---
+
+## 2026-08-08 (cont.) — solve.advanced closed
+
+- **Gate solve.advanced GREEN** (zero red-team objections — first clean pass): magnetic mirror descent (last-iterate; agrees with damped to 7e-13), implicit differentiation via custom VJP sharing the (I−SB) resolvent (Jacobian ≡ χ^eq to machine epsilon, verified at h≠0 too), pygambit cross-validation (1.2e-9 over 32 games × 2 λ, uniqueness confirmed via ρ(SB) < 1).
+- pygambit 16.7 installed (dev dep); label-based outcome API quirk documented in validate.py.
+
+**Next**: homotopy/branch tracer (solve.branch) OR open Stage 2 calibration bracket (population engine + TNTP, blotto plugin) and Stage 4 Learn scaffold. Priority per DOMAINS v1: the calibration bracket.

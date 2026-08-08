@@ -1,0 +1,17 @@
+{
+  "benchmark_id": "solver_cross_agreement",
+  "unit": "solve.advanced",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "max_profile_gap": 6.884770531456752e-13
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260808,
+  "config_ref": null,
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T19:24:37+00:00",
+  "notes": "Damped iteration and magnetic mirror descent land on the same QRE to 1e-9."
+}

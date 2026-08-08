@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T19:20:37+00:00",
+  "generated_at": "2026-08-08T19:31:24+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -42,6 +42,20 @@
         "adversarial": []
       },
       "checked_at": "2026-08-08T19:20:02+00:00"
+    },
+    "solve.advanced": {
+      "unit": "solve.advanced",
+      "claim": "Mirror descent, damped iteration and Gambit's homotopy agree on the QRE; implicit differentiation through the fixed point reproduces the Result 1 resolvent exactly",
+      "tier": "exact",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-08T19:31:24+00:00"
     }
   }
 }
