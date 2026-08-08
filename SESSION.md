@@ -95,3 +95,14 @@
 
 **Open gates**: none. Nine units green: stage0, finite.core*, finite.decompose.hodge*, finite.response.reciprocity, dynamics.exact, solve.advanced, domains.blotto, population.core, domains.congestion, science.phase_map (*covered under reciprocity gate paths).
 **Next**: Learn scaffold (Track D, wt/product), homotopy branch tracer, thermo trajectory estimators, Stage 3 empirics (DreamPrice port, ERCOT).
+
+---
+
+## 2026-08-08 (cont.) — solve.branch closed; session wrap
+
+- **Gate solve.branch GREEN** (red-team: zero correctness objections; two docstring precision nits fixed): pseudo-arclength tracer in tangent-logit coordinates, Newton corrector on the augmented system, fold flags via λ-direction reversal, ρ(SB) along the branch. Fixed-λ agreement 8.6e-13; Gambit agreement 5e-8 through the coordination pitchfork.
+- CI fully green on the phase-map push (ADR-0009 verified working in CI).
+
+**Eleven gates green**: stage0, finite.response.reciprocity, dynamics.exact, solve.advanced, domains.blotto, population.core, domains.congestion, science.phase_map, solve.branch (+ finite.core/hodge inside the reciprocity gate). Six findings logged (F-0001..F-0006), two genuinely new (F-0004 decoupling, F-0006 criticality escape).
+
+**Next session start here**: (1) Track D Learn scaffold in wt/product (Next.js; docs/theory 01-10 as single source — none written yet); (2) thermo trajectory estimators (Glauber simulate + KLD/TUR, PROGRAMME §3.5, test 10); (3) Stage 3: DreamPrice JAX port + domains.pricing; ERCOT loader + domains.electricity; (4) λ estimators (estimate/); (5) finer wedge-frontier sweep chasing F-0004/F-0006 connection; (6) performance benchmarks + Kronecker scaling check (open question 5).

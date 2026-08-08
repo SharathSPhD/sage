@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T20:29:21+00:00",
+  "generated_at": "2026-08-08T20:40:16+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -112,6 +112,20 @@
         "adversarial": []
       },
       "checked_at": "2026-08-08T20:29:21+00:00"
+    },
+    "solve.branch": {
+      "unit": "solve.branch",
+      "claim": "Pseudo-arclength continuation traces the principal QRE branch from the centroid through criticality: it passes through the fixed-lambda solver's points to 1e-7, matches Gambit's homotopy along the branch, and continues through rho = 1 (coordination pitchfork) without stalling",
+      "tier": "exact",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-08T20:40:16+00:00"
     }
   }
 }

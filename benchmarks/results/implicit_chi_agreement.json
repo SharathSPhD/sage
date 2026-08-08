@@ -13,6 +13,6 @@
   "seed": 20260808,
   "config_ref": null,
   "library_version": "0.1.0.dev0",
-  "timestamp": "2026-08-08T19:24:39+00:00",
+  "timestamp": "2026-08-08T20:36:03+00:00",
   "notes": "Custom-VJP Jacobian of the solved QRE equals the Result 1 resolvent (one operator, implemented once, reused)."
 }

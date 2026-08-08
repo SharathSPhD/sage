@@ -1,0 +1,18 @@
+{
+  "benchmark_id": "branch_agreement",
+  "unit": "solve.branch",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "max_profile_gap": 8.558709296835332e-13,
+    "n_games": 7.0
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260808,
+  "config_ref": null,
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T20:36:08+00:00",
+  "notes": "Arclength branch passes through the fixed-lambda QRE points to 1e-7 on 7 games x 2 probes (incl. harmonic anchors)."
+}

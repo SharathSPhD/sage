@@ -12,6 +12,6 @@
   "seed": 20260808,
   "config_ref": null,
   "library_version": "0.1.0.dev0",
-  "timestamp": "2026-08-08T19:24:37+00:00",
+  "timestamp": "2026-08-08T20:36:01+00:00",
   "notes": "Damped iteration and magnetic mirror descent land on the same QRE to 1e-9."
 }

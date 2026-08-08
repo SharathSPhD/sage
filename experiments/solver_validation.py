@@ -15,6 +15,7 @@ import jax
 import jax.numpy as jnp
 import strataq
 from strataq.core.solve.fixedpoint import logit_qre
+from strataq.core.solve.homotopy import logit_branch
 from strataq.core.solve.implicit import qre_sigma
 from strataq.core.solve.mirror import logit_qre_mirror
 from strataq.finite.games.library import matching_pennies, rock_paper_scissors
@@ -131,6 +132,34 @@ def run() -> int:
             timestamp=_now(),
             notes="Custom-VJP Jacobian of the solved QRE equals the Result 1 resolvent "
             "(one operator, implemented once, reused).",
+        )
+    )
+    # ---- branch_agreement ---------------------------------------------------
+    worst = 0.0
+    for game in [matching_pennies(), rock_paper_scissors(), *_random_games(5, (3, 3))]:
+        branch = logit_branch(game, 2.0, n_points=300)
+        for probe in (0.7, 1.5):
+            idx = int(jnp.argmin(jnp.abs(branch.lambdas - probe)))
+            lam_at = float(branch.lambdas[idx])
+            direct = logit_qre(game, lam_at, tol=1e-13, max_iter=200_000)
+            worst = max(
+                worst,
+                float(jnp.max(jnp.abs(branch.sigmas[idx] - jnp.concatenate(direct.sigma)))),
+            )
+    passed = worst < 1e-7
+    failures += not passed
+    _write(
+        BenchmarkResult(
+            benchmark_id="branch_agreement",
+            unit="solve.branch",
+            kind="correctness",
+            passed=passed,
+            metrics={"max_profile_gap": worst, "n_games": 7.0},
+            seed=SEED,
+            library_version=strataq.__version__,
+            timestamp=_now(),
+            notes="Arclength branch passes through the fixed-lambda QRE points to 1e-7 "
+            "on 7 games x 2 probes (incl. harmonic anchors).",
         )
     )
     return failures

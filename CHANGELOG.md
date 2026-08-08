@@ -6,6 +6,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 ## [Unreleased]
 
 ### Added
+- Pseudo-arclength branch tracer (unit: solve.branch): Euler predictor + Newton corrector on the augmented system in tangent-logit coordinates, fold detection via lambda-direction reversal, rho(SB) recorded along the branch; agreement with fixed-lambda solver 1e-8 and Gambit 1e-7.
 - The alpha-lambda phase map (unit: science.phase_map): 9x11 median surface of rho(SB), R, EPR + supercritical fraction over seeded families; SVG on the dashboard. F-0006: criticality escape on potential games (rho non-monotone in lambda); supercritical wedge from alpha ~ 0.4.
 - Engine 2 + congestion plugin (units: population.core, domains.congestion): routing population games, Fisk SUE via damped Newton on the convex Beckmann-entropy program, DF-symmetry potentiality test, toll susceptibility with FD oracle check; TNTP loader (Sioux Falls, cached fetch), k-shortest route sets, BPR oracle. Calibration on real data: R = 5.7e-17, DF defect 0, KKT 7e-15. Boundary rule refined (ADR-0008): plugins may import their own declared engine.
 - Blotto domain plugin (unit: domains.blotto) — the first DomainPlugin through the contract: contest oracle, allocation-grid builder, budgets as ConjugateFieldSpec, synthetic-only (loader None). alpha > 0.6 and R > 0.1 on symmetric budget-3 Blotto; positive dissipation on asymmetric instances; exact zero on the degenerate constant-payoff instance.

@@ -1,0 +1,28 @@
+unit: solve.branch
+claim: "Pseudo-arclength continuation traces the principal QRE branch from the centroid through criticality: it passes through the fixed-lambda solver's points to 1e-7, matches Gambit's homotopy along the branch, and continues through rho = 1 (coordination pitchfork) without stalling"
+tier: exact
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.85   # fold-retry branches exercised only on multi-branch games
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/core/solve/homotopy.py
+      - packages/strataq/tests/finite/test_homotopy.py
+  domain:
+    - id: branch_agreement
+      spec: "branch passes through fixed-lambda QRE points to 1e-7 on 7 games x 2 probes"
+      artifact: benchmarks/results/branch_agreement.json
+  statistical:
+    seeds_fixed_and_recorded: true
+  documentation:
+    files:
+      - docs/instruments/reciprocity.md
+    claims_ledger_updated: true
+    changelog_entry: true
+  adversarial:
+    red_team_signoff: true    # granted 2026-08-08: continuity through the pitchfork, fold flags, and Gambit agreement all verified; two doc nits fixed
+    objections: []
