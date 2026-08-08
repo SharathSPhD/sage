@@ -1,0 +1,14 @@
+# Render blueprint: the strataq API (CPU-only JAX). Deploy once external
+# provisioning is approved; the app proxies here for all heavy compute.
+services:
+  - type: web
+    name: sage-api
+    env: docker
+    dockerfilePath: services/api/Dockerfile
+    plan: starter
+    healthCheckPath: /v1/health
+    envVars:
+      - key: SAGE_API_MAX_ACTIONS_PER_PLAYER
+        value: "12"
+      - key: SAGE_API_MAX_PROFILE_STATES
+        value: "400"

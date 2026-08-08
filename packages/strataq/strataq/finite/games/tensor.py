@@ -27,6 +27,8 @@ class DenseTensorGame(eqx.Module):
 
     def __init__(self, payoffs: Sequence[Array]) -> None:
         arrays = tuple(jnp.asarray(u, dtype=jnp.float64) for u in payoffs)
+        if not arrays:
+            raise ValueError("a game needs at least one player's payoff tensor")
         shape = arrays[0].shape
         if len(shape) != len(arrays):
             raise ValueError(

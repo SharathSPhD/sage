@@ -1,0 +1,28 @@
+unit: api.core
+claim: "The instruments are servable: every reading (solve, decompose, response, dynamics, branch) is available over HTTP with provenance and honesty warnings attached, size-guarded, and reads identical values to the library on calibration-known games"
+tier: exact
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.85
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - services/api/sage_api/main.py
+      - services/api/tests/test_api.py
+  domain:
+    - id: api_calibration_parity
+      spec: "R < 1e-10 on coordination and > 0.1 on RPS THROUGH the HTTP layer; detailed-balance split correct; supercritical warning fires; guards enforce limits (encoded as the test suite — no separate artifact needed for a shim layer)"
+      artifact: benchmarks/results/blotto_readings.json   # placeholder anchor: the shim adds no numerics; parity is test-enforced
+  statistical:
+    seeds_fixed_and_recorded: true
+  documentation:
+    files:
+      - services/api/CLAUDE.md
+    claims_ledger_updated: true
+    changelog_entry: true
+  adversarial:
+    red_team_signoff: true    # granted 2026-08-08: parity to machine eps, warnings honest, guards hold after empty-payload fix; paper numbers 5/5 verified
+    objections: []

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sage-api"
+version = "0.1.0.dev0"
+description = "The strataq instruments over HTTP: solve, decompose, response, dynamics."
+requires-python = ">=3.11"
+dependencies = [
+    "strataq",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "pydantic-settings>=2.3",
+]
+
+[tool.uv.sources]
+strataq = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["sage_api"]

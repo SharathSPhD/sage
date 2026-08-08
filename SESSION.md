@@ -106,3 +106,14 @@
 **Eleven gates green**: stage0, finite.response.reciprocity, dynamics.exact, solve.advanced, domains.blotto, population.core, domains.congestion, science.phase_map, solve.branch (+ finite.core/hodge inside the reciprocity gate). Six findings logged (F-0001..F-0006), two genuinely new (F-0004 decoupling, F-0006 criticality escape).
 
 **Next session start here**: (1) Track D Learn scaffold in wt/product (Next.js; docs/theory 01-10 as single source — none written yet); (2) thermo trajectory estimators (Glauber simulate + KLD/TUR, PROGRAMME §3.5, test 10); (3) Stage 3: DreamPrice JAX port + domains.pricing; ERCOT loader + domains.electricity; (4) λ estimators (estimate/); (5) finer wedge-frontier sweep chasing F-0004/F-0006 connection; (6) performance benchmarks + Kronecker scaling check (open question 5).
+
+---
+
+## 2026-08-08 (cont.) — discovery chase + artifact suite (CINS-parity leg)
+
+- **science.decoupling GREEN** (two-round red-team incl. epistemic disclosures): **F-0007** — H2 confirmed (ℛ denominator-driven at high α, ρ = 0.993), H1 REFUTED (numerator also decouples, ρ = −0.37, CI excl. 0). The response and dissipation layers are distinct observables (interpretation flagged as argued-not-proved). Refuted repair recorded plainly; gate discloses its post-hoc regression-contract nature on its face.
+- **Paper p1_instruments**: 9-page manuscript (papers/p1_instruments/p1_main.pdf) — instruments + tiers, calibration table, three findings incl. the refutation, software/reproducibility, honest positioning; figures regenerated from benchmark JSONs (make_figures.py); results_digest.md maps every number to its artifact. Red-team spot-checked 5/5 numbers, abstract bounds, novelty claims, and no-empirical-claims rule: all held.
+- **api.core GREEN**: FastAPI surface (solve/decompose/response/dynamics/branch) with provenance + honesty warnings, size/NaN guards; red-team found and we fixed an empty-payload 500 (now 422 from the library boundary); parity to machine eps through HTTP; Dockerfile + render.yaml ready (deployment awaits provisioning approval).
+- CINS reference reviewed (github.com/SharathSPhD/CINS): paper+digest / app / site / gates pattern matched and extended (adversarial record, claim tiers, findings log are beyond-CINS elements).
+
+**Open gates**: none — twelve green. **Next**: Next.js app (Learn 01–10 authored in docs/theory + Lab against the API), thermo trajectory estimators, Stage 3 (DreamPrice port, ERCOT), deployment provisioning (ask PI), p3_noneq draft seeded from F-0004/F-0006/F-0007.

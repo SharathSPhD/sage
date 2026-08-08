@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T21:34:10+00:00",
+  "generated_at": "2026-08-08T21:48:49+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -140,6 +140,20 @@
         "adversarial": []
       },
       "checked_at": "2026-08-08T21:34:10+00:00"
+    },
+    "api.core": {
+      "unit": "api.core",
+      "claim": "The instruments are servable: every reading (solve, decompose, response, dynamics, branch) is available over HTTP with provenance and honesty warnings attached, size-guarded, and reads identical values to the library on calibration-known games",
+      "tier": "exact",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-08T21:48:49+00:00"
     }
   }
 }

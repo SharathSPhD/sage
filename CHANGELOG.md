@@ -6,6 +6,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 ## [Unreleased]
 
 ### Added
+- API (unit: api.core, services/api): FastAPI surface over the instruments — solve/decompose/response/dynamics/branch with provenance + honesty warnings (near-criticality, supercritical direction-only R), size guards, calibration-parity tests through HTTP; Dockerfile + render.yaml (deployment awaits provisioning approval). api.core referenced in memory/claims.md scope note.
 - Paper p1_instruments (papers/p1_instruments): 9-page manuscript with all measured calibration numbers, the three findings (lambda-scaling of R, criticality escape + wedge, response/dissipation decoupling incl. the refuted repair), results digest mapping every number to its artifact, and figures regenerated from benchmark JSONs.
 - Decoupling mechanism experiment (unit: science.decoupling, F-0007): at alpha=0.95 R is denominator-driven (rho=0.993) AND the numerator decouples from EPR (rho=-0.37) — the response and dissipation layers are structurally distinct observables; corrected-meter hypothesis refuted and recorded plainly.
 - Pseudo-arclength branch tracer (unit: solve.branch): Euler predictor + Newton corrector on the augmented system in tangent-logit coordinates, fold detection via lambda-direction reversal, rho(SB) recorded along the branch; agreement with fixed-lambda solver 1e-8 and Gambit 1e-7.

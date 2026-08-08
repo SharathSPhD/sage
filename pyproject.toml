@@ -12,6 +12,7 @@ members = [
     "packages/strataq",
     "packages/strataq-client",
     "packages/strataq-bench",
+    "services/api",
 ]
 
 [dependency-groups]
@@ -29,6 +30,7 @@ dev = [
     "types-pyyaml>=6.0.12.20260724",
     "pygambit>=16.7.0",
     "matplotlib>=3.11.1",
+    "httpx>=0.28.1",
 ]
 
 [tool.ruff]
@@ -50,5 +52,5 @@ ignore = ["RUF001", "RUF002", "RUF003"]
 strict = true
 
 [tool.pytest.ini_options]
-testpaths = ["packages/strataq/tests", "packages/strataq-client/tests", "packages/strataq-bench/tests", "gates/tests", ".claude/hooks/tests"]
+testpaths = ["packages/strataq/tests", "packages/strataq-client/tests", "packages/strataq-bench/tests", "services/api/tests", "gates/tests", ".claude/hooks/tests"]
 addopts = "-q"

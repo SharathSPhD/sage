@@ -139,5 +139,7 @@ class TestMechanics:
     def test_bad_shapes_raise(self):
         with pytest.raises(ValueError):
             DenseTensorGame((jnp.ones((2, 2)), jnp.ones((2, 3))))
+        with pytest.raises(ValueError, match="at least one player"):
+            DenseTensorGame(())
         with pytest.raises(ValueError):
             DenseTensorGame((jnp.ones((2, 2, 2)), jnp.ones((2, 2, 2))))
