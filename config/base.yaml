@@ -1,0 +1,42 @@
+# Global invariants. Every experiment composes on top of this; no literal
+# tolerance, seed, grid size or λ range may appear in library code — it comes
+# from here (or a group override) through a typed schema (strataq.core.config).
+
+defaults:
+  - _self_
+
+numerics:
+  jax_enable_x64: true          # float32 is not acceptable near criticality
+  dtype: float64
+
+seeds:
+  # Seed policy: every stochastic call site takes an explicit jax PRNG key
+  # derived by fold_in from this root; resolved configs record the root.
+  root: 20260808
+  policy: explicit-key-threading
+
+tolerances:
+  # The tolerance ladder. Exact identities test at `identity`; solver
+  # convergence at `solve`; finite-difference agreement at `fd`; oracle
+  # cross-checks at `oracle`.
+  identity: 1.0e-12
+  decompose: 1.0e-10
+  oracle: 1.0e-8
+  fd: 1.0e-6
+  solve: 1.0e-10
+
+lambda_conventions:
+  # Payoffs are rescaled to unit range internally; the scale folds into λ.
+  # Both `lam` (user-facing) and `lambda_normalised = lam * payoff_range`
+  # are always reported (PROGRAMME v3 §8.5).
+  normalise_payoffs: true
+  report_both: true
+
+criticality:
+  # Below this distance-to-criticality (1 - rho(SB)), warn rather than
+  # silently returning a huge chi_eq.
+  warn_below: 1.0e-3
+
+solver:
+  max_iter: 10000
+  damping: 0.5

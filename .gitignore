@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+.python-version
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.hypothesis/
+.coverage
+coverage.xml
+htmlcov/
+
+# uv — uv.lock is tracked deliberately
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+.vercel/
+
+# Hydra / experiment outputs (resolved configs live with results, which are tracked selectively)
+outputs/
+multirun/
+experiments/**/outputs/
+
+# Data (never commit raw datasets; loaders fetch them)
+data/raw/
+*.parquet
+!benchmarks/results/**
+*.npz
+
+# OS / editor junk
+.DS_Store
+._*
+*.swp
+.idea/
+.vscode/
+
+# Secrets — belt and braces; the hook is the real guard
+.env
+.env.*
+*.pem
+*.key
+site/

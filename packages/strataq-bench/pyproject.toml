@@ -1,0 +1,19 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "strataq-bench"
+version = "0.1.0.dev0"
+description = "Benchmark harness and statistical validation for strataq: correctness, performance, and statistical gates."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.11"
+authors = [{ name = "Sharath Sathish" }]
+dependencies = ["pydantic>=2.7", "numpy>=1.26"]
+
+[project.urls]
+Repository = "https://github.com/SharathSPhD/sage"
+
+[tool.hatch.build.targets.wheel]
+packages = ["strataq_bench"]

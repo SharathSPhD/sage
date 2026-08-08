@@ -1,0 +1,64 @@
+unit: stage0
+claim: "The SAGE foundation exists and enforces its own rules: workspace builds, contract protocols are real and tested, hooks fire, gates run, memory is seeded, CI is green, dashboard renders"
+tier: exact   # engineering fact, directly checkable
+
+gates:
+  code:
+    tests_pass: true
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/core/protocols.py
+      - packages/strataq/strataq/core/config.py
+      - packages/strataq-bench/strataq_bench/result.py
+      - packages/strataq/tests/test_protocols.py
+      - packages/strataq/tests/test_import_guard.py
+      - packages/strataq/tests/test_config_schema.py
+      - packages/strataq-bench/tests/test_result_schema.py
+      - .claude/hooks/tests/test_hooks.py
+
+  domain: []   # scaffolding unit: no scientific claim, no domain gates
+
+  statistical: {}
+
+  documentation:
+    files:
+      - README.md
+      - CLAUDE.md
+      - research/README.md
+      - memory/claims.md
+      - memory/decisions.md
+      - memory/glossary.md
+      - docs/index.md
+      - docs/architecture/patterns.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: true    # granted 2026-08-08 on verification pass: O-1..O-3 fixes verified, O-4/O-6 accepted+documented, no new blocking defects
+    objections:
+      - id: O-1
+        text: "import-sage guard bypassed by dynamic imports (__import__, import_module)"
+        disposition: addressed
+        where: ".claude/hooks/check_import_sage.py — pattern extended; tests added (test_blocks_dynamic_import_forms); exec-string smuggling documented as out of scope with the no-sage-module test as backstop"
+      - id: O-2
+        text: "SAGE_ADR_REF is a blanket override for boundary and anti-gaming guards"
+        disposition: addressed
+        where: "check_boundary.py / check_tests_and_gates.py — adr_ref_valid(): the referenced ADR must exist in memory/decisions.md; bogus refs ignored (tests added)"
+      - id: O-3
+        text: "gate regression check has no baseline before the first commit"
+        disposition: addressed
+        where: "gates/status.json committed in the initial commit as the baseline; CI gates.yml checks regression from then on"
+      - id: O-4
+        text: "git-CLI commits can bypass Claude Code hooks; CI is detection-after-the-fact"
+        disposition: accepted
+        where: "gates/README.md — three-layer model stated once; branch protection on main is the non-skippable backstop; pre-commit installed at setup"
+      - id: O-5
+        text: "hook tests did not cover dynamic-import variants"
+        disposition: addressed
+        where: "test_hooks.py::test_blocks_dynamic_import_forms"
+      - id: O-6
+        text: "diff-based guards unguarded on the very first commit"
+        disposition: accepted
+        where: "gates/README.md — initial commit itself is red-team-reviewed (this review); baseline exists from commit one onward"

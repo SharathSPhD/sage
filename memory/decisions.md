@@ -1,0 +1,52 @@
+# Decisions — ADRs
+
+Format per entry: Context · Options · Decision · Consequences · Date. Includes every divergence from the research docs. Referenced by hooks via `SAGE_ADR_REF=<id>`.
+
+---
+
+## ADR-0001 — Repo/package naming: repo `sage`, package `strataq`
+
+- **Context**: SageMath owns the top-level `sage` import; publishing or importing `sage` is unusable.
+- **Options**: (a) rename everything; (b) repo `sage` + package `strataq`.
+- **Decision**: (b), per the master build prompt. `import strataq` always; never publish `sage` to PyPI. Enforced by hook + CI + test (`test_import_guard.py`).
+- **Consequences**: A permanent naming split between repo and package; every doc states it once.
+- **Date**: 2026-08-08
+
+## ADR-0002 — Fresh monorepo at `~/projects/sage`, not in `~/projects/QRE`
+
+- **Context**: The build prompt assumes "the sage repo"; the session started in `~/projects/QRE`, which held only the research docs. GitHub `SharathSPhD/sage` existed, empty.
+- **Options**: (a) git-init QRE in place; (b) fresh `~/projects/sage` wired to the existing remote.
+- **Decision**: (b), confirmed by the PI (2026-08-08). QRE stays untouched as the source archive; docs copied into `research/` (with `research1.md` as a plain-text conversion of the RTF).
+- **Consequences**: Future sessions should be started from `~/projects/sage`.
+- **Date**: 2026-08-08
+
+## ADR-0003 — Python version policy
+
+- **Context**: `requires-python >= 3.11`; only 3.12 installed locally.
+- **Decision**: Local dev pinned to uv-managed 3.12 (PI-confirmed); CI matrix 3.11/3.12/3.13 is authoritative for compatibility. mypy runs under the active interpreter (no `python_version` pin — 3.11 pinning breaks numpy's 3.12-syntax stubs; the CI matrix covers 3.11 semantics).
+- **Date**: 2026-08-08
+
+## ADR-0004 — Engine 3 (`bayesian/`) is deferred, in writing
+
+- **Context**: Auctions require type spaces (DOMAINS v1 §3): the finite-strategic-form machinery (S, B, resolvent, Hodge) does not apply as written. High risk of premature core sprawl.
+- **Decision**: `bayesian/` is not started until Tier 0/1 domains have produced results and a superseding ADR exists. The directory exists as a marker only.
+- **Consequences**: Auctions and platforms are out of scope for Stages 0–4. Anyone proposing a domain that needs types is proposing an engine.
+- **Date**: 2026-08-08
+
+## ADR-0005 — Package layout: `packages/strataq/strataq/…`
+
+- **Context**: The master prompt's schematic layout shows modules directly under `packages/strataq/`. Python packaging convention puts the import package inside the distribution directory.
+- **Decision**: Conventional layout (`packages/strataq/strataq/core/…`) with hatchling `packages = ["strataq"]`. Divergence is cosmetic; module map (core/finite/population/bayesian/thermo/domains/data) is exactly as specified.
+- **Date**: 2026-08-08
+
+## ADR-0006 — Dominick's licence handling
+
+- **Context**: `qbz506/dreamprice-dominicks-cso` and all derived artefacts are CC-BY-NC-4.0; library is Apache-2.0.
+- **Decision**: Licence rides with the data, enforced at the loader and in every dataset card. No Dominick's-derived bytes in the Apache-licensed package or its tests; loaders fetch at runtime. `research/` docs record the intent; `domains/CLAUDE.md` carries the rule.
+- **Date**: 2026-08-08
+
+## ADR-0007 — N3 tier upgrade (conjectured → derived)
+
+- **Context**: Prior-art sweep (2026-08-08, theory-verifier, `literature-nearest-live-work.md`): the similarity argument is sound and unpublished for logit; Hommes–Ochea 2012 supports the contrapositive.
+- **Decision**: N3 recorded as `derived` in `claims.md`, with numerical verification explicitly outstanding (α-sweep). A cycle at α = 0 reverts the tier hard and is a headline finding.
+- **Date**: 2026-08-08

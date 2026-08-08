@@ -1,0 +1,5 @@
+# Damped fixed-point iteration — the reference solver.
+name: damped
+damping: 0.5
+tol: ${tolerances.solve}
+max_iter: ${solver.max_iter}

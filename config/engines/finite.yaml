@@ -1,0 +1,7 @@
+# Engine 1 — finite N-player strategic form.
+name: finite
+# Switch point between dense tangent-space eigendecomposition (near
+# criticality, where conditioning matters) and matrix-free GMRES (away from
+# it, where speed matters). See the TRIZ resolution 'speed vs conditioning'.
+matrix_free_above_actions: 2500
+dense_near_criticality_below: 1.0e-2

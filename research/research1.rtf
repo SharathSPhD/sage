@@ -1,0 +1,1921 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2870
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\froman\fcharset0 Times-Bold;\f2\froman\fcharset0 Times-Italic;
+\f3\fnil\fcharset0 AppleSymbols;\f4\fswiss\fcharset0 Helvetica;\f5\froman\fcharset0 TimesNewRomanPSMT;
+\f6\fmodern\fcharset0 Courier;\f7\fnil\fcharset0 Menlo-Regular;\f8\froman\fcharset0 Times-BoldItalic;
+\f9\fnil\fcharset128 HiraMinProN-W3;\f10\fnil\fcharset0 STIXTwoMath-Regular;\f11\fnil\fcharset0 HelveticaNeue;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red109\green109\blue109;\red255\green255\blue255;
+\red0\green0\blue0;\red179\green179\blue179;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c50196\c50196\c50196;\cssrgb\c100000\c100000\c100000;
+\cssrgb\c0\c0\c0\c84706;\cssrgb\c75294\c75294\c75294;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat0\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat0\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid101\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid2}
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat0\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid201\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid3}
+{\list\listtemplateid4\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat0\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid301\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid4}
+{\list\listtemplateid5\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid401\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid5}
+{\list\listtemplateid6\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat0\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid501\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid6}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}{\listoverride\listid4\listoverridecount0\ls4}{\listoverride\listid5\listoverridecount0\ls5}{\listoverride\listid6\listoverridecount0\ls6}}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 \
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 If you already know 
+\f1\b Nash equilibrium, mixed strategies, logit choice models, and competitive pricing
+\f0\b0 , the cleanest way to understand 
+\f1\b Quantal Response Equilibrium (QRE)
+\f0\b0  is:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b \cf0 QRE replaces the assumption of perfectly optimal best responses with probabilistic responses that become increasingly concentrated on higher-payoff actions as rationality increases.
+\f0\b0 \
+So instead of asking 
+\f2\i \'93Which price is my exact best response?\'94
+\f0\i0 , QRE asks:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f2\i \cf0 \'93Given my beliefs about competitors' prices, what probability do I assign to each price, considering that higher-payoff prices are more likely to be chosen?\'94
+\f0\i0 \
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f1\b\fs28 \cf0 1. Start from ordinary Nash\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Suppose two petrol stations choose prices pi and pj .\
+Your expected profit from choosing pi is\
+\pard\pardeftab720\partightenfactor0
+\cf0 Ui (pi ,pj )\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 and under Nash, player i chooses\
+\pard\pardeftab720\partightenfactor0
+\cf0 pi
+\f3 \uc0\u8727 
+\f0  
+\f3 \uc0\u8712 
+\f0 argpi max Ui (pi ,pj
+\f3 \uc0\u8727 
+\f0  )\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 The crucial assumption is 
+\f1\b deterministic best response
+\f0\b0 :\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(pi
+\f3 \uc0\u8727 
+\f0  )=1\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 and\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(pi 
+\f4 \uc0\u57376 
+\f0 =pi
+\f3 \uc0\u8727 
+\f0  )=0.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 This is appropriate if agents are perfectly rational and there are no decision errors.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa298\partightenfactor0
+
+\f1\b\fs36 \cf0 \strokec2 2. QRE makes the response probabilistic\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 QRE says that even if one price generates a higher expected profit, other prices can still be selected.\
+The canonical 
+\f1\b logit QRE
+\f0\b0  is\
+\pard\pardeftab720\partightenfactor0
+\cf0 Pi (p)=\uc0\u8721 p
+\f5 \uc0\u8242 
+\f0  exp(\uc0\u955 EUi (p
+\f5 \uc0\u8242 
+\f0 ))exp(\uc0\u955 EUi (p))\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 where:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls1\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 EUi (p) = expected payoff from price p\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 \uc0\u955  = 
+\f1\b rationality / precision parameter
+\f0\b0 \
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Pi (p) = probability of choosing price p\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 This is essentially a 
+\f1\b softmax best response
+\f0\b0 .\
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f1\b\fs28 \cf0 The key parameter is \uc0\u955 \
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 If\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u955 =0\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 then\
+\pard\pardeftab720\partightenfactor0
+\cf0 Pi (p)=
+\f3 \uc0\u8739 
+\f0 P
+\f3 \uc0\u8739 
+\f0 1\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 so every price is equally likely.\
+As\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u955 
+\f5 \uc0\u8594 
+\f0 \uc0\u8734 \
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 the distribution converges toward the ordinary best response:\
+\pard\pardeftab720\partightenfactor0
+\cf0 Pi (p
+\f3 \uc0\u8727 
+\f0 )
+\f5 \uc0\u8594 
+\f0 1.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 So you can think of QRE as creating a continuum:\
+\pard\pardeftab720\partightenfactor0
+\cf0 random\'a0behaviour
+\f3 \uc0\u10230 
+\f0 boundedly\'a0rational\'a0behaviour
+\f3 \uc0\u10230 
+\f0 perfect\'a0rationality\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 as \uc0\u955  increases.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 3. The subtle part: equilibrium\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 The interesting thing isn't the softmax itself.\
+The interesting thing is that 
+\f1\b everyone is responding probabilistically to everyone else's probabilistic behaviour
+\f0\b0 .\
+For two firms:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u963 1 (p)=\u8721 p
+\f5 \uc0\u8242 
+\f0  exp[\uc0\u955 1 EU1 (p
+\f5 \uc0\u8242 
+\f0 ,\uc0\u963 2 )]exp[\u955 1 EU1 (p,\u963 2 )]\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 and\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u963 2 (p)=\u8721 p
+\f5 \uc0\u8242 
+\f0  exp[\uc0\u955 2 EU2 (p
+\f5 \uc0\u8242 
+\f0 ,\uc0\u963 1 )]exp[\u955 2 EU2 (p,\u963 1 )] .\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 A 
+\f1\b QRE
+\f0\b0  is a fixed point:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u963 1 =BR1QRE (\u963 2 ) \u963 2 =BR2QRE (\u963 1 ).\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 That's the conceptual leap.\
+In Nash:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 "I know your strategy, so I choose my best response."\
+In QRE:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 "I know your 
+\f1\b probability distribution over strategies
+\f0\b0 , so I choose my own probability distribution according to a noisy/quantally rational response."\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 4. Why this is particularly interesting for pricing\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Imagine two petrol stations with possible prices:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \{1.70,1.72,1.74,1.76,1.78\}.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Suppose, given Station B's price distribution, Station A's expected profits are:\
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1575\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f1\b \cf0 Price\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf0 Expected profit\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1575\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f0\b0 \cf0 \'a31.70\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 102\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1575\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 \'a31.72\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 108\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1575\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 \'a31.74\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 115\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1575\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 \'a31.76\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 113\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1575\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 \'a31.78\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 104\cell \lastrow\row
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Nash says:\
+\pard\pardeftab720\partightenfactor0
+\cf0 pA =1.74.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 QRE doesn't.\
+With, say,\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u955 =0.1,\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 you calculate\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(1.70)
+\f3 \uc0\u8733 
+\f0 e0.1(102) P(1.72)
+\f3 \uc0\u8733 
+\f0 e0.1(108)\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 etc.\
+After normalization, \'a31.74 has the highest probability, but \'a31.76 and even \'a31.72 still have meaningful probabilities.\
+That is often much closer to observed pricing behaviour.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 5. The really important distinction from ordinary mixed Nash\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 This is where QRE becomes more interesting to someone who already knows game theory.\
+A 
+\f1\b mixed-strategy Nash equilibrium
+\f0\b0  doesn't mean:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 "Players make random mistakes."\
+It means players are indifferent among the actions in the support.\
+For example, if\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(A)=0.6,P(B)=0.4\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 in a mixed Nash equilibrium, the supported strategies have equal expected payoff.\
+QRE doesn't require that.\
+You can have\
+\pard\pardeftab720\partightenfactor0
+\cf0 EU(A)=10\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 and\
+\pard\pardeftab720\partightenfactor0
+\cf0 EU(B)=8\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 yet still have\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(B)>0.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 The probability difference reflects 
+\f1\b payoff sensitivity
+\f0\b0 , rather than indifference.\
+That's why QRE is often described as a model of 
+\f1\b bounded rationality / stochastic choice
+\f0\b0 , rather than merely another equilibrium refinement.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 6. QRE gives you something Nash doesn't\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Suppose the payoff difference between two prices is tiny:\
+\pard\pardeftab720\partightenfactor0
+\cf0 EU(\'a31.74)=100 EU(\'a31.75)=99.8.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 A deterministic Nash model says:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 \'a31.74 wins. Choose it.\
+But empirically, it would be unreasonable to expect firms to behave as though a 20p-per-day difference is infinitely important.\
+QRE says:\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(\'a31.74)>P(\'a31.75)\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 but perhaps only slightly.\
+That's economically meaningful.\
+The 
+\f1\b magnitude of the payoff difference matters
+\f0\b0 .\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 7. Interpretation of \uc0\u955 \
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 This is where I would be careful with the term 
+\f2\i rationality
+\f0\i0 .\
+Mathematically, \uc0\u955  is a 
+\f1\b precision parameter
+\f0\b0 .\
+Consider two prices with expected profits:\
+\pard\pardeftab720\partightenfactor0
+\cf0 U1 =100,U2 =95.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Then\
+\pard\pardeftab720\partightenfactor0
+\cf0 P2 P1 =e\uc0\u955 (U1 \u8722 U2 )=e5\u955 .\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Therefore:\
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f1\b\fs28 \cf0 Low \uc0\u955 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\b0\fs24 \cf0 \uc0\u955 =0.1\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 gives\
+\pard\pardeftab720\partightenfactor0
+\cf0 P2 P1 =e0.5\uc0\u8776 1.65.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Only modest preference.\
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f1\b\fs28 \cf0 High \uc0\u955 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\b0\fs24 \cf0 \uc0\u955 =1\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 gives\
+\pard\pardeftab720\partightenfactor0
+\cf0 P2 P1 =e5\uc0\u8776 148.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Almost deterministic.\
+So \uc0\u955  controls 
+\f1\b how strongly payoff differences translate into choice probabilities
+\f0\b0 .\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 8. Connection to discrete choice\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Given your pricing background, this is probably the most useful mental model:\
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f1\b\fs28 \cf0 Logit demand\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 You may already have something like\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(j)=\uc0\u8721 k eVk eVj\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 where consumers choose products probabilistically according to utility.\
+QRE essentially applies the same mathematical machinery to 
+\f1\b strategic players
+\f0\b0 .\
+Instead of:\
+\pard\pardeftab720\partightenfactor0
+\cf0 Vj =consumer\'a0utility\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 you have:\
+\pard\pardeftab720\partightenfactor0
+\cf0 Vj =EUi (j,\uc0\u963 \u8722 i )\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 \'97the expected payoff to the strategic player.\
+So:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b \cf0 QRE is essentially a logit response model embedded inside a game.
+\f0\b0 \
+That is one of the easiest ways to conceptualize it if you're already comfortable with discrete-choice pricing models.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 9. And this produces an interesting feedback loop\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 For pricing, you get:\
+\pard\pardeftab720\partightenfactor0
+\cf0 Competitor\'a0price\'a0distribution
+\f5 \uc0\u8594 
+\f0 your\'a0expected\'a0profits
+\f5 \uc0\u8594 
+\f0 your\'a0price\'a0probabilities
+\f5 \uc0\u8594 
+\f0 competitor\'92s\'a0expected\'a0profits
+\f5 \uc0\u8594 
+\f0 their\'a0price\'a0probabilities\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 until the system reaches a fixed point.\
+For example:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u963 B 
+\f5 \uc0\u8594 
+\f0 EUA 
+\f5 \uc0\u8594 
+\f0 \uc0\u963 A 
+\f5 \uc0\u8594 
+\f0 EUB 
+\f5 \uc0\u8594 
+\f0 \uc0\u963 B .\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 At convergence, nobody has an incentive to change their 
+\f1\b choice distribution
+\f0\b0 , given the other firm's distribution.\
+That's QRE.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 10. QRE vs Nash in one picture\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 You can think of the best-response function changing from:\
+\pard\pardeftab720\partightenfactor0
+
+\f6\fs26 \cf0 \
+Nash\
+\
+probability\
+1 |             
+\f7 \uc0\u9608 
+\f6 \
+  |             
+\f7 \uc0\u9608 
+\f6 \
+  |             
+\f7 \uc0\u9608 
+\f6 \
+0 | 
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6 \
+    prices\
+\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\fs24 \cf0 to something like:\
+\pard\pardeftab720\partightenfactor0
+
+\f6\fs26 \cf0 \
+QRE\
+\
+probability\
+  |\
+  |             
+\f7 \uc0\u9608 
+\f6 \
+  |           
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6 \
+  |         
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6 \
+  |       
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6  
+\f7 \uc0\u9608 
+\f6 \
+  +--------------------\
+       prices\
+\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\fs24 \cf0 The best price still gets the largest probability, but nearby alternatives aren't eliminated.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 11. Why QRE can be useful in your pricing work\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 For something like 
+\f1\b petrol/gas-station pricing
+\f0\b0 , QRE gives you a particularly nice framework because firms may:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls2\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 observe competitor prices imperfectly;\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 have delayed information;\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 have heterogeneous pricing algorithms;\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 react imperfectly to small margin differences;\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 have operational constraints;\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 use heuristics;\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 anticipate competitor reactions imperfectly.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Rather than explicitly modelling every source of imperfection, QRE gives you a parsimonious behavioural parameter:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u955 .\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 You can then ask:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 What happens to equilibrium pricing as firms become more strategically precise?\
+For example:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u955 =0.1
+\f5 \uc0\u8594 
+\f0 \uc0\u955 =0.5
+\f5 \uc0\u8594 
+\f0 \uc0\u955 =1
+\f5 \uc0\u8594 
+\f0 \uc0\u955 =5\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 and observe how the equilibrium price distributions sharpen.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa298\partightenfactor0
+
+\f1\b\fs36 \cf0 \strokec2 12. One particularly important insight\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 QRE isn't simply:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b \cf0 "Nash equilibrium with randomness."
+\f0\b0 \
+The deeper idea is:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b \cf0 The equilibrium object itself is a probability distribution over actions, generated by strategically consistent stochastic responses.
+\f0\b0 \
+Nash asks:\
+\pard\pardeftab720\partightenfactor0
+\cf0 Which\'a0actions\'a0are\'a0optimal?\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 QRE asks:\
+\pard\pardeftab720\partightenfactor0
+\cf0 How\'a0does\'a0the\'a0probability\'a0of\'a0choosing\'a0an\'a0action\'a0depend\'a0on\'a0how\'a0optimal\'a0it\'a0is,\'a0when\'a0everyone\'a0behaves\'a0this\'a0way?\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 That makes QRE especially attractive when your empirical object is 
+\f1\b a distribution of prices
+\f0\b0 , rather than a single equilibrium price.\
+And that's probably the most useful way to think about it for a pricing model such as your 
+\f1\b ThermoQRE
+\f0\b0  work: instead of predicting 
+\f2\i "the equilibrium price is \'a31.76"
+\f0\i0 , the model can predict something like 
+\f2\i "\'a31.76 has a 37% probability, \'a31.75 has 28%, \'a31.77 has 21%,..."
+\f0\i0 , with the distribution emerging endogenously from strategic interaction.\
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+\
+\
+In reality you still have to choose one price...so what's the use of a probability...you them tend to increase your lambda and land on the same result as Nash...debate on this\
+\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Yes \'97 
+\f1\b that is a legitimate criticism of QRE
+\f0\b0 , and it gets at one of the most important conceptual issues with using QRE for real-world pricing.\
+Your argument is essentially:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f2\i \cf0 "The firm doesn't submit a probability distribution to the market. It has to submit one price. So why should I care about a QRE distribution? If I eventually need to select one price, why not just increase \uc0\u955  until QRE collapses onto the Nash best response?"
+\f0\i0 \
+I think that's a strong argument 
+\f1\b if QRE is being used as a prescriptive pricing algorithm
+\f0\b0 . But it is much weaker if QRE is being used as a 
+\f1\b positive behavioural model
+\f0\b0 .\
+There are really two different uses of QRE.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa298\partightenfactor0
+
+\f1\b\fs36 \cf0 \strokec2 1. Your criticism is exactly right for "what price should I charge?"\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Suppose QRE gives:\
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1722\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f1\b \cf0 Price\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf0 QRE probability\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1722\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f0\b0 \cf0 \'a31.72\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 8%\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1722\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 \'a31.73\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 15%\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1722\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 \'a31.74\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 27%\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1722\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 \'a31.75\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 31%\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1722\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 \'a31.76\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 14%\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1722\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 \'a31.77\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 5%\cell \lastrow\row
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 But tomorrow you must actually set:\
+\pard\pardeftab720\partightenfactor0
+\cf0 p
+\f3 \uc0\u8712 
+\f0 \{1.72,\'85,1.77\}.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 What do you do?\
+You could choose:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls3\ilvl0
+\f1\b \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 mode
+\f0\b0  
+\f5 \uc0\u8594 
+\f0  \'a31.75\
+\ls3\ilvl0
+\f1\b \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 expected price
+\f0\b0  
+\f5 \uc0\u8594 
+\f0  perhaps \'a31.745\
+\ls3\ilvl0
+\f1\b \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 randomly sample
+\f0\b0  
+\f5 \uc0\u8594 
+\f0  potentially any of them\
+\ls3\ilvl0
+\f1\b \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 maximize expected profit again
+\f0\b0  
+\f5 \uc0\u8594 
+\f0  back to best response\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 And that last option is the problem you identified.\
+If your objective is simply:\
+\pard\pardeftab720\partightenfactor0
+\cf0 pmax E[\uc0\u960 (p)]\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 then the QRE probabilities aren't necessarily adding anything to the decision rule.\
+You could simply calculate expected profit for every price and select:\
+\pard\pardeftab720\partightenfactor0
+\cf0 p
+\f3 \uc0\u8727 
+\f0 =argpmax E[\uc0\u960 (p)].\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 That's basically the Nash-style best response.\
+So 
+\f1\b QRE should not automatically be sold as a better pricing optimiser than Nash.
+\f0\b0 \
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 2. But there's a subtle mistake in saying "therefore QRE is useless"\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 The probability isn't necessarily a prescription for 
+\f1\b what you should do
+\f0\b0 .\
+It can instead describe 
+\f1\b how firms actually behave
+\f0\b0 .\
+That's a completely different question.\
+Imagine observing 10,000 daily prices from petrol stations.\
+You find:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 When \'a31.74 is estimated to be the profit-maximising price, firms choose it 61% of the time, \'a31.73 18%, \'a31.75 14%, and other prices 7%.\
+A Nash model predicts:\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(1.74)=1.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 That's empirically terrible.\
+QRE can say:\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(p)
+\f3 \uc0\u8733 
+\f0 e\uc0\u955 EU(p).\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Now the distribution itself is the 
+\f1\b object you are trying to explain
+\f0\b0 .\
+You're no longer saying:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 "The firm should randomise between these prices."\
+You're saying:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 "Given strategic incentives, these are the empirically plausible probabilities with which firms select different prices."\
+That's a much stronger use of QRE.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 3. Think of it as analogous to discrete-choice demand\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 This is probably the most useful analogy for your pricing background.\
+Suppose a consumer has utilities:\
+\pard\pardeftab720\partightenfactor0
+\cf0 UA =10.0 UB =9.8.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 You don't say:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 "The consumer has to buy one product, therefore the probability model is useless."\
+The consumer 
+\f1\b does
+\f0\b0  buy one product.\
+The probability model is useful because you're modelling the 
+\f1\b distribution of choices across repeated decisions / heterogeneous consumers / unobserved shocks
+\f0\b0 .\
+QRE is doing something analogous on the 
+\f1\b strategic supply side
+\f0\b0 .\
+The petrol station ultimately chooses one price.\
+But the model says that conditional on its information, incentives, noise, heterogeneity, bounded rationality, etc., the probability of selecting each feasible action is:\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(pi ).\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 The realised price is one draw from that behavioural process.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 4. But this exposes a deeper question: where does the randomness actually come from?\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 This is where I'd push QRE much harder than the standard textbook presentation.\
+If you tell me:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 "The firm chooses \'a31.74 with 40% probability and \'a31.75 with 35% probability."\
+I'd immediately ask:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b \cf0 Probability according to what?
+\f0\b0 \
+Is the firm literally randomising?\
+Usually, 
+\f1\b no
+\f0\b0 .\
+There may instead be:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls4\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 private information;\
+\ls4\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 unobserved demand shocks;\
+\ls4\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 manager-specific preferences;\
+\ls4\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 imperfect competitor-price observation;\
+\ls4\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 different forecasts;\
+\ls4\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 different operational constraints;\
+\ls4\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 algorithmic noise;\
+\ls4\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 different beliefs about elasticity;\
+\ls4\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 integer/price-grid constraints;\
+\ls4\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 adjustment costs;\
+\ls4\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 inertia;\
+\ls4\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 organisational behaviour.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 QRE compresses all of this into the stochastic response.\
+That's useful\'97but also potentially dangerous.\
+Because \uc0\u955  can become a 
+\f1\b garbage parameter absorbing everything you didn't model explicitly.
+\f0\b0 \
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 5. And this is where your "just increase \uc0\u955 " argument becomes powerful\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Suppose:\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(pi )=\uc0\u8721 j exp(\u955 EU(pj ))exp(\u955 EU(pi )) .\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 As:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u955 
+\f5 \uc0\u8594 
+\f0 \uc0\u8734 \
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 you get:\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(p
+\f3 \uc0\u8727 
+\f0 )
+\f5 \uc0\u8594 
+\f0 1.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 So yes:\
+\pard\pardeftab720\partightenfactor0
+\cf0 QRE\uc0\u955 
+\f5 \uc0\u8594 
+\f0 \uc0\u8734  Nash\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 in the appropriate sense.\
+Therefore, if your only criterion is 
+\f1\b profit maximisation under a known payoff model
+\f0\b0 , QRE doesn't magically dominate Nash.\
+It actually contains Nash as its limiting case.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 6. But there's an even more interesting problem\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Increasing \uc0\u955  isn't necessarily "becoming more rational."\
+That's an interpretation we often attach to the parameter.\
+Mathematically, you're saying:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 "Small payoff differences have a weak effect on choice."\
+versus\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 "Small payoff differences have a strong effect on choice."\
+Consider:\
+\pard\pardeftab720\partightenfactor0
+\cf0 EU(p1 )=100.0 EU(p2 )=99.9.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 At high \uc0\u955 , you effectively say:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 "A 10p difference makes the firm overwhelmingly choose p1 ."\
+But a real pricing organisation might have a much bigger source of uncertainty than 10p of expected profit.\
+So 
+\f1\b high \uc0\u955  isn't necessarily more realistic.
+\f0\b0 \
+It is only more consistent with the assumption that firms respond very precisely to payoff differences.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 7. There's also an important distinction between QRE and "randomising"\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 This is often misunderstood.\
+A QRE does 
+\f1\b not necessarily mean the manager wakes up every morning and flips a weighted coin.
+\f0\b0 \
+You can interpret the logit formulation as arising from a latent payoff:\
+\pard\pardeftab720\partightenfactor0
+\cf0 U~i (p)=EUi (p)+
+\f5 \uc0\u1013 
+\f0 ip\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 where 
+\f5 \uc0\u1013 
+\f0 ip represents unobserved payoff/decision noise.\
+The firm chooses:\
+\pard\pardeftab720\partightenfactor0
+\cf0 pi =argpmax [EUi (p)+
+\f5 \uc0\u1013 
+\f0 ip ].\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 If the 
+\f5 \uc0\u1013 
+\f0 's have the appropriate extreme-value distribution, you get the logit QRE probabilities.\
+Now the probability has a much more natural interpretation.\
+The firm 
+\f1\b still chooses one price
+\f0\b0 .\
+We\'97the modeller\'97don't observe the firm's complete latent decision environment.\
+Hence we predict a probability distribution.\
+That is much more defensible.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 8. Now let's turn your argument around\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 You said:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 "You then tend to increase \uc0\u955  and land on the same result as Nash."\
+I'd modify that slightly.\
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f1\b\fs28 \cf0 If you are doing optimisation:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\fs24 \cf0 Yes.
+\f0\b0 \
+You should probably not use QRE merely to generate a probability and then pick a price. Just solve the optimisation problem.\
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f1\b\fs28 \cf0 If you are doing prediction:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\fs24 \cf0 No.
+\f0\b0 \
+You should estimate \uc0\u955  from observed behaviour rather than arbitrarily increasing it.\
+For example:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u955 ^=arg\u955 max t\u8721  logP\u955  (pt 
+\f3 \uc0\u8739 
+\f0 competitor\'a0behaviourt ).\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Now \uc0\u955  is estimated from actual pricing decisions.\
+If the estimated \uc0\u955  is low, that's evidence of substantial stochasticity / imperfect response.\
+If it's very high, the data are telling you behaviour is close to best response.\
+That's an empirical question rather than a modelling preference.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 9. This gives QRE a very different role in a pricing system\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 I'd divide the approaches like this:\
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3791\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth1306\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth1999\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f1\b \cf0 Question\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf0 Nash\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf0 QRE\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3791\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth1306\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth1999\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f0\b0 \cf0 What is the theoretically optimal price?\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b \cf0 Excellent
+\f0\b0 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Not primary purpose\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3791\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth1306\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth1999\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Find equilibrium strategy\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b \cf0 Excellent
+\f0\b0 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Yes\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3791\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth1306\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth1999\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Predict one firm's price\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Can be brittle\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b \cf0 Potentially better
+\f0\b0 \cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3791\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth1306\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth1999\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Explain price dispersion\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Poor\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b \cf0 Good
+\f0\b0 \cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3791\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth1306\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth1999\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Model imperfect response\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Poor\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b \cf0 Good
+\f0\b0 \cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3791\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth1306\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth1999\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Estimate behavioural rationality\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 No\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b \cf0 Yes
+\f0\b0 \cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3791\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth1306\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth1999\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Forecast distribution of prices\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Poor\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b \cf0 Good
+\f0\b0 \cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3791\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth1306\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth1999\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Optimise tomorrow's price\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b \cf0 Excellent
+\f0\b0 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Not necessarily\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3791\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth1306\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth1999\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Capture heterogeneous behaviour\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Limited\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Potentially good\cell \lastrow\row
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 So I wouldn't claim:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b \cf0 QRE is better than Nash for pricing.
+\f0\b0 \
+I'd claim:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b \cf0 QRE answers a different question from Nash.
+\f0\b0 \
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 10. And there's a major issue for your ThermoQRE idea\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 This actually suggests a better architecture.\
+Don't make QRE the 
+\f1\b decision rule
+\f0\b0 .\
+Make it the 
+\f1\b strategic environment model
+\f0\b0 .\
+For example:\
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f1\b\fs28 \cf0 Layer 1 \'97 Strategic model\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Estimate:\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(pj 
+\f3 \uc0\u8739 
+\f0 state)\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 for competitors using QRE.\
+This gives you a 
+\f1\b probability distribution over competitor prices
+\f0\b0 .\
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f1\b\fs28 \cf0 Layer 2 \'97 Your optimisation\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Then calculate:\
+\pard\pardeftab720\partightenfactor0
+\cf0 E[\uc0\u960 i (pi )]=pj \u8721  P(pj )\u960 i (pi ,pj ).
+\f1\b\fs28 \
+\pard\pardeftab720\sa280\partightenfactor0
+\cf0 Layer 3 \'97 Choose your actual price\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Finally:\
+\pard\pardeftab720\partightenfactor0
+\cf0 pi
+\f3 \uc0\u8727 
+\f0  =argpi max E[\uc0\u960 i (pi )].\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Now QRE is doing something genuinely useful.\
+It isn't telling 
+\f1\b you
+\f0\b0  to randomise your price.\
+It is telling you:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b \cf0 "Don't assume your competitor will deterministically play their Nash price. Here's the distribution of competitor behaviour you should optimise against."
+\f0\b0 \
+That is a substantially stronger use case.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 11. And there's one more twist: QRE can change your best response even when 
+\f8\i you
+\f1\i0  don't randomise\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Suppose your competitor has:\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(pB )=
+\f9 \uc0\u9129 \u9128 \u9127 
+\f0  0.20.50.3 \'a31.70\'a31.75\'a31.80\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 You can calculate your expected profit for each of your own prices.\
+You might discover:\
+\pard\pardeftab720\partightenfactor0
+\cf0 EU(1.74)=\'a31,020 EU(1.75)=\'a31,018 EU(1.76)=\'a31,015.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 You still choose 
+\f1\b \'a31.74 deterministically
+\f0\b0 .\
+But your calculation is based on a 
+\f1\b stochastic model of the competitor
+\f0\b0 .\
+That's where QRE can matter without requiring you to randomise.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa298\partightenfactor0
+
+\f1\b\fs36 \cf0 \strokec2 So my verdict on your challenge\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 I'd actually 
+\f1\b agree with about 70% of your criticism
+\f0\b0 .\
+The weak argument for QRE is:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 "Real firms aren't perfectly rational, therefore give them probabilities."\
+That's not enough.\
+And:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 "We have to choose one price, so let's take the highest-probability QRE price."\
+is also not a particularly compelling decision theory.\
+But the stronger argument is:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b \cf0 Nash is a theory of strategic equilibrium under exact best responses. QRE is a behavioural model of how observed actions depart from those best responses.
+\f0\b0 \
+And in pricing, the really valuable thing may not be the probability that 
+\f1\b you
+\f0\b0  charge \'a31.75.\
+It may be the probability that 
+\f1\b your competitor
+\f0\b0  charges \'a31.74, \'a31.75, \'a31.76, etc.\'97because 
+\f1\b your optimal deterministic price can then be calculated against that distribution.
+\f0\b0 \
+That distinction turns QRE from 
+\f2\i "why would I randomise my price?"
+\f0\i0  into a much more defensible 
+\f1\b stochastic model of the competitive environment
+\f0\b0 .\
+And there is a genuinely interesting research question lurking here: 
+\f1\b whether a QRE-based stochastic competitor model actually produces better out-of-sample pricing predictions than Nash, mixed Nash, or a conventional demand/response model.
+\f0\b0  That's where I'd test QRE rather than arguing about it philosophically.\
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+\
+\
+Where does this leave demand forecasting/elasticity modelling which is the pricing world's linchpin...qre (and also nash) do they account for it implicitly (likely)...and isn't qre similar to max entropy...just different math\
+\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Yes \'97 and I think this is where the distinction becomes much more interesting. There are 
+\f1\b three layers
+\f0\b0  that are easy to conflate:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls5\ilvl0
+\f1\b \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Demand model / elasticity
+\f0\b0  \'97 what happens to quantity when prices change?\
+\ls5\ilvl0
+\f1\b \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	2	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Strategic model (Nash/QRE)
+\f0\b0  \'97 how do competitors account for each other's actions?\
+\ls5\ilvl0
+\f1\b \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	3	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Choice/noise model (QRE / entropy)
+\f0\b0  \'97 how precisely do they translate incentives into an action?\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 QRE does 
+\f1\b not replace demand forecasting
+\f0\b0 . In a serious pricing system, I'd put demand/elasticity underneath the game-theoretic layer.\
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f1\b\fs28 \cf0 1. Nash doesn't inherently contain demand elasticity\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Suppose your firm's profit is\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u960 i (pi ,pj )=(pi \u8722 ci )Qi (pi ,pj ).\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 The Nash equilibrium is defined by\
+\pard\pardeftab720\partightenfactor0
+\cf0 pi
+\f3 \uc0\u8727 
+\f0  
+\f3 \uc0\u8712 
+\f0 argpi max Epj [\uc0\u960 i (pi ,pj )].\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 But where did Qi come from?\
+That's your 
+\f1\b demand model
+\f0\b0 .\
+It might be:\
+\pard\pardeftab720\partightenfactor0
+\cf0 Qi =f(pi ,pj ,X)\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 where X includes seasonality, weather, location, promotions, competitor characteristics, etc.\
+So elasticity is absolutely central.\
+For example, with a simple demand curve\
+\pard\pardeftab720\partightenfactor0
+\cf0 Q(p)=Ap\uc0\u8722 
+\f5 \uc0\u1013 
+\f0 ,\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 the firm's optimal price depends directly on 
+\f5 \uc0\u1013 
+\f0 .\
+In the simplest monopoly case:\
+\pard\pardeftab720\partightenfactor0
+\cf0 pp\uc0\u8722 c =
+\f5 \uc0\u1013 
+\f0 1 .\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 So Nash isn't somehow 
+\f2\i implicitly discovering
+\f0\i0  elasticity. 
+\f1\b You supply the payoff function, and elasticity is embedded in that payoff function.
+\f0\b0 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+\
+\
+Ed = %\uc0\u916 P%\u916 Qd\
+\pard\pardeftab720\partightenfactor0
+
+\f10 \cf0 T\
+R\
+=\
+P\
+\'d7\
+Q\
+\pard\pardeftab720\partightenfactor0
+
+\fs18 \cf0 d\
+\pard\pardeftab720\partightenfactor0
+
+\fs24 \cf0 =\
+50\
+\'d7\
+50\
+=\
+2\
+,\
+500\
+\pard\pardeftab720\partightenfactor0
+
+\f0 \cf0 TR = P \\times Q_d = 50 \\times 50 = 2,500\
+\pard\pardeftab720\partightenfactor0
+\cf0 TR=P\'d7Qd =50\'d750=2,500\
+\pard\pardeftab720\partightenfactor0
+
+\f10 \cf0 E\
+\pard\pardeftab720\partightenfactor0
+
+\fs18 \cf0 d\
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf0 E_d\
+\pard\pardeftab720\partightenfactor0
+\cf0 Ed\
+\pard\pardeftab720\partightenfactor0
+
+\f11\fs22 \cf0 \cb4 0.50
+\f0\fs24 \cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\f10 \cf0 E\
+\pard\pardeftab720\partightenfactor0
+
+\fs18 \cf0 d\
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf0 E_d\
+\pard\pardeftab720\partightenfactor0
+\cf0 Ed\
+\pard\pardeftab720\partightenfactor0
+
+\f10 \cf0 P\
+\pard\pardeftab720\partightenfactor0
+
+\f0 \cf0 P\
+\pard\pardeftab720\partightenfactor0
+\cf0 P\
+\pard\pardeftab720\partightenfactor0
+
+\f11\fs22 \cf0 \cb4 50.0
+\f0\fs24 \cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\f10 \cf0 P\
+\pard\pardeftab720\partightenfactor0
+
+\f0 \cf0 P\
+\pard\pardeftab720\partightenfactor0
+\cf0 P\
+\
+\pard\pardeftab720\partightenfactor0
+
+\fs16 \cf0 20\
+40\
+60\
+80\
+100\
+20\
+40\
+60\
+80\
+\pard\pardeftab720\partightenfactor0
+
+\f10\fs24 \cf0 Q\
+\pard\pardeftab720\partightenfactor0
+
+\f0 \cf0 Q\
+\pard\pardeftab720\partightenfactor0
+\cf0 Q\
+\pard\pardeftab720\partightenfactor0
+
+\f10 \cf0 P\
+\pard\pardeftab720\partightenfactor0
+
+\f0 \cf0 P\
+\pard\pardeftab720\partightenfactor0
+\cf0 P\
+\pard\pardeftab720\partightenfactor0
+
+\f1\b\fs26 \cf0 TR = 2,500\
+\pard\pardeftab720\qc\partightenfactor0
+
+\f11\b0\fs22 \cf5 \cb6 \strokec5 Give feedback\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 2. In a competitive pricing game, elasticity gets more interesting\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Suppose demand is\
+\pard\pardeftab720\partightenfactor0
+\cf0 Qi =Qi (pi ,pj ).\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Then the firm's first-order condition is something like\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u8706 pi \u8706 \u960 i =Qi +(pi \u8722 ci )\u8706 pi \u8706 Qi =0.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Now the relevant object isn't just own-price elasticity.\
+It's the 
+\f1\b strategic demand system
+\f0\b0 :\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls6\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 own-price elasticity\
+\ls6\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 cross-price elasticity\
+\ls6\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 competitor-price response\
+\ls6\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 substitution patterns\
+\ls6\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 market share\
+\ls6\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 potentially dynamic effects.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 So a Nash pricing model is really:\
+\pard\pardeftab720\partightenfactor0
+\cf0 Demand\'a0model+strategic\'a0interaction
+\f5 \uc0\u8594 
+\f0 equilibrium\'a0prices\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 That's how I'd conceptualise it.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 3. QRE sits one level above that\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Now replace the deterministic best response with:\
+\pard\pardeftab720\partightenfactor0
+\cf0 Pi (p)
+\f3 \uc0\u8733 
+\f0 exp\{\uc0\u955 EUi (p)\}.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 But notice what is inside EUi (p):\
+\pard\pardeftab720\partightenfactor0
+\cf0 EUi (p)=pj \uc0\u8721  Pj (pj )determined\'a0by\'a0demand\'a0model\u960 i (p,pj ) .\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 And:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u960 i =(p\u8722 c)Qi (p,pj ).\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 So the architecture is:\
+\pard\pardeftab720\partightenfactor0
+\cf0 Demand/elasticity
+\f5 \uc0\u8594 
+\f0 profit
+\f5 \uc0\u8594 
+\f0 strategic\'a0expected\'a0profit
+\f5 \uc0\u8594 
+\f0 QRE\'a0response\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Therefore your intuition is correct:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b \cf0 QRE does account for elasticity, but only because elasticity is already embedded in the payoff function.
+\f0\b0 \
+QRE itself doesn't estimate elasticity.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 4. This distinction is extremely important\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Imagine your demand model says:\
+\pard\pardeftab720\partightenfactor0
+
+\f5 \cf0 \uc0\u1013 
+\f0 =\uc0\u8722 4.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 QRE doesn't tell you that.\
+And if you change your demand model to:\
+\pard\pardeftab720\partightenfactor0
+
+\f5 \cf0 \uc0\u1013 
+\f0 =\uc0\u8722 1.5,\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 QRE doesn't magically adjust its understanding of consumers.\
+The resulting QRE changes because the 
+\f1\b payoffs change
+\f0\b0 .\
+That's quite different.\
+So I'd resist saying:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 "QRE implicitly models demand."\
+Better:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b \cf0 "QRE propagates the consequences of the demand model through strategic behaviour."
+\f0\b0 \
+That's a much more accurate statement.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 5. Now your Max Entropy point is really interesting\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\fs24 \cf0 Yes, there is a deep connection.
+\f0\b0 \
+In fact, the logit QRE response can be derived as the solution to an entropy-regularised optimisation problem.\
+Instead of:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u963 i max E\u963 i [Ui ]\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 you solve:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u963 i max [E\u963 i [Ui ]+\u955 1 H(\u963 i )]\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 where\
+\pard\pardeftab720\partightenfactor0
+\cf0 H(\uc0\u963 i )=\u8722 a\u8721  \u963 i (a)ln\u963 i (a)\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 is Shannon entropy.\
+The solution is:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u963 i (a)=\u8721 b exp(\u955 Ui (b))exp(\u955 Ui (a)) .\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 That's precisely the 
+\f1\b logit response
+\f0\b0 .\
+So your intuition is not merely an analogy.\
+There is an actual mathematical equivalence.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 6. But I wouldn't say "QRE is just Max Entropy"\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 I'd say:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b \cf0 Logit QRE can be interpreted as maximum-entropy / entropy-regularised choice subject to expected-payoff considerations.
+\f0\b0 \
+The distinction matters because the 
+\f1\b game
+\f0\b0  is what makes QRE different.\
+Maximum entropy by itself asks something like:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Given constraints/information, what probability distribution has maximum entropy?\
+QRE asks:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Given that other players are themselves strategically responding, what probability distribution is the entropy-regularised optimal response?\
+So:\
+\pard\pardeftab720\partightenfactor0
+\cf0 MaxEnt
+\f5 \uc0\u8594 
+\f0 probability\'a0distribution\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 whereas\
+\pard\pardeftab720\partightenfactor0
+\cf0 QRE=strategic\'a0game+stochastic/entropy-regularised\'a0response\cf3 \strokec3 \
+\
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 7. And there's a beautiful connection to statistical mechanics\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 This is where the mathematics becomes surprisingly elegant.\
+The QRE distribution:\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(a)=Ze\uc0\u955 U(a)\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 looks exactly like a 
+\f1\b Boltzmann/Gibbs distribution
+\f0\b0 :\
+\pard\pardeftab720\partightenfactor0
+\cf0 P(x)=Ze\uc0\u8722 \u946 E(x) .\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 The correspondence is approximately:\
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth2220\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth2814\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f1\b \cf0 Statistical mechanics\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf0 QRE\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth2220\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth2814\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f0\b0 \cf0 Energy E\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Negative payoff \uc0\u8722 U\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth2220\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth2814\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Inverse temperature \uc0\u946 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Rationality \uc0\u955 \cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth2220\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth2814\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Temperature T\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 1/\uc0\u955 \cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth2220\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth2814\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Boltzmann distribution\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Logit response\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth2220\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth2814\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Ground state\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Best response\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth2220\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth2814\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 High temperature\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Noisy/random behaviour\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth2220\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth2814\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Low temperature\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Near-deterministic behaviour\cell \lastrow\row
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 So your earlier intuition about QRE being related to maximum entropy is pointing toward a 
+\f1\b very real statistical-mechanical interpretation
+\f0\b0 .\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 8. But there's a critical pricing implication\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 And this comes back to your original objection.\
+If I give you:\
+\pard\pardeftab720\partightenfactor0
+\cf0 Q(p)=f(p)\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 and you have a good estimate of elasticity, 
+\f1\b the demand model is usually doing far more economic work than QRE.
+\f0\b0 \
+Suppose you're deciding whether to move petrol price from \'a31.70 to \'a31.72.\
+The critical question is:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 How many litres do I lose?\
+That's elasticity.\
+QRE doesn't answer that.\
+It answers:\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Given the resulting profit consequences and competitor behaviour, how precisely does the firm respond to those incentives?\
+So in the hierarchy:\
+\pard\pardeftab720\partightenfactor0
+\cf0 Demand>strategic\'a0interaction>choice\'a0stochasticity\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 for many practical pricing applications.\
+Not universally\'97but that's a good default.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 9. This also exposes a potential weakness in using QRE for your ThermoQRE model\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 If you build:\
+\pard\pardeftab720\partightenfactor0
+\cf0 QRE
+\f5 \uc0\u8594 
+\f0 price\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 without a serious demand model underneath it, you've essentially built a 
+\f1\b game-theoretic pricing toy model
+\f0\b0 .\
+But if you build:\
+\pard\pardeftab720\partightenfactor0
+\cf0 Demand\'a0forecasting
+\f5 \uc0\u8594 
+\f0 elasticity
+\f5 \uc0\u8594 
+\f0 profit\'a0surface
+\f5 \uc0\u8594 
+\f0 competitor\'a0response
+\f5 \uc0\u8594 
+\f0 QRE
+\f5 \uc0\u8594 
+\f0 optimal\'a0price\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 then you're doing something much more interesting.\
+And you can actually ask an empirical question:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b \cf0 Does modelling competitor behaviour as QRE improve pricing decisions beyond a conventional elasticity-based optimisation model?
+\f0\b0 \
+That's the experiment I'd run.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 10. There's an even deeper possibility\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 You could potentially make 
+\f1\b \uc0\u955  state-dependent
+\f0\b0 .\
+Instead of:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u955 =constant,\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 have:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u955 t =f(market\'a0volatility,competitor\'a0uncertainty,price\'a0dispersion,time\'a0of\'a0day,information\'a0quality,\'85).\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Then QRE becomes a model where 
+\f1\b strategic precision changes with the environment
+\f0\b0 .\
+For example, firms might behave approximately Nash-like when competitor prices are stable:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u955 
+\f5 \uc0\u8594 
+\f0 high\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 but become much more diffuse when the market is volatile:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \uc0\u955 
+\f5 \uc0\u8594 
+\f0 low.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Now you're getting something that standard Nash can't represent.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa298\partightenfactor0
+
+\f1\b\fs36 \cf0 \strokec2 The conceptual stack I'd use\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 If we strip away the terminology, I think the cleanest architecture is:\
+\pard\pardeftab720\partightenfactor0
+
+\f6\fs26 \cf0 \
+                 CUSTOMER BEHAVIOUR\
+                        
+\f7 \uc0\u9474 
+\f6 \
+                        
+\f7 \uc0\u9660 
+\f6 \
+              Demand / Elasticity\
+                        
+\f7 \uc0\u9474 
+\f6 \
+                        
+\f7 \uc0\u9660 
+\f6 \
+                  Profit surface\
+                        
+\f7 \uc0\u9474 
+\f6 \
+                        
+\f7 \uc0\u9660 
+\f6 \
+              Strategic interaction\
+                        
+\f7 \uc0\u9474 
+\f6 \
+              
+\f7 \uc0\u9484 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9524 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9488 
+\f6 \
+              
+\f7 \uc0\u9660 
+\f6                    
+\f7 \uc0\u9660 
+\f6 \
+             Nash                QRE\
+        exact response       noisy/entropy-\
+                             regularised response\
+              
+\f7 \uc0\u9474 
+\f6                    
+\f7 \uc0\u9474 
+\f6 \
+              
+\f7 \uc0\u9492 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9516 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9496 
+\f6 \
+                        
+\f7 \uc0\u9660 
+\f6 \
+                  Price decision\
+\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\fs24 \cf0 And 
+\f1\b MaxEnt sits underneath the QRE response mechanism
+\f0\b0 , not as an alternative to demand modelling.\
+So I'd sharpen the earlier debate considerably:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b \cf0 Demand modelling tells you what the economic consequences of a price are. Nash tells you how a perfectly strategic firm responds to those consequences. QRE tells you how a strategically interacting firm responds when the mapping from payoff to action is probabilistic/entropy-regularised.
+\f0\b0 \
+And your observation that 
+\f1\b logit QRE is essentially an entropy-regularised best response
+\f0\b0  is exactly the bridge between the game-theory and MaxEnt perspectives.\
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+\
+}

@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: py${{ matrix.python }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python }}
+          enable-cache: true
+      - name: Sync workspace
+        run: uv sync --all-packages
+      - name: Lint
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+      - name: Types (strict)
+        run: uv run mypy packages/strataq/strataq packages/strataq-bench/strataq_bench
+      - name: Tests
+        run: uv run pytest -q
+
+  guards:
+    name: boundary + secrets + naming
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Changed files
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            git fetch origin "$BASE_REF" --depth=1
+            BASE="origin/$BASE_REF"
+          else
+            BASE="$BEFORE_SHA"
+          fi
+          git diff --name-only --diff-filter=ACMR "$BASE"...HEAD > changed.txt \
+            || git diff --name-only HEAD~1 HEAD > changed.txt
+          cat changed.txt
+      - name: Plugin boundary (domains never touch core)
+        run: xargs -a changed.txt -r python3 .claude/hooks/check_boundary.py
+      - name: No `import sage`
+        run: grep '\.py$' changed.txt | xargs -r python3 .claude/hooks/check_import_sage.py
+      - name: Secret scan
+        run: xargs -a changed.txt -r python3 .claude/hooks/check_secrets.py

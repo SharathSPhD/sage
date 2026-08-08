@@ -1,0 +1,34 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.14
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: no-import-sage
+        name: block `import sage` (the library is strataq)
+        entry: python3 .claude/hooks/check_import_sage.py
+        language: system
+        types: [python]
+
+      - id: plugin-boundary
+        name: domains never touch core (plugin contract)
+        entry: python3 .claude/hooks/check_boundary.py
+        language: system
+        pass_filenames: true
+
+      - id: anti-gaming
+        name: no test deletion / xfail / gate regression without ADR
+        entry: python3 .claude/hooks/check_tests_and_gates.py
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      - id: secret-scan
+        name: block plausible secrets
+        entry: python3 .claude/hooks/check_secrets.py
+        language: system
+        pass_filenames: true

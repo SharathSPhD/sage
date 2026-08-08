@@ -1,0 +1,59 @@
+site_name: SAGE — Strategic Agent Game Engine
+site_description: >
+  A computational framework for stochastic strategic interaction: Nash and
+  quantal-response equilibria, potential and non-potential games,
+  entropy-regularised response, and non-equilibrium strategic dynamics.
+site_url: https://sharathsphd.github.io/sage/
+repo_url: https://github.com/SharathSPhD/sage
+repo_name: SharathSPhD/sage
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: teal
+      toggle:
+        icon: material/weather-night
+        name: dark mode
+    - scheme: slate
+      primary: teal
+      toggle:
+        icon: material/weather-sunny
+        name: light mode
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.arithmatex:
+      generic: true
+  - tables
+  - md_in_html
+  - toc:
+      permalink: true
+
+extra_javascript:
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - Progress: progress/index.md
+  - Concepts:
+      - The theory tiers: concepts/tiers.md
+  - Instruments: instruments/index.md
+  - Engines: engines/index.md
+  - Domains: domains/index.md
+  - Theory (Learn source): theory/index.md
+  - Architecture:
+      - Patterns: architecture/patterns.md
+  - Contributing: contributing.md

@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-08-08T18:09:11+00:00",
+  "units": {
+    "stage0": {
+      "unit": "stage0",
+      "claim": "The SAGE foundation exists and enforces its own rules: workspace builds, contract protocols are real and tested, hooks fire, gates run, memory is seeded, CI is green, dashboard renders",
+      "tier": "exact",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-08T18:09:11+00:00"
+    }
+  }
+}
