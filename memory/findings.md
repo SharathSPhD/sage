@@ -30,3 +30,21 @@ Entry format:
 - Expected / observed: ledger/docs briefly claimed "ℛ is λ-free"; observed ℛ(λ) ≈ ∝ λ on matching pennies (0.5, 1.0, 2.0, ... at λ = 0.5, 1.0, 2.0). Consistent with χ_T = (I − S_T B_T)⁻¹S_T with S ∝ λ: the antisymmetric part enters at O(λ²) against a symmetric O(λ) base, so the ratio grows ≈ linearly at small λ.
 - Chase status: resolved (theory understood; docs/ledger corrected). The λ-free property is Result 2's *symmetry* statement: ℛ = 0 ⟺ potential, at every λ.
 - Resolution / follow-up: empirical use of ℛ levels (Stage 3 pass-through work) must hold λ fixed or co-report it; only the zero test is λ-robust. Candidate for a normalised variant ℛ/λ_normalised if cross-λ comparability becomes needed.
+
+## F-0003 — EPR, ℛ and α co-move almost perfectly on random 3×3 families
+
+- Date: 2026-08-08
+- Instrument / experiment: `thermo_read` + `reciprocity_defect` via `experiments/dynamics_calibration.py`
+- Config: `config/experiments/dynamics_calibration.yaml` (seed 20260808, λ = 1.2, 100×10 games)
+- Expected / observed: C1 predicted co-movement but not its tightness; observed ρ(EPR, ℛ) = 0.993 — the dissipation of the *joint-profile Markov chain* and the asymmetry of the *equilibrium response matrix* are near-interchangeable orderings on these families, despite being computed from entirely different objects (generator vs resolvent).
+- Chase status: superseded by F-0004 — the marginal agreement is α-driven confounding, discovered by red-team stratification.
+- Resolution / follow-up: see F-0004.
+
+## F-0004 — The meters DECOUPLE at high α: within-level ρ(EPR, ℛ) reverses sign
+
+- Date: 2026-08-08
+- Instrument / experiment: stratified re-analysis of `chain_comovement` (red-team objection during dynamics.exact review; independently verified same day, then made a permanent artifact metric)
+- Config: `config/experiments/dynamics_calibration.yaml` (seed 20260808, λ = 1.2, 100 games × 10 α levels)
+- Expected / observed: C1 expected tight co-movement of dissipation and reciprocity defect. Observed: the marginal ρ(EPR, ℛ) = 0.993 is driven by α. **Conditional on α**, coupling is strong (+0.80..+0.88) for α ≤ 0.65, degrades through 0.75 (+0.61) and 0.85 (+0.32), and **reverses to −0.355 at α = 0.95**: among near-pure-harmonic games, higher reciprocity defect associates with LOWER dissipation.
+- Chase status: **chasing — this is the programme's first genuine discovery.** Working hypothesis (unverified): at α → 1, ℛ's denominator ‖χ+χᵀ‖ is dominated by the vanishing symmetric response, so ℛ measures the *smallness of the residual potential sliver* rather than circulation strength, while EPR tracks actual current magnitudes — two meters that agree in the mixed regime part company when the symmetric part underflows. If right, ℛ and EPR are complementary instruments, not substitutes, and the high-α regime needs both.
+- Resolution / follow-up: (1) test the hypothesis by tracking numerator and denominator of ℛ separately along α; (2) check whether an EPR-normalised or numerator-only variant restores coupling at high α; (3) verify on N=3 and larger m; (4) this belongs in p3_noneq as a result, with C1's falsifier status stated plainly.

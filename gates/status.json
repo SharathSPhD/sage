@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T18:52:20+00:00",
+  "generated_at": "2026-08-08T19:12:43+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -28,6 +28,20 @@
         "adversarial": []
       },
       "checked_at": "2026-08-08T18:52:20+00:00"
+    },
+    "dynamics.exact": {
+      "unit": "dynamics.exact",
+      "claim": "Glauber-logit dynamics are Gibbs-reversible exactly on potential games (pi = e^{lambda Phi}/Z, J* = 0, EPR = 0) and settle into a dissipative NESS off potentiality, with dissipation co-moving with harmonic fraction and reciprocity defect",
+      "tier": "exact",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-08T19:12:43+00:00"
     }
   }
 }

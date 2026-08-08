@@ -1,0 +1,18 @@
+{
+  "benchmark_id": "equilibrium_reads_zero",
+  "unit": "dynamics.exact",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "max_epr": 4.1937372803438954e-30,
+    "max_current": 9.71445146547012e-17
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260808,
+  "config_ref": "config/experiments/dynamics_calibration.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T19:10:36+00:00",
+  "notes": "EPR and J* below 1e-12 on exact potential games (detailed balance)."
+}

@@ -1,0 +1,17 @@
+{
+  "benchmark_id": "gibbs_agreement",
+  "unit": "dynamics.exact",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "max_abs_gap": 4.718447854656915e-16
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260808,
+  "config_ref": "config/experiments/dynamics_calibration.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T19:10:36+00:00",
+  "notes": "Stationary pi of Glauber-logit matches exp(lambda*Phi)/Z to 1e-10 (K3)."
+}

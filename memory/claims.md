@@ -32,7 +32,7 @@ Source: PROGRAMME v3 §3; updated by the prior-art sweep of 2026-08-08 (`literat
 
 | ID | Claim | Falsifier | Status |
 |---|---|---|---|
-| C1 | The chain cycling → non-potential → broken reciprocity → positive dissipation holds *tightly* (the four meters co-move monotonically along α) | A regime in the α-sweep where the meters decouple (e.g. ℛ rises but EPR stays ≈ 0, or cycling without dissipation jump) | Open; this is what the α-sweep is for. Decoupling would be a finding, not a failure |
+| C1 | The chain cycling → non-potential → broken reciprocity → positive dissipation holds *tightly* (the four meters co-move monotonically along α) | A regime in the α-sweep where the meters decouple (e.g. ℛ rises but EPR stays ≈ 0, or cycling without dissipation jump) | **Falsifier PARTIALLY REALISED 2026-08-08** (unit dynamics.exact, artifact `chain_comovement.json`, findings F-0004): marginally, ρ(EPR, α) = 0.990 and ρ(EPR, ℛ) = 0.993 — but stratified by α, within-level ρ(EPR, ℛ) falls from +0.88 (α ≤ 0.65) to **−0.355 at α = 0.95**. The chain co-moves *along* α but the meters decouple, and reverse, *within* the near-harmonic regime. C1 as stated ('holds tightly') is FALSE conditionally at high α; retained as `conjectured` in the refined form 'marginal co-movement along α, conditional decoupling above α ≈ 0.75'. Discovered via red-team stratification |
 | C2 | ℛ measured from real pass-through asymmetry (Dominick's/ERCOT) is comparable in magnitude to synthetic games at matched α | ℛ_empirical persistently orders-of-magnitude off the synthetic curve across demand specifications | Open; Stage 3+ |
 
 ## Speculative — not for user-facing docs

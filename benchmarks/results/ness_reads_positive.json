@@ -1,0 +1,18 @@
+{
+  "benchmark_id": "ness_reads_positive",
+  "unit": "dynamics.exact",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "min_epr": 1.567826596148266,
+    "min_current": 0.08531711600773197
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260808,
+  "config_ref": "config/experiments/dynamics_calibration.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T19:10:37+00:00",
+  "notes": "Harmonic games are NESS: positive dissipation and circulation."
+}

@@ -1,0 +1,63 @@
+unit: dynamics.exact
+claim: "Glauber-logit dynamics are Gibbs-reversible exactly on potential games (pi = e^{lambda Phi}/Z, J* = 0, EPR = 0) and settle into a dissipative NESS off potentiality, with dissipation co-moving with harmonic fraction and reciprocity defect"
+tier: exact   # the identities are K3/Schnakenberg; the co-movement leg feeds conjecture C1
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.90
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/core/dynamics/markov.py
+      - packages/strataq/strataq/core/dynamics/currents.py
+      - packages/strataq/strataq/core/dynamics/entropy.py
+      - packages/strataq/strataq/thermo/exact.py
+      - packages/strataq/tests/thermo/test_exact.py
+
+  domain:
+    - id: gibbs_agreement
+      spec: "stationary pi matches exp(lambda Phi)/Z to 1e-10 on congestion n=2/3 across lambda in {0.7, 1.2, 2.0}"
+      artifact: benchmarks/results/gibbs_agreement.json
+    - id: equilibrium_reads_zero
+      spec: "EPR < 1e-12 and max |J*| < 1e-12 on exact potential games"
+      artifact: benchmarks/results/equilibrium_reads_zero.json
+    - id: ness_reads_positive
+      spec: "EPR > 1e-3 and circulation present on RPS and matching pennies"
+      artifact: benchmarks/results/ness_reads_positive.json
+    - id: chain_comovement
+      spec: "Spearman rho(EPR, alpha) > 0.9 and rho(EPR, R) > 0.8 over 100 games x 10 alpha levels at fixed lambda"
+      artifact: benchmarks/results/chain_comovement.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/instruments/dissipation.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: true    # granted 2026-08-08 verification pass: O-1,O-2,O-4 verified; O-3 self-resolved; stratification code audited, no new defects
+    objections:
+      - id: O-1
+        text: "marginal rho(EPR,R)=0.993 masks conditional decoupling: within-level rho falls to -0.355 at alpha=0.95"
+        disposition: addressed
+        where: "Independently verified, then made permanent: chain_comovement.json now carries per-level within_level_rho_* metrics; docs/instruments/dissipation.md leads with the stratified analysis; findings F-0004 records the discovery (the programme's first); F-0003 marked superseded"
+      - id: O-2
+        text: "C1 falsifier already triggered in the artifact but ledger/docs did not flag it"
+        disposition: addressed
+        where: "memory/claims.md C1 now states 'Falsifier PARTIALLY REALISED' with the stratified numbers and the refined conjecture; dissipation.md states it plainly"
+      - id: O-3
+        text: "coordination(2,3) potentiality subtlety"
+        disposition: addressed
+        where: "Red-team's own follow-up found the test correct (common-interest games are exact potential with Phi = v; Glauber-reversibility confirmed numerically). No artifact claims a Gibbs form for coordination (phi: None is skipped in gibbs_agreement); scope already honest"
+      - id: O-4
+        text: "unused floor parameter in entropy_production_rate could in principle clamp a negative (bug-masking)"
+        disposition: addressed
+        where: "Parameter removed; docstring now states nonnegativity is structural (strictly positive logit rates, (x-y)log(x/y) >= 0), not clamped"

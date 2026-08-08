@@ -43,3 +43,13 @@
 **Next action**: Stage 1 remaining units — homotopy/branch solver + pygambit validation, mirror descent, implicit diff, then core/dynamics + thermo (Glauber, currents, EPR). Stage 4 Track D (Learn scaffold) still unstarted in wt/product.
 
 **Open gates**: none.
+
+---
+
+## 2026-08-08 (cont.) — dynamics.exact closed; first genuine discovery (F-0004)
+
+- **Gate dynamics.exact GREEN** (all five sections): Glauber generator, stationary π, currents, exact EPR. Calibration: π = e^{λΦ}/Z to 2.5e-16 on congestion; EPR/J* < 1e-12 potential; NESS on RPS/MP.
+- **F-0004 — the programme's first discovery, found by red-team stratification**: marginal ρ(EPR, ℛ) = 0.993 is α-confounded; within-level coupling is +0.80..0.88 for α ≤ 0.65 but **reverses to −0.355 at α = 0.95**. C1's falsifier partially realised; ledger refined; working hypothesis (ℛ's symmetric denominator underflow at α→1) logged for chase. p3_noneq material.
+- Red-team round: O-1/O-2 (stratified honesty) addressed with permanent per-level artifact metrics; O-4 floor param removed. Verification granted.
+
+**Next**: homotopy/branch + pygambit validation (solve.branch unit), mirror descent, implicit diff; then trajectory estimators (thermo.estimators); population engine + TNTP (Stage 2 bracket); Learn scaffold (Track D).

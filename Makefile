@@ -28,6 +28,7 @@ gates-check:
 # is not green.
 reproduce: reproduce-fast
 	uv run python -m experiments.reciprocity_calibration
+	uv run python -m experiments.dynamics_calibration
 
 # Fast subset: what `main` must always pass (CI runs this on every merge).
 reproduce-fast:
