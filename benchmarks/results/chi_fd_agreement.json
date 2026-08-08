@@ -1,0 +1,18 @@
+{
+  "benchmark_id": "chi_fd_agreement",
+  "unit": "finite.response.reciprocity",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "max_abs_gap": 1.2760891177077127e-8,
+    "n_games": 50.0
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260808,
+  "config_ref": "config/experiments/reciprocity_calibration.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T18:48:19+00:00",
+  "notes": "chi_eq must match central finite differences of logit_qre to 1e-6."
+}

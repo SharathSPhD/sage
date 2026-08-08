@@ -1,0 +1,20 @@
+{
+  "benchmark_id": "reciprocity_harmonic",
+  "unit": "finite.response.reciprocity",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "R_rps_3": 0.6928203230275507,
+    "R_rps_5": 0.434657051228945,
+    "R_matching_pennies": 1.1999999999999995,
+    "min_R": 0.434657051228945
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260808,
+  "config_ref": "config/experiments/reciprocity_calibration.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T18:48:06+00:00",
+  "notes": "R > 0.1 required on the RPS family (and matching pennies)."
+}

@@ -23,13 +23,36 @@ from strataq.core.protocols import (  # noqa: E402  (x64 config must precede any
     LearnPageSpec,
     PayoffOracle,
 )
+from strataq.core.solve.fixedpoint import logit_qre  # noqa: E402
+from strataq.core.types import Game, QREPoint, SpectrumInfo  # noqa: E402
+from strataq.finite.decompose.generate import make_family  # noqa: E402
+from strataq.finite.decompose.hodge import alpha, hodge_decompose  # noqa: E402
+from strataq.finite.games.normalise import normalise  # noqa: E402
+from strataq.finite.games.tensor import DenseTensorGame  # noqa: E402
+from strataq.finite.response.reciprocity import reciprocity_defect  # noqa: E402
+from strataq.finite.response.spectral import critical_lambda, strategic_spectrum  # noqa: E402
+from strataq.finite.response.susceptibility import chi_equilibrium, chi_partial  # noqa: E402
 
 __all__ = [
     "ActionGridBuilder",
     "ConjugateFieldSpec",
     "DatasetLoader",
+    "DenseTensorGame",
     "Engine",
+    "Game",
     "LearnPageSpec",
     "PayoffOracle",
+    "QREPoint",
+    "SpectrumInfo",
     "__version__",
+    "alpha",
+    "chi_equilibrium",
+    "chi_partial",
+    "critical_lambda",
+    "hodge_decompose",
+    "logit_qre",
+    "make_family",
+    "normalise",
+    "reciprocity_defect",
+    "strategic_spectrum",
 ]

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T18:14:29+00:00",
+  "generated_at": "2026-08-08T18:52:20+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -13,7 +13,21 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T18:14:29+00:00"
+      "checked_at": "2026-08-08T18:09:11+00:00"
+    },
+    "finite.response.reciprocity": {
+      "unit": "finite.response.reciprocity",
+      "claim": "reciprocity_defect reads 0 on exact potential games and rises with harmonic fraction",
+      "tier": "derived",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-08T18:52:20+00:00"
     }
   }
 }

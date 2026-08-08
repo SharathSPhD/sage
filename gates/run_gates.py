@@ -92,9 +92,13 @@ class CodeSection(Section):
                 result.failures.append(f"types_clean: {out[-1000:]}")
         if self.spec.get("coverage_min") and source_paths and test_paths:
             floor = float(self.spec["coverage_min"]) * 100
+            # pytest-cov takes directories/packages, not single files: measure
+            # the source files' parent packages (slight over-measurement is the
+            # conservative direction for a floor).
+            cov_dirs = sorted({str(Path(p).parent) for p in source_paths if p.endswith(".py")})
             rc, out = _run(
                 ["uv", "run", "pytest", "-q", *test_paths]
-                + [f"--cov={p}" for p in source_paths]
+                + [f"--cov={d}" for d in cov_dirs]
                 + [f"--cov-fail-under={floor}"]
             )
             if rc != 0:

@@ -1,0 +1,16 @@
+{/* Learn explainer 7 — Reciprocity.
+    SINGLE SOURCE RULE: prose and math for this page are authored in
+    docs/theory/07-reciprocity.md (written in Stage 4 Track D alongside the
+    interactive controls); this file is the app-side mount point. The
+    measurement demo: poke firm 1 → read firm 2; poke firm 2 → read firm 1;
+    watch the two numbers coincide at α = 0 and diverge as α rises, with the
+    ℛ gauge tracking α. Instrument backing: strataq.finite.response.reciprocity
+    (gate finite.response.reciprocity, tier: derived). */}
+
+export const meta = {
+  slug: "07-reciprocity",
+  title: "Reciprocity — the same number both ways",
+  instrument: "reciprocity_defect",
+  controls: ["lambda", "alpha", "poke-player", "poke-size"],
+  status: "content-pending-stage4",
+};

@@ -29,4 +29,17 @@
 
 **Open gates**: none. `stage0` — **GREEN** (all five sections, red-team sign-off granted 2026-08-08).
 
-**Shipped**: pushed to `origin/main`; CI (3.11/3.12/3.13 + guards), Gates and Docs workflows all green; Pages live at https://sharathsphd.github.io/sage/ with /progress rendering; branch protection on `main` requires the five checks. Worktrees open: `~/projects/sage-wt/engine1` (`wt/engine1`), `~/projects/sage-wt/product` (`wt/product`).
+---
+
+## 2026-08-08 (cont.) — Stage 1 Track A: first instruments closed
+
+**What changed** (branch track/finite.core → main):
+- `finite.core`: DenseTensorGame, normalise, verified library (Rosenthal congestion + explicit potential, coordination, common-interest, RPS family, matching pennies), JIT damped logit-QRE solver. Exact identities verified to 1e-12; Gibbs correspondence on congestion to 1e-10.
+- `finite.response.reciprocity` — **GATE GREEN, the programme's first milestone**: tangent-space machinery (Helmert), S/B operators, chi_partial (K7), chi_equilibrium (Result 1), reciprocity_defect (Result 2), strategic_spectrum + critical_lambda. Five regenerable artifacts: ℛ ≤ 9e-17 on 5 potential games; ℛ ∈ [0.43, 1.2] harmonic; Spearman ρ(ℛ,α) = 0.982 (n = 2000, λ fixed at 1.2, bootstrap CI); χ–FD agreement 1.3e-8; SB spectrum exactly real on potential games across λ ∈ {0.5..10} (N3 leg).
+- `finite.decompose.hodge`: separable Kronecker subset transform, m-weighted Candogan projection, alpha(), make_family() with exact target α; weighted orthogonality + equivalence-invariance tested.
+- Red-team round: O-1 (blocking, "λ-free" overclaim) → docs/ledger corrected, findings F-0002; O-2 → sweep-holds-λ-fixed made explicit; O-3 → spectrum_reality artifact added. Verification pass granted sign-off.
+- Findings: F-0001 (ℛ unbounded above; MP reads 1.2), F-0002 (ℛ magnitude ∝ λ at small λ; only the zero test is λ-free).
+
+**Next action**: Stage 1 remaining units — homotopy/branch solver + pygambit validation, mirror descent, implicit diff, then core/dynamics + thermo (Glauber, currents, EPR). Stage 4 Track D (Learn scaffold) still unstarted in wt/product.
+
+**Open gates**: none.

@@ -26,6 +26,7 @@ dev = [
     "pyyaml>=6.0",
     "mkdocs-material>=9.5",
     "mkdocstrings[python]>=0.25",
+    "types-pyyaml>=6.0.12.20260724",
 ]
 
 [tool.ruff]

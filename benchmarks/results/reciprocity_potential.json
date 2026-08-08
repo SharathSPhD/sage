@@ -1,0 +1,22 @@
+{
+  "benchmark_id": "reciprocity_potential",
+  "unit": "finite.response.reciprocity",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "R_congestion_n2": 5.257186090829472e-17,
+    "R_congestion_n3": 5.664125278765818e-17,
+    "R_coordination_2x3": 4.0149525302608155e-17,
+    "R_coordination_3x2": 8.926528984957911e-17,
+    "R_common_interest_random": 3.1791928067825974e-17,
+    "max_R": 8.926528984957911e-17
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260808,
+  "config_ref": "config/experiments/reciprocity_calibration.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T18:48:04+00:00",
+  "notes": "R < 1e-10 required on 5 verified exact potential games."
+}

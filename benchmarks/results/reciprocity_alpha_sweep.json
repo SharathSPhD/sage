@@ -1,0 +1,28 @@
+{
+  "benchmark_id": "reciprocity_alpha_sweep",
+  "unit": "finite.response.reciprocity",
+  "kind": "statistical",
+  "passed": true,
+  "metrics": {
+    "spearman_rho": 0.9819440094860024,
+    "n_pairs": 2000.0,
+    "t_stat": 232.02143971184378
+  },
+  "effect_sizes": [
+    {
+      "name": "spearman_rho_R_alpha",
+      "value": 0.9819440094860024,
+      "ci_low": 0.979758071652018,
+      "ci_high": 0.9824224410556102,
+      "ci_level": 0.95,
+      "method": "bootstrap (2000 resamples, percentile)"
+    }
+  ],
+  "n": 2000,
+  "n_justification": "200 games x 10 alpha levels: pilot runs put the bootstrap CI half-width on Spearman rho below 0.01 at this n, an order of magnitude tighter than the 0.9 gate threshold margin.",
+  "seed": 20260808,
+  "config_ref": "config/experiments/reciprocity_calibration.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T18:48:19+00:00",
+  "notes": "Gate: Spearman rho(R, alpha) > 0.9, p < 0.01."
+}

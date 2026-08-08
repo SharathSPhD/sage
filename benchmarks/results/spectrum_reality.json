@@ -1,0 +1,19 @@
+{
+  "benchmark_id": "spectrum_reality",
+  "unit": "finite.response.reciprocity",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "max_rel_imag_potential": 0.0,
+    "min_abs_imag_harmonic": 0.28867513459481314,
+    "lam_grid_max": 10.0
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260808,
+  "config_ref": "config/experiments/reciprocity_calibration.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-08T18:48:20+00:00",
+  "notes": "N3 numerical leg: SB spectrum effectively real (rel. imag < 1e-8) on all potential games across lambda in {0.5..10}; visibly complex on harmonic games. A complex pair on a potential game would falsify N3 (claims ledger)."
+}
