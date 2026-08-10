@@ -1,0 +1,28 @@
+# Trajectory-estimator validation — the thermo.estimators domain-gate artifacts.
+defaults:
+  - _self_
+
+seed: 20260810
+lam: 1.5
+
+sampling:
+  n_steps: 60000
+  n_trajectories: 8
+  n_trajectories_tur: 128  # TUR divides by a sample variance; 128 windows keeps
+                           # its relative error ~ sqrt(2/127) ≈ 12.5% — near
+                           # TUR saturation (alpha -> 0) coarser variance
+                           # estimates routinely push the point bound above
+                           # the exact EPR
+
+thresholds:
+  kld_rel_err_max: 0.15        # plug-in bias + trajectory noise at this n
+  potential_reads_zero_max: 5.0e-3
+  tur_ratio_max: 1.05          # certified bound + finite-sample margin
+  spearman_min: 0.95
+
+sweep:
+  levels: [0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95]
+  scale: 2.0
+
+bootstrap:
+  n_resamples: 2000

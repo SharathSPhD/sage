@@ -32,6 +32,7 @@ reproduce: reproduce-fast
 	uv run python -m experiments.solver_validation
 	uv run python -m experiments.blotto_calibration
 	uv run python -m experiments.congestion_calibration
+	uv run python -m experiments.estimator_validation
 
 # Fast subset: what `main` must always pass (CI runs this on every merge).
 reproduce-fast:

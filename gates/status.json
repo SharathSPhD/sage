@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T22:07:23+00:00",
+  "generated_at": "2026-08-10T17:33:49+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -168,6 +168,20 @@
         "adversarial": []
       },
       "checked_at": "2026-08-08T22:07:23+00:00"
+    },
+    "thermo.estimators": {
+      "unit": "thermo.estimators",
+      "claim": "Irreversibility is estimable from trajectories alone: the KLD k-th order Markov estimator recovers the exact Schnakenberg EPR on synthetic Glauber data, and the TUR bound is a certified lower bound that degrades gracefully, tight near equilibrium and loosening toward harmonic games",
+      "tier": "exact",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-10T17:33:49+00:00"
     }
   }
 }

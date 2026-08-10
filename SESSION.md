@@ -148,3 +148,10 @@
 - Bare-metal deploy (1 GB ⟹ no Docker): uv + systemd (MemoryMax=700M) + Caddy :80. **External smoke: /v1/health ok; RPS ℛ = 0.866; coordination EPR = 0, detailed balance true — the instruments are on the internet at €0.**
 - Ops reality vs doc: the Oracle iptables REJECT sits at INPUT 5; rules must go above it (hit and fixed live).
 - A1 retry monitor still cycling (~10 min); on landing → compose migration. 48h without → Netcup/GCP per PI.
+
+## 2026-08-10 (cont.) — unit thermo.estimators GREEN (13th gate)
+
+- **Trajectory irreversibility estimators** (PROGRAMME §3.5, estimators 1–2; NEEP deferred pending ADR): uniformised Glauber sampler (`core/dynamics/sample.py`, skeleton per-step EP = EPR/Λ exactly), KLD k-th-order Markov and TUR lower bound (`thermo/estimators.py`).
+- Validation: KLD ρ = 1.0 vs exact EPR across ten α levels (~1% per level); TUR tightness ~0.97 near α→0 (linear-response saturation) loosening to ~0.6 at α=0.95.
+- Two real bugs caught by TDD/red-team and fixed honestly: (1) fixed-jump-count windows suppress Poisson timing fluctuation → "bound" overshot ×1.5; fixed-horizon truncation now mandatory and tested. (2) point estimate straddles exact near saturation even after debiasing (E[J̄²], Jensen-on-1/Var) → certification moved to `tur_epr_bound_ci` bootstrap-lower quantile, exceedance surfaced as artifact metric + effect size.
+- Red-team: 1 blocking + 3 must-address + 1 note, all addressed on re-review; signoff granted. Claims K9/K10 added (both known theorems, implemented and verified).

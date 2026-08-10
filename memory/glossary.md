@@ -14,7 +14,9 @@ Definitions the dashboard's hover-defs and the docs draw from. One line each; pr
 - **distance_to_criticality** — 1 − ρ(SB). Zero = a bifurcation of the QRE correspondence; the phase locator's needle.
 - **EPR (σ_EP)** — entropy production rate of the Glauber chain at stationarity; 0 iff detailed balance (potential game); the dissipation meter.
 - **J*** — stationary probability current on the profile space; nonzero = NESS; circulation = cycling.
-- **TUR** — thermodynamic uncertainty relation: a lower bound on dissipation needed to sustain a current of given regularity; the headline empirical estimator (degrades gracefully under partial observation).
+- **TUR** — thermodynamic uncertainty relation: a lower bound on dissipation needed to sustain a current of given regularity; the headline empirical estimator (degrades gracefully under partial observation). The sample version (`tur_epr_bound`) is a point estimate that can straddle the true EPR near saturation; the certifiable statement is the lower bootstrap quantile (`tur_epr_bound_ci`).
+- **KLD estimator** — plug-in k-th-order-Markov estimate of irreversibility from a trajectory: (1/kτ)·KL(forward blocks ‖ reversed blocks). For a stationary Markov chain the (k+1)-block KLD equals k × per-step EP exactly; needs n ≫ n_states^(k+1) samples, and data-starved k underestimates.
+- **Uniformisation** — exact simulation of a CTMC as its skeleton chain P = I + L/Λ with Exponential(Λ) holding times; skeleton per-step entropy production = EPR/Λ.
 - **NESS** — non-equilibrium steady state: stationary but current-carrying; where non-potential strategic systems live.
 - **SUE** — stochastic user equilibrium (Fisk 1980): logit route choice; entropy-regularised Wardrop with a known convex potential; the α=0 calibration anchor.
 - **Conjugate field (h)** — the observable payoff perturbation a domain declares via `ConjugateFieldSpec` (tolls, budgets, fuel shocks). No field ⟹ no response instruments for that domain.

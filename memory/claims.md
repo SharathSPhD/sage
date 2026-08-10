@@ -17,6 +17,9 @@ Source: PROGRAMME v3 §3; updated by the prior-art sweep of 2026-08-08 (`literat
 | K7 | Partial susceptibility χ^part = λC (static FDT, opponents frozen) | K2 + differentiation |
 | K8 | Logit route choice in congestion games = Fisk (1980) SUE, convex potential Σₐ∫cₐ + λ⁻¹Σ xₐlog xₐ | Fisk 1980; Beckmann 1956; Rosenthal 1973. **Implemented and verified 2026-08-08** (units population.core, domains.congestion): ∇Beckmann ≡ route costs to 1e-12 by autodiff; KKT to 7e-15; ℛ = 5.7e-17 on real Sioux Falls data |
 
+| K9 | For a stationary Markov chain, the (k+1)-block KLD between forward and reversed path measures equals k · (per-step entropy production); uniformised skeleton per-step EP = EPR/Λ | Roldán–Parrondo *PRL* 2010; uniformisation (Jensen 1953). **Implemented and verified 2026-08-10** (unit thermo.estimators): KLD(k=1) recovers exact Schnakenberg EPR with Spearman ρ = 1.0 and ~1% per-level error across ten α levels (`estimator_alpha_sweep.json`) |
+| K10 | Finite-time TUR: σ ≥ 2⟨J_T⟩²/(Var(J_T)·T) for any time-integrated current of a stationary CTMC | Barato–Seifert *PRL* 2015; Horowitz–Gingrich *PRE* 2017. **Implemented and verified 2026-08-10**: bootstrap-lower bound ≤ exact EPR at every sweep level; tightness ~0.97 near α→0 (linear-response saturation), ~0.6–0.7 at α=0.95 (`estimator_ground_truth.json`, `estimator_alpha_sweep.json`). Estimator debiased for E[J̄²] and Jensen-on-1/Var; fixed-horizon windows mandatory (fixed-jump-count windows overshoot ×1.5) |
+
 **History note:** v2 of the programme claimed the symmetry⟺potentiality characterisation as new. It is textbook (K4). Downgraded during the v3 sanity check — the precedent for how this ledger works.
 
 ## Our results — `derived`

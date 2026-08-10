@@ -1,0 +1,59 @@
+unit: thermo.estimators
+claim: "Irreversibility is estimable from trajectories alone: the KLD k-th order Markov estimator recovers the exact Schnakenberg EPR on synthetic Glauber data, and the TUR bound is a certified lower bound that degrades gracefully, tight near equilibrium and loosening toward harmonic games"
+tier: exact   # the identities (block-KLD = k x per-step EP; finite-time TUR) are known theorems; the estimators are statistical objects validated here
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.90
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/core/dynamics/sample.py
+      - packages/strataq/strataq/thermo/estimators.py
+      - packages/strataq/tests/thermo/test_estimators.py
+
+  domain:
+    - id: estimator_ground_truth
+      spec: "KLD(k=1) within 15% of exact EPR on RPS and matching pennies, < 5e-3 on potential games; TUR a certified lower bound on named games at lambda=1.5"
+      artifact: benchmarks/results/estimator_ground_truth.json
+    - id: estimator_alpha_sweep
+      spec: "Spearman rho(KLD, exact) > 0.95 across 10 alpha levels; TUR bootstrap-lower bound <= exact EPR at every level with EPR above noise floor"
+      artifact: benchmarks/results/estimator_alpha_sweep.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/instruments/estimators.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: true    # granted 2026-08-10 after re-review of all five objections
+    objections:
+      - id: O-1
+        text: "BLOCKING: artifact notes called the TUR point estimate a 'certified lower bound' while it exceeded the exact EPR at 2 of 10 sweep levels (max ratio 1.073)"
+        disposition: addressed
+        where: "Certification moved into the library API: tur_epr_bound_ci returns the bootstrap-lower quantile and is what artifacts certify (alpha_*_tur_ci_low <= exact at every level); tur_epr_bound docstring states it is a point estimate NOT guaranteed below the true EPR with the ~7% exceedance quoted; both artifact notes rewritten; n_levels_point_above_exact metric and an exceedance-fraction EffectSize added"
+      - id: O-2
+        text: "docstring 'every k targets the same rate' true only as a population identity; empirically k=4 reads ~17% low, k=5 ~59% low at the validation sample size"
+        disposition: addressed
+        where: "Module + kld_epr docstrings state the n >> n_states^(k+1) requirement and the underestimation direction; test_data_starved_k_underestimates pins the failure mode"
+      - id: O-3
+        text: "empirical_flux_weights test derived weights and evaluated the bound on the same batch (selection bias)"
+        disposition: addressed
+        where: "test_data_driven_weights_on_held_out_split derives weights and evaluates on independently sampled batches"
+      - id: O-4
+        text: "artifact notes conflated point estimate with certified bound"
+        disposition: addressed
+        where: "Same fix as O-1; docs/instruments/estimators.md rule 3 names both functions and the 2-of-10 exceedance"
+      - id: O-5
+        text: "window_currents and _reversed_codes untested directly"
+        disposition: addressed
+        where: "Direct tests added for digit reversal, fixed-horizon truncation, and the certified quantile ordering"

@@ -1,0 +1,31 @@
+config:
+  bootstrap:
+    n_resamples: 2000
+  defaults:
+  - _self_
+  lam: 1.5
+  sampling:
+    n_steps: 60000
+    n_trajectories: 8
+    n_trajectories_tur: 128
+  seed: 20260810
+  sweep:
+    levels:
+    - 0.05
+    - 0.15
+    - 0.25
+    - 0.35
+    - 0.45
+    - 0.55
+    - 0.65
+    - 0.75
+    - 0.85
+    - 0.95
+    scale: 2.0
+  thresholds:
+    kld_rel_err_max: 0.15
+    potential_reads_zero_max: 0.005
+    spearman_min: 0.95
+    tur_ratio_max: 1.05
+library_version: 0.1.0.dev0
+run_at: '2026-08-10T17:30:57+00:00'

@@ -1,0 +1,32 @@
+{
+  "benchmark_id": "estimator_ground_truth",
+  "unit": "thermo.estimators",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "congestion_n2_exact_epr": 2.3785234813182363e-31,
+    "congestion_n2_kld": 0.000029694270074661762,
+    "congestion_n2_tur": 0.0,
+    "coordination_2x3_exact_epr": 7.93964619573638e-32,
+    "coordination_2x3_kld": 0.000027570145981208802,
+    "coordination_2x3_tur": 0.0,
+    "rps_3_exact_epr": 2.239453383955765,
+    "rps_3_kld": 2.228151681643841,
+    "rps_3_tur": 1.1242196490982164,
+    "rps_3_kld_rel_err": 0.00504663432286359,
+    "rps_3_tur_ratio": 0.5020062740097753,
+    "matching_pennies_exact_epr": 2.7154447609346,
+    "matching_pennies_kld": 2.711963365841469,
+    "matching_pennies_tur": 1.604066866182862,
+    "matching_pennies_kld_rel_err": 0.001282071778154206,
+    "matching_pennies_tur_ratio": 0.5907197558424188
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260810,
+  "config_ref": "config/experiments/estimator_validation.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-10T17:31:11+00:00",
+  "notes": "KLD(k=1) recovers exact EPR on harmonic games and reads ~0 on potential games. TUR values are POINT estimates (tur_epr_bound); on these strongly non-equilibrium games they sit well below exact (ratio ~0.3-0.6) — the certified statement is always the bootstrap-lower quantile (tur_epr_bound_ci), checked per level in estimator_alpha_sweep. Oracle current weights: this artifact validates the estimators, it is not a blind-data protocol."
+}
