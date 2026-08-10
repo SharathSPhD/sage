@@ -155,3 +155,10 @@
 - Validation: KLD ρ = 1.0 vs exact EPR across ten α levels (~1% per level); TUR tightness ~0.97 near α→0 (linear-response saturation) loosening to ~0.6 at α=0.95.
 - Two real bugs caught by TDD/red-team and fixed honestly: (1) fixed-jump-count windows suppress Poisson timing fluctuation → "bound" overshot ×1.5; fixed-horizon truncation now mandatory and tested. (2) point estimate straddles exact near saturation even after debiasing (E[J̄²], Jensen-on-1/Var) → certification moved to `tur_epr_bound_ci` bootstrap-lower quantile, exceedance surfaced as artifact metric + effect size.
 - Red-team: 1 blocking + 3 must-address + 1 note, all addressed on re-review; signoff granted. Claims K9/K10 added (both known theorems, implemented and verified).
+
+## 2026-08-10 (cont.) — SAGE Labs redesigned, e2e-verified, DEPLOYED to Vercel (unit web.app)
+
+- **Full app rebuild** (instrument-panel design system, no scaffolding left): landing with LIVE meters (RPS ℛ/σ computed on page load by the VM), Lab (game picker, log-λ slider, σ bars, ℛ/ρ(SB) gauges, EPR + detailed-balance badge, per-game α split bar, full ρ(SB)-vs-λ branch trace with criticality line, honesty warnings surfaced as amber flags), interactive α×λ phase heatmap from the committed surface artifact (4 metrics, hover readouts, supercritical outlines), Learn with KaTeX-rendered theory + prev/next.
+- **Issues found & fixed by browser e2e**: no CORS on the API (added middleware, redeployed VM); HTTPS→HTTP mixed content on any hosted frontend (solved by /api same-origin proxy rewrites); client env var not NEXT_PUBLIC (earlier); raw $$ LaTeX in Learn (KaTeX build-time pipeline); Next 15.1.6 rejected by Vercel (CVE-2025-66478 → 15.5.23).
+- **Deployed**: https://sage-labs.vercel.app (project sage-labs, prod, iad1 — same region as the VM). Verified in-browser: landing live strip, Lab full readings on congestion + RPS across λ, phase map hover, Learn math — all against the live Oracle backend.
+- Pending operator clicks: disable Vercel Authentication (Settings → Deployment Protection) to make the URL public; set Root Directory = apps/web on the now-connected GitHub integration so git pushes deploy.
