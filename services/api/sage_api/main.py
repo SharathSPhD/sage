@@ -18,6 +18,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings
+from strataq.core.dynamics.markov import glauber_generator, profile_space
+from strataq.core.dynamics.sample import sample_trajectories
 from strataq.core.solve.fixedpoint import logit_qre
 from strataq.core.solve.homotopy import logit_branch
 from strataq.finite.decompose.hodge import hodge_decompose
@@ -25,6 +27,12 @@ from strataq.finite.games.tensor import DenseTensorGame
 from strataq.finite.response.reciprocity import reciprocity_defect
 from strataq.finite.response.spectral import strategic_spectrum
 from strataq.finite.response.susceptibility import chi_equilibrium
+from strataq.thermo.estimators import (
+    kld_epr,
+    stationary_current_weights,
+    tur_epr_bound,
+    tur_epr_bound_ci,
+)
 from strataq.thermo.exact import thermo_read
 
 
@@ -34,6 +42,9 @@ class Settings(BaseSettings):
     max_actions_per_player: int = 12
     max_players: int = 3
     max_profile_states: int = 400  # dense dynamics guard
+    max_sample_steps: int = 20000
+    max_sample_trajectories: int = 16
+    max_sample_budget: int = 120_000  # n_steps * n_trajectories cap
     model_config = {"env_prefix": "SAGE_API_"}
 
 
@@ -174,6 +185,8 @@ def dynamics_stationary(payload: GamePayload) -> dict[str, Any]:
         "max_current": float(reading.max_current),
         "detailed_balance": bool(reading.detailed_balance),
         "pi": reading.pi.tolist(),
+        "currents": reading.currents.tolist(),
+        "states": [list(s) for s in profile_space(game.num_actions)],
         "provenance": _provenance(game, payload.lam).model_dump(),
         "warnings": [],
     }
@@ -217,3 +230,104 @@ def examples() -> dict[str, Any]:
         "rock_paper_scissors (alpha=1)": rock_paper_scissors(),
     }
     return {name: {"payoffs": [u.tolist() for u in game.payoffs]} for name, game in named.items()}
+
+
+class PokePayload(BaseModel):
+    """A finite payoff nudge to one player's one action — the ℛ measurement procedure."""
+
+    payoffs: list[Any]
+    lam: Annotated[float, Field(gt=0, le=100)]
+    player: Annotated[int, Field(ge=0)]
+    action: Annotated[int, Field(ge=0)]
+    size: Annotated[float, Field(gt=-100, lt=100)]
+
+
+@app.post("/v1/response/poke")
+def response_poke(payload: PokePayload) -> dict[str, Any]:
+    """Nudge one player's incentives, re-equilibrate, report who moved.
+
+    This is the operational content of the reciprocity meter (theory doc 07):
+    poke player 1, read player 2; poke player 2, read player 1. The poke is a
+    finite h added to the chosen action's payoff for the chosen player; both
+    equilibria are solved fresh (no linearisation), so the readings are honest
+    at any poke size.
+    """
+    game = _game_from(GamePayload(payoffs=payload.payoffs, lam=payload.lam))
+    if payload.player >= game.n_players:
+        raise HTTPException(status_code=422, detail="player index out of range")
+    if payload.action >= game.num_actions[payload.player]:
+        raise HTTPException(status_code=422, detail="action index out of range")
+
+    base = logit_qre(game, payload.lam)
+    idx: list[Any] = [slice(None)] * game.n_players
+    idx[payload.player] = payload.action
+    poked_payoffs = list(game.payoffs)
+    poked_payoffs[payload.player] = poked_payoffs[payload.player].at[tuple(idx)].add(payload.size)
+    poked_game = DenseTensorGame(tuple(poked_payoffs))
+    poked = logit_qre(poked_game, payload.lam)
+    if not (bool(base.converged) and bool(poked.converged)):
+        raise HTTPException(status_code=422, detail="solver did not converge")
+    return {
+        "sigma_base": [s.tolist() for s in base.sigma],
+        "sigma_poked": [s.tolist() for s in poked.sigma],
+        "delta": [(sp - sb).tolist() for sp, sb in zip(poked.sigma, base.sigma, strict=True)],
+        "provenance": _provenance(game, payload.lam).model_dump(),
+        "warnings": [],
+    }
+
+
+class SamplePayload(BaseModel):
+    """Trajectory sampling request for the estimator panels."""
+
+    payoffs: list[Any]
+    lam: Annotated[float, Field(gt=0, le=100)]
+    n_steps: Annotated[int, Field(gt=100)]
+    n_trajectories: Annotated[int, Field(gt=1)]
+    seed: Annotated[int, Field(ge=0)] = 0
+
+
+@app.post("/v1/dynamics/sample")
+def dynamics_sample(payload: SamplePayload) -> dict[str, Any]:
+    """Sample Glauber trajectories and read the irreversibility estimators.
+
+    Returns the KLD(k=1) point estimate, the TUR point estimate AND its
+    certified bootstrap-lower quantile, alongside the exact EPR of the same
+    generator — the app shows convergence of data-side meters to the exact
+    one. Seeded and deterministic.
+    """
+    import jax
+
+    game = _game_from(GamePayload(payoffs=payload.payoffs, lam=payload.lam))
+    n_states = 1
+    for m in game.num_actions:
+        n_states *= m
+    if n_states > settings.max_profile_states:
+        raise HTTPException(status_code=413, detail="profile space exceeds dense limit")
+    if (
+        payload.n_steps > settings.max_sample_steps
+        or payload.n_trajectories > settings.max_sample_trajectories
+        or payload.n_steps * payload.n_trajectories > settings.max_sample_budget
+    ):
+        raise HTTPException(status_code=413, detail="sampling budget exceeds service limit")
+
+    gen = glauber_generator(game, payload.lam)
+    key, boot_key = jax.random.split(jax.random.key(payload.seed))
+    batch = sample_trajectories(
+        gen, key, n_steps=payload.n_steps, n_trajectories=payload.n_trajectories
+    )
+    weights = stationary_current_weights(gen)
+    reading = thermo_read(game, payload.lam)
+    return {
+        "exact_epr": float(reading.epr),
+        "kld_epr": float(kld_epr(batch, k=1)),
+        "tur_point": float(tur_epr_bound(batch, weights)),
+        "tur_ci_low": float(tur_epr_bound_ci(batch, weights, boot_key)),
+        "n_steps": payload.n_steps,
+        "n_trajectories": payload.n_trajectories,
+        "seed": payload.seed,
+        "provenance": _provenance(game, payload.lam).model_dump(),
+        "warnings": [
+            "tur_point is a point estimate and may exceed exact EPR near equilibrium; "
+            "tur_ci_low is the certified statement"
+        ],
+    }

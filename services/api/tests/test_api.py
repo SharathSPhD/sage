@@ -85,3 +85,48 @@ def test_nonfinite_payoffs_rejected():
     raw = '{"payoffs": [[[Infinity, 0], [0, 1]], [[1, 0], [0, 1]]], "lam": 1.0}'
     resp = client.post("/v1/solve/qre", content=raw, headers={"content-type": "application/json"})
     assert resp.status_code in (400, 422)
+
+
+def test_poke_cross_readings_symmetric_on_potential():
+    """Doc 07's measurement procedure: poke 1 read 2 vs poke 2 read 1."""
+    base = {"payoffs": COORD["payoffs"], "lam": 1.0, "player": 0, "action": 0, "size": 0.2}
+    r1 = client.post("/v1/response/poke", json=base).json()
+    r2 = client.post("/v1/response/poke", json={**base, "player": 1}).json()
+    assert r1["delta"][0][0] > 0  # own action pushed up
+    # cross-reading: how much the OTHER player moved
+    cross_12 = r1["delta"][1][0]
+    cross_21 = r2["delta"][0][0]
+    assert abs(cross_12 - cross_21) < 1e-6  # reciprocity on an exact potential game
+    assert "sigma_base" in r1 and "sigma_poked" in r1
+
+
+def test_poke_rejects_bad_indices():
+    bad = {"payoffs": COORD["payoffs"], "lam": 1.0, "player": 5, "action": 0, "size": 0.1}
+    assert client.post("/v1/response/poke", json=bad).status_code == 422
+
+
+def test_stationary_includes_currents_and_states():
+    rps = client.post("/v1/dynamics/stationary", json=RPS).json()
+    coord = client.post("/v1/dynamics/stationary", json=COORD).json()
+    n = len(rps["pi"])
+    assert len(rps["currents"]) == n and len(rps["currents"][0]) == n
+    assert len(rps["states"]) == n and len(rps["states"][0]) == 2
+    flat = [abs(v) for row in rps["currents"] for v in row]
+    assert max(flat) > 1e-4  # RPS circulates
+    flat_c = [abs(v) for row in coord["currents"] for v in row]
+    assert max(flat_c) < 1e-10  # potential game: no current
+
+
+def test_sample_estimates_track_exact():
+    body = {**RPS, "n_steps": 8000, "n_trajectories": 8, "seed": 7}
+    out = client.post("/v1/dynamics/sample", json=body).json()
+    assert out["exact_epr"] > 1e-3
+    assert abs(out["kld_epr"] - out["exact_epr"]) / out["exact_epr"] < 0.5
+    assert 0 < out["tur_ci_low"] <= out["exact_epr"] * 1.1
+    again = client.post("/v1/dynamics/sample", json=body).json()
+    assert again["kld_epr"] == out["kld_epr"]  # seeded, deterministic
+
+
+def test_sample_size_guard():
+    body = {**RPS, "n_steps": 500000, "n_trajectories": 64, "seed": 1}
+    assert client.post("/v1/dynamics/sample", json=body).status_code in (413, 422)
