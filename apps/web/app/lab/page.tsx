@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 
 // The Lab is a research instrument: pick a game, slide λ, every meter updates
 // from the live API (heavy compute never runs in the browser).
-const API = process.env.SAGE_API_BASE ?? "http://localhost:8000";
+const API = process.env.NEXT_PUBLIC_SAGE_API_BASE ?? "http://150.136.84.2";
 
 interface Readings {
   sigma?: number[][];
