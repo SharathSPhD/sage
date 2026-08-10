@@ -64,3 +64,14 @@ jobs:
         run: grep '\.py$' changed.txt | xargs -r python3 .claude/hooks/check_import_sage.py
       - name: Secret scan
         run: xargs -a changed.txt -r python3 .claude/hooks/check_secrets.py
+
+  web-math:
+    name: client math vs library goldens
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: cd apps/web && npm ci --no-audit --no-fund
+      - run: cd apps/web && npm test

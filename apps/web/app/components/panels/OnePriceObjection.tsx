@@ -52,7 +52,7 @@ export function OnePriceObjection() {
   return (
     <PanelShell title="argmax against a point rival vs the QRE distribution" provenance="client">
       <LambdaSlider lam={rivalLam} setLam={setRivalLam} min={0.1} max={20} label="how noisy is the rival? (their λ)" />
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.4rem", marginTop: "1rem" }}>
+      <div className="panel-cols" style={{ marginTop: "1rem" }}>
         <div>
           <div className="panel-label">
             rival as a POINT prediction <span className="badge">recommend {PRICES[pointBest]}</span>

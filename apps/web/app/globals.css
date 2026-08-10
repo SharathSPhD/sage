@@ -353,3 +353,6 @@ table { border-collapse: collapse; }
 .explorable { border-color: var(--accent-dim); }
 .explorable:hover { border-color: var(--accent-dim); }
 .explorable select { font-size: 0.85rem; }
+
+.panel-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; align-items: start; }
+@media (max-width: 760px) { .panel-cols { grid-template-columns: 1fr !important; } }

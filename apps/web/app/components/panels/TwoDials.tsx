@@ -25,7 +25,7 @@ export function TwoDials() {
 
   return (
     <PanelShell title="elasticity moves the payoffs; λ moves the sharpness" provenance="client">
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.4rem", alignItems: "start" }}>
+      <div className="panel-cols">
         <div>
           <NumberDial
             value={elasticity}

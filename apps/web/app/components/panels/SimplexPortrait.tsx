@@ -86,10 +86,23 @@ export function SimplexPortrait() {
 
   return (
     <PanelShell title="the loop, settling — click inside the triangle" provenance="client">
-      <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "1.4rem", alignItems: "start" }}>
+      <div className="panel-cols" style={{ gridTemplateColumns: "auto 1fr" }}>
         <svg
           viewBox={`0 0 ${W} ${H}`}
           style={{ width: "100%", maxWidth: 440, cursor: "crosshair" }}
+          tabIndex={0}
+          role="button"
+          aria-description="Press Enter or Space to seed a trajectory at a fresh interior point"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              const n = seeds.length;
+              const p = [0.2 + 0.5 * ((n * 7) % 10) / 10, 0.15 + 0.4 * ((n * 3) % 10) / 10, 0];
+              p[2] = Math.max(0.05, 1 - p[0] - p[1]);
+              const z = p[0] + p[1] + p[2];
+              setSeeds((prev) => [...prev.slice(-4), p.map((c) => c / z)]);
+            }
+          }}
           onClick={(e) => {
             const rect = (e.target as SVGElement).closest("svg")!.getBoundingClientRect();
             const sx = ((e.clientX - rect.left) / rect.width) * W;

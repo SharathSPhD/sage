@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { solveQRE, type TwoPlayerGame } from "../../../lib/qre";
-import { Bars, NumberDial, PanelShell } from "./ui";
+import { Bars, LambdaSlider, NumberDial, PanelShell } from "./ui";
 
 /* Doc 07's promised panel: poke-player selector, poke size, the two
    cross-readings side by side. The reciprocity meter's actual measurement
@@ -45,7 +45,7 @@ export function PokePanel() {
   const [action, setAction] = useState(0); // a: P1's poked action / P1's read action
   const [readAction, setReadAction] = useState(1); // b: P2's read action / P2's poked action
   const [size, setSize] = useState(0.3);
-  const lam = 1.2;
+  const [lam, setLam] = useState(1.2);
   const game = GAMES[gameName];
 
   // Reciprocity compares chi_{(2,b),(1,a)} with chi_{(1,a),(2,b)}:
@@ -101,9 +101,12 @@ export function PokePanel() {
         <div style={{ minWidth: 180 }}>
           <NumberDial value={size} setValue={setSize} min={0.05} max={1.5} step={0.05} label="poke size h" />
         </div>
+        <div style={{ minWidth: 200 }}>
+          <LambdaSlider lam={lam} setLam={setLam} min={0.2} max={8} />
+        </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.4rem" }}>
+      <div className="panel-cols">
         <div>
           <div className="panel-label">
             poke P1&apos;s {ACTIONS[action]} → read P2&apos;s {ACTIONS[readAction]}:{" "}
@@ -130,7 +133,7 @@ export function PokePanel() {
       </div>
       <p style={{ fontSize: "0.78rem", color: "var(--text-faint)", marginTop: "0.6rem" }}>
         {game.note}. This works without knowing the payoffs: only pokes and observed shifts —
-        that is why ℛ is estimable from real pass-through data.
+        that is why ℛ is estimable from real pass-through data. Slide λ: the asymmetry's MAGNITUDE changes, but zero stays zero and nonzero stays nonzero at every λ — the symmetry verdict is λ-free.
       </p>
     </PanelShell>
   );

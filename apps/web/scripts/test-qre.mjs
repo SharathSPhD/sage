@@ -35,6 +35,44 @@ for (const [name, kase] of Object.entries(goldens.cases)) {
   }
 }
 
+// ---- primitives: every exported function the panels rely on ----
+const prim = goldens.primitives;
+const close = (a, b, tol = 1e-9) => Math.abs(a - b) < tol;
+const vecClose = (a, b, tol = 1e-9) => a.length === b.length && a.every((v, i) => close(v, b[i], tol));
+
+for (const c of prim.softmax) {
+  const got = mod.softmax(c.values, c.lam);
+  const okP = vecClose(got, c.probs);
+  const okH = close(mod.entropy(got), c.entropy);
+  if (!okP || !okH) failures++;
+  console.log(`${okP && okH ? "PASS" : "FAIL"} softmax+entropy lam=${c.lam}`);
+}
+for (const c of prim.logit_flow) {
+  const got = mod.logitFlow(c.u, c.x, c.lam);
+  const ok = vecClose(got, c.flow);
+  if (!ok) failures++;
+  console.log(`${ok ? "PASS" : "FAIL"} logitFlow lam=${c.lam} x=${c.x}`);
+}
+{
+  const c = prim.coordination_rest_point;
+  const path = mod.logitTrajectory(c.u, c.seed, c.lam, { dt: 0.05, steps: 3000 });
+  const end = path[path.length - 1];
+  const ok = vecClose(end, c.rest, 1e-5) && path.every((p) => close(p.reduce((a, b) => a + b, 0), 1, 1e-8));
+  if (!ok) failures++;
+  console.log(`${ok ? "PASS" : "FAIL"} logitTrajectory rest point + simplex invariant`);
+}
+for (const c of prim.argmax) {
+  const ok = vecClose(mod.argmaxMix(c.values), c.mix);
+  if (!ok) failures++;
+  console.log(`${ok ? "PASS" : "FAIL"} argmaxMix ${JSON.stringify(c.values)}`);
+}
+{
+  const c = prim.expected_payoffs_col;
+  const ok = vecClose(mod.expectedPayoffsCol(c.u2, c.row_mix), c.out);
+  if (!ok) failures++;
+  console.log(`${ok ? "PASS" : "FAIL"} expectedPayoffsCol`);
+}
+
 if (failures > 0) {
   console.error(`${failures} golden disagreement(s) — client math has drifted from the library`);
   process.exit(1);

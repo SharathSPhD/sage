@@ -21,7 +21,7 @@ export function FreeEnergyDial() {
 
   return (
     <PanelShell title="the Gibbs variational principle" provenance="client">
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.4rem", alignItems: "start" }}>
+      <div className="panel-cols">
         <div>
           <NumberDial
             value={temp}

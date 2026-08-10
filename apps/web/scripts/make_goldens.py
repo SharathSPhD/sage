@@ -42,8 +42,59 @@ CASES = {
 LAMBDAS = [0.3, 1.2, 4.0]
 
 
+def _softmax(v, lam):
+    import jax.nn
+
+    return jax.nn.softmax(lam * jnp.asarray(v, dtype=jnp.float64))
+
+
+def primitives() -> dict:
+    """References for every client-side primitive, from the library's stack."""
+    vals = [102.0, 108.0, 115.0, 113.0, 104.0]
+    rps = jnp.array([[0.0, -1.0, 1.0], [1.0, 0.0, -1.0], [-1.0, 1.0, 0.0]])
+    coord = jnp.array([[2.0, 0.0, 0.0], [0.0, 2.0, 0.0], [0.0, 0.0, 2.0]])
+
+    softmax_cases = []
+    for lam in [0.05, 0.3, 2.0]:
+        pr = _softmax(vals, lam)
+        h = float(-jnp.sum(jnp.where(pr > 0, pr * jnp.log(pr), 0.0)))
+        softmax_cases.append({"values": vals, "lam": lam, "probs": pr.tolist(), "entropy": h})
+
+    flow_cases = []
+    for xx in ([0.5, 0.3, 0.2], [0.2, 0.2, 0.6], [1 / 3, 1 / 3, 1 / 3]):
+        for lam in [0.8, 2.0]:
+            f = _softmax(rps @ jnp.asarray(xx), lam) - jnp.asarray(xx)
+            flow_cases.append({"u": rps.tolist(), "x": list(xx), "lam": lam, "flow": f.tolist()})
+
+    # symmetric single-population fixed point of coordination at lam=2 seeded
+    # asymmetrically -> converges to the basin's rest point; used to check the
+    # client trajectory integrator lands where the field says it must.
+    y = jnp.array([0.6, 0.25, 0.15])
+    for _ in range(20000):
+        y = 0.5 * y + 0.5 * _softmax(coord @ y, 2.0)
+    argmax_cases = [
+        {"values": [1.0, 2.0, 2.0], "mix": [0.0, 0.5, 0.5]},
+        {"values": [3.0, 1.0, 0.0], "mix": [1.0, 0.0, 0.0]},
+    ]
+    u2 = ASYM.payoffs[1]
+    row_mix = [0.2, 0.5, 0.3]
+    epc = (jnp.asarray(row_mix) @ u2).tolist()
+    return {
+        "softmax": softmax_cases,
+        "logit_flow": flow_cases,
+        "coordination_rest_point": {
+            "u": coord.tolist(),
+            "lam": 2.0,
+            "seed": [0.6, 0.25, 0.15],
+            "rest": y.tolist(),
+        },
+        "argmax": argmax_cases,
+        "expected_payoffs_col": {"u2": u2.tolist(), "row_mix": row_mix, "out": epc},
+    }
+
+
 def main() -> None:
-    goldens: dict = {"cases": {}}
+    goldens: dict = {"cases": {}, "primitives": primitives()}
     for name, game in CASES.items():
         payoffs = [u.tolist() for u in game.payoffs]
         solves = []

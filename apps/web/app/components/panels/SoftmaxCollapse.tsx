@@ -18,7 +18,7 @@ export function SoftmaxCollapse() {
 
   return (
     <PanelShell title="softmax and λ" provenance="client">
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.4rem", alignItems: "start" }}>
+      <div className="panel-cols">
         <div>
           <div className="panel-label">expected profit per price — drag to edit</div>
           {payoffs.map((v, i) => (
