@@ -1,51 +1,65 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import "./globals.css";
+import { HealthDot } from "./components/HealthDot";
+import { NavLinks } from "./components/NavLinks";
 
 export const metadata: Metadata = {
-  title: "SAGE Labs",
+  title: "SAGE Labs — instruments for strategic systems",
   description:
-    "Measurement instruments for stochastic strategic systems: susceptibility, reciprocity, dissipation, phase.",
+    "Measurement instruments for stochastic strategic systems: susceptibility, reciprocity, dissipation, phase. Every reading calibrated on games where the answer is known.",
 };
+
+function BrandMark() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="10" stroke="var(--accent)" strokeWidth="1.5" />
+      <path
+        d="M12 3 L12 12 L18.4 16.4"
+        stroke="var(--accent)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <circle cx="12" cy="12" r="1.8" fill="var(--accent)" />
+    </svg>
+  );
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body
-        style={{
-          fontFamily: "system-ui, sans-serif",
-          margin: 0,
-          color: "#1a202c",
-          background: "#fafaf7",
-        }}
-      >
-        <nav
-          style={{
-            display: "flex",
-            gap: "1.5rem",
-            padding: "0.9rem 2rem",
-            borderBottom: "1px solid #e2e2dc",
-            background: "#0f3d3e",
-            color: "white",
-            alignItems: "baseline",
-          }}
-        >
-          <Link href="/" style={{ color: "white", fontWeight: 700, textDecoration: "none" }}>
+      <body>
+        <nav className="site-nav">
+          <Link href="/" className="brand">
+            <BrandMark />
             SAGE Labs
           </Link>
-          <Link href="/learn" style={{ color: "#cde5e0", textDecoration: "none" }}>
-            Learn
-          </Link>
-          <Link href="/lab" style={{ color: "#cde5e0", textDecoration: "none" }}>
-            Lab
-          </Link>
-          <a
-            href="https://github.com/SharathSPhD/sage"
-            style={{ marginLeft: "auto", color: "#cde5e0", textDecoration: "none", fontSize: "0.9rem" }}
-          >
-            code + gates + paper
-          </a>
+          <NavLinks />
+          <div style={{ marginLeft: "auto", display: "flex", gap: "1.2rem", alignItems: "center" }}>
+            <HealthDot />
+            <a
+              href="https://github.com/SharathSPhD/sage"
+              style={{ color: "var(--text-dim)", fontSize: "0.88rem" }}
+            >
+              GitHub
+            </a>
+          </div>
         </nav>
-        <main style={{ maxWidth: "52rem", margin: "0 auto", padding: "2rem 1.5rem" }}>{children}</main>
+        <main>{children}</main>
+        <footer className="site-footer">
+          <span>
+            Every number regenerates from fixed seeds in the{" "}
+            <a href="https://github.com/SharathSPhD/sage">open repository</a>; adversarial reviews
+            that closed each instrument are part of the public record.
+          </span>
+          <span>
+            <a href="https://sharathsphd.github.io/sage/">docs</a>
+            {" · "}
+            <a href="https://sharathsphd.github.io/sage/progress/">gate dashboard</a>
+            {" · "}
+            <a href="/api/v1/health">API</a>
+          </span>
+        </footer>
       </body>
     </html>
   );

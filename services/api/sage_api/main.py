@@ -15,6 +15,7 @@ from typing import Annotated, Any, Literal
 import jax.numpy as jnp
 import strataq
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings
 from strataq.core.solve.fixedpoint import logit_qre
@@ -41,6 +42,15 @@ app = FastAPI(
     title="strataq API",
     version=strataq.__version__,
     description="Susceptibility, reciprocity, dissipation and phase readings for finite games.",
+)
+
+# Public, read-compute API with no credentials or user state: permissive CORS
+# is safe and lets any origin (the app, notebooks, third-party pages) call it.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
 
 
