@@ -162,3 +162,8 @@
 - **Issues found & fixed by browser e2e**: no CORS on the API (added middleware, redeployed VM); HTTPS→HTTP mixed content on any hosted frontend (solved by /api same-origin proxy rewrites); client env var not NEXT_PUBLIC (earlier); raw $$ LaTeX in Learn (KaTeX build-time pipeline); Next 15.1.6 rejected by Vercel (CVE-2025-66478 → 15.5.23).
 - **Deployed**: https://sage-labs.vercel.app (project sage-labs, prod, iad1 — same region as the VM). Verified in-browser: landing live strip, Lab full readings on congestion + RPS across λ, phase map hover, Learn math — all against the live Oracle backend.
 - Pending operator clicks: disable Vercel Authentication (Settings → Deployment Protection) to make the URL public; set Root Directory = apps/web on the now-connected GitHub integration so git pushes deploy.
+
+## 2026-08-10 (cont.) — p3_noneq working draft v0.1
+
+- 7-page draft in papers/p3_noneq/: setup (Glauber/NESS + meters), phase map (F-0006: criticality escape + supercritical wedge), decoupling (F-0004/F-0007: within-level sign reversal, H1 refuted/H2 confirmed, structural local-derivative-vs-global-flux reading), estimators (K9/K10: KLD rho=1.0 recovery; TUR fixed-horizon + debiasing + bootstrap certification, tightness-as-diagnostic), discussion with explicit falsifiers, provenance table mapping every claim to its gate artifact. Figures regenerate from committed artifacts only (make_figures.py — no solves in the paper pipeline).
+- Vercel: PI disabled deployment protection and set Root Directory — https://sage-labs.vercel.app now PUBLIC (200s anonymous on /, /lab, /phase, /api/v1/health); git pushes auto-deploy.

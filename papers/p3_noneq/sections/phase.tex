@@ -1,0 +1,50 @@
+\section{The $\alpha \times \lambda$ phase map: criticality escape and the supercritical wedge}
+\label{sec:phase}
+
+Naively $\rho(SB) \propto \lambda$, since $S = \lambda C$ with
+$C = \mathrm{diag}(\sigma) - \sigma\sigma^\top$ the choice covariance. The
+sweep (9 $\lambda$ $\times$ 11 $\alpha$, medians over 100 games per cell,
+9{,}900 solves) says otherwise (Figure~\ref{fig:wedge}).
+
+\begin{finding}[Criticality escape; F-0006]
+On potential games ($\alpha=0$) the median $\rho(SB)$ is \emph{non-monotone}
+in $\lambda$: $0.07 \to 0.51$ (at $\lambda = 1.7$) $\to 10^{-3}$ (at
+$\lambda = 15$). As $\lambda \to \infty$ the principal QRE branch concentrates
+on a strict equilibrium, $C \to 0$ exponentially, and $S = \lambda C \to 0$
+despite the $\lambda$ factor: the system escapes criticality \emph{through}
+equilibrium concentration. At $\alpha = 1$, mixed equilibria keep $C$ bounded
+away from zero and $\rho$ grows without bound ($6.9$ at $\lambda=15$).
+\end{finding}
+
+\begin{finding}[The supercritical wedge; F-0006]
+Between the extremes a wedge of supercritical games opens. The \emph{median}
+game first crosses $\rho = 1$ at $\alpha = 0.5$ (for $\lambda \ge 8.5$); a
+$0.2$ fraction of games crosses already at $\alpha = 0.4$; the frontier
+$\lambda_c(\alpha)$ descends monotonically ($\lambda_c \approx 3$ by
+$\alpha = 0.8$). Inside the wedge the resolvent is near-singular, so response
+\emph{magnitudes} ($\chieq$, and hence $\R$ levels) are unreliable there ---
+the meters themselves flag it; symmetry statements survive as
+direction-only reads.
+\end{finding}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/phase_wedge.pdf}
+\caption{The $\alpha\times\lambda$ plane. Left: median $\rho(SB)$ with the
+$\rho=1$ contour in white --- non-monotone along the bottom edge (criticality
+escape), unbounded along the top. Right: fraction of games per cell with
+$\rho \ge 1$ --- the supercritical wedge, frontier descending in $\alpha$.
+Artifact: \texttt{phase\_map\_surface.json}.}
+\label{fig:wedge}
+\end{figure}
+
+Two consistency checks the map passes: the escape mechanism predicts no Hopf
+bifurcation of logit dynamics in full potential games ($B = B^\top$ makes the
+$SB$ spectrum real; verified exactly across the $\lambda$ grid), consistent
+with cycles requiring non-potential structure \citep{hommes2012}; and the
+$\alpha = 0$ row of every dissipation meter reads zero to machine precision at
+all $\lambda$, as it must.
+
+Open at this draft: whether the $\alpha=0$ peak location ($\lambda \approx
+1.7$ at payoff scale 2.0) is a pure scale artefact of the $\lambda$--payoff
+folding, and whether $\lambda_c(\alpha)$ is a clean curve under a finer grid.

@@ -1,0 +1,28 @@
+\section*{Provenance}
+\addcontentsline{toc}{section}{Provenance}
+
+Every quantitative claim in this draft maps to a committed, gate-checked
+artifact regenerated from fixed seeds by \texttt{make reproduce}:
+
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+Claim & Artifact & Gate unit \\
+\midrule
+Phase surface, wedge, criticality escape & \texttt{phase\_map\_surface.json} & \texttt{science.phase\_map} \\
+Marginal and within-level $\rho(\EPR,\R)$ & \texttt{chain\_comovement.json} & \texttt{dynamics.exact} \\
+H1/H2 mechanism test & \texttt{decoupling\_mechanism.json} & \texttt{science.decoupling} \\
+KLD/TUR ground truth (named games) & \texttt{estimator\_ground\_truth.json} & \texttt{thermo.estimators} \\
+KLD $\rho = 1.0$; TUR certification per level & \texttt{estimator\_alpha\_sweep.json} & \texttt{thermo.estimators} \\
+Zero calibration (potential games, real network) & \texttt{equilibrium\_reads\_zero.json}, \texttt{sioux\_falls\_calibration.json} & \texttt{dynamics.exact}, \texttt{domains.congestion} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Each gate closed only after adversarial review; the objections and their
+dispositions (including the blocking objection to the TUR certification
+language, and the red-team origin of the decoupling finding itself) are in
+\texttt{gates/*.yaml} in the repository. Claims carry tiers in
+\texttt{memory/claims.md}; conjecture C1's partial falsification is recorded
+there, not smoothed over.

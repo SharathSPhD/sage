@@ -1,0 +1,80 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[numbers]{natbib}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{xcolor}
+
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\chieq}{\chi^{\mathrm{eq}}}
+\newcommand{\EPR}{\sigma_{\mathrm{EP}}}
+\newtheorem{finding}{Finding}
+\newtheorem{result}{Result}
+
+\title{\textbf{The non-equilibrium thermodynamics of quantal response:}\\
+\large criticality escape, a supercritical wedge, and the decoupling of\\
+response asymmetry from dissipation}
+\author{Sharath Sathish\thanks{With agent-assisted implementation. Code, gate records, and every
+number's regeneration path: \url{https://github.com/SharathSPhD/sage}.}}
+\date{August 2026 --- working draft v0.1 (grown at every closed gate)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Logit revision dynamics on a finite game define a Markov jump process on the joint
+profile space whose stationary state is a genuine thermodynamic object: a Gibbs
+equilibrium exactly when the game is potential, and a dissipative non-equilibrium
+steady state otherwise. We sweep the two-parameter plane spanned by the harmonic
+fraction $\alpha$ of the game's Hodge decomposition and the logit precision
+$\lambda$, reading four calibrated meters at every point --- spectral criticality
+$\rho(SB)$, reciprocity defect $\R$, exact entropy production $\EPR$, and its
+trajectory estimators --- and report three facts we did not predict.
+(i)~\emph{Criticality escape}: on potential games $\rho(SB)$ is non-monotone in
+$\lambda$ --- equilibrium concentration kills the choice covariance faster than
+$\lambda$ amplifies it --- while harmonic games cross $\rho=1$ and stay there,
+opening a \emph{supercritical wedge} whose frontier descends in $\alpha$
+(median onset $\alpha=0.5$).
+(ii)~\emph{Decoupling}: dissipation and response asymmetry co-move almost
+perfectly along $\alpha$ ($\rho_S=0.993$ marginally) yet, conditional on
+$\alpha$, their correlation degrades and \emph{reverses} to $-0.355$ in the
+near-harmonic regime; a mechanism experiment shows this is structural --- the
+equilibrium susceptibility is a local derivative, the entropy production a
+global flux functional, and no renormalisation of the former recovers the
+latter's ordering. A repair hypothesis we proposed is refuted by its own
+preregistered test.
+(iii)~\emph{Estimability}: irreversibility is recoverable from trajectories
+alone --- a $k$-th order Markov KLD estimator tracks the exact meter with rank
+correlation $1.0$ across the family, and a debiased finite-time
+thermodynamic-uncertainty bound certifies dissipation from two cumulants of one
+current, saturating (ratio $\to 1$) precisely in the near-equilibrium regime.
+Every number regenerates from fixed seeds; every claim carries its confidence
+tier and its falsifier.
+\end{abstract}
+
+\input{sections/setup}
+\input{sections/phase}
+\input{sections/decoupling}
+\input{sections/estimators}
+\input{sections/discussion}
+\input{sections/provenance}
+
+\bibliographystyle{plainnat}
+\begin{thebibliography}{12}
+\bibitem[Blume(1993)]{blume1993} L.~Blume. The statistical mechanics of strategic interaction. \emph{Games Econ.\ Behav.}, 5:387--424, 1993.
+\bibitem[Candogan et al.(2011)]{candogan2011} O.~Candogan, I.~Menache, A.~Ozdaglar, P.~Parrilo. Flows and decompositions of games: harmonic and potential games. \emph{Math.\ OR}, 36(3):474--503, 2011.
+\bibitem[McKelvey and Palfrey(1995)]{mckelvey1995} R.~McKelvey, T.~Palfrey. Quantal response equilibria for normal form games. \emph{Games Econ.\ Behav.}, 10:6--38, 1995.
+\bibitem[Schnakenberg(1976)]{schnakenberg1976} J.~Schnakenberg. Network theory of microscopic and macroscopic behavior of master equation systems. \emph{Rev.\ Mod.\ Phys.}, 48:571, 1976.
+\bibitem[Barato and Seifert(2015)]{barato2015} A.~C. Barato, U.~Seifert. Thermodynamic uncertainty relation for biomolecular processes. \emph{Phys.\ Rev.\ Lett.}, 114:158101, 2015.
+\bibitem[Horowitz and Gingrich(2017)]{horowitz2017} J.~M. Horowitz, T.~R. Gingrich. Proof of the finite-time thermodynamic uncertainty relation for steady-state currents. \emph{Phys.\ Rev.\ E}, 96:020103, 2017.
+\bibitem[Rold\'an and Parrondo(2010)]{roldan2010} \'E.~Rold\'an, J.~M.~R. Parrondo. Estimating dissipation from single stationary trajectories. \emph{Phys.\ Rev.\ Lett.}, 105:150607, 2010.
+\bibitem[Otsubo et al.(2022)]{otsubo2022} S.~Otsubo, S.~K. Manikandan, T.~Sagawa, S.~Krishnamurthy. Estimating time-dependent entropy production from non-equilibrium trajectories. \emph{Commun.\ Phys.}, 5:11, 2022.
+\bibitem[Xu and Wang(2011)]{xu2011} B.~Xu, Z.~Wang. Evolutionary dynamical patterns of `coyness and philandering': evidence from experimental economics. arXiv:1107.6043, 2011.
+\bibitem[Legacci et al.(2024)]{legacci2024} D.~Legacci, P.~Mertikopoulos, B.~Pradelski. A geometric decomposition of finite games: convergence vs.\ recurrence under exponential weights. arXiv:2405.07224, 2024.
+\bibitem[Hommes and Ochea(2012)]{hommes2012} C.~Hommes, M.~Ochea. Multiple equilibria and limit cycles in evolutionary games with logit dynamics. \emph{Games Econ.\ Behav.}, 74:434--441, 2012.
+\bibitem[Sathish(2026)]{p1} S.~Sathish. strataq: measurement instruments for stochastic strategic systems. Working draft, 2026. In the same repository.
+\end{thebibliography}
+
+\end{document}
