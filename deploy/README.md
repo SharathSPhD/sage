@@ -13,3 +13,11 @@ Compute split: research sweeps stay on the DGX Spark; the VM serves the API only
 The GHCR package is pushed private by default (GITHUB_TOKEN scope). Either:
 - GitHub → Packages → sage-api → Package settings → Change visibility → **Public** (recommended, open project), or
 - `docker login ghcr.io` on the VM with a classic PAT holding `read:packages`.
+
+## Interim deployment (live) — ADR-0011
+
+`http://150.136.84.2` — VM.Standard.E2.1.Micro (Always Free x86), bare-metal:
+repo at `/home/ubuntu/sage`, `uv sync --package sage-api`, systemd unit `sage-api`
+(uvicorn on 127.0.0.1:8000, MemoryMax=700M), Caddy on :80. Update:
+`ssh ubuntu@150.136.84.2 'cd sage && git pull && systemctl restart sage-api'` (via sudo).
+Migrate to the A1 box with the compose stack above when capacity lands.

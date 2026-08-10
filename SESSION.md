@@ -139,3 +139,12 @@
 - Repo side complete: deploy/ (compose + Caddyfile + runbook), docs/ops-hosting.md, api-image.yml (linux/arm64 → GHCR on every main push touching the API), ADR-0010. **When capacity lands**: SSH in → docs/ops-hosting.md §4 (docker, swap, iptables) → copy deploy/ to /opt/sage → `docker compose up -d`.
 
 **Next per SESSION.md**: Learn explainers 02–06/08/10, thermo trajectory estimators, Stage 3 empirics, p3_noneq draft.
+
+---
+
+## 2026-08-10 (cont.) — THE API IS LIVE (interim micro box, ADR-0011)
+
+- PAYG declined (£79 card-verification hold); other regions impossible on Free Tier (home region fixed). **Pivot: VM.Standard.E2.1.Micro launched on the FIRST attempt** (different capacity pool from A1) — 150.136.84.2, Ubuntu 24.04 x86, 4 GB swap.
+- Bare-metal deploy (1 GB ⟹ no Docker): uv + systemd (MemoryMax=700M) + Caddy :80. **External smoke: /v1/health ok; RPS ℛ = 0.866; coordination EPR = 0, detailed balance true — the instruments are on the internet at €0.**
+- Ops reality vs doc: the Oracle iptables REJECT sits at INPUT 5; rules must go above it (hit and fixed live).
+- A1 retry monitor still cycling (~10 min); on landing → compose migration. 48h without → Netcup/GCP per PI.

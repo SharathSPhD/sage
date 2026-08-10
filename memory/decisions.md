@@ -70,3 +70,10 @@ Format per entry: Context · Options · Decision · Consequences · Date. Includ
 - **Decision**: services/api deploys to the Oracle VM via Docker Compose + Caddy (deploy/); CI builds a linux/arm64 image to GHCR. render.yaml retained as the documented fallback path only (Netcup is the paid fallback). Provisioning: VCN sage-vcn + subnet created 2026-08-10 (us-ashburn-1); instance launch is capacity-gated with a scripted retry (the documented Always Free failure mode).
 - **Consequences**: worker concurrency 1 on 2 ARM cores; game-size limits enforced in API validation before queueing; arm64 images mandatory.
 - **Date**: 2026-08-10
+
+## ADR-0011 — Interim backend on Always Free x86 micro; A1 retry continues; PAYG declined
+
+- **Context**: A1 capacity exhausted in all Ashburn ADs; the PAYG upgrade path (community-reported to improve A1 queue position — not guaranteed) was declined because Oracle's card verification attempts a £79 hold. Free Tier cannot subscribe to other regions (home region fixed at signup), so "another region" is not an option without PAYG.
+- **Decision**: Provisioned VM.Standard.E2.1.Micro (Always Free x86, 1 GB + 4 GB swap) — capacity available immediately, different pool from A1. API deployed bare-metal (uv + systemd + Caddy; no Docker at 1 GB) at http://150.136.84.2 with reduced size limits (10 actions/player, 200 profile states). The scripted A1 retry keeps running; on an A1 landing, migrate via deploy/ compose (portable by design). If A1 hasn't landed in ~48h, Netcup/GCP per the PI.
+- **Consequences**: interim box is slow (1/8 OCPU burstable) and RAM-tight — fine for Lab-scale sync calls; branch tracing and dense dynamics stay conservative. Ops detail recorded: Oracle's default iptables REJECT sits at INPUT position 5 — port rules must be inserted ABOVE it (the hosting doc's gotcha, met in practice).
+- **Date**: 2026-08-10
