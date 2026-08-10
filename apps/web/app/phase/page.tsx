@@ -8,8 +8,16 @@ export const metadata = { title: "Phase map — SAGE Labs" };
 // seeds (unit science.phase_map). The app reads it at build time — the
 // dashboard reads files, it does not compute.
 function loadSurface(): Surface {
-  const p = path.join(process.cwd(), "..", "..", "benchmarks", "results", "phase_map_surface.json");
-  return JSON.parse(fs.readFileSync(p, "utf-8")) as Surface;
+  // Monorepo checkout first; the standalone deploy carries a synced copy in
+  // data/ (refresh with `make reproduce` + the deploy step).
+  const candidates = [
+    path.join(process.cwd(), "..", "..", "benchmarks", "results", "phase_map_surface.json"),
+    path.join(process.cwd(), "data", "phase_map_surface.json"),
+  ];
+  for (const p of candidates) {
+    if (fs.existsSync(p)) return JSON.parse(fs.readFileSync(p, "utf-8")) as Surface;
+  }
+  throw new Error("phase_map_surface.json not found in benchmarks/results or data/");
 }
 
 export default function PhasePage() {
