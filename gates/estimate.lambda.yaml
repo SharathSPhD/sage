@@ -1,0 +1,56 @@
+unit: estimate.lambda
+claim: "lambda is estimable four structurally different ways (frequency MLE, autodiff MLE, chi moment-matching, dispersion inversion), the family agrees on well-specified data, and its disagreement -- plus explicit unidentifiability warnings -- is a working misspecification diagnostic rather than a number that lies"
+tier: derived   # statistical machinery over exact solves; consistency shown on synthetic ground truth
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.90
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/estimate/lam.py
+      - packages/strataq/strataq/estimate/__init__.py
+      - packages/strataq/tests/estimate/test_lambda.py
+
+  domain:
+    - id: estimator_recovery
+      spec: "median relative error over identified (game, lambda*) cases: MLE < 10%, dispersion < 20%, chi moment-matching < 5% (oracle-chi anchor); unidentified cases excluded via the estimators' own warnings"
+      artifact: benchmarks/results/estimator_recovery.json
+    - id: estimator_misspecification
+      spec: "lambda-mixture data widens the agreement gap by > 2x over clean data; symmetric-RPS data yields an unidentifiability warning, never a bare number"
+      artifact: benchmarks/results/estimator_misspecification.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/instruments/lambda.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: true    # granted-conditional 2026-08-10; both conditions closed same-session
+    objections:
+      - id: O-1
+        text: "flat-likelihood guard used a hardcoded 1e-3 scale (config x literal), inconsistent with the dispersion guard and 40x off the documented threshold"
+        disposition: addressed
+        where: "Two honest config knobs now: flat_ll_per_obs (nats per observation, MLE) and flat_entropy_threshold (nats, dispersion); no inline literal; schema updated"
+      - id: O-2
+        text: "lambda_mle_implicit silently inherited the grid MLE's profile-likelihood CI"
+        disposition: addressed
+        where: "Disclosed in the docstring and as an explicit warnings entry on every estimate"
+      - id: O-3
+        text: "moment_chi validated only against the oracle chi; agreement-flag precedence (warnings suppress the flag) undocumented"
+        disposition: addressed
+        where: "moment_chi docstring states the measurement requirement and what the gate does/does not bound; protocol docstring documents the precedence (identification warnings suppress; both always visible); ci-inheritance disclosure no longer suppresses the flag"
+      - id: O-4
+        text: "verified clean: unrolled-solve convergence to 1e-11 at lambda=20; profile CI drop 1.92 correct; mixture flag fires (gap 0.709 > 0.25); bootstrap determinism intentional"
+        disposition: addressed
+        where: "No change required; recorded as verification"
+

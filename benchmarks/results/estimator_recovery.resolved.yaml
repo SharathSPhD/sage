@@ -1,0 +1,25 @@
+config:
+  alphas:
+  - 0.15
+  - 0.45
+  - 0.75
+  bootstrap:
+    n_resamples: 2000
+  defaults:
+  - _self_
+  family_scale: 2.0
+  lam_stars:
+  - 0.3
+  - 0.8
+  - 1.5
+  - 3.0
+  - 6.0
+  n_samples: 20000
+  seed: 20260810
+  thresholds:
+    dispersion_rel_err_max: 0.2
+    mixture_gap_ratio_min: 2.0
+    mle_rel_err_max: 0.1
+    moment_chi_rel_err_max: 0.05
+library_version: 0.1.0.dev0
+run_at: '2026-08-10T22:09:33+00:00'

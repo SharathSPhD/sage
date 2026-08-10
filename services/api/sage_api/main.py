@@ -22,6 +22,7 @@ from strataq.core.dynamics.markov import glauber_generator, profile_space
 from strataq.core.dynamics.sample import sample_trajectories
 from strataq.core.solve.fixedpoint import logit_qre
 from strataq.core.solve.homotopy import logit_branch
+from strataq.estimate.lam import lambda_dispersion, lambda_mle
 from strataq.finite.decompose.hodge import hodge_decompose
 from strataq.finite.games.tensor import DenseTensorGame
 from strataq.finite.response.reciprocity import reciprocity_defect
@@ -330,4 +331,53 @@ def dynamics_sample(payload: SamplePayload) -> dict[str, Any]:
             "tur_point is a point estimate and may exceed exact EPR near equilibrium; "
             "tur_ci_low is the certified statement"
         ],
+    }
+
+
+class EstimatePayload(BaseModel):
+    """Observed choice counts for the λ-estimator family."""
+
+    payoffs: list[Any]
+    counts: list[list[int]] = Field(description="Per-player observed action counts.")
+
+
+@app.post("/v1/estimate/lambda")
+def estimate_lambda(payload: EstimatePayload) -> dict[str, Any]:
+    """Run the fast members of the λ-estimator family on observed counts.
+
+    Sync-budget subset: frequency MLE (profile-likelihood CI) and dispersion
+    inversion (point estimate, no bootstrap). Unidentifiability warnings pass
+    through — the API never returns a bare number where λ is not identified.
+    """
+    game = _game_from(GamePayload(payoffs=payload.payoffs, lam=1.0))
+    if len(payload.counts) != game.n_players:
+        raise HTTPException(status_code=422, detail="one count vector per player required")
+    counts = []
+    for c, m in zip(payload.counts, game.num_actions, strict=True):
+        if len(c) != m or any(x < 0 for x in c) or sum(c) == 0:
+            raise HTTPException(
+                status_code=422, detail="counts must be nonnegative, per-action, nonempty"
+            )
+        counts.append(jnp.asarray(c))
+    total = sum(int(jnp.sum(c)) for c in counts)
+    if total > 10_000_000:
+        raise HTTPException(status_code=413, detail="count total exceeds service limit")
+
+    mle = lambda_mle(game, tuple(counts))
+    disp = lambda_dispersion(game, tuple(counts), bootstrap=False)
+    lams = [mle.lam, disp.lam]
+    gap = (max(lams) - min(lams)) / max(sum(lams) / len(lams), 1e-12)
+    return {
+        "estimates": {
+            e.method: {
+                "lam": e.lam,
+                "ci_low": e.ci_low,
+                "ci_high": e.ci_high,
+                "warnings": list(e.warnings),
+            }
+            for e in (mle, disp)
+        },
+        "agreement_gap": gap,
+        "provenance": _provenance(game, mle.lam if mle.lam > 0 else 1.0).model_dump(),
+        "warnings": list(dict.fromkeys([*mle.warnings, *disp.warnings])),
     }

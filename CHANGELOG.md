@@ -6,6 +6,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 ## [Unreleased]
 
 ### Added
+- `strataq.estimate` — the λ-estimator family (frequency MLE with profile-likelihood CI, autodiff MLE through an unrolled solve, χ moment-matching, dispersion inversion) and the agreement protocol with unidentifiability warnings (unit estimate.lambda).
 - `strataq.thermo.estimators` — trajectory irreversibility estimators (KLD k-th order Markov, debiased finite-time TUR lower bound) with the uniformised Glauber trajectory sampler `strataq.core.dynamics.sample`; validated against the exact Schnakenberg EPR across the potential-to-harmonic family (unit thermo.estimators).
 - Oracle backend deployment (ADR-0010, deploy/ + docs/ops-hosting.md + .github/workflows/api-image.yml): Always Free A1.Flex replaces Render; VCN/subnet provisioned in us-ashburn-1; instance launch capacity-gated with scripted retry; CI builds linux/arm64 image to GHCR; compose+Caddy stack ready for pull-and-up.
 - SAGE Labs app (unit: web.scaffold, apps/web): Next.js 15 with Learn (single-source rendering of docs/theory — explainers 01 softmax/lambda, 07 reciprocity, 09 the one-price objection) and a live Lab (game selector, lambda slider, all three meters from the API, reproduce-in-Python funnel). next build: 9 static pages. Theory explainers referenced by web.scaffold gate.

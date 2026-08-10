@@ -1,0 +1,20 @@
+# λ-estimator recovery — the estimate.lambda domain-gate artifacts.
+defaults:
+  - _self_
+
+seed: 20260810
+n_samples: 20000
+
+lam_stars: [0.3, 0.8, 1.5, 3.0, 6.0]
+
+alphas: [0.15, 0.45, 0.75]   # mixed-family games at these harmonic fractions
+family_scale: 2.0
+
+thresholds:
+  mle_rel_err_max: 0.10        # median over cases
+  dispersion_rel_err_max: 0.20
+  moment_chi_rel_err_max: 0.05
+  mixture_gap_ratio_min: 2.0   # misspecified data must widen the spread by at least this factor
+
+bootstrap:
+  n_resamples: 2000

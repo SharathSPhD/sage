@@ -26,3 +26,4 @@ Definitions the dashboard's hover-defs and the docs draw from. One line each; pr
 - **QRE** — quantal response equilibrium: fixed point of logit responses to logit responses (McKelvey–Palfrey 1995). The equilibrium object is a distribution, not a point.
 - **Glauber dynamics** — single-site logit revision Markov chain on the joint profile space; reversible iff the game is potential.
 - **Hodge decomposition** — orthogonal split of a game into potential ⊕ harmonic ⊕ nonstrategic (Candogan et al. 2011); computed here by the separable Kronecker transform.
+- **λ-agreement protocol** — run all applicable λ-estimators together; the relative spread is a misspecification diagnostic (flagged beyond the configured gap), and unidentifiability (flat likelihood / flat entropy) produces warnings, never bare numbers.

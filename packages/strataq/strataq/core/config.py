@@ -70,6 +70,22 @@ class SolverDefaults(BaseModel):
     damping: float = Field(gt=0, le=1)
 
 
+class EstimateConfig(BaseModel):
+    """λ-estimator family defaults (PROGRAMME v3 §4)."""
+
+    model_config = ConfigDict(frozen=True)
+
+    lam_min: float = Field(gt=0)
+    lam_max: float = Field(gt=0)
+    grid_points: int = Field(gt=4)
+    refine_iters: int = Field(gt=0)
+    profile_ci_drop: float = Field(gt=0)
+    flat_ll_per_obs: float = Field(gt=0)
+    flat_entropy_threshold: float = Field(gt=0)
+    agreement_flag_gap: float = Field(gt=0)
+    bootstrap_resamples: int = Field(gt=1)
+
+
 class BaseConfig(BaseModel):
     """The validated form of ``config/base.yaml``."""
 
@@ -81,6 +97,7 @@ class BaseConfig(BaseModel):
     lambda_conventions: LambdaConventions
     criticality: CriticalityConfig
     solver: SolverDefaults
+    estimate: EstimateConfig
 
     @classmethod
     def from_mapping(cls, cfg: dict[str, Any]) -> BaseConfig:

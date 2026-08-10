@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-10T17:33:49+00:00",
+  "generated_at": "2026-08-10T23:25:03+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -182,6 +182,20 @@
         "adversarial": []
       },
       "checked_at": "2026-08-10T17:33:49+00:00"
+    },
+    "estimate.lambda": {
+      "unit": "estimate.lambda",
+      "claim": "lambda is estimable four structurally different ways (frequency MLE, autodiff MLE, chi moment-matching, dispersion inversion), the family agrees on well-specified data, and its disagreement -- plus explicit unidentifiability warnings -- is a working misspecification diagnostic rather than a number that lies",
+      "tier": "derived",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-10T23:25:03+00:00"
     }
   }
 }

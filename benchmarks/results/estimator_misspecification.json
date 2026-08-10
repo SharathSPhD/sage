@@ -1,0 +1,20 @@
+{
+  "benchmark_id": "estimator_misspecification",
+  "unit": "estimate.lambda",
+  "kind": "correctness",
+  "passed": true,
+  "metrics": {
+    "clean_gap": 0.007784290320224423,
+    "mixture_gap": 0.709060060116187,
+    "gap_ratio": 91.08859394336473,
+    "rps_unidentified_warned": 1.0
+  },
+  "effect_sizes": [],
+  "n": null,
+  "n_justification": null,
+  "seed": 20260810,
+  "config_ref": "config/experiments/estimator_recovery.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-10T22:13:25+00:00",
+  "notes": "The diagnostics fire when they must: lambda-mixture data widens the estimator spread by the required factor, and symmetric-RPS data (lambda unidentified from frequencies) produces a warning, not a number."
+}

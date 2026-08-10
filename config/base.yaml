@@ -40,3 +40,16 @@ criticality:
 solver:
   max_iter: 10000
   damping: 0.5
+
+estimate:
+  # λ-estimator family (PROGRAMME v3 §4): shared search window and honesty
+  # thresholds. The window is on the user-facing lam scale.
+  lam_min: 0.05
+  lam_max: 20.0
+  grid_points: 40
+  refine_iters: 30
+  profile_ci_drop: 1.92        # chi2(1) 95% two-sided, /2 (profile likelihood)
+  flat_ll_per_obs: 1.0e-6      # LL range per observation (nats) below which lambda is unidentified
+  flat_entropy_threshold: 1.0e-3  # model-entropy range (nats) below which dispersion is unidentified
+  agreement_flag_gap: 0.25     # relative spread across estimators that flags misspecification
+  bootstrap_resamples: 50

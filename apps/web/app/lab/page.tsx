@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Gauge } from "../components/Gauge";
+import { GuessLambda } from "../components/panels/GuessLambda";
 
 /* The Lab is a research instrument: pick a game, slide λ, every meter updates
    from the live API (heavy compute never runs in the browser). All requests go
@@ -408,6 +409,10 @@ export default function Lab() {
             </p>
           </div>
         </div>
+      </div>
+
+      <div style={{ marginTop: "1.4rem" }}>
+        <GuessLambda />
       </div>
     </div>
   );

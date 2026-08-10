@@ -130,3 +130,30 @@ def test_sample_estimates_track_exact():
 def test_sample_size_guard():
     body = {**RPS, "n_steps": 500000, "n_trajectories": 64, "seed": 1}
     assert client.post("/v1/dynamics/sample", json=body).status_code in (413, 422)
+
+
+def test_estimate_lambda_recovers_and_warns():
+    import jax
+    import jax.numpy as jnp
+    from strataq.estimate.lam import sample_choices
+    from strataq.finite.games.tensor import DenseTensorGame
+
+    game = DenseTensorGame(
+        (
+            jnp.array([[3.0, 0.0, 1.5], [1.0, 2.0, 0.5], [0.0, 1.0, 2.5]]),
+            jnp.array([[2.0, 1.0, 0.0], [0.5, 3.0, 1.0], [1.5, 0.0, 2.0]]),
+        )
+    )
+    counts = sample_choices(game, 1.2, 20_000, jax.random.key(11))
+    body = {
+        "payoffs": [u.tolist() for u in game.payoffs],
+        "counts": [[int(x) for x in c] for c in counts],
+    }
+    out = client.post("/v1/estimate/lambda", json=body).json()
+    assert abs(out["estimates"]["mle"]["lam"] - 1.2) / 1.2 < 0.15
+    assert out["agreement_gap"] < 0.2
+
+    rps_counts = [[13400, 13300, 13300], [13350, 13350, 13300]]
+    rps_body = {"payoffs": RPS["payoffs"], "counts": rps_counts}
+    out2 = client.post("/v1/estimate/lambda", json=rps_body).json()
+    assert any("unidentified" in w for w in out2["warnings"])
