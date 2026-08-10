@@ -1,0 +1,26 @@
+# /opt/sage/docker-compose.yml on the Oracle VM (SAGE_HOSTING.md §5).
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    depends_on: [api]
+
+  api:
+    image: ghcr.io/sharathsphd/sage-api:latest
+    restart: unless-stopped
+    env_file: .env
+    mem_limit: 4g
+    depends_on: [redis]
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    mem_limit: 256m
+    command: redis-server --save "" --appendonly no
+
+volumes:
+  caddy_data:

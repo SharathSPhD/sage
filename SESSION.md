@@ -128,3 +128,14 @@
 **Thirteen gates green. The CINS-parity suite is complete and exceeded**: library (strataq, 100+ tests) · paper (p1_main.pdf + results digest) · API (FastAPI + Docker + render.yaml) · app (Next.js Learn+Lab) · Pages dashboard with live phase map · claim ledger with tier history · findings log F-0001..F-0007 · adversarial record on every unit.
 
 **Next session**: remaining Learn explainers (02-06, 08, 10); deployment provisioning (Render/Vercel — ask PI); thermo trajectory estimators; Stage 3 empirics (DreamPrice JAX port, ERCOT loader, λ estimators); p3_noneq draft from F-0004/6/7; finer wedge-frontier sweep.
+
+---
+
+## 2026-08-10 — Oracle backend provisioning (ADR-0010)
+
+- OCI CLI configured against the PI's tenancy (API key added via Console by the agent through the browser; fingerprint bf:6c:cc:...:e4; region us-ashburn-1; config at ~/.oci/config on the DGX Spark, key never left the machine).
+- Network stack created: VCN `sage-vcn` (10.0.0.0/16), IGW + default route, security list 22/80/443, public subnet `sage-public` (OCIDs in ~/.oci/sage-network.txt).
+- Instance launch (A1.Flex 2 OCPU/12GB, Ubuntu 24.04 aarch64, 100GB): **Out of host capacity in all 3 Ashburn ADs** — the documented Always Free failure mode. Persistent scripted retry running on the Spark (~/.oci/retry-launch.sh, cycles ADs every ~10 min; instance OCID will land in ~/.oci/sage-instance.txt).
+- Repo side complete: deploy/ (compose + Caddyfile + runbook), docs/ops-hosting.md, api-image.yml (linux/arm64 → GHCR on every main push touching the API), ADR-0010. **When capacity lands**: SSH in → docs/ops-hosting.md §4 (docker, swap, iptables) → copy deploy/ to /opt/sage → `docker compose up -d`.
+
+**Next per SESSION.md**: Learn explainers 02–06/08/10, thermo trajectory estimators, Stage 3 empirics, p3_noneq draft.

@@ -63,3 +63,10 @@ Format per entry: Context · Options · Decision · Consequences · Date. Includ
 - **Context**: CI re-runs the boundary check on pushed commits, where the local `SAGE_ADR_REF` env var no longer exists; the calibration-bracket merge (legitimately referencing ADR-0008) failed CI's guard.
 - **Decision**: `check_boundary.py` falls back to scanning the HEAD commit message for `ADR-\d{4}` tokens that exist in `memory/decisions.md`. Same strictness (the ADR must exist), better auditability (the override is recorded in history, not a transient env var).
 - **Date**: 2026-08-08
+
+## ADR-0010 — Backend hosting: Oracle Always Free VM replaces Render
+
+- **Context**: PI decision recorded in SAGE_HOSTING.md (now docs/ops-hosting.md): Oracle A1.Flex 2 OCPU / 12 GB ARM at EUR 0/month; research compute stays on the DGX Spark; Supabase/Vercel/HF unchanged.
+- **Decision**: services/api deploys to the Oracle VM via Docker Compose + Caddy (deploy/); CI builds a linux/arm64 image to GHCR. render.yaml retained as the documented fallback path only (Netcup is the paid fallback). Provisioning: VCN sage-vcn + subnet created 2026-08-10 (us-ashburn-1); instance launch is capacity-gated with a scripted retry (the documented Always Free failure mode).
+- **Consequences**: worker concurrency 1 on 2 ARM cores; game-size limits enforced in API validation before queueing; arm64 images mandatory.
+- **Date**: 2026-08-10

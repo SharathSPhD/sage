@@ -1,0 +1,5 @@
+# Replace with the API domain once DNS exists; :80 serves plain HTTP on the
+# public IP until then (Caddy auto-HTTPS activates when a hostname is set).
+:80 {
+    reverse_proxy api:8000
+}
