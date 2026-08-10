@@ -347,3 +347,9 @@ table { border-collapse: collapse; }
 .pager a { flex: 1; max-width: 48%; }
 .pager .card { padding: 0.8rem 1rem; font-size: 0.88rem; }
 .pager .dir { font-family: var(--mono); font-size: 0.68rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.1em; }
+
+/* ---------- explorable panels ---------- */
+
+.explorable { border-color: var(--accent-dim); }
+.explorable:hover { border-color: var(--accent-dim); }
+.explorable select { font-size: 0.85rem; }

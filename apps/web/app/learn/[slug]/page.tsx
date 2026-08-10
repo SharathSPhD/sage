@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import "katex/dist/katex.min.css";
 import { listExplainers } from "../../../lib/theory";
 import { renderMarkdown } from "../../../lib/markdown";
+import { ExplorablePanel } from "../../components/panels/registry";
 
 export function generateStaticParams() {
   return listExplainers().map((e) => ({ slug: e.slug }));
@@ -34,6 +35,7 @@ export default async function ExplainerPage({ params }: { params: Promise<{ slug
       </div>
       {/* html is rendered at build time from repo-authored markdown (docs/theory) — same trust domain as the code; no user-supplied content flows here */}
       <article className="prose" dangerouslySetInnerHTML={{ __html: html }} />
+      <ExplorablePanel slug={slug} />
       <nav className="pager">
         {prev ? (
           <Link href={`/learn/${prev.slug}`}>

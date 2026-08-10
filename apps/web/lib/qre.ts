@@ -79,7 +79,7 @@ export function solveQRE(
 /** Best-response (Nash-limit) mix: argmax with ties split uniformly. */
 export function argmaxMix(values: number[]): number[] {
   const m = Math.max(...values);
-  const winners = values.map((v) => (Math.abs(v - m) < 1e-12 ? 1 : 0));
+  const winners: number[] = values.map((v) => (Math.abs(v - m) < 1e-12 ? 1 : 0));
   const k = winners.reduce((a, b) => a + b, 0);
   return winners.map((w) => w / k);
 }
