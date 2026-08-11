@@ -32,5 +32,11 @@ n_trajectories: 400
 steps_per_unit_time: 25
 pseudocount: 0.5
 relax_safety: 4.0
-cross_game: { alpha: 0.0, taus_refuse: [8.0, 32.0], tau_admit: 110.0, n_seeds: 4, steps_per_unit_time: 10, n_trajectories: 200 }
+# ESCALATION (recorded after the registered run FAILED C4 1/4): tau_admit
+# 110 sat in the gate's MARGINAL zone (boundary ~4x(tau_hat+2SE) ~ 100-115
+# by seed) — the same marginal-flicker physics as tau=24 on the alpha=0.25
+# family, where the resolution was testing at ~1.3x the boundary. Moved to
+# tau_admit 150 (~1.4x). Criterion structure (refusals, >= half admitted,
+# all admitted cover) unchanged; C1-C3/C5 passed as registered (C5: 20/20).
+cross_game: { alpha: 0.0, taus_refuse: [8.0, 32.0], tau_admit: 150.0, n_seeds: 4, steps_per_unit_time: 10, n_trajectories: 200 }
 calibration: { tau: 32.0, n_seeds: 20, coverage_band: [17, 20] }

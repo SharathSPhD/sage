@@ -1,13 +1,11 @@
-"""Hatano-Sasa Y from observed trajectories - EXPERIMENTAL, NOT CERTIFIED.
+"""Hatano-Sasa Y from observed trajectories — the data-facing quench meter.
 
-.. warning::
-   Red-team verdict WITHHELD (2026-08-12, F-0016): multi-seed coverage at
-   the one admitted hold is ~2/5 (residual plug-in bias beyond the CI); the
-   relaxation-time underestimate is game-dependent (up to ~19x at alpha=0,
-   far beyond any fixed safety factor); the autocorrelation gate breaks at
-   small n_trajectories (24x underestimate at n=1). Do NOT use this module
-   for scientific claims - it is retained as the measured failure map and
-   the starting point for a redesign (F-0016 continuation notes).
+CERTIFIED (fresh red-team GRANTED 2026-08-12 after a first WITHHELD; the
+full arc — two refuted hypotheses, one fixed missing-window bug, five
+recorded escalations — is F-0016) within its validated scope: Markov-chain
+quenches on 2x2 mixed families (alpha in {0, 0.25}, 4 joint states,
+n_trajectories >= 200). Outside that scope the gate margins are unverified
+— read the hs_y_estimate docstring's contract before use.
 
 Real systems never hand over π_λ. The plug-in estimator pools occupation
 frequencies inside each hold window into π̂_k (Laplace-smoothed) and
@@ -158,10 +156,22 @@ def hs_y_estimate(
     """Estimate ⟨Y⟩ from per-hold observed state windows.
 
     ``windows[k]`` is an ``(n_trajectories, len_k)`` int array of states
-    during hold k (after the k-th λ switch); the pre-quench stationary
-    window may be prepended as ``windows[0]`` or omitted — the estimator
-    uses window k−1's occupation as π̂ entering switch k, so at least two
-    windows are required.
+    during hold k. ``windows[0]`` MUST be the pre-quench stationary window
+    (observed at λ₀ before the first switch) — omitting it silently drops
+    the first jump term, a bug this estimator's own history documents
+    (F-0016). ``hold_durations`` and your sampling interval must share ONE
+    time unit: the k-th window's implied sample spacing is
+    ``hold_durations[k] / windows[k].shape[1]``, and the relaxation gate is
+    computed in that unit — passing milliseconds where the data was described
+    in seconds rescales the gate silently (nothing data-side can detect
+    that; the contract is yours to honour). Example: 6 holds of 24 time
+    units sampled 25×/unit → each window has 600 columns and
+    ``hold_durations=[24.0]*6``.
+
+    VALIDATED SCOPE: 2×2 mixed families (α ∈ {0, 0.25}) with 4 joint
+    states, n_trajectories ≥ 200; the relaxation-time underestimate is
+    game-dependent and only measured there — treat other games' gate
+    margins as unverified.
 
     **The primary usability gate** (F-0016): with ``hold_durations`` (the τ
     of each hold, in the same time units the data was sampled at), every

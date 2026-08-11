@@ -23,7 +23,7 @@ from strataq_bench import BenchmarkResult, EffectSize
 
 REPO = Path(__file__).resolve().parents[1]
 RESULTS = REPO / "benchmarks" / "results"
-CONFIG = REPO / "config" / "experiments" / "hs_estimator.yaml"
+CONFIG = REPO / "config" / "experiments" / "hs_estimator_v2.yaml"
 UNIT = "thermo.hs_estimator"
 
 
@@ -33,7 +33,7 @@ def main() -> int:
     (RESULTS / "hs_estimator.resolved.yaml").write_text(yaml.safe_dump(cfg))
 
     game = make_family(
-        coordination(2, 2, bonus=2.0), matching_pennies(), [float(cfg["game"]["alpha"])]
+        coordination(2, 2, bonus=2.0), matching_pennies(), [float(cfg["family"]["alpha"])]
     )[0]
     lams = jnp.array([float(x) for x in cfg["protocol"]["lambdas"]])
     taus = [float(t) for t in cfg["taus"]]
@@ -60,20 +60,71 @@ def main() -> int:
         rows.append((tau, exact, est))
 
     usable_rows = [(t, ex, e) for t, ex, e in rows if e.usable]
-    short_rows = [(t, ex, e) for t, ex, e in rows if t <= 0.5]
-    # P1 (as re-scoped with the relaxation gate, escalation 2 in config):
-    # the gate must admit SOMETHING, and every admitted hold must cover
-    p1 = bool(usable_rows) and all(
+    usable_seq = [e.usable for _, _, e in rows]  # taus ascending
+    c1 = usable_seq == sorted(usable_seq)
+    c2 = bool(usable_rows) and all(
         e.mean_y_ci_low <= ex <= e.mean_y_ci_high for _, ex, e in usable_rows
     )
-    p2 = all(not e.usable for _, _, e in short_rows)
-    usable_seq = [e.usable for _, _, e in rows]  # taus ascending
-    p3 = usable_seq == sorted(usable_seq)  # False..True monotone
+    c3 = all(not e.usable for t, _, e in rows if t <= 2.0)
+
+    # C4: cross-game (alpha=0, slow basin hopping)
+    cg = cfg["cross_game"]
+    g0 = make_family(coordination(2, 2, bonus=2.0), matching_pennies(), [float(cg["alpha"])])[0]
+    refuse_ok = True
+    for t_ref in cg["taus_refuse"]:
+        proto0 = QuenchProtocol(lambdas=lams, taus=jnp.full((len(lams) - 1,), float(t_ref)))
+        w0 = sample_quench_states(
+            g0,
+            proto0,
+            n_trajectories=int(cg["n_trajectories"]),
+            steps_per_unit_time=int(cg["steps_per_unit_time"]),
+            seed=seed,
+        )
+        e0 = hs_y_estimate(w0, n_states=4, hold_durations=[float(t_ref)] * len(w0))
+        refuse_ok = refuse_ok and not e0.usable
+    proto_a = QuenchProtocol(lambdas=lams, taus=jnp.full((len(lams) - 1,), float(cg["tau_admit"])))
+    exact_a = float(hatano_sasa_exact(g0, proto_a)[1])
+    admit_us = admit_cov = 0
+    for s in range(int(cg["n_seeds"])):
+        wa = sample_quench_states(
+            g0,
+            proto_a,
+            n_trajectories=int(cg["n_trajectories"]),
+            steps_per_unit_time=int(cg["steps_per_unit_time"]),
+            seed=seed + s,
+        )
+        ea = hs_y_estimate(wa, n_states=4, hold_durations=[float(cg["tau_admit"])] * len(wa))
+        admit_us += int(ea.usable)
+        if ea.usable:
+            admit_cov += int(ea.mean_y_ci_low <= exact_a <= ea.mean_y_ci_high)
+    c4 = refuse_ok and admit_us * 2 >= int(cg["n_seeds"]) and admit_cov == admit_us
+
+    # C5: 20-seed calibration at tau=32
+    cal = cfg["calibration"]
+    proto_c = QuenchProtocol(lambdas=lams, taus=jnp.full((len(lams) - 1,), float(cal["tau"])))
+    exact_c = float(hatano_sasa_exact(game, proto_c)[1])
+    cov_c = 0
+    for s in range(int(cal["n_seeds"])):
+        wc = sample_quench_states(
+            game,
+            proto_c,
+            n_trajectories=int(cfg["n_trajectories"]),
+            steps_per_unit_time=int(cfg["steps_per_unit_time"]),
+            seed=seed + 1000 + s,
+        )
+        ec = hs_y_estimate(wc, n_states=4, hold_durations=[float(cal["tau"])] * len(wc))
+        cov_c += int(ec.mean_y_ci_low <= exact_c <= ec.mean_y_ci_high)
+    lo_band, hi_band = (int(x) for x in cal["coverage_band"])
+    c5 = lo_band <= cov_c <= hi_band
 
     metrics: dict[str, float] = {
-        "p1_long_hold_recovery": float(p1),
-        "p2_short_hold_self_flags": float(p2),
-        "p3_monotone_boundary": float(p3),
+        "c1_monotone_boundary": float(c1),
+        "c2_admitted_holds_cover": float(c2),
+        "c3_short_holds_refused": float(c3),
+        "c4_cross_game_alpha0": float(c4),
+        "c5_calibration_20seed": float(c5),
+        "c4_admit_usable": float(admit_us),
+        "c5_coverage_count": float(cov_c),
     }
     for t, ex, e in rows:
         key = str(t).replace(".", "p")
@@ -87,7 +138,7 @@ def main() -> int:
         benchmark_id="hs_estimator_sweep",
         unit=UNIT,
         kind="statistical",
-        passed=bool(p1 and p2 and p3),
+        passed=bool(c1 and c2 and c3 and c4 and c5),
         metrics=metrics,
         effect_sizes=[
             EffectSize(

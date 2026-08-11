@@ -1,8 +1,21 @@
-game:
+calibration:
+  coverage_band:
+  - 17
+  - 20
+  n_seeds: 20
+  tau: 32.0
+cross_game:
+  alpha: 0.0
+  n_seeds: 4
+  n_trajectories: 200
+  steps_per_unit_time: 10
+  tau_admit: 150.0
+  taus_refuse:
+  - 8.0
+  - 32.0
+family:
   alpha: 0.25
-ift_ci_level: 0.95
-ift_tolerance: 0.05
-n_trajectories: 800
+n_trajectories: 400
 protocol:
   lambdas:
   - 0.5
@@ -13,7 +26,7 @@ protocol:
   - 5.5
 pseudocount: 0.5
 relax_safety: 4.0
-seed: 20260816
+seed: 20260817
 steps_per_unit_time: 25
 taus:
 - 0.25

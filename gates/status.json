@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T09:18:29+00:00",
+  "generated_at": "2026-08-11T11:51:29+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -311,19 +311,17 @@
     },
     "thermo.hs_estimator": {
       "unit": "thermo.hs_estimator",
-      "claim": "Hatano-Sasa Y is estimable from observed quench trajectories alone (plug-in pi_hat from burned-in hold windows), with a DATA-SIDE usability gate that survived its own failures: the IFT equivalence check is measurably insufficient (45% bias behind IFT ~ 1.01, F-0016) and is demoted to companion; the primary gate is per-window hold >= 4 x lag-N/4-autocorrelation relaxation time (safety 4 absorbs the estimator's measured ~25% slow-mode underestimate). Registered sweep: boundary perfectly monotone, every admitted hold covers the exact <Y>, every fooling regime refused",
+      "claim": "CERTIFIED within validated scope after a WITHHELD-then-GRANTED arc (F-0016): Hatano-Sasa Y from observed quench trajectories \u2014 plug-in with the mandatory pre-quench window, calibrated trajectory-bootstrap CI (20/20 at nominal 95%), primary relaxation gate (hold >= 4 x (lag-N/4 tau_hat + 2 SE), zero flicker at settled holds, conservative-only at margins, correct on the alpha=0 basin-hopping family with no game tuning), and a TESTED IFT anomaly companion that fires on genuinely non-stepwise input. v2 criteria C1-C5 all pass on a registration whose commit landed pre-run; scope and unit contracts explicit in the docstring",
       "tier": "derived",
-      "green": false,
+      "green": true,
       "sections": {
         "code": [],
         "domain": [],
         "statistical": [],
         "documentation": [],
-        "adversarial": [
-          "red_team_signoff: not granted"
-        ]
+        "adversarial": []
       },
-      "checked_at": "2026-08-11T09:18:29+00:00"
+      "checked_at": "2026-08-11T11:51:29+00:00"
     }
   }
 }

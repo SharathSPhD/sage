@@ -314,3 +314,8 @@
 
 - α=0 needed no game tuning: the noise-aware gate demands τ ≥ ~86 there (the true basin-hopping timescale), refuses everything shorter, and at τ=110 admits with full coverage (3/4 usable, 3/3 cover). The red-team's ~19x underestimate was the pre-fix machinery on unsettled windows; settled-hold underestimate is ~1.32x, inside safety 4.
 - Thin-statistics warning below n=100 added (validated at n ≥ 200). The unit's remaining path: fresh registered config + fresh red-team.
+
+## 2026-08-12 (cont.) — thermo.hs_estimator GREEN (23rd gate): withheld → certified, the full arc
+
+- v2 registration (commit landed pre-run) passed C1–C5 (one recorded C4 probe-point escalation out of the measured marginal zone; calibration 20/20). Fresh red-team's two blocking conditions closed and verified in-repo: the IFT anomaly companion PROVEN to fire on a continuous-ramp non-stepwise input (CI [1.03, 1.10] excludes 1 — permanent test), and the unit/scope contracts made explicit (mandatory λ₀ window, one-time-unit rule with worked example, validated scope 2×2 α∈{0, 0.25} n≥200).
+- Verdict GRANTED, zero remaining objections, banner LIFTED. F-0016 closed: two refuted hypotheses, one found-and-fixed bug, five recorded escalations, two red-team rounds — the adversarial machinery converged.

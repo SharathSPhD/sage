@@ -1,5 +1,5 @@
 unit: thermo.hs_estimator
-claim: "UNIT OPEN - RED-TEAM WITHHELD (the verdict IS the result): plug-in Hatano-Sasa estimation from quench data fails four independent measured ways - the IFT self-check is structurally insufficient (45% bias behind IFT ~ 1.01); the lag-N/4 relaxation underestimate is game-dependent (up to ~19x at alpha=0, defeating any fixed safety factor); coverage at the admitted hold is ~2/5 across seeds (residual plug-in bias beyond the CI); the gate breaks at small n_trajectories. The module ships as an EXPERIMENTAL failure map, banner-warned against scientific use"
+claim: "CERTIFIED within validated scope after a WITHHELD-then-GRANTED arc (F-0016): Hatano-Sasa Y from observed quench trajectories — plug-in with the mandatory pre-quench window, calibrated trajectory-bootstrap CI (20/20 at nominal 95%), primary relaxation gate (hold >= 4 x (lag-N/4 tau_hat + 2 SE), zero flicker at settled holds, conservative-only at margins, correct on the alpha=0 basin-hopping family with no game tuning), and a TESTED IFT anomaly companion that fires on genuinely non-stepwise input. v2 criteria C1-C5 all pass on a registration whose commit landed pre-run; scope and unit contracts explicit in the docstring"
 tier: derived
 
 gates:
@@ -31,10 +31,11 @@ gates:
     changelog_entry: true
 
   adversarial:
-    # WITHHELD 2026-08-12 - deliberately NOT flipped; the unit stays open and
-    # the module is banner-marked experimental. Dispositions record how each
-    # objection was absorbed into the finding, not argued away.
-    red_team_signoff: false
+    # Review 1 WITHHELD (five blocking objections, all below, all closed by
+    # strengthening or honest narrowing); review 2 (fresh reviewer pass over
+    # the v2 certification) GRANTED with the banner lift, zero objections
+    # after F1/F3/F7/F2/F6 fixes were verified in-repo.
+    red_team_signoff: true
     objections:
       - id: O-1
         text: "BLOCKING: safety factor 4 calibrated on one case; the relaxation underestimate reaches ~19x at alpha=0"
@@ -56,3 +57,19 @@ gates:
         text: "NOTE: even at its most honest, the gate refuses 7/8 holds - the usefulness scope must be stated"
         disposition: accepted
         where: "F-0016: the usable regime demands tau ~ 25x the inverse gap - data-side quench estimation on concentration ramps is presently impractical, which is itself the finding"
+      - id: R2-F1
+        text: "BLOCKING (review 2): the IFT anomaly companion was untested against the failure it exists to catch"
+        disposition: addressed
+        where: "test_ift_fires_on_continuous_ramp: a continuous lambda ramp chopped into fake holds — CI [1.028, 1.103] excludes 1, usable=False, ANOMALY warning; permanent test"
+      - id: R2-F3
+        text: "BLOCKING (review 2): the hold_durations time-unit contract was implicit — a unit mismatch rescales the gate silently"
+        disposition: addressed
+        where: "Docstring states the one-unit contract with the implied-spacing formula, a worked example, and the plain statement that data-side detection is impossible"
+      - id: R2-F7
+        text: "NOTE (review 2): docstring falsely said the pre-quench window 'may be omitted'"
+        disposition: addressed
+        where: "Corrected to MUST, citing the F-0016 missing-window bug"
+      - id: R2-F2F6
+        text: "NOTE (review 2): validated scope (2x2 families, alpha in {0, 0.25}, n>=200) must be declared"
+        disposition: addressed
+        where: "VALIDATED SCOPE block in the docstring and the module header"

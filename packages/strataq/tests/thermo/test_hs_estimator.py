@@ -92,3 +92,33 @@ class TestValidation:
             assert "n_states" in str(e)
         else:
             raise AssertionError("out-of-range states must raise")
+
+
+class TestAnomalyDetector:
+    def test_ift_fires_on_continuous_ramp(self):
+        """F1 (fresh red-team): the excludes-1 companion must CATCH a
+        genuinely non-stepwise system — a continuous λ ramp chopped into
+        fake holds — or it is decorative. Measured: CI [1.03, 1.10]."""
+        import jax
+        from jax.scipy.linalg import expm
+        from strataq.core.dynamics.markov import glauber_generator, stationary_distribution
+
+        key = jax.random.PRNGKey(3)
+        n_traj, dt, total = 400, 0.1, 160.0
+        n_steps = int(total / dt)
+        pi0 = stationary_distribution(glauber_generator(GAME, 0.5))
+        key, k0 = jax.random.split(key)
+        states = jax.random.categorical(k0, jnp.log(pi0), shape=(n_traj,))
+        seq = np.empty((n_traj, n_steps), dtype=np.int64)
+        for t in range(n_steps):
+            lam = 0.5 + 5.0 * (t / n_steps)
+            kern = expm(dt * glauber_generator(GAME, lam))
+            key, ks = jax.random.split(key)
+            states = jax.random.categorical(ks, jnp.log(jnp.maximum(kern, 1e-300))[states])
+            seq[:, t] = np.asarray(states)
+        chunk = n_steps // 5
+        windows = [seq[:, i * chunk : (i + 1) * chunk] for i in range(5)]
+        est = hs_y_estimate(windows, n_states=4, hold_durations=[total / 5] * 5)
+        assert not est.usable
+        assert not (est.ift_ci_low <= 1.0 <= est.ift_ci_high)  # the CI EXCLUDES 1
+        assert any("ANOMALY" in w for w in est.warnings)
