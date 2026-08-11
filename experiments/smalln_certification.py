@@ -19,6 +19,7 @@ import jax.numpy as jnp
 import numpy as np
 import strataq
 import yaml
+from strataq.core.dynamics.markov import glauber_generator
 from strataq.finite.decompose.generate import make_family
 from strataq.finite.games.library import coordination, matching_pennies
 from strataq.thermo.hs_estimator import HSEstimate, hs_y_estimate, sample_quench_states
@@ -117,6 +118,42 @@ def main() -> int:
             metrics[f"{key}_gate_agreement"] = float(c.agree)
             metrics[f"{key}_flag_flips"] = float(c.flips)
             metrics[f"{key}_width_over_se"] = c.width_ratio
+
+    # ---- C-1 / C-2 diagnostics mandated by the results red-team ----------
+    diag = cfg["diagnostics"]
+    d_method = str(diag["method"])
+    # TRUE settling status from the generator's exact gaps: no sampling noise,
+    # so a disagreement cannot be blamed on the finite-sample reference.
+    gaps = []
+    for lam in [float(x) for x in cfg["protocol"]["lambdas"]][1:]:
+        ev = np.linalg.eigvals(np.asarray(glauber_generator(game, lam)))
+        gaps.append(float(-np.sort(ev.real)[::-1][1]))
+    true_settled = all(tau >= float(cfg["relax_safety"]) / g for g in gaps)
+    metrics["true_settled_primary"] = float(true_settled)
+    metrics["true_max_relax_time"] = float(max(1.0 / g for g in gaps))
+
+    def within_group_perm(n: int, rng_local: np.random.Generator) -> np.ndarray:
+        """Permute only INSIDE each i::4 residue class, so the SE split's
+        composition is preserved while the permutation stays physically null."""
+        idx = np.arange(n)
+        out = idx.copy()
+        for r in range(4):
+            grp = idx[r::4]
+            out[r::4] = rng_local.permutation(grp)
+        return out
+
+    drng = np.random.default_rng(int(cfg["seed"]) + 31337)
+    for n in [int(x) for x in diag["n_grid"]]:
+        agree_true = flips_within = 0
+        for s in range(n_seeds):
+            w = windows_for(n, s)
+            e = est_for(w, d_method)
+            agree_true += int(e.usable == true_settled)
+            wg = within_group_perm(n, drng)
+            e_wg = est_for([x[wg] for x in w], d_method)
+            flips_within += int(e_wg.usable != e.usable)
+        metrics[f"n{n}_agree_true_settling"] = float(agree_true)
+        metrics[f"n{n}_flips_within_group"] = float(flips_within)
 
     lo_band, hi_band = (int(x) for x in cfg["coverage_band"])
     agree_min = int(cfg["gate_agreement_min"])
@@ -257,6 +294,13 @@ def main() -> int:
     path.write_text(res.model_dump_json(indent=2) + "\n")
     print(f"[PASS] smalln_certification -> {path.name}")
     print(f"  {verdict}")
+    print("  diagnostics (percentile; true_settled=" + str(true_settled) + "):")
+    for n in [int(x) for x in diag["n_grid"]]:
+        print(
+            f"    n={n:>3} agree-with-TRUE {metrics[f'n{n}_agree_true_settling']:.0f}/{n_seeds}"
+            f"  flips(full perm) {metrics[f'n{n}_{d_method}_flag_flips']:.0f}"
+            f"  flips(within-group) {metrics[f'n{n}_flips_within_group']:.0f}"
+        )
     for (n, m), c in sorted(results.items()):
         print(
             f"  n={n:>3} {m:<12} coverage {c.cover:>2}/{n_seeds} "

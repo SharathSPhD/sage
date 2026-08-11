@@ -90,3 +90,24 @@ s1_scope_validation:
 #   quadrature: the Student-t CDF is integrated on a 240k grid; measured error
 #     < 5e-5 for n >= 10 (about 5e-3 at n=5), so it is immaterial over the
 #     tested n_grid, whose floor is 20.
+#
+# ============================================================================
+# RESULTS RED-TEAM CONDITIONS (granted-conditional; these three diagnostics
+# are mandated additions, run on the percentile method only to bound cost —
+# the interval comparison already showed all three constructions behave alike)
+# ============================================================================
+# C-1 (was blocking): S2 must also be computed against the TRUE settling
+#   status from the generator's exact spectral gap (tau >= relax_safety /
+#   gap_k for every hold k), which has NO sampling noise, so the finite-sample
+#   n=400 reference cannot be blamed for the disagreement.
+# C-2: the S3 permutation must be decomposed. A WITHIN-GROUP permutation
+#   (shuffling only inside each i::4 residue class) preserves the SE split's
+#   composition while remaining physically null. If flips largely vanish, the
+#   instability is the 4-way-split IMPLEMENTATION, not the physics — and the
+#   gate can be fixed instead of the floor raised.
+# C-3: the chase item ("import the full-window settling verdict to a month")
+#   is REJECTED in writing — a joint verdict over 211 days does not imply any
+#   30-day subset settled.
+diagnostics:
+  n_grid: [30, 50, 100, 200]
+  method: percentile
