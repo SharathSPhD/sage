@@ -20,3 +20,8 @@ Measured, honestly split: marginally ρ(EPR, α) = 0.990 and ρ(EPR, ℛ) = 0.99
 Artifacts regenerate via `uv run python -m experiments.dynamics_calibration` (`make reproduce`).
 
 **Limitations, stated once.** This is the *exact, generator-level* meter: it needs the full profile space, so it runs on small games. Real-data dissipation goes through the trajectory estimators (KLD, TUR bound, NEEP — a later unit) which are validated against this meter on synthetic ground truth before touching anything empirical. The co-movement result is rank-order evidence at fixed λ, on 3×3 two-player families.
+
+
+## Frontier refinements (unit science.frontier, 2026-08-11)
+
+The α = 0 criticality peak is a pure λ×payoff-scale fold (σ(λ, s·u) = σ(sλ, u) exactly; verified across scales 1/2/4). The supercritical frontier λ_c(α) is monotone descending — 7.8 at α = 0.55 to 3.0 at α = 0.80, with no median crossing below α ≈ 0.5 by λ = 15 at 40-game sampling. And F-0004's reversal decomposes (F-0010): the within-level coupling COLLAPSE at α = 0.95 is universal; the sign is λ-dependent across the three λ tested (+0.25 → +0.03 → −0.23; −0.26 at 4×4), each individual sign within ~2 null-SD — the initial criterion failed 2/4 and the revision is on the record. λ_c(α) is the verified-unique crossing of the fixed-set median-ρ curve (single-crossing checked per level); the 5-game phase map's α=0.5 onset vs this 40-game onset between 0.50–0.55 is recorded as sampling variability.

@@ -6,6 +6,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 ## [Unreleased]
 
 ### Added
+- Unit science.frontier: scale-folding identity for the α=0 criticality peak, the bisected λ_c(α) frontier, and F-0010 (universal coupling collapse at α=0.95 with a λ-amplified sign flip; pre-registered criterion failure documented).
 - `strataq.domains.electricity` — CAISO OASIS LMP loader (DAM hourly / RTM 5-minute, cached, coverage-guarded, rate-limit backoff), quantile discretization, phase-space embedding, and `trajectory_from_series` bridging observed data into the irreversibility estimators. First real-data reading: certified null (F-0008).
 - `strataq.estimate` — the λ-estimator family (frequency MLE with profile-likelihood CI, autodiff MLE through an unrolled solve, χ moment-matching, dispersion inversion) and the agreement protocol with unidentifiability warnings (unit estimate.lambda).
 - `strataq.thermo.estimators` — trajectory irreversibility estimators (KLD k-th order Markov, debiased finite-time TUR lower bound) with the uniformised Glauber trajectory sampler `strataq.core.dynamics.sample`; validated against the exact Schnakenberg EPR across the potential-to-harmonic family (unit thermo.estimators).

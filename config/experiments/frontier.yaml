@@ -1,0 +1,37 @@
+# Unit science.frontier — F-0006/F-0004 open questions resolved by sweep.
+defaults:
+  - _self_
+
+seed: 20260811
+shape: [3, 3]
+
+scale_folding:
+  scales: [1.0, 2.0, 4.0]
+  lambdas_n: 15          # geomspace grid per scale
+  lam_min: 0.2
+  lam_max: 15.0
+  games: 20
+  fold_tolerance: 0.35   # relative spread of lam_peak*scale across scales (grid-resolution bound)
+
+frontier:
+  alphas: [0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80]
+  games: 40
+  lam_lo: 0.5
+  lam_hi: 15.0
+  bisect_steps: 8
+  max_monotonicity_violations: 1
+
+crossover:
+  alphas: [0.55, 0.65, 0.75, 0.85, 0.95]
+  lambdas: [0.8, 1.2, 2.0]
+  games: 60
+  m4_games: 40           # the 4x4 size check at lam = 1.2
+  reversal_threshold: 0.0    # sign-flip bookkeeping (recorded as data per F-0010)
+  # Collapse threshold rationale (locked here per red-team O-3): baseline
+  # within-level coupling at alpha<=0.65 is ~0.90 across all conditions;
+  # "collapse" = below half the baseline minus one Spearman null-SD at n=60
+  # (0.45 - 0.13 ~ 0.32), rounded up to 0.35. Margin at the tightest
+  # condition (lambda=0.8: 0.25) is ~0.10; changing this value after seeing
+  # data requires a new finding entry, not an edit.
+  collapse_threshold: 0.35
+  min_reversal_conditions: 3

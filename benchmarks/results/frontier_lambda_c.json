@@ -1,0 +1,49 @@
+{
+  "benchmark_id": "frontier_lambda_c",
+  "unit": "science.frontier",
+  "kind": "statistical",
+  "passed": true,
+  "metrics": {
+    "crossings_a0.30": 0.0,
+    "lambda_c_a0.30": null,
+    "crossings_a0.35": 0.0,
+    "lambda_c_a0.35": null,
+    "crossings_a0.40": 0.0,
+    "lambda_c_a0.40": null,
+    "crossings_a0.45": 0.0,
+    "lambda_c_a0.45": null,
+    "crossings_a0.50": 0.0,
+    "lambda_c_a0.50": null,
+    "crossings_a0.55": 1.0,
+    "lambda_c_a0.55": 7.770984029875295,
+    "crossings_a0.60": 1.0,
+    "lambda_c_a0.60": 5.216459854194573,
+    "crossings_a0.65": 1.0,
+    "lambda_c_a0.65": 4.217506795144364,
+    "crossings_a0.70": 1.0,
+    "lambda_c_a0.70": 3.6440618290886175,
+    "crossings_a0.75": 1.0,
+    "lambda_c_a0.75": 3.233372147571089,
+    "crossings_a0.80": 1.0,
+    "lambda_c_a0.80": 2.946223292363554,
+    "single_crossing_all_levels": 1.0,
+    "monotonicity_violations": 0.0
+  },
+  "effect_sizes": [
+    {
+      "name": "lambda_c range over alpha in [0.55, 0.80]",
+      "value": 7.770984029875295,
+      "ci_low": 2.946223292363554,
+      "ci_high": 7.770984029875295,
+      "ci_level": 0.95,
+      "method": "bisection endpoints across levels; per-level resolution ~3% in log-lambda"
+    }
+  ],
+  "n": 440,
+  "n_justification": "40 seeded games per alpha level; lambda_c from geometric bisection (8 steps, ~3% log-lambda resolution) on the fixed-set median-rho curve (single crossing verified per level); monotonicity judged with a 5% tolerance.",
+  "seed": 20260811,
+  "config_ref": "config/experiments/frontier.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-11T03:48:37+00:00",
+  "notes": "lambda_c(alpha) = the (verified-unique) crossing of the fixed 40-game MEDIAN-rho curve m(lambda) through 1; single-crossing checked on a coarse grid at every level before bisection. Monotone descending as a statement about this median-curve statistic (individual games vary). Note: the earlier phase_map (5 games/cell) showed a median crossing at alpha=0.5, lambda>=8.5; at 40-game sampling the onset sits between 0.50 and 0.55 — sampling variability of the median, recorded, not hidden."
+}

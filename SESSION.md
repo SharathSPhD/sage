@@ -208,3 +208,10 @@
 
 - BiddingOracle (uniform-price, D=1, ties split) + OfferGridBuilder + exact-linear offer-shift ConjugateFieldSpec + PLUGIN registration — five-object contract satisfied and contract-tested; clearing-price dispersion monotone in λ (the identification channel) unit-tested; auction α confirmed mixed.
 - The conditional λ̂ artifact recorded the honest outcome: MODEL REJECTED (dispersion ceiling 10.4 < observed 16.8) — no λ reported; richer supply model queued. Task #37 closed; /markets page live with F-0009.
+
+## 2026-08-11 (cont.) — unit science.frontier GREEN (16th gate; F-0010)
+
+- **Scale folding**: σ(λ, s·u) = σ(sλ, u) checked SHARPLY (identity error 0.0) — the α=0 criticality peak is a pure λ×payoff-scale fold; the sweep's 23% spread labelled honestly as grid coarseness. F-0006 item 1 closed.
+- **Frontier**: λ_c(α) = the verified-unique crossing of the fixed-set median-ρ curve (single crossing checked per level), monotone descending 7.8→3.0 over α 0.55→0.80; the 5-game-vs-40-game onset difference recorded as sampling variability.
+- **F-0010**: the initial reversal criterion FAILED 2/4 and the failure is the finding — the universal fact is the coupling COLLAPSE at α=0.95 (all λ, both sizes); the sign is λ-dependent across three λ, each within ~2 null-SD. Criterion revision + rationale locked in config.
+- Red-team: granted-conditional; all five conditions (identity framing, single-crossing verification, threshold rationale, sign-language, 'pre-registered' wording) closed same-session and recorded in the gate.

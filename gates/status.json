@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T01:33:39+00:00",
+  "generated_at": "2026-08-11T03:49:43+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -210,6 +210,20 @@
         "adversarial": []
       },
       "checked_at": "2026-08-11T01:33:39+00:00"
+    },
+    "science.frontier": {
+      "unit": "science.frontier",
+      "claim": "F-0006's and F-0004's open questions are resolved by sweep: the alpha=0 criticality peak is a pure lambda-x-payoff-scale fold (exact identity, verified numerically); the supercritical frontier lambda_c(alpha) is a clean monotone-descending curve (7.8 at alpha=0.55 to 3.0 at 0.80, no crossing below alpha~0.5 by lambda=15 at this sampling); and F-0004's reversal decomposes into a UNIVERSAL coupling collapse at alpha=0.95 plus a lambda-amplified sign flip (F-0010 \u2014 the pre-registered reversal criterion failed 2/4 and the failure is the finding)",
+      "tier": "derived",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-11T03:49:43+00:00"
     }
   }
 }

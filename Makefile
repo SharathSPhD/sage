@@ -35,6 +35,7 @@ reproduce: reproduce-fast
 	uv run python -m experiments.estimator_validation
 	uv run python -m experiments.estimator_recovery
 	uv run python -m experiments.electricity_reading
+	uv run python -m experiments.frontier
 
 # Fast subset: what `main` must always pass (CI runs this on every merge).
 reproduce-fast:
