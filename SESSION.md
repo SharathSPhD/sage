@@ -215,3 +215,7 @@
 - **Frontier**: λ_c(α) = the verified-unique crossing of the fixed-set median-ρ curve (single crossing checked per level), monotone descending 7.8→3.0 over α 0.55→0.80; the 5-game-vs-40-game onset difference recorded as sampling variability.
 - **F-0010**: the initial reversal criterion FAILED 2/4 and the failure is the finding — the universal fact is the coupling COLLAPSE at α=0.95 (all λ, both sizes); the sign is λ-dependent across three λ, each within ~2 null-SD. Criterion revision + rationale locked in config.
 - Red-team: granted-conditional; all five conditions (identity framing, single-crossing verification, threshold rationale, sign-language, 'pre-registered' wording) closed same-session and recorded in the gate.
+
+## 2026-08-11 (cont.) — p3_noneq v0.2 (8 pages)
+
+- Data section added (four nulls → F-0009 detection ~1.1 nats/day concentrated in scarcity weeks; RTM at-null; model rejection; the retraction in the text); phase section closes both v0.1 open questions (exact fold identity; λ_c curve with single-crossing verification); decoupling section carries F-0010 (universal collapse, λ-dependent sign, failed-criterion honesty); abstract updated to "through to real data".

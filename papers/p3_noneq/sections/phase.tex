@@ -45,6 +45,15 @@ with cycles requiring non-potential structure \citep{hommes2012}; and the
 $\alpha = 0$ row of every dissipation meter reads zero to machine precision at
 all $\lambda$, as it must.
 
-Open at this draft: whether the $\alpha=0$ peak location ($\lambda \approx
-1.7$ at payoff scale 2.0) is a pure scale artefact of the $\lambda$--payoff
-folding, and whether $\lambda_c(\alpha)$ is a clean curve under a finer grid.
+Both questions this section left open in v0.1 are now closed (unit
+\texttt{science.frontier}). The peak location is a \emph{pure} scale fold:
+$\sigma(\lambda, s\cdot u) = \sigma(s\lambda, u)$ is an algebraic identity
+(checked numerically to error $0.0$), so $\rho$ depends on $\lambda$ and the
+payoff scale only through their product and the peak is physical only in the
+normalised coordinate. And $\lambda_c(\alpha)$ --- defined as the
+verified-unique crossing of the fixed-family median-$\rho$ curve, with
+single-crossing checked at every level before bisection --- is a clean
+monotone-descending frontier: $7.8$ at $\alpha = 0.55$ down to $3.0$ at
+$\alpha = 0.80$, with no median crossing below $\alpha \approx 0.5$ by
+$\lambda = 15$ at 40-game sampling (the earlier 5-game map's onset at
+$\alpha = 0.5$ is sampling variability of the median, recorded as such).

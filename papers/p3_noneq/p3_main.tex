@@ -18,7 +18,7 @@
 response asymmetry from dissipation}
 \author{Sharath Sathish\thanks{With agent-assisted implementation. Code, gate records, and every
 number's regeneration path: \url{https://github.com/SharathSPhD/sage}.}}
-\date{August 2026 --- working draft v0.1 (grown at every closed gate)}
+\date{August 2026 --- working draft v0.2 (grown at every closed gate)}
 
 \begin{document}
 \maketitle
@@ -45,11 +45,15 @@ equilibrium susceptibility is a local derivative, the entropy production a
 global flux functional, and no renormalisation of the former recovers the
 latter's ordering. A repair hypothesis we proposed is refuted by its own
 preregistered test.
-(iii)~\emph{Estimability}: irreversibility is recoverable from trajectories
-alone --- a $k$-th order Markov KLD estimator tracks the exact meter with rank
-correlation $1.0$ across the family, and a debiased finite-time
-thermodynamic-uncertainty bound certifies dissipation from two cumulants of one
-current, saturating (ratio $\to 1$) precisely in the near-equilibrium regime.
+(iii)~\emph{Estimability, through to real data}: a $k$-th order Markov KLD
+estimator tracks the exact meter with rank correlation $1.0$; a debiased
+finite-time thermodynamic-uncertainty bound certifies dissipation from two
+cumulants of one current; and, pointed at a real power market (CAISO SP15,
+July 2026), the instruments deliver a verified detection --- day-ahead hourly
+prices violate pair-level detailed balance at $\approx 1.1$ nats/day,
+concentrated in scarcity weeks --- alongside an equally instructive certified
+at-null verdict for the 5-minute series and one documented retraction en
+route.
 Every number regenerates from fixed seeds; every claim carries its confidence
 tier and its falsifier.
 \end{abstract}
@@ -58,6 +62,7 @@ tier and its falsifier.
 \input{sections/phase}
 \input{sections/decoupling}
 \input{sections/estimators}
+\input{sections/data}
 \input{sections/discussion}
 \input{sections/provenance}
 

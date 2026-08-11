@@ -1,0 +1,53 @@
+\section{First data contact: a power market}
+\label{sec:data}
+
+The estimators of Section~\ref{sec:estimators} were built synthetic-first;
+their first real-data application (unit \texttt{domains.electricity}) is
+CAISO's SP15 hub --- day-ahead hourly and real-time 5-minute locational
+marginal prices, July 2026. The sequence of nulls it took to read them
+honestly is the methods contribution; the reading itself is the empirical
+one.
+
+\paragraph{Three structural lessons, each now a permanent guard.}
+(i) Price-\emph{value} discretization is provably blind to loop
+irreversibility --- a periodic drive retraces the same 1-D path, so its
+reversal visits identical value transitions (unit-tested on a noisy sine;
+then observed on the real data to four decimals: the value-space reading
+sits exactly on its null). The loop becomes visible only in the phase
+embedding (price bin, $\Delta$-sign). (ii) A plain shuffle null fails twice
+(destroys persistence; the embedding of an i.i.d.\ series is structurally
+asymmetric), and a plain FT surrogate fails on heavy tails (LMPs carry
+excess kurtosis $\approx 130$; Gaussianisation distorts the sign-flip
+rate). Amplitude-adjusted surrogates repair the marginal but still cannot
+bracket the data's direction-persistence --- the reading escapes the null
+band on the \emph{low} side, which is neither detection nor certified null.
+(iii) The null that decides is the \emph{reversibilized Markov} surrogate:
+fit the embedded pair counts, symmetrize the flux, simulate the
+detailed-balance chain with identical persistence. It satisfies detailed
+balance exactly, and its false-positive rate on truly reversible data
+matches~$\alpha$.
+
+\paragraph{The reading (F-0009, adversarially verified).} Against the
+persistence-matched null, the day-ahead hourly series \emph{violates
+pair-level detailed balance}: $0.0447$ nats/hour vs.\ null $q_{99} =
+0.0291$, empirical $p < 0.01$, robust to surrogate seeds, binning
+(2/3/4 price bins), tie-breaking, Bonferroni across markets and null
+classes, and reversible second-order structure. Weekly stratification
+shows the signal has consistent sign in all five weeks but concentrates in
+the high-ramp second half (per-week ratios $1.6, 1.5, 3.0, 9.1, 4.2$; the
+detection is statistically driven by the scarcity weeks, stated wherever
+the number is used). In physical terms: the diurnal loop --- night valley,
+morning ramp, evening peak, decline --- dissipates $\approx 1.1$ nats per
+day at hourly resolution. The real-time 5-minute series, by contrast, is
+genuinely at-null at $k \in \{1,2\}$ in the matched class: at that sampling
+rate dwell dominates the pair statistic. And the domain's stylised
+two-generator auction model, asked to rationalise the observed price
+dispersion, is \emph{rejected} by it (the model's dispersion ceiling sits
+40\% below the spike-driven observation) --- the conditional-$\lambda$
+pipeline reports the rejection rather than a number.
+
+One retraction is part of this record: an intermediate ``certified null''
+claim (v0.1 of finding F-0008) was withdrawn on adversarial review and
+replaced by the scoped verdicts above. The audit trail --- four null
+classes, two red-team reviews, the retraction --- ships with the
+repository.
