@@ -1,0 +1,23 @@
+game:
+  alpha: 0.25
+ift_ci_level: 0.95
+ift_tolerance: 0.05
+n_trajectories: 800
+protocol:
+  lambdas:
+  - 0.5
+  - 1.5
+  - 2.5
+  - 3.5
+  - 4.5
+  - 5.5
+pseudocount: 0.5
+seed: 20260816
+steps_per_unit_time: 25
+taus:
+- 0.25
+- 0.5
+- 1.0
+- 2.0
+- 4.0
+- 8.0

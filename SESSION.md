@@ -284,3 +284,8 @@
 - Third EFE campaign (pre-registration verified landed; F-0014's failure cells in the grid by construction; full hypothesis × probe residual table in the artifact): **recursive_1mode** — the per-step single-gap recursion tracking p along the ramp — at belief 1.0, held-out validated; dominates the incumbent on median (0.076 vs 0.13 dex) AND worst case (0.44 vs 1.11; loop-path improvement +0.67 dex).
 - Red-team round 3 caught two things that matter: (1) run-1's two-mode anti-result was an implementation ARTIFACT (eigenbasis mix-up + truncated lstsq) — retracted on the record; the fixed implementation still loses to one mode, and the lesson is re-attributed to fast-remainder truncation; (2) 2×2-only validation — 3×3 probes added (config addition recorded), claim holds within adequacy there with honestly larger errors.
 - p3 §protocols carries the recursion + the retraction note (10 pages).
+
+## 2026-08-12 (cont.) — thermo.hs_estimator OPEN (F-0016): the IFT cannot self-calibrate the plug-in — checkpointed honestly, no gate claimed
+
+- Data-facing HS estimator built + tested (module, sampler, 4 tests green); registered sweep run twice, BOTH failures recorded: covers-1 diagnostic non-monotone (P3 FAIL), equivalence upgrade still false-passes at τ=1 (45% bias behind an IFT ≈ 1.01). Root cause isolated: spectral-gap collapse along the ramp (0.88→0.15) — late windows never settle; the F-0006 concentration effect biting the estimator.
+- Unit deliberately left OPEN with next steps recorded in F-0016 (per-window relaxation-time gate from within-window autocorrelation replaces the IFT as primary). ADR-0013: papers fold to p1+p3 (p2/p4 stubs removed).

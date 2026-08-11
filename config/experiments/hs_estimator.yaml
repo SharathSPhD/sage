@@ -18,12 +18,25 @@
 #   P3 — the diagnostic's pass/fail boundary is monotone in tau (no
 #        pass-fail-pass anomalies across the tau grid).
 seed: 20260816
+# CHANGE (recorded before the experiment's first run, during TDD): the
+# originally registered alpha=0.5 gentle ramp has exact <Y> ~ 0.01 — below
+# plug-in noise at n=400, so P1/P2 would be vacuous either way. Regime
+# moved to alpha=0.25 with a steep ramp (<Y> ~ 0.25 at fast holds) where
+# the criteria have power. The P1-P3 CRITERIA themselves are unchanged.
 game:
-  alpha: 0.5
+  alpha: 0.25
 protocol:
-  lambdas: [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+  lambdas: [0.5, 1.5, 2.5, 3.5, 4.5, 5.5]
 taus: [0.25, 0.5, 1.0, 2.0, 4.0, 8.0]
-n_trajectories: 400
+n_trajectories: 800
 steps_per_unit_time: 25
 pseudocount: 0.5 # Laplace smoothing for pi_hat (zero-visit states)
 ift_ci_level: 0.95
+# ESCALATION (recorded AFTER the first registered run): P3 FAILED with the
+# covers-1 diagnostic (usable sequence F,F,T,F,T,T — non-monotone; a
+# failure-to-reject rule is a coin flip at the boundary; the tau=1.0 'pass'
+# sat next to a 45% bias in mean_y). Diagnostic upgraded to an EQUIVALENCE
+# test (IFT CI must sit INSIDE [1-ift_tolerance, 1+ift_tolerance]) and
+# n_trajectories doubled to stabilise boundary verdicts. The failed run's
+# artifact stays in git history; criteria P1-P3 are otherwise unchanged.
+ift_tolerance: 0.05
