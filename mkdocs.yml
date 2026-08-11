@@ -49,6 +49,7 @@ nav:
   - Home: index.md
   - Progress: progress/index.md
   - Cookbook (your data): cookbook.md
+  - API reference: reference.md
   - Concepts:
       - The theory tiers: concepts/tiers.md
   - Instruments: instruments/index.md
