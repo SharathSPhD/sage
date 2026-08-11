@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T21:12:51+00:00",
+  "generated_at": "2026-08-11T21:35:06+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -13,7 +13,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T22:07:23+00:00"
+      "checked_at": "2026-08-11T21:33:11+00:00"
     },
     "finite.response.reciprocity": {
       "unit": "finite.response.reciprocity",
@@ -27,7 +27,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T22:06:38+00:00"
+      "checked_at": "2026-08-11T21:31:37+00:00"
     },
     "dynamics.exact": {
       "unit": "dynamics.exact",
@@ -41,7 +41,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T22:06:05+00:00"
+      "checked_at": "2026-08-11T21:15:20+00:00"
     },
     "solve.advanced": {
       "unit": "solve.advanced",
@@ -55,7 +55,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T22:07:04+00:00"
+      "checked_at": "2026-08-11T21:32:53+00:00"
     },
     "domains.blotto": {
       "unit": "domains.blotto",
@@ -69,7 +69,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T22:05:45+00:00"
+      "checked_at": "2026-08-11T21:14:37+00:00"
     },
     "population.core": {
       "unit": "population.core",
@@ -83,7 +83,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T22:06:51+00:00"
+      "checked_at": "2026-08-11T21:31:50+00:00"
     },
     "domains.congestion": {
       "unit": "domains.congestion",
@@ -97,7 +97,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T22:05:55+00:00"
+      "checked_at": "2026-08-11T21:14:47+00:00"
     },
     "science.phase_map": {
       "unit": "science.phase_map",
@@ -111,7 +111,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T22:06:51+00:00"
+      "checked_at": "2026-08-11T21:32:12+00:00"
     },
     "solve.branch": {
       "unit": "solve.branch",
@@ -125,7 +125,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T22:07:21+00:00"
+      "checked_at": "2026-08-11T21:33:10+00:00"
     },
     "science.decoupling": {
       "unit": "science.decoupling",
@@ -139,7 +139,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T22:06:51+00:00"
+      "checked_at": "2026-08-11T21:32:11+00:00"
     },
     "api.core": {
       "unit": "api.core",
@@ -153,7 +153,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-11T21:09:42+00:00"
+      "checked_at": "2026-08-11T21:14:26+00:00"
     },
     "web.scaffold": {
       "unit": "web.scaffold",
@@ -167,7 +167,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T22:07:23+00:00"
+      "checked_at": "2026-08-11T21:35:06+00:00"
     },
     "thermo.estimators": {
       "unit": "thermo.estimators",
@@ -181,7 +181,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-10T17:33:49+00:00"
+      "checked_at": "2026-08-11T21:33:49+00:00"
     },
     "estimate.lambda": {
       "unit": "estimate.lambda",
@@ -195,7 +195,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-10T23:25:03+00:00"
+      "checked_at": "2026-08-11T21:31:04+00:00"
     },
     "domains.electricity": {
       "unit": "domains.electricity",
@@ -209,7 +209,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-11T01:33:39+00:00"
+      "checked_at": "2026-08-11T21:15:07+00:00"
     },
     "science.frontier": {
       "unit": "science.frontier",
@@ -223,7 +223,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-11T03:49:43+00:00"
+      "checked_at": "2026-08-11T21:32:12+00:00"
     },
     "domains.pricing": {
       "unit": "domains.pricing",
@@ -237,7 +237,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-11T05:55:42+00:00"
+      "checked_at": "2026-08-11T21:15:10+00:00"
     },
     "thermo.protocols": {
       "unit": "thermo.protocols",
@@ -251,7 +251,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-11T06:14:36+00:00"
+      "checked_at": "2026-08-11T21:35:06+00:00"
     },
     "estimate.bayes": {
       "unit": "estimate.bayes",
@@ -265,7 +265,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-11T07:00:41+00:00"
+      "checked_at": "2026-08-11T21:15:33+00:00"
     },
     "product.toolkit": {
       "unit": "product.toolkit",
@@ -279,7 +279,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-11T07:01:01+00:00"
+      "checked_at": "2026-08-11T21:32:11+00:00"
     },
     "science.quench_regimes": {
       "unit": "science.quench_regimes",
@@ -293,7 +293,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-11T07:39:24+00:00"
+      "checked_at": "2026-08-11T21:32:39+00:00"
     },
     "science.quench_multimode": {
       "unit": "science.quench_multimode",
@@ -307,7 +307,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-11T07:56:53+00:00"
+      "checked_at": "2026-08-11T21:32:26+00:00"
     },
     "thermo.hs_estimator": {
       "unit": "thermo.hs_estimator",
@@ -321,7 +321,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-11T11:51:29+00:00"
+      "checked_at": "2026-08-11T21:34:50+00:00"
     },
     "domains.electricity.quench": {
       "unit": "domains.electricity.quench",
@@ -335,7 +335,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-11T21:12:51+00:00"
+      "checked_at": "2026-08-11T21:15:07+00:00"
     }
   }
 }
