@@ -324,3 +324,8 @@
 
 - p3 §protocols gains the data-side quench paragraph (the certification arc in miniature + the gap-collapse consequence: quench dissipation is hardest to measure exactly where strategic systems are most interesting). 10 pages.
 - /findings gains the F-0016 card ("The estimator that had to earn it" — withheld → certified).
+
+## 2026-08-12 (cont.) — R7 round 1: WITHHELD, and rightly — the premise itself was the finding
+
+- Red-team caught four foundations failing: the circular protocol half-counted (closure adds +3.7 → loop total 7.0 nats/day), 6 states outside certified scope, iid CI ~28% narrow (day-block bootstrap [6.22, 8.50] now THE interval), and the full-window "admission" was regime-mixing cancellation — their monthly scan (now a permanent artifact metric) shows 5/7 months individually fire the anomaly detector.
+- F-0017 REWRITTEN (original in git history): the drift diagnosis leads — the trading day is NOT one repeated quench at monthly granularity; the 7.0 nats/day loop affinity is descriptive only (out-of-scope states; the IFT's open-chain identity doesn't constrain closed cycles). Re-review dispatched on the corrected framing.

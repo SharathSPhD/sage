@@ -6,6 +6,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 ## [Unreleased]
 
 ### Added
+- Unit domains.electricity.quench (R7) — the trading-day-as-repeated-quench premise REFUTED informatively (F-0017, rewritten after review): 5 of 7 months individually fire the anomaly detector; the closed daily-loop affinity ~7.0 nats/day survives as a descriptive number with the half-counted-cycle, serial-correlation and out-of-scope corrections on the record.
 - `strataq.thermo.hs_estimator` — EXPERIMENTAL (red-team WITHHELD, unit open): plug-in Hatano-Sasa estimation from quench data with its measured four-mode failure map (F-0016); banner-warned against scientific use — the failure map is the deliverable.
 - Unit science.quench_multimode — the per-step path-aware recursion supersedes the global quench crossover (F-0015; loop-path worst case 1.11 -> 0.44 dex), with the naive two-mode anti-result on record.
 - Unit science.quench_regimes — fast-quench dissipation bracketed by the frozen divergence and the path-length floor with spectral-gap interpolation (F-0014); `run_campaign` gains the `min_probes` guard born from the campaign's own recorded failure.

@@ -1,0 +1,34 @@
+unit: domains.electricity.quench
+claim: "REVISED after red-team round 1 (WITHHELD; all four objections absorbed): the honest R7 deliverable is the DRIFT DIAGNOSIS — 5 of 7 months individually fire the anomaly detector, so the trading day is not one repeated quench protocol at monthly granularity — plus the closed-loop affinity ~7.0 nats/day (day-block bootstrap [6.22, 8.50]) as a DESCRIPTIVE number: the application is outside the certified 4-state scope and the IFT companion is uninformative on closed cycles, both stated. The half-counted open chain, the iid CI, and the mixing-artifact admission of round 1 are corrected on the record (F-0017 rewritten; original in git history)"
+tier: derived
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.85
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - experiments/day_quench_reading.py
+
+  domain:
+    - id: day_quench_read
+      spec: "registered D1-D4 executed verbatim: gate flags reported as-is, seasonal halves labelled indicative-only, drops counted"
+      artifact: benchmarks/results/day_quench_read.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/instruments/market-data.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: false
+    objections: []

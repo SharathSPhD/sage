@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T11:51:29+00:00",
+  "generated_at": "2026-08-11T13:26:06+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -322,6 +322,24 @@
         "adversarial": []
       },
       "checked_at": "2026-08-11T11:51:29+00:00"
+    },
+    "domains.electricity.quench": {
+      "unit": "domains.electricity.quench",
+      "claim": "The certified HS estimator applied to real market data with its gates in charge (registered D1-D4, no outcome declared): 212 CAISO DAM days as repeated diurnal quenches yield an ADMITTED excess-dissipation read of 3.27 nats/day [2.84, 3.90] (IFT companion clean), sitting at ~3x F-0009's stationary pair-level EPR on the same market \u2014 different observables, sensible ordering; and the anomaly detector FIRED on the winter half (IFT [0.07, 0.40]) \u2014 seasonal drift breaks the repeated-protocol premise and the instrument refused instead of quoting, its first catch on real data. Serial-day correlation and regime-mixing caveats stated in F-0017",
+      "tier": "derived",
+      "green": false,
+      "sections": {
+        "code": [
+          "types_clean: experiments/day_quench_reading.py:30: error: Missing type arguments for generic type \"list\"  [type-arg]\nexperiments/day_quench_reading.py:56: error: Missing type arguments for generic type \"dict\"  [type-arg]\nFound 2 errors in 1 file (checked 1 source file)\n"
+        ],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": [
+          "red_team_signoff: not granted"
+        ]
+      },
+      "checked_at": "2026-08-11T13:26:06+00:00"
     }
   }
 }

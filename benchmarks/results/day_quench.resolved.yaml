@@ -1,0 +1,18 @@
+data:
+  days: 213
+  node_market: DAM
+  start: '2026-01-01'
+embedding:
+  n_price_bins: 3
+estimator:
+  pseudocount: 0.5
+  relax_safety: 4.0
+holds:
+  hour_boundaries:
+  - 1
+  - 5
+  - 10
+  - 15
+  - 20
+  - 24
+seed: 20260818
