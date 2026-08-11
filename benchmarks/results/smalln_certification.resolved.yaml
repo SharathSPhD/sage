@@ -1,0 +1,45 @@
+coverage_band:
+- 17
+- 20
+family:
+  alpha: 0.25
+flag_flip_max: 1
+gate_agreement_min: 18
+holdout_seed_offset: 500000
+interval_candidates:
+- percentile
+- bootstrap_t
+- t_widened
+max_width_times_se: 2.0
+n_grid:
+- 20
+- 30
+- 50
+- 100
+- 200
+n_reference: 400
+n_seeds: 20
+protocol:
+  lambdas:
+  - 0.5
+  - 1.5
+  - 2.5
+  - 3.5
+  - 4.5
+  - 5.5
+  tau: 32.0
+pseudocount: 0.5
+relax_safety: 4.0
+s1_scope_validation:
+  primary:
+    alpha: 0.25
+    tau: 32.0
+  secondary:
+    alpha: 0.0
+    n_seeds: 8
+    steps_per_unit_time: 10
+    tau: 150.0
+  secondary_coverage_min_fraction: 0.75
+seed: 20260819
+selection_validation: held_out_confirmation
+steps_per_unit_time: 25

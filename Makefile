@@ -44,6 +44,7 @@ reproduce: reproduce-fast
 	uv run python -m experiments.quench_multimode_campaign
 	uv run python -m experiments.hs_estimator_reading
 	uv run python -m experiments.day_quench_reading
+	uv run python -m experiments.smalln_certification
 
 # Fast subset: what `main` must always pass (CI runs this on every merge).
 reproduce-fast:

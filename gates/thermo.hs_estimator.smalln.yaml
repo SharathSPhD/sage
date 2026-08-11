@@ -1,0 +1,35 @@
+unit: thermo.hs_estimator.smalln
+claim: "REFUSED, with the refusal boundary as the deliverable (F-0019): no (n, interval-method) cell passes the registered S1/S1b/S2/S3, so the n >= 200 floor stands and monthly market windows are not self-certifying reads. The mechanism is the finding — interval COVERAGE holds at every n down to 20 (19-20/20, width ~1.9x SE, all three constructions), so the estimator NUMBER is fine on a month of data; what fails is the DECISION machinery (gate agreement 10/20 at n=20-30 rising to 17/20 at n=200; permutation flag-flips 4-6 falling to 1), which mechanistically explains F-0017 flag instability. Recorded caveat: n=200 also fails S2 (17 vs 18), so either the bar is slightly strict or the existing floor is marginal on decision stability — unresolved by design, and the criteria were red-teamed BEFORE any result existed (first run stopped mid-flight, verdict never read)"
+tier: derived
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.9
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/thermo/hs_estimator.py
+      - packages/strataq/tests/thermo/test_hs_estimator.py
+
+  domain:
+    - id: smalln_certification
+      spec: "registered S1-S3 evaluated on every (n, interval method) cell with the per-seed permutation re-read; the certified floor (or the refusal) follows from the criteria, not from selection after the fact"
+      artifact: benchmarks/results/smalln_certification.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/instruments/dissipation.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: false
+    objections: []
