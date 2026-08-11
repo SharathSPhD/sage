@@ -84,3 +84,10 @@ Format per entry: Context · Options · Decision · Consequences · Date. Includ
 - **Decision**: Start the Bayesian engine (unit `estimate.bayes`): posterior over (λ, payoff-scale) given choice frequencies via the existing solver + JAX (NUTS or dense-grid posterior for small games), with model-comparison machinery (the F-0008 model rejection becomes a Bayes-factor statement), and the λ-estimator family's disagreement diagnostic re-expressed as posterior conflict. Deeper empirics resume when the PI sources cross-chain retail or finer electricity data; the loaders are ready.
 - **Consequences**: p1 gains a calibrated-uncertainty section; the app's Estimate panel can show posteriors instead of point reads; no new data dependencies; the R4/R2 chase items stay parked and explicit in findings.
 - **Date**: 2026-08-12
+
+## ADR-0013 — Papers consolidate to p1 + p3; p2/p4 stubs folded
+
+- **Context**: papers/p2_reciprocity and p4_empirical are empty directories from the original four-paper plan. The reciprocity theory and its empirical read (F-0011) live naturally in p1 (instruments — the measurement is the instrument's payoff); the empirical programme's results are p1/p3 sections (F-0008/9 data in p3), and a standalone empirical paper is compelling only when cross-chain retail or finer electricity data lands (both parked chase items awaiting data the PI would source).
+- **Decision**: fold p2 into p1 and p4 into p1+p3; delete the empty stubs. Revisit a dedicated empirical paper when new data arrives (the trigger is data, not writing time).
+- **Consequences**: two dense papers instead of four thin ones; p1 v0.2 (10pp) and p3 v0.2 (10pp) are the arXiv-track artifacts.
+- **Date**: 2026-08-12

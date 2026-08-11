@@ -1,0 +1,29 @@
+# thermo.hs_estimator — Hatano–Sasa Y from OBSERVED trajectories (data-facing).
+#
+# Real data never provides pi_lambda; the plug-in estimator builds pi_hat_k
+# from occupation frequencies inside each hold window and accumulates
+# Y_hat = sum_k ln pi_hat_{k-1}(s at switch k)/pi_hat_k(s at switch k) per
+# trajectory. THE INSTRUMENT'S OWN VALIDITY METER: the IFT <e^{-Y}> = 1
+# holds for the TRUE Y, so the sampled <e^{-Y_hat}> CI bracketing 1 is a
+# self-calibration diagnostic — windows too short to estimate pi push it
+# off 1 (plug-in bias), and the estimator must REPORT that instead of a
+# number.
+#
+# EX-ANTE CRITERIA (committed before the run; verify this commit LANDED):
+#   P1 — long-hold regime (tau >= 4, n_traj >= 400 at alpha 0.5): the
+#        estimated mean Y_hat brackets the exact <Y> within its 95% CI and
+#        the IFT diagnostic passes (CI covers 1).
+#   P2 — short-hold regime (tau <= 0.5): the IFT diagnostic FAILS (CI off
+#        1) — the meter must flag itself unusable rather than quote Y_hat.
+#   P3 — the diagnostic's pass/fail boundary is monotone in tau (no
+#        pass-fail-pass anomalies across the tau grid).
+seed: 20260816
+game:
+  alpha: 0.5
+protocol:
+  lambdas: [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+taus: [0.25, 0.5, 1.0, 2.0, 4.0, 8.0]
+n_trajectories: 400
+steps_per_unit_time: 25
+pseudocount: 0.5 # Laplace smoothing for pi_hat (zero-visit states)
+ift_ci_level: 0.95
