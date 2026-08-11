@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T07:56:53+00:00",
+  "generated_at": "2026-08-11T09:18:29+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -308,6 +308,22 @@
         "adversarial": []
       },
       "checked_at": "2026-08-11T07:56:53+00:00"
+    },
+    "thermo.hs_estimator": {
+      "unit": "thermo.hs_estimator",
+      "claim": "Hatano-Sasa Y is estimable from observed quench trajectories alone (plug-in pi_hat from burned-in hold windows), with a DATA-SIDE usability gate that survived its own failures: the IFT equivalence check is measurably insufficient (45% bias behind IFT ~ 1.01, F-0016) and is demoted to companion; the primary gate is per-window hold >= 4 x lag-N/4-autocorrelation relaxation time (safety 4 absorbs the estimator's measured ~25% slow-mode underestimate). Registered sweep: boundary perfectly monotone, every admitted hold covers the exact <Y>, every fooling regime refused",
+      "tier": "derived",
+      "green": false,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": [
+          "red_team_signoff: not granted"
+        ]
+      },
+      "checked_at": "2026-08-11T09:18:29+00:00"
     }
   }
 }

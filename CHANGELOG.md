@@ -6,6 +6,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 ## [Unreleased]
 
 ### Added
+- `strataq.thermo.hs_estimator` — EXPERIMENTAL (red-team WITHHELD, unit open): plug-in Hatano-Sasa estimation from quench data with its measured four-mode failure map (F-0016); banner-warned against scientific use — the failure map is the deliverable.
 - Unit science.quench_multimode — the per-step path-aware recursion supersedes the global quench crossover (F-0015; loop-path worst case 1.11 -> 0.44 dex), with the naive two-mode anti-result on record.
 - Unit science.quench_regimes — fast-quench dissipation bracketed by the frozen divergence and the path-length floor with spectral-gap interpolation (F-0014); `run_campaign` gains the `min_probes` guard born from the campaign's own recorded failure.
 - `strataq.toolkit` + `strataq.thermo.nulls` — the plain-data product surface (unit product.toolkit): rationality posterior from choice counts, reciprocity verdict from any cross-response matrix, irreversibility verdict from any scalar series — one call each from plain lists, honesty warnings attached; the reversibilized-Markov null promoted from experiment code; README quickstart + tag-triggered PyPI trusted-publishing workflow.

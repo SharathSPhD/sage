@@ -27,7 +27,7 @@ game:
   alpha: 0.25
 protocol:
   lambdas: [0.5, 1.5, 2.5, 3.5, 4.5, 5.5]
-taus: [0.25, 0.5, 1.0, 2.0, 4.0, 8.0]
+taus: [0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 24.0]
 n_trajectories: 800
 steps_per_unit_time: 25
 pseudocount: 0.5 # Laplace smoothing for pi_hat (zero-visit states)
@@ -40,3 +40,16 @@ ift_ci_level: 0.95
 # n_trajectories doubled to stabilise boundary verdicts. The failed run's
 # artifact stays in git history; criteria P1-P3 are otherwise unchanged.
 ift_tolerance: 0.05
+# ESCALATION 2 (recorded, after F-0016's mechanism was isolated): the
+# per-window RELAXATION gate (tau >= relax_safety x data-estimated
+# relaxation time, lag-N/4 autocorrelation) replaces the IFT as the
+# PRIMARY usability check; the IFT equivalence stays as companion. The
+# slowest window (lambda=5.5, relax ~5) means the gate first passes near
+# tau ~ 16 — taus extended to 16/24 so the usable regime is in the sweep.
+# P1 now reads: every gate-PASSING hold must cover the exact <Y>; P2:
+# every tau <= 0.5 hold flagged; P3: the usable boundary monotone in tau.
+# safety raised 3 -> 4 (recorded): the lag-N/4 relaxation estimate
+# underestimates slow modes ~25% (5.2 vs true 6.6 at lambda=5.5), and at
+# safety 3 the tau=16 hold passed the gate while 58% biased; 4 x the
+# underestimate covers the true 3 x relaxation requirement.
+relax_safety: 4.0

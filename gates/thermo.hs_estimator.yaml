@@ -1,0 +1,58 @@
+unit: thermo.hs_estimator
+claim: "UNIT OPEN - RED-TEAM WITHHELD (the verdict IS the result): plug-in Hatano-Sasa estimation from quench data fails four independent measured ways - the IFT self-check is structurally insufficient (45% bias behind IFT ~ 1.01); the lag-N/4 relaxation underestimate is game-dependent (up to ~19x at alpha=0, defeating any fixed safety factor); coverage at the admitted hold is ~2/5 across seeds (residual plug-in bias beyond the CI); the gate breaks at small n_trajectories. The module ships as an EXPERIMENTAL failure map, banner-warned against scientific use"
+tier: derived
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.9
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/thermo/hs_estimator.py
+      - packages/strataq/tests/thermo/test_hs_estimator.py
+
+  domain:
+    - id: hs_estimator_sweep
+      spec: "P1 every gate-admitted hold covers exact <Y>; P2 short holds refused; P3 monotone usable boundary — after two recorded diagnostic failures and two recorded escalations (all in config comments and F-0016)"
+      artifact: benchmarks/results/hs_estimator_sweep.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/instruments/dissipation.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    # WITHHELD 2026-08-12 - deliberately NOT flipped; the unit stays open and
+    # the module is banner-marked experimental. Dispositions record how each
+    # objection was absorbed into the finding, not argued away.
+    red_team_signoff: false
+    objections:
+      - id: O-1
+        text: "BLOCKING: safety factor 4 calibrated on one case; the relaxation underestimate reaches ~19x at alpha=0"
+        disposition: addressed
+        where: "F-0016 + module banner; fixed safety factors abandoned as an approach in the continuation notes"
+      - id: O-2
+        text: "BLOCKING: single-seed coverage - multi-seed shows ~2/5 at the admitted hold (residual bias beyond the CI)"
+        disposition: addressed
+        where: "F-0016 names the plug-in's in-sample correlation bias as the redesign target (split-sample pi_hat / explicit bias correction)"
+      - id: O-3
+        text: "BLOCKING: the autocorrelation gate breaks at small n_trajectories (24x underestimate at n=1)"
+        disposition: addressed
+        where: "Module banner states the failure; minimum-n analysis deferred to the redesign"
+      - id: O-4
+        text: "BLOCKING: P1 was re-scoped from 'tau>=4' to 'gate-admitted holds' - a weakening to fit the implementation"
+        disposition: addressed
+        where: "Owned in F-0016: the original criterion was never met, the sweep's PASS is void for certification, and the unit is NOT green"
+      - id: O-5
+        text: "NOTE: even at its most honest, the gate refuses 7/8 holds - the usefulness scope must be stated"
+        disposition: accepted
+        where: "F-0016: the usable regime demands tau ~ 25x the inverse gap - data-side quench estimation on concentration ramps is presently impractical, which is itself the finding"

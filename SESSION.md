@@ -289,3 +289,8 @@
 
 - Data-facing HS estimator built + tested (module, sampler, 4 tests green); registered sweep run twice, BOTH failures recorded: covers-1 diagnostic non-monotone (P3 FAIL), equivalence upgrade still false-passes at τ=1 (45% bias behind an IFT ≈ 1.01). Root cause isolated: spectral-gap collapse along the ramp (0.88→0.15) — late windows never settle; the F-0006 concentration effect biting the estimator.
 - Unit deliberately left OPEN with next steps recorded in F-0016 (per-window relaxation-time gate from within-window autocorrelation replaces the IFT as primary). ADR-0013: papers fold to p1+p3 (p2/p4 stubs removed).
+
+## 2026-08-12 (cont.) — thermo.hs_estimator: red-team WITHHELD round 2; unit stays OPEN, the failure map is the deliverable (F-0016 final)
+
+- The per-window relaxation gate closed round 1's false-pass regime (monotone boundary, τ=1 fooling case caught, admitted-hold coverage on the registered seed) — then round 2 broke it four measured ways: game-dependent underestimate up to ~19× (α=0), multi-seed coverage ~2/5 at the admitted hold, collapse at small n_trajectories, and the P1 re-scope owned as a criterion weakening (sweep PASS void for certification).
+- Response: signoff NOT flipped; module banner-marked EXPERIMENTAL; F-0016 carries the full four-mode failure map + redesign directions (split-sample π̂, explicit bias correction, game-adaptive safety, minimum-n analysis); docs/CHANGELOG corrected to the withheld status. Six tests remain green for what the module does.

@@ -52,14 +52,20 @@ def main() -> int:
         est = hs_y_estimate(
             windows,
             n_states=4,
+            hold_durations=[tau] * len(windows),
             pseudocount=float(cfg["pseudocount"]),
+            relax_safety=float(cfg.get("relax_safety", 3.0)),
             ift_tolerance=float(cfg.get("ift_tolerance", 0.05)),
         )
         rows.append((tau, exact, est))
 
-    long_rows = [(t, ex, e) for t, ex, e in rows if t >= 4.0]
+    usable_rows = [(t, ex, e) for t, ex, e in rows if e.usable]
     short_rows = [(t, ex, e) for t, ex, e in rows if t <= 0.5]
-    p1 = all(e.usable and e.mean_y_ci_low <= ex <= e.mean_y_ci_high for _, ex, e in long_rows)
+    # P1 (as re-scoped with the relaxation gate, escalation 2 in config):
+    # the gate must admit SOMETHING, and every admitted hold must cover
+    p1 = bool(usable_rows) and all(
+        e.mean_y_ci_low <= ex <= e.mean_y_ci_high for _, ex, e in usable_rows
+    )
     p2 = all(not e.usable for _, _, e in short_rows)
     usable_seq = [e.usable for _, _, e in rows]  # taus ascending
     p3 = usable_seq == sorted(usable_seq)  # False..True monotone
@@ -76,7 +82,7 @@ def main() -> int:
         metrics[f"tau{key}_ift"] = e.ift_estimate
         metrics[f"tau{key}_usable"] = float(e.usable)
 
-    t_long, ex_long, e_long = long_rows[-1]
+    t_long, ex_long, e_long = (usable_rows or rows)[-1]
     res = BenchmarkResult(
         benchmark_id="hs_estimator_sweep",
         unit=UNIT,

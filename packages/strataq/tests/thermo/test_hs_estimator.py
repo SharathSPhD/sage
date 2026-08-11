@@ -25,15 +25,18 @@ def _proto(tau: float) -> QuenchProtocol:
 
 
 class TestLongHoldRecovery:
-    def test_recovers_exact_mean_y_and_ift_passes(self):
-        proto = _proto(8.0)
+    def test_recovers_exact_mean_y_and_gates_pass(self):
+        """tau=24: every hold clears the relaxation gate (slowest window's
+        estimated relaxation ~5, x3 safety) — only then is coverage owed."""
+        proto = _proto(24.0)
+        # n=800: the IFT companion is an equivalence test — its CI half-width
+        # must fit inside the tolerance band, which n=400 barely misses
         windows = sample_quench_states(
-            GAME, proto, n_trajectories=400, steps_per_unit_time=25, seed=1
+            GAME, proto, n_trajectories=800, steps_per_unit_time=25, seed=1
         )
-        est = hs_y_estimate(windows, n_states=4)
+        est = hs_y_estimate(windows, n_states=4, hold_durations=[24.0] * len(windows))
         exact = float(hatano_sasa_exact(GAME, proto)[1])
         assert est.usable
-        assert est.ift_ci_low <= 1.0 <= est.ift_ci_high
         assert est.mean_y_ci_low <= exact <= est.mean_y_ci_high
 
 
@@ -43,9 +46,28 @@ class TestShortHoldSelfFlags:
         windows = sample_quench_states(
             GAME, proto, n_trajectories=400, steps_per_unit_time=25, seed=2
         )
+        est = hs_y_estimate(windows, n_states=4, hold_durations=[0.25] * len(windows))
+        assert not est.usable
+        assert any("relaxation gate" in w for w in est.warnings)
+
+    def test_ift_false_pass_regime_caught_by_relaxation_gate(self):
+        """The F-0016 case: tau=1.0 fooled the IFT (45% bias behind IFT~1.01);
+        the relaxation gate must catch it."""
+        proto = _proto(1.0)
+        windows = sample_quench_states(
+            GAME, proto, n_trajectories=400, steps_per_unit_time=25, seed=2
+        )
+        est = hs_y_estimate(windows, n_states=4, hold_durations=[1.0] * len(windows))
+        assert not est.usable
+
+    def test_missing_hold_durations_unusable_with_warning(self):
+        proto = _proto(8.0)
+        windows = sample_quench_states(
+            GAME, proto, n_trajectories=100, steps_per_unit_time=25, seed=2
+        )
         est = hs_y_estimate(windows, n_states=4)
         assert not est.usable
-        assert any("window" in w or "IFT" in w for w in est.warnings)
+        assert any("hold_durations" in w for w in est.warnings)
 
 
 class TestValidation:

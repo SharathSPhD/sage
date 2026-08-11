@@ -1,4 +1,13 @@
-"""Hatano–Sasa Y from observed trajectories — the data-facing quench meter.
+"""Hatano-Sasa Y from observed trajectories - EXPERIMENTAL, NOT CERTIFIED.
+
+.. warning::
+   Red-team verdict WITHHELD (2026-08-12, F-0016): multi-seed coverage at
+   the one admitted hold is ~2/5 (residual plug-in bias beyond the CI); the
+   relaxation-time underestimate is game-dependent (up to ~19x at alpha=0,
+   far beyond any fixed safety factor); the autocorrelation gate breaks at
+   small n_trajectories (24x underestimate at n=1). Do NOT use this module
+   for scientific claims - it is retained as the measured failure map and
+   the starting point for a redesign (F-0016 continuation notes).
 
 Real systems never hand over π_λ. The plug-in estimator pools occupation
 frequencies inside each hold window into π̂_k (Laplace-smoothed) and
@@ -6,11 +15,13 @@ accumulates, per trajectory,
 
     Ŷ = Σ_k ln π̂_{k−1}(s at switch k) − ln π̂_k(s at switch k),
 
-with s the trajectory's last state of window k−1. **The instrument carries
-its own validity meter**: the true Y satisfies ⟨e^{−Y}⟩ = 1 exactly, so the
-sampled ⟨e^{−Ŷ}⟩ CI bracketing 1 diagnoses the plug-in — windows too short
-for π̂ to be stationary push it off 1, and the estimator then reports
-``usable = False`` instead of a number to quote.
+with s the trajectory's last state of window k−1. **The usability gate is
+the per-window relaxation check** (F-0016): each hold must exceed
+``relax_safety`` × its own data-estimated relaxation time, else π̂ never
+settled and the read is refused. The IFT ⟨e^{−Ŷ}⟩ ≈ 1 equivalence check is
+only a COMPANION — it is measurably insufficient alone (a 45% bias can
+hide behind an IFT of 1.01, because state-correlated plug-in errors cancel
+in the exponential average but not the mean).
 
 References
 ----------
@@ -87,12 +98,33 @@ class HSEstimate:
     warnings: list[str] = field(default_factory=list)
 
 
+def _relaxation_time(window: np.ndarray, n_states: int, dt: float) -> float:
+    """Data-side relaxation-time estimate from within-window autocorrelation.
+
+    Categorical autocorrelation at lag N/4 (long lags see the slow modes a
+    lag-1 estimate under-weights), fitted as a single exponential. This is
+    what makes the usability gate estimable from observations alone.
+    """
+    # lag N/4 sees slow modes far better than lag 1, but still UNDERESTIMATES
+    # them (~25% measured on a gap-collapsed window: 5.2 vs true 6.6) — the
+    # default relax_safety of 4 exists to absorb exactly that bias
+    lag = max(1, window.shape[1] // 4)
+    a, b = window[:, :-lag].reshape(-1), window[:, lag:].reshape(-1)
+    pi = np.bincount(window.reshape(-1), minlength=n_states) / window.size
+    base = float(np.sum(pi**2))
+    rho = (float(np.mean(a == b)) - base) / max(1.0 - base, 1e-12)
+    rho = min(max(rho, 1e-12), 1.0 - 1e-12)
+    return float(-lag * dt / np.log(rho))
+
+
 def hs_y_estimate(
     windows: list[np.ndarray],
     *,
     n_states: int,
+    hold_durations: list[float] | None = None,
     pseudocount: float = 0.5,
     burn_in_fraction: float = 0.25,
+    relax_safety: float = 4.0,
     ift_tolerance: float = 0.05,
     ci_level: float = 0.95,
 ) -> HSEstimate:
@@ -103,6 +135,16 @@ def hs_y_estimate(
     window may be prepended as ``windows[0]`` or omitted — the estimator
     uses window k−1's occupation as π̂ entering switch k, so at least two
     windows are required.
+
+    **The primary usability gate** (F-0016): with ``hold_durations`` (the τ
+    of each hold, in the same time units the data was sampled at), every
+    window must satisfy τ ≥ ``relax_safety`` × its own estimated relaxation
+    time — otherwise the hold never settled and π̂ is biased regardless of
+    what the IFT says. The IFT equivalence check is the necessary COMPANION
+    diagnostic, not the primary one: ⟨e^{−Ŷ}⟩ can sit at 1 while ⟨Ŷ⟩ is
+    badly biased (measured: 45% bias behind an IFT of 1.01). Without
+    ``hold_durations`` the relaxation gate cannot run and the read is
+    marked unusable with an explicit warning.
     """
     if len(windows) < 2:
         raise ValueError("need at least two hold windows")
@@ -142,20 +184,47 @@ def hs_y_estimate(
     vals = np.exp(-y)
     ift = float(np.mean(vals))
     half_ift = z * float(np.std(vals, ddof=1)) / float(np.sqrt(n_traj))
-    # EQUIVALENCE-style diagnostic (upgraded after the registered P3 run
-    # failed with a covers-1 rule — non-monotone at the boundary, because
-    # failure-to-reject flips by seed): usable demands the whole IFT CI
-    # inside [1 - tol, 1 + tol] — positive evidence of closeness to the
-    # identity, not absence of evidence against it.
-    usable = (1.0 - ift_tolerance) <= ift - half_ift and ift + half_ift <= 1.0 + ift_tolerance
+    # companion diagnostic (equivalence-style; known-insufficient alone —
+    # F-0016): the whole IFT CI must sit inside [1 - tol, 1 + tol]
+    ift_ok = (1.0 - ift_tolerance) <= ift - half_ift and ift + half_ift <= 1.0 + ift_tolerance
     warnings = []
-    if not usable:
+    # PRIMARY gate (F-0016): every hold must be long relative to its own
+    # data-estimated relaxation time, else pi_hat never settled
+    relax_ok = False
+    if hold_durations is None:
         warnings.append(
-            "IFT diagnostic failed: <e^{-Y_hat}> CI is not contained in "
-            f"[{1 - ift_tolerance}, {1 + ift_tolerance}] — either the hold windows "
-            "are too short for the plug-in stationary estimates (or the system is "
-            "not stepwise-stationary), or the sample is too small to certify the "
-            "identity; do NOT quote mean_y from this read"
+            "hold_durations not supplied: the primary relaxation gate cannot run, "
+            "so this read is marked unusable — pass the hold lengths (same time "
+            "units as your sampling) to enable it"
+        )
+    else:
+        if len(hold_durations) != len(windows):
+            raise ValueError("hold_durations must have one entry per window")
+        relax_times = [
+            _relaxation_time(w, n_states, float(tau) / w.shape[1])
+            for w, tau in zip(windows, hold_durations, strict=True)
+        ]
+        offenders = [
+            k
+            for k, (tau, tr) in enumerate(zip(hold_durations, relax_times, strict=True))
+            if float(tau) < relax_safety * tr
+        ]
+        relax_ok = not offenders
+        if offenders:
+            worst = max(offenders, key=lambda k: relax_times[k] / float(hold_durations[k]))
+            warnings.append(
+                f"relaxation gate failed for {len(offenders)} window(s) (worst: window "
+                f"{worst}, hold {float(hold_durations[worst]):g} < {relax_safety} x "
+                f"estimated relaxation time {relax_times[worst]:.2f}) — the hold never "
+                "settled; pi_hat is biased there and mean_y must not be quoted"
+            )
+    usable = relax_ok and ift_ok
+    if relax_ok and not ift_ok:
+        warnings.append(
+            "IFT companion diagnostic failed: <e^{-Y_hat}> CI is not contained in "
+            f"[{1 - ift_tolerance}, {1 + ift_tolerance}] despite settled holds — "
+            "sample too small to certify the identity, or the system is not "
+            "stepwise-stationary; do NOT quote mean_y from this read"
         )
     min_len = min(w.shape[1] for w in windows)
     if min_len * n_traj < 20 * n_states:

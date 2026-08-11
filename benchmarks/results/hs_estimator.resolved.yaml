@@ -12,6 +12,7 @@ protocol:
   - 4.5
   - 5.5
 pseudocount: 0.5
+relax_safety: 4.0
 seed: 20260816
 steps_per_unit_time: 25
 taus:
@@ -21,3 +22,5 @@ taus:
 - 2.0
 - 4.0
 - 8.0
+- 16.0
+- 24.0
