@@ -9,6 +9,7 @@ const LINKS = [
   { href: "/phase", label: "Phase map" },
   { href: "/network", label: "Network" },
   { href: "/markets", label: "Markets" },
+  { href: "/findings", label: "Findings" },
 ];
 
 export function NavLinks() {
