@@ -11,6 +11,7 @@ weights on a held-out split.
 from __future__ import annotations
 
 from datetime import UTC, date, datetime
+from itertools import pairwise
 from pathlib import Path
 
 import numpy as np
@@ -88,11 +89,41 @@ def _read_market(cfg: dict, mcfg: dict, seed: int) -> tuple[dict, list, bool, in
 
     null_a, null_e = null_dist(ft_surrogate)
     _null_a2, null_e2 = null_dist(aaft_surrogate)
+
+    # Third null — REVERSIBILIZED MARKOV (the persistence-matched one the
+    # spectral classes cannot provide): fit the embedded chain's pair counts,
+    # symmetrize the flux (C+C^T)/2 -> a detailed-balance chain with the SAME
+    # symmetric pair structure and mixing; simulate; re-read. Exceeding this
+    # null means the observed pair-flux asymmetry is beyond what a reversible
+    # chain with identical persistence generates by chance.
+    eseq = np.asarray(estates)
+    counts = np.zeros((e_nstates, e_nstates))
+    for a, b in pairwise(eseq):
+        counts[a, b] += 1.0
+    sym = (counts + counts.T) / 2.0
+    rowsum = sym.sum(axis=1, keepdims=True)
+    p_rev = np.divide(sym, rowsum, out=np.full_like(sym, 1.0 / e_nstates), where=rowsum > 0)
+
+    def markov_surrogate_states() -> np.ndarray:
+        out = np.empty(len(eseq), dtype=np.int64)
+        out[0] = eseq[0]
+        for i in range(1, len(eseq)):
+            out[i] = rng.choice(e_nstates, p=p_rev[out[i - 1]])
+        return out
+
+    null_m = np.array(
+        [
+            float(kld_epr(trajectory_from_series(markov_surrogate_states(), e_nstates, dt=dt), k=1))
+            for _ in range(int(cfg["surrogates"]))
+        ]
+    )
     alpha = float(cfg["thresholds"]["surrogate_alpha"])
     q_val = float(np.quantile(null_a, 1.0 - alpha))
     q_emb = float(np.quantile(null_e, 1.0 - alpha))
     q_emb2 = float(np.quantile(null_e2, 1.0 - alpha))
     lo_emb2 = float(np.quantile(null_e2, alpha))
+    q_m = float(np.quantile(null_m, 1.0 - alpha))
+    lo_m = float(np.quantile(null_m, alpha))
 
     metrics = {
         "n_samples": float(n),
@@ -113,6 +144,13 @@ def _read_market(cfg: dict, mcfg: dict, seed: int) -> tuple[dict, list, bool, in
         # (Δ-sign persistence beyond any linear+marginal surrogate). Then a
         # sharp "certified null" is NOT available — only "no detection".
         "null_mismatch_low": float(kld_embed < lo_emb2),
+        "null_markov_median": float(np.median(null_m)),
+        "null_markov_q99": q_m,
+        "null_markov_q01": lo_m,
+        # The persistence-matched verdict: pair-flux asymmetry beyond a
+        # reversible chain with identical symmetric flux.
+        "markov_detected": float(kld_embed > q_m),
+        "markov_at_null": float(lo_m <= kld_embed <= q_m),
     }
     effect = EffectSize(
         name="phase-embedded KLD vs AAFT-surrogate null (nats/hour)",
