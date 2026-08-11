@@ -10,6 +10,7 @@ const LINKS = [
   { href: "/network", label: "Network" },
   { href: "/markets", label: "Markets" },
   { href: "/findings", label: "Findings" },
+  { href: "/tools", label: "Your data" },
 ];
 
 export function NavLinks() {

@@ -180,3 +180,59 @@ def test_sioux_sue_guards():
         ).status_code
         == 422
     )
+
+
+def test_toolkit_reciprocity_f0011():
+    r = client.post(
+        "/v1/toolkit/reciprocity",
+        json={"chi": [[1.0697, 0.0028], [0.0005, 0.9685]]},
+    )
+    assert r.status_code == 200
+    body = r.json()
+    assert abs(body["r"] - 0.0011) < 3e-4
+    assert body["warnings"]  # honesty warnings travel over HTTP too
+
+
+def test_toolkit_reciprocity_with_se_gives_ci():
+    r = client.post(
+        "/v1/toolkit/reciprocity",
+        json={"chi": [[1.0, 0.05], [0.01, 1.0]], "chi_se": [[0.02, 0.02], [0.02, 0.02]]},
+    )
+    assert r.status_code == 200
+    body = r.json()
+    assert body["ci_low"] is not None and body["ci_low"] < body["r"] < body["ci_high"]
+
+
+def test_toolkit_reciprocity_nan_is_422():
+    r = client.post("/v1/toolkit/reciprocity", json={"chi": [[1.0, None], [0.2, 0.9]]})
+    assert r.status_code == 422
+
+
+def test_toolkit_irreversibility_walk_at_null():
+    import numpy as np
+
+    series = list(np.cumsum(np.random.default_rng(0).normal(size=400)))
+    r = client.post(
+        "/v1/toolkit/irreversibility",
+        json={"series": series, "n_surrogates": 60},
+    )
+    assert r.status_code == 200
+    assert r.json()["detected"] is False
+
+
+def test_toolkit_irreversibility_constant_is_422():
+    r = client.post("/v1/toolkit/irreversibility", json={"series": [5.0] * 200})
+    assert r.status_code == 422
+    assert "constant" in r.json()["detail"]
+
+
+def test_toolkit_rationality_flat_warns():
+    r = client.post(
+        "/v1/toolkit/rationality",
+        json={
+            "payoff_matrices": [[[1.0, -1.0], [-1.0, 1.0]], [[-1.0, 1.0], [1.0, -1.0]]],
+            "counts": [[500, 500], [500, 500]],
+        },
+    )
+    assert r.status_code == 200
+    assert any("flat likelihood" in w for w in r.json()["warnings"])

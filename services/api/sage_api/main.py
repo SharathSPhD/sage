@@ -14,6 +14,7 @@ from typing import Annotated, Any, Literal
 
 import jax.numpy as jnp
 import strataq
+import strataq.toolkit as tk
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -477,4 +478,113 @@ def sioux_sue(payload: SUEPayload) -> dict[str, Any]:
         "residual": float(residual),
         "newton_steps": int(steps),
         "warnings": [],
+    }
+
+
+# ---------------------------------------------------------------------------
+# /v1/toolkit — the plain-data product surface (unit product.toolkit): the
+# same three questions strataq.toolkit answers in Python, over HTTP. Verdicts
+# carry their honesty warnings; guards raise 422s with instructive messages.
+# ---------------------------------------------------------------------------
+
+
+class ToolkitReciprocityPayload(BaseModel):
+    chi: list[list[float]]
+    chi_se: list[list[float]] | None = None
+
+
+@app.post("/v1/toolkit/reciprocity")
+def toolkit_reciprocity(payload: ToolkitReciprocityPayload) -> dict[str, Any]:
+    """R + verdict from a measured cross-response matrix (curl-able F-0011).
+
+    Example: curl -X POST .../v1/toolkit/reciprocity -H 'Content-Type: application/json'
+    -d '{"chi": [[1.07, 0.003], [0.0005, 0.97]]}'
+    """
+    try:
+        read = tk.reciprocity_read(payload.chi, chi_se=payload.chi_se)
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e)) from e
+    return {
+        "r": read.r,
+        "verdict": read.verdict,
+        "ci_low": read.ci_low,
+        "ci_high": read.ci_high,
+        "calibration": read.calibration,
+        "warnings": read.warnings,
+    }
+
+
+class ToolkitSeriesPayload(BaseModel):
+    series: list[float]
+    n_bins: int = 3
+    n_surrogates: int = 150
+    alpha_level: float = 0.01
+    seed: int = 0
+
+
+@app.post("/v1/toolkit/irreversibility")
+def toolkit_irreversibility(payload: ToolkitSeriesPayload) -> dict[str, Any]:
+    """Irreversibility verdict for a scalar time series (the F-0009 instrument)."""
+    if len(payload.series) > 20_000:
+        raise HTTPException(status_code=422, detail="series capped at 20000 points on this host")
+    if not 1 <= payload.n_bins <= 6 or not 20 <= payload.n_surrogates <= 500:
+        raise HTTPException(status_code=422, detail="n_bins in [1,6], n_surrogates in [20,500]")
+    try:
+        v = tk.irreversibility_test(
+            payload.series,
+            n_bins=payload.n_bins,
+            n_surrogates=payload.n_surrogates,
+            alpha_level=payload.alpha_level,
+            seed=payload.seed,
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e)) from e
+    return {
+        "detected": v.detected,
+        "p_value": v.p_value,
+        "statistic": v.statistic,
+        "null_quantile": v.null_quantile,
+        "null_median": v.null_median,
+        "null_mismatch_low": v.null_mismatch_low,
+        "n_surrogates": v.n_surrogates,
+        "warnings": (
+            ["n < 300: underpowered — a non-detection here is weak evidence"]
+            if len(payload.series) < 300
+            else []
+        ),
+    }
+
+
+class ToolkitRationalityPayload(BaseModel):
+    payoff_matrices: list[list[list[float]]]
+    counts: list[list[float]]
+    lam_min: float = 0.05
+    lam_max: float = 20.0
+
+
+@app.post("/v1/toolkit/rationality")
+def toolkit_rationality(payload: ToolkitRationalityPayload) -> dict[str, Any]:
+    """Bayesian lambda posterior from choice counts under a known game."""
+    if len(payload.payoff_matrices) > settings.max_players:
+        raise HTTPException(status_code=422, detail=f"max {settings.max_players} players")
+    for u in payload.payoff_matrices:
+        if len(u) > settings.max_actions_per_player:
+            raise HTTPException(
+                status_code=422, detail=f"max {settings.max_actions_per_player} actions/player"
+            )
+    try:
+        est = tk.estimate_rationality(
+            list(payload.payoff_matrices),
+            list(payload.counts),
+            lam_range=(payload.lam_min, payload.lam_max),
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e)) from e
+    return {
+        "mean": est.mean,
+        "map": est.map,
+        "ci_low": est.ci_low,
+        "ci_high": est.ci_high,
+        "grid_resolved": est.grid_resolved,
+        "warnings": est.warnings,
     }
