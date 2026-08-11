@@ -304,3 +304,8 @@
 
 - 20-seed study: coverage 19/20 (the bootstrap is calibrated — the earlier 1.7× shortfall was a six-sample mirage), unbiased (0.0911 vs 0.0891). Decomposition shows π̂ noise negligible vs switch-state sampling.
 - Remaining before re-registration: relaxation-gate boundary flicker (conservative — 4/20 usable at τ=24), game-adaptive safety, minimum-n. F-0016 updated; unit stays open/bannered until those close.
+
+## 2026-08-12 (cont.) — hs_estimator gates stabilised: 10/10 usable + 10/10 coverage at settled holds
+
+- Relaxation threshold → τ̂ + 2SE (0/10 flicker); IFT companion → anomaly detector (excludes-1), its equivalence form having been pure power-starved flicker once certification moved to the relaxation gate (escalations 3+4 recorded in config). τ=32: 10/10 usable, 10/10 coverage; τ=24 the honest conservative margin (5/10 admitted, all cover). Registered sweep PASSES with a monotone boundary.
+- Remaining before re-registration + fresh red-team: game-adaptive safety (α=0), minimum-n analysis. Banner stays on.

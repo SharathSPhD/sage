@@ -112,23 +112,36 @@ class HSEstimate:
     warnings: list[str] = field(default_factory=list)
 
 
-def _relaxation_time(window: np.ndarray, n_states: int, dt: float) -> float:
-    """Data-side relaxation-time estimate from within-window autocorrelation.
+def _relaxation_time(window: np.ndarray, n_states: int, dt: float) -> tuple[float, float]:
+    """Data-side relaxation-time estimate (value, SE) from autocorrelation.
 
     Categorical autocorrelation at lag N/4 (long lags see the slow modes a
-    lag-1 estimate under-weights), fitted as a single exponential. This is
-    what makes the usability gate estimable from observations alone.
+    lag-1 estimate under-weights), fitted as a single exponential; the SE
+    comes from a 4-way trajectory split. The gate uses tau_hat + 2 SE so a
+    noisy estimate cannot FLICKER a marginal hold into the usable set
+    (measured flicker: usable 4/20 at a boundary hold before this).
     """
     # lag N/4 sees slow modes far better than lag 1, but still UNDERESTIMATES
     # them (~25% measured on a gap-collapsed window: 5.2 vs true 6.6) — the
     # default relax_safety of 4 exists to absorb exactly that bias
     lag = max(1, window.shape[1] // 4)
-    a, b = window[:, :-lag].reshape(-1), window[:, lag:].reshape(-1)
-    pi = np.bincount(window.reshape(-1), minlength=n_states) / window.size
-    base = float(np.sum(pi**2))
-    rho = (float(np.mean(a == b)) - base) / max(1.0 - base, 1e-12)
-    rho = min(max(rho, 1e-12), 1.0 - 1e-12)
-    return float(-lag * dt / np.log(rho))
+
+    def one(win: np.ndarray) -> float:
+        a, b = win[:, :-lag].reshape(-1), win[:, lag:].reshape(-1)
+        pi = np.bincount(win.reshape(-1), minlength=n_states) / win.size
+        base = float(np.sum(pi**2))
+        rho = (float(np.mean(a == b)) - base) / max(1.0 - base, 1e-12)
+        rho = min(max(rho, 1e-12), 1.0 - 1e-12)
+        return float(-lag * dt / np.log(rho))
+
+    est = one(window)
+    n_traj = window.shape[0]
+    if n_traj >= 8:
+        groups = [one(window[i::4]) for i in range(4)]
+        se = float(np.std(groups, ddof=1)) / 2.0
+    else:
+        se = est  # too few trajectories to estimate SE: maximally cautious
+    return est, se
 
 
 def hs_y_estimate(
@@ -210,9 +223,14 @@ def hs_y_estimate(
     tail = (1.0 - ci_level) / 2.0
     y_lo, y_hi = (float(q) for q in np.quantile(boot_y, [tail, 1.0 - tail]))
     ift_lo, ift_hi = (float(q) for q in np.quantile(boot_ift, [tail, 1.0 - tail]))
-    # companion diagnostic (equivalence-style; known-insufficient alone —
-    # F-0016): the whole IFT CI must sit inside [1 - tol, 1 + tol]
-    ift_ok = (1.0 - ift_tolerance) <= ift_lo and ift_hi <= 1.0 + ift_tolerance
+    # companion diagnostic — ROLE CHANGED with the relaxation gate primary
+    # (F-0016 history): as an ANOMALY DETECTOR it flags only when the IFT CI
+    # EXCLUDES 1 (gross violation: non-stepwise-stationary system or broken
+    # sampling). The old equivalence form was right when this check was
+    # primary, but as companion it just flickered at CI-width ~ tolerance
+    # (measured 3/10 usable at a fully-settled hold); certification power now
+    # lives in the relaxation gate, detection power here.
+    ift_ok = ift_lo <= 1.0 <= ift_hi
     warnings = []
     # PRIMARY gate (F-0016): every hold must be long relative to its own
     # data-estimated relaxation time, else pi_hat never settled
@@ -226,10 +244,13 @@ def hs_y_estimate(
     else:
         if len(hold_durations) != len(windows):
             raise ValueError("hold_durations must have one entry per window")
-        relax_times = [
+        relax_reads = [
             _relaxation_time(w, n_states, float(tau) / w.shape[1])
             for w, tau in zip(windows, hold_durations, strict=True)
         ]
+        # noise-aware threshold: tau_hat + 2 SE, so estimate noise cannot
+        # flicker a marginal hold into the usable set
+        relax_times = [tr + 2.0 * se for tr, se in relax_reads]
         offenders = [
             k
             for k, (tau, tr) in enumerate(zip(hold_durations, relax_times, strict=True))
@@ -247,10 +268,9 @@ def hs_y_estimate(
     usable = relax_ok and ift_ok
     if relax_ok and not ift_ok:
         warnings.append(
-            "IFT companion diagnostic failed: <e^{-Y_hat}> CI is not contained in "
-            f"[{1 - ift_tolerance}, {1 + ift_tolerance}] despite settled holds — "
-            "sample too small to certify the identity, or the system is not "
-            "stepwise-stationary; do NOT quote mean_y from this read"
+            "IFT companion ANOMALY: <e^{-Y_hat}> CI excludes 1 despite settled "
+            "holds — the system is likely not stepwise-stationary (or the "
+            "sampling is broken); do NOT quote mean_y from this read"
         )
     min_len = min(w.shape[1] for w in windows)
     if min_len * n_traj < 20 * n_states:

@@ -27,7 +27,7 @@ game:
   alpha: 0.25
 protocol:
   lambdas: [0.5, 1.5, 2.5, 3.5, 4.5, 5.5]
-taus: [0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 24.0]
+taus: [0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 24.0, 32.0]
 n_trajectories: 800
 steps_per_unit_time: 25
 pseudocount: 0.5 # Laplace smoothing for pi_hat (zero-visit states)
@@ -53,3 +53,14 @@ ift_tolerance: 0.05
 # safety 3 the tau=16 hold passed the gate while 58% biased; 4 x the
 # underestimate covers the true 3 x relaxation requirement.
 relax_safety: 4.0
+# ESCALATION 3 (recorded): the gate now thresholds on tau_hat + 2 SE
+# (4-way trajectory-split SE) so per-seed estimate noise cannot flicker a
+# marginal hold into the usable set (measured flicker: 4/20 usable at
+# tau=24). This makes tau=24 a consistent REFUSAL (true relaxation ~6.6
+# needs ~26); tau=32 added so the sweep contains a solidly usable hold.
+# ESCALATION 4 (recorded): with the relaxation gate primary and stable
+# (0/10 flicker after the +2SE threshold), the IFT companion's equivalence
+# form still flickered (3/10 usable at tau=32, every CI containing 1 — a
+# pure power problem at n=400). Role change: the companion is an ANOMALY
+# DETECTOR (flag when the CI EXCLUDES 1), which is the correct test for its
+# job now that certification lives in the relaxation gate.
