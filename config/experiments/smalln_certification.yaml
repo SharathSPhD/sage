@@ -1,0 +1,39 @@
+# thermo.hs_estimator.smalln (R8) — can a MONTH of market data be quoted?
+#
+# F-0017 left a precise requirement: monthly windows carry n ~ 30
+# trajectories, the estimator is certified at n >= 200, and at n ~ 30 the
+# anomaly flag was observed to FLIP under a physically-null permutation.
+# This unit either extends the certification downward or publishes the
+# refusal boundary. Both outcomes are acceptable findings.
+#
+# REGISTERED CRITERIA (this commit must LAND before any run — verify with
+# git log; the standing rule since the thermo.protocols O-3 failure):
+#   S1 (coverage) — on the certified family (alpha=0.25 steep ramp, settled
+#       hold tau=32), the 95% interval must cover the exact <Y> in
+#       [17, 20] of 20 seeds at EVERY n that the unit certifies. An n whose
+#       coverage falls below 17/20 is REFUSED, not patched.
+#   S2 (SE machinery) — the relaxation gate's 4-way-split SE must remain
+#       usable: at each n, the gate's admit/refuse decision must agree with
+#       the n=400 reference decision on >= 18/20 seeds. Disagreement means
+#       the gate itself is unreliable at that n.
+#   S3 (flag stability) — the anomaly flag must not flip under the
+#       physically-null trajectory-order shuffle (the F-0017 diagnostic) on
+#       more than 1 of 20 seeds. This is the criterion that failed at n~30
+#       with the current interval; it is the real bar.
+#   INTERVAL CANDIDATES compared at every n (the winner must be chosen by
+#   S1-S3, not by preference): percentile bootstrap (incumbent), bootstrap-t
+#   (studentised), and a t-distribution widening of the percentile interval.
+#   No candidate may be added after seeing results without a recorded note.
+seed: 20260819
+family: { alpha: 0.25 }
+protocol: { lambdas: [0.5, 1.5, 2.5, 3.5, 4.5, 5.5], tau: 32.0 }
+n_grid: [20, 30, 50, 100, 200]
+n_reference: 400
+n_seeds: 20
+steps_per_unit_time: 25
+pseudocount: 0.5
+relax_safety: 4.0
+coverage_band: [17, 20]
+gate_agreement_min: 18
+flag_flip_max: 1
+interval_candidates: [percentile, bootstrap_t, t_widened]
