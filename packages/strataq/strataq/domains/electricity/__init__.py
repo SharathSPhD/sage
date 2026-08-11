@@ -6,6 +6,8 @@ exactly linearly), loader (CAISO OASIS), learn spec. The irreversibility
 readings on real data are findings F-0008/F-0009.
 """
 
+from typing import Literal
+
 from strataq.core.protocols import ConjugateFieldSpec, DomainPlugin, LearnPageSpec
 from strataq.domains.electricity.caiso import (
     DEFAULT_NODE,
@@ -20,7 +22,7 @@ from strataq.domains.electricity.oracle import (
     clearing_price_distribution,
 )
 
-ENGINE = "finite"
+ENGINE: Literal["finite", "population", "bayesian"] = "finite"
 
 FIELD = ConjugateFieldSpec(
     name="offer-price shift",

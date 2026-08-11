@@ -46,7 +46,12 @@ CORE_MARK = re.compile(r"strataq/(core|finite|population)/")
 ENGINE_OR_DOMAIN_IMPORT = re.compile(
     r"^\s*(?:from|import)\s+(strataq\.(?:finite|population|domains)[\w.]*)", re.MULTILINE
 )
-ENGINE_DECL = re.compile(r"^ENGINE\s*=\s*[\"\'](finite|population|bayesian)[\"\']", re.MULTILINE)
+# accepts both the bare form and a typed one (`ENGINE: Literal[...] = "finite"`);
+# a plugin that annotates its declaration must not silently lose its ADR-0008
+# allowance — that false negative blocked a legitimate import on 2026-08-12
+ENGINE_DECL = re.compile(
+    r"^ENGINE(?:\s*:[^=]+)?\s*=\s*[\"\'](finite|population|bayesian)[\"\']", re.MULTILINE
+)
 
 
 def declared_engine(domain_file: str) -> str | None:

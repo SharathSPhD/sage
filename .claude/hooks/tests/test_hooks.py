@@ -221,3 +221,49 @@ class TestAdrFromCommitMessage:
             check=False,
         )
         assert proc.returncode == 1
+
+
+class TestBoundaryEngineDeclaration:
+    """ADR-0008 lets a plugin import its own declared engine. The hook must
+    resolve that declaration in BOTH the bare and the type-annotated form —
+    on 2026-08-12 annotating `ENGINE` (to satisfy strict mypy) silently
+    voided the allowance and blocked a legitimate import.
+    """
+
+    def _mod(self):
+        import importlib.util
+        from pathlib import Path
+
+        path = Path(__file__).resolve().parents[1] / "check_boundary.py"
+        spec = importlib.util.spec_from_file_location("check_boundary_mod", path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod
+
+    def test_bare_declaration_resolves(self):
+        m = self._mod()
+        assert m.ENGINE_DECL.search('ENGINE = "finite"').group(1) == "finite"
+
+    def test_annotated_declaration_resolves(self):
+        m = self._mod()
+        src = 'ENGINE: Literal["finite", "population", "bayesian"] = "population"'
+        assert m.ENGINE_DECL.search(src).group(1) == "population"
+
+    def test_lookalike_name_does_not_resolve(self):
+        m = self._mod()
+        assert m.ENGINE_DECL.search('ENGINEER = "finite"') is None
+
+    def test_real_plugins_still_declare_resolvably(self):
+        """Any domain that CONSTRUCTS a DomainPlugin must keep a resolvable
+        ENGINE, or its files lose the ADR-0008 allowance the moment anyone
+        edits them. (Loader-only domain modules — e.g. pricing, which ships
+        a dataset loader rather than the five-object contract — are exempt
+        by construction, and this test says which is which.)"""
+        from pathlib import Path
+
+        m = self._mod()
+        root = Path(__file__).resolve().parents[3] / "packages/strataq/strataq/domains"
+        full_plugins = [p for p in root.glob("*/__init__.py") if "DomainPlugin(" in p.read_text()]
+        assert full_plugins, "no full domain plugins found — path wrong?"
+        for init in full_plugins:
+            assert m.ENGINE_DECL.search(init.read_text()), f"{init} engine not resolvable"

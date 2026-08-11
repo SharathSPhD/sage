@@ -2,8 +2,10 @@
 
 from datetime import date
 
+import jax.numpy as jnp
 from strataq.core.dynamics.sample import trajectory_from_series
 from strataq.domains.electricity import discretize_quantile, fetch_dam_lmp
+from strataq.domains.electricity.oracle import BiddingOracle
 from strataq.thermo.estimators import kld_epr
 
 
@@ -198,3 +200,33 @@ class TestBiddingOracle:
         assert isinstance(plug.field_spec, ConjugateFieldSpec)
         assert plug.field_spec.linearity == "exact"
         assert plug.learn.slug
+
+
+class TestOracleProtocolConformance:
+    """The plugin shipped without `response_matrix` — the PayoffOracle
+    protocol requires it, and only CI's strict typing caught the gap
+    (2026-08-12; the same blind-spot lesson as F-0018). These tests make
+    conformance a runtime fact, not just a type-checker opinion."""
+
+    def test_bidding_oracle_satisfies_payoff_oracle(self):
+        from strataq.core.protocols import PayoffOracle
+
+        oracle = BiddingOracle((10.0, 12.0), (11.0, 13.0, 15.0))
+        assert isinstance(oracle, PayoffOracle)
+
+    def test_response_matrix_shape_and_sign(self):
+        """Undercutting a rival lifts your own profit on this grid: the
+        own-derivative of profit w.r.t. one's own offer rung is finite and
+        the matrix is (2, 2)."""
+        oracle = BiddingOracle((10.0, 10.0), (11.0, 12.0, 13.0))
+        jac = oracle.response_matrix(jnp.asarray([1, 1]))
+        assert jac.shape == (2, 2)
+        assert bool(jnp.all(jnp.isfinite(jac)))
+
+    def test_response_matrix_edge_clamped(self):
+        """At a grid edge the one-sided difference is used, never an index
+        out of range."""
+        oracle = BiddingOracle((10.0, 10.0), (11.0, 12.0, 13.0))
+        for idx in ([0, 0], [2, 2]):
+            jac = oracle.response_matrix(jnp.asarray(idx))
+            assert jac.shape == (2, 2) and bool(jnp.all(jnp.isfinite(jac)))

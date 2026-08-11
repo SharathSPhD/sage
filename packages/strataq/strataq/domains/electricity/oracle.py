@@ -74,6 +74,34 @@ class BiddingOracle:
             return jnp.asarray([0.5, 0.5])
         return jnp.asarray([1.0, 0.0]) if i < j else jnp.asarray([0.0, 1.0])
 
+    def response_matrix(self, actions: Array, state: Array | None = None) -> Array:
+        """(2, 2) Jacobian d profit_p / d offer_q on the discrete offer grid.
+
+        Central differences in grid-index space (one rung of the markup
+        ladder), clamped at the grid edges — the auction's payoff is a step
+        function of the offer ORDER, so the grid step is the smallest
+        meaningful perturbation. Added 2026-08-12: the protocol requires
+        this method and the plugin shipped without it (caught by CI strict
+        typing, not by any gate — see F-0018's lesson about blind spots).
+        """
+        idx = [int(actions[0]), int(actions[1])]
+        n = len(self.offers)
+        jac = jnp.zeros((2, 2))
+        for q in range(2):  # perturb player q's offer index
+            lo = list(idx)
+            hi = list(idx)
+            lo[q] = max(0, idx[q] - 1)
+            hi[q] = min(n - 1, idx[q] + 1)
+            span = hi[q] - lo[q]
+            if span == 0:
+                continue
+            step = (self.offers[hi[q]] - self.offers[lo[q]]) / span
+            if step == 0:
+                continue
+            d = (self.profit(jnp.asarray(hi)) - self.profit(jnp.asarray(lo))) / (span * step)
+            jac = jac.at[:, q].set(d)
+        return jac
+
 
 class OfferGridBuilder:
     """ActionGridBuilder: offer grids as cost plus a markup ladder."""
