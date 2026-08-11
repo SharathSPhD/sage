@@ -157,3 +157,26 @@ def test_estimate_lambda_recovers_and_warns():
     rps_body = {"payoffs": RPS["payoffs"], "counts": rps_counts}
     out2 = client.post("/v1/estimate/lambda", json=rps_body).json()
     assert any("unidentified" in w for w in out2["warnings"])
+
+
+def test_sioux_network_and_sue():
+    net = client.get("/v1/domains/sioux_falls/network").json()
+    assert net["n_nodes"] == 24 and len(net["links"]) == 76
+    base = client.post("/v1/domains/sioux_falls/sue", json={"theta": 0.5}).json()
+    assert base["residual"] < 1e-8
+    assert base["total_travel_time"] > 0
+    # toll the busiest link: flow there must FALL, total time must not improve
+    busiest = max(range(76), key=lambda i: base["link_flows"][i])
+    tolled = client.post(
+        "/v1/domains/sioux_falls/sue", json={"theta": 0.5, "tolls": {str(busiest): 20.0}}
+    ).json()
+    assert tolled["link_flows"][busiest] < base["link_flows"][busiest]
+
+
+def test_sioux_sue_guards():
+    assert (
+        client.post(
+            "/v1/domains/sioux_falls/sue", json={"theta": 0.5, "tolls": {"999": 1.0}}
+        ).status_code
+        == 422
+    )

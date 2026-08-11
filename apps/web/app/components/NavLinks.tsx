@@ -7,6 +7,7 @@ const LINKS = [
   { href: "/learn", label: "Learn" },
   { href: "/lab", label: "Lab" },
   { href: "/phase", label: "Phase map" },
+  { href: "/network", label: "Network" },
 ];
 
 export function NavLinks() {

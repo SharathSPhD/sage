@@ -381,3 +381,100 @@ def estimate_lambda(payload: EstimatePayload) -> dict[str, Any]:
         "provenance": _provenance(game, mle.lam if mle.lam > 0 else 1.0).model_dump(),
         "warnings": list(dict.fromkeys([*mle.warnings, *disp.warnings])),
     }
+
+
+# ---------------------------------------------------------------------------
+# Sioux Falls domain lab — real TNTP data through the population engine.
+# The RoutingNetwork is built lazily on first request (TNTP fetch is cached on
+# disk) and memoised for the process lifetime; route sets are the k shortest
+# per OD, a documented restriction of the congestion plugin.
+_SIOUX: dict[str, Any] = {}
+
+
+def _sioux() -> dict[str, Any]:
+    if not _SIOUX:
+        from strataq.domains.congestion import load_sioux_falls, routing_network_from_tntp
+
+        tntp = load_sioux_falls()
+        od_pairs = sorted(tntp.demand, key=tntp.demand.get, reverse=True)[:12]
+        network = routing_network_from_tntp(tntp, od_pairs, k_routes=3)
+        _SIOUX.update(
+            tntp=tntp,
+            network=network,
+            od_pairs=od_pairs,
+            links=[
+                {
+                    "from": int(a),
+                    "to": int(b),
+                    "free_flow": float(f),
+                    "capacity": float(c),
+                }
+                for a, b, f, c in zip(
+                    tntp.init_node, tntp.term_node, tntp.free_flow_time, tntp.capacity, strict=True
+                )
+            ],
+        )
+    return _SIOUX
+
+
+@app.get("/v1/domains/sioux_falls/network")
+def sioux_network() -> dict[str, Any]:
+    """The real Sioux Falls network: 76 links, top-12 OD pairs, k=3 routes."""
+    s = _sioux()
+    return {
+        "n_nodes": int(s["tntp"].n_nodes),
+        "links": s["links"],
+        "od_pairs": [[int(o), int(d)] for o, d in s["od_pairs"]],
+        "n_routes": int(s["network"].n_routes),
+        "warnings": [
+            "route sets restricted to k=3 shortest per OD (documented plugin restriction)"
+        ],
+    }
+
+
+class SUEPayload(BaseModel):
+    """Stochastic-user-equilibrium request with optional per-link tolls."""
+
+    theta: Annotated[float, Field(gt=0, le=10)] = 0.5
+    tolls: dict[int, float] | None = Field(
+        default=None, description="Sparse per-link tolls (link index -> toll)."
+    )
+
+
+@app.post("/v1/domains/sioux_falls/sue")
+def sioux_sue(payload: SUEPayload) -> dict[str, Any]:
+    """Solve the Fisk SUE on real data; returns link flows, costs and totals.
+
+    Tolls enter route costs exactly linearly — the congestion plugin's
+    conjugate field. This is the measurement procedure behind the network's
+    R = 0 calibration reading: toll a link, watch flows re-equilibrate.
+    """
+    from strataq.population.games.routing import solve_sue
+
+    s = _sioux()
+    net = s["network"]
+    tolls = None
+    if payload.tolls:
+        import numpy as _np
+
+        arr = _np.zeros(net.n_links)
+        for k, v in payload.tolls.items():
+            if not 0 <= int(k) < net.n_links:
+                raise HTTPException(status_code=422, detail="toll link index out of range")
+            if not -100 <= float(v) <= 100:
+                raise HTTPException(status_code=422, detail="toll magnitude out of range")
+            arr[int(k)] = float(v)
+        tolls = jnp.asarray(arr)
+    x, residual, steps = solve_sue(net, payload.theta, tolls=tolls)
+    v = net.link_flows(x)
+    costs = net.link_costs(v)
+    total_time = float(v @ costs)
+    return {
+        "link_flows": [float(f) for f in v],
+        "link_costs": [float(c) for c in costs],
+        "total_travel_time": total_time,
+        "beckmann": float(net.beckmann(x)),
+        "residual": float(residual),
+        "newton_steps": int(steps),
+        "warnings": [],
+    }
