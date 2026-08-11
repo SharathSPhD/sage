@@ -41,9 +41,21 @@ jobs:
         env:
           UV_PUBLISH_USERNAME: __token__
           UV_PUBLISH_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        # --check-url makes the publish IDEMPOTENT: files already on the
-        # index are skipped instead of erroring. 0.1.0 was published by hand
-        # (the PI supplied the token mid-session), so the tag's first run hit
-        # "400 File already exists" — a re-tag or re-run must not fail for
-        # that reason again.
-        run: uv publish --check-url https://pypi.org/simple/strataq/ dist/*
+        # Idempotent by construction: a re-run or re-tag of an already-
+        # published version must not fail the release. uv's --check-url
+        # semantics differ across versions (0.11 tolerates the duplicate,
+        # 0.12.3 errors), so the ONE benign error is matched explicitly and
+        # everything else still fails the job. 0.1.0 was published by hand
+        # when the PI supplied the token, which is how this path was found.
+        run: |
+          set +e
+          out=$(uv publish --check-url https://pypi.org/simple/strataq/ dist/* 2>&1)
+          code=$?
+          echo "$out"
+          if [ "$code" -ne 0 ]; then
+            if echo "$out" | grep -q "File already exists"; then
+              echo "::notice::this version is already on PyPI — nothing to upload"
+              exit 0
+            fi
+            exit "$code"
+          fi
