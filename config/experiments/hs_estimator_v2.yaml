@@ -1,0 +1,36 @@
+# thermo.hs_estimator — FRESH REGISTRATION (v2) after the F-0016 arc.
+#
+# History: v1 (config/experiments/hs_estimator.yaml) carries four recorded
+# escalations, two refuted hypotheses, one fixed bug (missing lambda_0
+# window) and one red-team WITHHELD. This file registers the FINAL
+# criteria cleanly, before the certification run and fresh review.
+#
+# THE INSTRUMENT (as it now stands):
+#   estimate: plug-in Y from per-hold windows incl. the pre-quench window;
+#   CI: trajectory bootstrap with pi_hat re-estimated per resample;
+#   PRIMARY gate: every hold >= relax_safety x (tau_hat + 2 SE), tau_hat
+#     from lag-N/4 categorical autocorrelation, SE from a 4-way split;
+#   COMPANION: IFT anomaly detector (flag when <e^{-Y_hat}> CI EXCLUDES 1);
+#   thin-statistics warnings below n=100 and for short windows.
+#
+# REGISTERED CRITERIA (this commit must LAND before the run):
+#   C1 — sweep boundary monotone in tau (usable never reverts to unusable
+#        as tau grows), on the alpha=0.25 steep ramp.
+#   C2 — every gate-ADMITTED hold's CI covers the exact <Y>; at least one
+#        hold admitted.
+#   C3 — every tau <= 2 hold REFUSED (these are all unsettled here).
+#   C4 — cross-game spot-check: on the alpha=0 family (slow basin hopping)
+#        the gate REFUSES tau <= 32 and ADMITS tau = 110 on >= half the
+#        seeds, with every admitted read covering.
+#   C5 — 20-seed calibration at tau = 32 (alpha 0.25): CI coverage in
+#        [17, 20] out of 20 (binomial 95% band around 0.95).
+seed: 20260817
+family: { alpha: 0.25 }
+protocol: { lambdas: [0.5, 1.5, 2.5, 3.5, 4.5, 5.5] }
+taus: [0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 24.0, 32.0]
+n_trajectories: 400
+steps_per_unit_time: 25
+pseudocount: 0.5
+relax_safety: 4.0
+cross_game: { alpha: 0.0, taus_refuse: [8.0, 32.0], tau_admit: 110.0, n_seeds: 4, steps_per_unit_time: 10, n_trajectories: 200 }
+calibration: { tau: 32.0, n_seeds: 20, coverage_band: [17, 20] }
