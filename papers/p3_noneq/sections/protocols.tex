@@ -66,5 +66,15 @@ spectral-gap crossover $\langle Y\rangle \approx F + (D_{\mathrm{frozen}}
 median $0.089$). Where the NESS path is loop-like ($\pi_{\mathrm{end}}
 \approx \pi_{\mathrm{start}}$ with excursions between, as at
 $\alpha = 0.95$ with a long ramp) the formula fails by $\sim 1$ dex, and
-that failure is reported, not averaged away; the multi-mode relaxation
-spectrum is the open refinement.
+that failure is reported, not averaged away. A third campaign (F-0015)
+then replaced the global formula with a \emph{per-step, path-aware}
+recursion — $p_k = \pi_k + (p_{k-1} - \pi_k)e^{-g_k\tau}$ with $g_k$ the
+gap at the current $\lambda_k$, $Y$ accumulated along the tracked
+distribution — which dominates on both median ($0.076$ vs $0.13$ dex,
+$3{\times}3$ games included) and worst case ($0.44$ vs $1.11$: the
+loop-path failure is structural to endpoint comparison and vanishes when
+the path is followed). Two process notes belong in print: the campaign's
+first two-mode ``result'' was retracted as an implementation artifact
+caught by adversarial review, and the corrected two-mode model
+\emph{still} loses to one mode — truncating the fast remainder at each
+switch errs more than damping the whole deviation at the gap rate.
