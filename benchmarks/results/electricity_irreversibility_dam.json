@@ -10,18 +10,22 @@
     "null_value_q99": 0.05119067884093855,
     "value_detected": 0.0,
     "kld_embed_per_hour": 0.04465589955121747,
-    "null_embed_median": 0.05026659073832537,
-    "null_embed_q99": 0.08369636946458744,
-    "embed_detected": 0.0
+    "null_embed_ft_median": 0.05026659073832537,
+    "null_embed_ft_q99": 0.08369636946458744,
+    "null_embed_aaft_median": 0.04988031863379793,
+    "null_embed_aaft_q99": 0.07183570954417566,
+    "null_embed_aaft_q01": 0.03350472567341782,
+    "embed_detected": 0.0,
+    "null_mismatch_low": 0.0
   },
   "effect_sizes": [
     {
-      "name": "phase-embedded KLD vs FT-surrogate null (nats/hour)",
+      "name": "phase-embedded KLD vs AAFT-surrogate null (nats/hour)",
       "value": 0.04465589955121747,
-      "ci_low": 0.03225726891742558,
-      "ci_high": 0.08369636946458744,
-      "ci_level": 0.99,
-      "method": "re-embedded phase-randomised surrogate null (band shows the NULL, not the estimate)"
+      "ci_low": 0.03350472567341782,
+      "ci_high": 0.07183570954417566,
+      "ci_level": 0.98,
+      "method": "re-embedded amplitude-adjusted (AAFT) surrogate null (band = the NULL, not the estimate)"
     }
   ],
   "n": 840,
@@ -29,6 +33,6 @@
   "seed": 20260811,
   "config_ref": "config/experiments/electricity_reading.yaml",
   "library_version": "0.1.0.dev0",
-  "timestamp": "2026-08-11T01:10:56+00:00",
-  "notes": "Detection flags are FINDINGS, not gate criteria: embed_detected=1 means the series is measurably time-irreversible beyond any linear process with its spectrum; 0 is a certified null at this n and binning."
+  "timestamp": "2026-08-11T01:27:59+00:00",
+  "notes": "Detection flags are FINDINGS, not gate criteria. embed_detected=1 requires exceeding BOTH the FT and AAFT null upper quantiles. null_mismatch_low=1 means the reading escapes the AAFT null band on the LOW side: neither detection nor a sharp certified null -- the surrogate class fails to bracket the data's Δ-sign persistence, and the honest verdict is 'no detection; adequate null construction open' (F-0008 as revised per red-team review)."
 }

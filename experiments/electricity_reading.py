@@ -66,18 +66,33 @@ def _read_market(cfg: dict, mcfg: dict, seed: int) -> tuple[dict, list, bool, in
             phases[-1] = 0.0
         return np.fft.irfft(np.abs(spec) * np.exp(1j * phases), n=len(x)) + x.mean()
 
-    null, null_embed = [], []
-    for _ in range(int(cfg["surrogates"])):
-        perm = ft_surrogate(np.asarray(prices))
-        ps, _ = discretize_quantile(list(perm), n_bins)
-        null.append(float(kld_epr(trajectory_from_series(np.asarray(ps), n_bins, dt=dt), k=1)))
-        es, en = phase_embed(list(perm), n_price_bins)
-        null_embed.append(float(kld_epr(trajectory_from_series(np.asarray(es), en, dt=dt), k=1)))
-    null_a = np.array(null)
-    null_e = np.array(null_embed)
+    sorted_data = np.sort(np.asarray(prices))
+
+    def aaft_surrogate(x: np.ndarray) -> np.ndarray:
+        # amplitude-adjusted FT: rank-remap the FT surrogate back onto the
+        # data's own marginal (heavy tails preserved; red-team O-1)
+        s = ft_surrogate(x)
+        out = np.empty_like(s)
+        out[np.argsort(s)] = sorted_data
+        return out
+
+    def null_dist(surrogate) -> tuple[np.ndarray, np.ndarray]:
+        nv, ne = [], []
+        for _ in range(int(cfg["surrogates"])):
+            perm = surrogate(np.asarray(prices))
+            ps, _ = discretize_quantile(list(perm), n_bins)
+            nv.append(float(kld_epr(trajectory_from_series(np.asarray(ps), n_bins, dt=dt), k=1)))
+            es, en = phase_embed(list(perm), n_price_bins)
+            ne.append(float(kld_epr(trajectory_from_series(np.asarray(es), en, dt=dt), k=1)))
+        return np.array(nv), np.array(ne)
+
+    null_a, null_e = null_dist(ft_surrogate)
+    _null_a2, null_e2 = null_dist(aaft_surrogate)
     alpha = float(cfg["thresholds"]["surrogate_alpha"])
     q_val = float(np.quantile(null_a, 1.0 - alpha))
     q_emb = float(np.quantile(null_e, 1.0 - alpha))
+    q_emb2 = float(np.quantile(null_e2, 1.0 - alpha))
+    lo_emb2 = float(np.quantile(null_e2, alpha))
 
     metrics = {
         "n_samples": float(n),
@@ -86,20 +101,30 @@ def _read_market(cfg: dict, mcfg: dict, seed: int) -> tuple[dict, list, bool, in
         "null_value_q99": q_val,
         "value_detected": float(kld1 > q_val),
         "kld_embed_per_hour": kld_embed,
-        "null_embed_median": float(np.median(null_e)),
-        "null_embed_q99": q_emb,
-        "embed_detected": float(kld_embed > q_emb),
+        "null_embed_ft_median": float(np.median(null_e)),
+        "null_embed_ft_q99": q_emb,
+        "null_embed_aaft_median": float(np.median(null_e2)),
+        "null_embed_aaft_q99": q_emb2,
+        "null_embed_aaft_q01": lo_emb2,
+        # Detection requires exceeding BOTH null classes' upper quantiles.
+        "embed_detected": float(kld_embed > q_emb and kld_embed > q_emb2),
+        # Below-band flag: the reading escapes the null on the LOW side — the
+        # surrogate class does not contain the data-generating process
+        # (Δ-sign persistence beyond any linear+marginal surrogate). Then a
+        # sharp "certified null" is NOT available — only "no detection".
+        "null_mismatch_low": float(kld_embed < lo_emb2),
     }
     effect = EffectSize(
-        name="phase-embedded KLD vs FT-surrogate null (nats/hour)",
+        name="phase-embedded KLD vs AAFT-surrogate null (nats/hour)",
         value=kld_embed,
-        ci_low=float(np.quantile(null_e, 0.005)),
-        ci_high=q_emb,
-        ci_level=0.99,
-        method="re-embedded phase-randomised surrogate null (band = the NULL, not the estimate)",
+        ci_low=lo_emb2,
+        ci_high=q_emb2,
+        ci_level=0.98,
+        method="re-embedded AAFT surrogate null (band = the NULL, not the estimate)",
     )
     sane = (
         float(np.median(null_e)) > float(cfg["thresholds"]["min_null_median"])
+        and float(np.median(null_e2)) > float(cfg["thresholds"]["min_null_median"])
         and float(np.median(null_a)) >= 0.0
     )
     return metrics, [effect], sane, n
@@ -141,9 +166,13 @@ def run() -> int:
                 library_version=strataq.__version__,
                 timestamp=_now(),
                 notes=(
-                    "Detection flags are FINDINGS, not gate criteria: embed_detected=1 means "
-                    "the series is measurably time-irreversible beyond any linear process "
-                    "with its spectrum; 0 is a certified null at this n and binning."
+                    "Detection flags are FINDINGS, not gate criteria. embed_detected=1 "
+                    "requires exceeding BOTH the FT and AAFT null upper quantiles. "
+                    "null_mismatch_low=1 means the reading escapes the AAFT null band on "
+                    "the LOW side: neither detection nor a sharp certified null -- the "
+                    "surrogate class fails to bracket the data's Δ-sign persistence, and "
+                    "the honest verdict is 'no detection; adequate null construction open' "
+                    "(F-0008 as revised per red-team review)."
                 ),
             )
         )

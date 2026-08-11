@@ -84,3 +84,64 @@ class TestPhaseEmbed:
         assert v < 5e-3  # value space: blind to the loop
         assert e > 0.02  # phase space: sees it
         assert e > 100 * v
+
+
+class TestLoaderGuards:
+    def test_fresh_fetch_exercises_network_path(self):
+        """An uncached day goes through the paced fetch (happy path)."""
+        from strataq.domains.electricity.caiso import CACHE, DEFAULT_NODE
+
+        target = CACHE / f"DAM_{DEFAULT_NODE}_2026-06-15.zip"
+        target.unlink(missing_ok=True)
+        _ts, prices = fetch_dam_lmp(date(2026, 6, 15), 1)
+        assert len(prices) >= 22
+        assert target.exists()
+
+    def test_coverage_refusal(self, monkeypatch):
+        """Below-90% coverage must raise, never silently truncate."""
+        import io
+        import zipfile
+
+        from strataq.domains.electricity import caiso
+
+        def tiny_zip(node, day, market="DAM"):
+            buf = io.BytesIO()
+            with zipfile.ZipFile(buf, "w") as zf:
+                zf.writestr("notes.xml", "<ignored/>")  # non-csv entries are skipped
+                zf.writestr(
+                    "x.csv",
+                    "INTERVALSTARTTIME_GMT,LMP_TYPE,MW\n"
+                    "2026-08-01T09:00:00-00:00,LMP,42.0\n"
+                    "2026-08-01T10:00:00-00:00,MCC,1.0\n",
+                )
+            return buf.getvalue()
+
+        monkeypatch.setattr(caiso, "_fetch_day", tiny_zip)
+        try:
+            caiso.fetch_dam_lmp(date(2026, 8, 1), 1)
+        except ValueError as exc:
+            assert "coverage" in str(exc)
+        else:
+            raise AssertionError("expected coverage refusal")
+
+
+class TestRateLimitBackoff:
+    def test_429_retries_then_raises(self, monkeypatch):
+        from urllib.error import HTTPError
+
+        from strataq.domains.electricity import caiso
+
+        calls = {"n": 0}
+
+        def always_429(url, timeout=0):
+            calls["n"] += 1
+            raise HTTPError(url, 429, "rate limited", None, None)
+
+        monkeypatch.setattr(caiso, "urlopen", always_429)
+        monkeypatch.setattr(caiso.time, "sleep", lambda s: None)
+        try:
+            caiso._fetch_day("FAKE_NODE", date(2030, 1, 1))
+        except TimeoutError:
+            assert calls["n"] == 6  # all retries consumed
+        else:
+            raise AssertionError("expected TimeoutError")

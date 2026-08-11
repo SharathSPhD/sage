@@ -51,14 +51,14 @@ def _fetch_day(node: str, day: date, market: str = "DAM") -> bytes:
         try:
             time.sleep(delay if attempt else 5.0)
             with urlopen(url, timeout=120) as resp:
-                blob = resp.read()
+                blob = bytes(resp.read())
             cached.write_bytes(blob)
             return blob
         except HTTPError as exc:
             if exc.code != 429:
                 raise
             delay = min(delay * 2, 120.0)
-    raise HTTPError(url, 429, "CAISO OASIS rate limit persisted after retries", None, None)
+    raise TimeoutError(f"CAISO OASIS rate limit persisted after retries: {url}")
 
 
 def _parse_zip(blob: bytes) -> dict[datetime, float]:

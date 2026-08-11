@@ -192,3 +192,9 @@
 - /v1/domains/sioux_falls/{network,sue}: lazy-cached RoutingNetwork (top-12 OD, k=3), toll guards; API test asserts the physics (tolling the busiest link reduces its flow). Warm SUE solves 0.7s on the micro (16.8s one-time JAX trace).
 - /network page deployed: real TNTP node geometry, flows as width, v/c as colour, click-to-toll (the domain's conjugate field) with total-time delta vs untolled, θ dial, live KKT residual, gate ℛ reading. Verified on sage-labs.vercel.app.
 - Remaining in A3: Blotto allocation lab. Next research: R2 ERCOT.
+
+## 2026-08-11 (cont.) — unit domains.electricity GREEN (15th gate; F-0008 revised)
+
+- Red-team WITHHELD on the first pass — a substantive catch: plain-FT surrogates Gaussianize the kurtosis-132 LMP marginal (biased null), and the RTM reading sits 5–6× BELOW its null (not "at-null"). Empirical corrections, not rewording: AAFT nulls added as primary (detection requires exceeding both classes), a null_mismatch_low honesty flag in every artifact, claim scoped to n/bins/embedding, F-0008 rewritten with the retraction of "certified null" on the audit trail.
+- Final verdicts: **DAM hourly at-null** (0.0447 inside the AAFT band — consistent with a linear time-reversible process); **RTM 5-min no-detection + mismatch flag** (0.0474 vs AAFT q01 0.239 — no linear process with its spectrum+marginal reproduces the Δ-sign persistence; the anomaly is now a chase item with a candidate mechanism: dispatch/ramp constraints).
+- Also: 429-backoff mock test; OASIS terms note; coverage 94%; signoff granted-conditional with permanence conditions live in code.

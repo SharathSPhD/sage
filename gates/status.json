@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-10T23:25:03+00:00",
+  "generated_at": "2026-08-11T01:33:39+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -196,6 +196,20 @@
         "adversarial": []
       },
       "checked_at": "2026-08-10T23:25:03+00:00"
+    },
+    "domains.electricity": {
+      "unit": "domains.electricity",
+      "claim": "Real market price series flow into the gated irreversibility estimators through an honest pipeline (coverage-guarded CAISO loader, discretization whose loop-blindness is proven and controlled, (price, delta-sign) phase embedding, FT AND amplitude-adjusted surrogate nulls with a below-band honesty flag). First readings, scoped to n<=4032 / 6 bins / this embedding: DAM hourly at-null (consistent with a linear time-reversible process); RTM 5-min NO DETECTION with the null-mismatch flag raised (the linear+marginal surrogate class cannot bracket its delta-sign persistence) \u2014 finding F-0008 as revised",
+      "tier": "derived",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-11T01:33:39+00:00"
     }
   }
 }

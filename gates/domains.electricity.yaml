@@ -1,0 +1,60 @@
+unit: domains.electricity
+claim: "Real market price series flow into the gated irreversibility estimators through an honest pipeline (coverage-guarded CAISO loader, discretization whose loop-blindness is proven and controlled, (price, delta-sign) phase embedding, FT AND amplitude-adjusted surrogate nulls with a below-band honesty flag). First readings, scoped to n<=4032 / 6 bins / this embedding: DAM hourly at-null (consistent with a linear time-reversible process); RTM 5-min NO DETECTION with the null-mismatch flag raised (the linear+marginal surrogate class cannot bracket its delta-sign persistence) — finding F-0008 as revised"
+tier: derived   # the reading is a statistical verdict on real data; the blindness result and null construction are the methodological content
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.85    # network-fetch branches (429 backoff) are exercised live, not unit-mocked
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/domains/electricity/caiso.py
+      - packages/strataq/strataq/domains/electricity/__init__.py
+      - packages/strataq/tests/domains/test_electricity.py
+
+  domain:
+    - id: electricity_irreversibility_dam
+      spec: "methodology holds on DAM hourly data: coverage >= 90%, sane FT-surrogate nulls, value-space blindness control on-null; detection flag recorded as a finding either way"
+      artifact: benchmarks/results/electricity_irreversibility_dam.json
+    - id: electricity_irreversibility_rtm
+      spec: "same on RTM 5-minute data (12x the sampling rate)"
+      artifact: benchmarks/results/electricity_irreversibility_rtm.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/instruments/market-data.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: true    # granted-conditional 2026-08-11; empirical corrections verified on re-review; permanence conditions live in code
+    objections:
+      - id: O-1
+        text: "BLOCKING: plain-FT surrogates Gaussianize a kurtosis-132 marginal — the null was biased (sign-flip rate 49% vs data 40%; embedded null 5.8x the reading)"
+        disposition: addressed
+        where: "AAFT surrogates (rank-remap onto the data's sorted values) added as the primary null; detection requires exceeding BOTH FT and AAFT upper quantiles; benchmarks rerun; AAFT band is the reported EffectSize CI (permanence condition: never revert to FT-only)"
+      - id: O-2
+        text: "BLOCKING: the RTM reading sits 5-6x BELOW its null — 'at-null/certified null' was a mischaracterization"
+        disposition: addressed
+        where: "null_mismatch_low flag (reading < AAFT q01) computed in every artifact (permanence condition); RTM verdict everywhere is 'no detection AND no certified null — the linear+marginal class cannot bracket the data's delta-sign persistence'; F-0008 rewritten as REVISED with the retraction on the audit trail; the persistence anomaly promoted to a chase item"
+      - id: O-3
+        text: "BLOCKING: claim scope overreached a single embedding and bin count"
+        disposition: addressed
+        where: "Gate claim, ledger row R3 and docs scoped to n<=4032 / 6 bins / (price, delta-sign) embedding; DAM (at-null) and RTM (no-detection + flag) distinguished"
+      - id: O-4
+        text: "429 backoff path untested"
+        disposition: addressed
+        where: "TestRateLimitBackoff monkeypatch test: all 6 retries consumed, then raise"
+      - id: O-5
+        text: "OASIS terms uncited"
+        disposition: addressed
+        where: "market-data.md data-source note (posted terms, paced requests, caching)"
+
