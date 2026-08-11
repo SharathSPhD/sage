@@ -219,3 +219,7 @@
 ## 2026-08-11 (cont.) — p3_noneq v0.2 (8 pages)
 
 - Data section added (four nulls → F-0009 detection ~1.1 nats/day concentrated in scarcity weeks; RTM at-null; model rejection; the retraction in the text); phase section closes both v0.1 open questions (exact fold identity; λ_c curve with single-crossing verification); decoupling section carries F-0010 (universal collapse, λ-dependent sign, failed-criterion honesty); abstract updated to "through to real data".
+
+## 2026-08-11 (cont.) — A4 findings gallery live
+
+- /findings: all ten findings as status-chipped cards — discoveries, corrections, certified nulls, the refuted repair, the retraction, the failed-criterion finding, in equal typography — plus inline charts from committed artifacts (decoupling collapse behind a you-predict-it reveal, the λ_c frontier, estimator tracking) and play-with-it links. Deployed and verified.
