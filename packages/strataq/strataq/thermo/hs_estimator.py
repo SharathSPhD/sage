@@ -201,7 +201,9 @@ def hs_y_estimate(
         counts = (
             np.bincount(w[:, start:].reshape(-1), minlength=n_states).astype(float) + pseudocount
         )
-        return counts / counts.sum()
+        # explicit asarray: numpy stub versions differ on whether the division
+        # is Any (CI strict caught this where the local stubs did not)
+        return np.asarray(counts / counts.sum(), dtype=float)
 
     pis = [pi_hat(w) for w in windows]
     y = np.zeros(n_traj)
