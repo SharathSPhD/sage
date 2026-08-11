@@ -1,0 +1,34 @@
+# domains.electricity.quench (R7) — the trading day as a repeated quench.
+#
+# FRAMING: each DAY of CAISO SP15 DAM hourly prices is one trajectory
+# realization of the same diurnal protocol; the day is windowed into
+# consecutive hour-blocks (the "holds"); states are the within-day phase
+# embedding (price bin x delta-sign). The CERTIFIED HS estimator
+# (thermo.hs_estimator, 23rd gate) is applied with its gates in charge.
+#
+# PRE-REGISTERED (this commit must LAND before any run; NO outcome is
+# declared — the instrument's own verdicts are the finding either way):
+#   D1 — data: fetch DAM 2026-01-01 for 213 days (n_traj = complete days
+#        >= 200 required by the estimator's validated scope; days with
+#        missing hours dropped and counted).
+#   D2 — embedding: per-day phase_embed with n_price_bins 3 (6 states,
+#        23 samples/day after the delta); holds = 5 blocks defined by
+#        hour-of-day boundaries [1, 5, 10, 15, 20, 24] (night / morning
+#        ramp / midday / evening ramp / peak-to-late); hold_durations in
+#        HOURS (the one-unit contract: 4, 5, 5, 5, 4).
+#   D3 — the READ: report hs_y_estimate verbatim — usable flag, which gate
+#        refused (relaxation / anomaly / thin-stats), mean_y + CI if
+#        admitted. A refusal is reported as the quantified statement "the
+#        trading day is not stepwise-stationary at hour-block resolution"
+#        with the offending windows named. No re-binning after seeing
+#        results without a recorded escalation.
+#   D4 — seasonal split: the same read on the two contiguous halves of the
+#        window (winter/spring vs summer incl. the F-0009 scarcity weeks),
+#        each >= 90 days — BELOW the n >= 200 scope, so these are labelled
+#        indicative-only by construction and their thin-n warning must be
+#        quoted in the artifact.
+seed: 20260818
+data: { start: "2026-01-01", days: 213, node_market: "DAM" }
+embedding: { n_price_bins: 3 }
+holds: { hour_boundaries: [1, 5, 10, 15, 20, 24] }
+estimator: { pseudocount: 0.5, relax_safety: 4.0 }
