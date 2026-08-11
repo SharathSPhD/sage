@@ -9,6 +9,7 @@ name: pypi-release
 on:
   push:
     tags: ["strataq-v*"]
+  workflow_dispatch: # manual re-run (idempotent: already-uploaded files skip)
 
 jobs:
   build-and-publish:
@@ -40,4 +41,9 @@ jobs:
         env:
           UV_PUBLISH_USERNAME: __token__
           UV_PUBLISH_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: uv publish dist/*
+        # --check-url makes the publish IDEMPOTENT: files already on the
+        # index are skipped instead of erroring. 0.1.0 was published by hand
+        # (the PI supplied the token mid-session), so the tag's first run hit
+        # "400 File already exists" — a re-tag or re-run must not fail for
+        # that reason again.
+        run: uv publish --check-url https://pypi.org/simple/strataq/ dist/*
