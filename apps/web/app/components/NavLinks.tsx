@@ -8,6 +8,7 @@ const LINKS = [
   { href: "/lab", label: "Lab" },
   { href: "/phase", label: "Phase map" },
   { href: "/network", label: "Network" },
+  { href: "/markets", label: "Markets" },
 ];
 
 export function NavLinks() {

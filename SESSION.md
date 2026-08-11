@@ -198,3 +198,8 @@
 - Red-team WITHHELD on the first pass — a substantive catch: plain-FT surrogates Gaussianize the kurtosis-132 LMP marginal (biased null), and the RTM reading sits 5–6× BELOW its null (not "at-null"). Empirical corrections, not rewording: AAFT nulls added as primary (detection requires exceeding both classes), a null_mismatch_low honesty flag in every artifact, claim scoped to n/bins/embedding, F-0008 rewritten with the retraction of "certified null" on the audit trail.
 - Final verdicts: **DAM hourly at-null** (0.0447 inside the AAFT band — consistent with a linear time-reversible process); **RTM 5-min no-detection + mismatch flag** (0.0474 vs AAFT q01 0.239 — no linear process with its spectrum+marginal reproduces the Δ-sign persistence; the anomaly is now a chase item with a candidate mechanism: dispatch/ramp constraints).
 - Also: 429-backoff mock test; OASIS terms note; coverage 94%; signoff granted-conditional with permanence conditions live in code.
+
+## 2026-08-11 (cont.) — F-0009 verified, stratified, and shipped to the app
+
+- Red-team numerically verified the Markov null (DB exact to 1e-10; FPR 1/30 at α=.01; robust to seeds/bins/ties/Bonferroni/order-2 leakage); blocking subsample condition resolved by weekly stratification (consistent-sign, concentrated in high-ramp weeks 4–5 at p≤.005; LOWO mapped) with the concentration acknowledged wherever the number is used. RTM re-probed at k=2: still at-null (chase item closed).
+- **/markets page live**: the actual July-2026 SP15 series with weekly-ratio shading, the verdict table against the reversible null, and the plain-language explanation — all rendered from the committed `electricity_series.json` artifact (no live dependency). Continuous-build rule satisfied for F-0009.

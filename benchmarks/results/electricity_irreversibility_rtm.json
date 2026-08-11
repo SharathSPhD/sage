@@ -38,6 +38,6 @@
   "seed": 20260811,
   "config_ref": "config/experiments/electricity_reading.yaml",
   "library_version": "0.1.0.dev0",
-  "timestamp": "2026-08-11T01:36:30+00:00",
+  "timestamp": "2026-08-11T02:37:36+00:00",
   "notes": "Detection flags are FINDINGS, not gate criteria. embed_detected=1 requires exceeding BOTH the FT and AAFT null upper quantiles. null_mismatch_low=1 means the reading escapes the AAFT null band on the LOW side: neither detection nor a sharp certified null -- the surrogate class fails to bracket the data's Δ-sign persistence, and the honest verdict is 'no detection; adequate null construction open' (F-0008 as revised per red-team review)."
 }

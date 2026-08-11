@@ -176,8 +176,38 @@ def run() -> int:
         yaml.safe_dump({"config": cfg, "library_version": strataq.__version__, "run_at": _now()})
     )
     failures = 0
+    series_out: dict = {}
     for name, mcfg in cfg["markets"].items():
         metrics, effects, sane, n = _read_market(cfg, dict(mcfg), seed)
+        if name == "dam":
+            # small committed series artifact so the app can draw the actual
+            # data behind F-0008/F-0009 without a live CAISO dependency
+            from strataq.domains.electricity import fetch_dam_lmp as _f
+
+            ts, prices = _f(
+                date.fromisoformat(str(mcfg["start"])),
+                int(mcfg["days"]),
+                node=str(cfg["node"]),
+            )
+            series_out = {
+                "node": str(cfg["node"]),
+                "start": str(mcfg["start"]),
+                "hours": [t.isoformat() for t in ts],
+                "prices": [round(float(x), 2) for x in prices],
+                "verdict": {
+                    "kld_embed_per_hour": metrics["kld_embed_per_hour"],
+                    "null_markov_median": metrics["null_markov_median"],
+                    "null_markov_q99": metrics["null_markov_q99"],
+                    "markov_detected": metrics["markov_detected"],
+                    "weekly_ratios_f0009": [
+                        1.63,
+                        1.52,
+                        3.03,
+                        9.10,
+                        4.17,
+                    ],  # F-0009 stratification run (seed 20260811); see findings.md
+                },
+            }
         # Pass = the METHODOLOGY held (coverage, sane nulls). Detection is a
         # finding either way: a certified null result on DAM is as much a
         # reading as a detection on RTM would be.
@@ -214,6 +244,11 @@ def run() -> int:
                 ),
             )
         )
+    if series_out:
+        import json as _json
+
+        (RESULTS / "electricity_series.json").write_text(_json.dumps(series_out) + "\n")
+        print("[PASS] electricity_series -> electricity_series.json")
     return failures
 
 

@@ -99,3 +99,7 @@ Entry format:
 - **Blocking condition (subsample fragility) resolved via weekly stratification** (5 × 7d blocks, per-block nulls): every week's statistic exceeds its null MEDIAN (ratios 1.63, 1.52, 3.03, 9.10, 4.17 — the signal has consistent sign throughout), but per-week significance concentrates in the second half (weeks 4–5: p ≤ 0.005; week 3: 0.035; weeks 1–2 underpowered at n=168). Leave-one-week-out: detection survives removal of weeks 1, 2, or 4 but not 3 or 5. **Explicit acknowledgment per red-team condition (B): the July-2026 detection is statistically driven by the high-ramp second half of the window — physically sensible (irreversibility concentrates where the diurnal drive is strongest, summer scarcity ramps) and stated as such wherever the number is used.**
 - **Garden-of-forking-paths note (red-team O-2)**: the Markov null was chosen after two spectral nulls failed; mitigation is the prominently-reported empirical p-value (<0.01) and this documented selection history.
 - p3_noneq data section may now cite F-0009 with the concentration caveat verbatim.
+
+### F-0009 addendum 2 — RTM k=2 probe (chase item closed)
+
+- RTM 5-min vs its reversibilized-Markov null at k=2: stat 0.0833 vs null [med 0.0591, q99 0.1176] — still no detection (and k=1 re-confirmed: 0.0474 vs q99 0.1026). The RTM at-null verdict is robust to block order at this resolution; remaining RTM avenue is coarser Δt aggregation (30–60 min), queued low-priority.
