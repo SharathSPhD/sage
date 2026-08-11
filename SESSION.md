@@ -299,3 +299,8 @@
 
 - Root-caused and fixed: the sampler emitted K−1 of K jump windows — with the pre-quench λ₀ window prepended, the estimator is unbiased across seeds (multi-seed mean within 0.01 of exact). Two refuted hypotheses (split-sample π̂, burn-in scaling) on the record first.
 - CI moved to a trajectory bootstrap with π̂ re-estimated per resample — still under-covers ~1.7× (common-mode π̂ noise; per-seed coverage 2-3/6). Unit stays OPEN, module banner stays on; the certification path is now a variance model (window-block bootstrap or autocorrelation-corrected delta method) + the game-adaptive safety and minimum-n items.
+
+## 2026-08-12 (cont.) — hs_estimator statistics VINDICATED: 19/20 CI coverage; only the conservative gate flicker remains
+
+- 20-seed study: coverage 19/20 (the bootstrap is calibrated — the earlier 1.7× shortfall was a six-sample mirage), unbiased (0.0911 vs 0.0891). Decomposition shows π̂ noise negligible vs switch-state sampling.
+- Remaining before re-registration: relaxation-gate boundary flicker (conservative — 4/20 usable at τ=24), game-adaptive safety, minimum-n. F-0016 updated; unit stays open/bannered until those close.
