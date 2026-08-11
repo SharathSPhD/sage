@@ -1,0 +1,23 @@
+{
+  "benchmark_id": "electricity_lambda",
+  "unit": "domains.electricity",
+  "kind": "statistical",
+  "passed": true,
+  "metrics": {
+    "model_rejected": 1.0,
+    "model_dispersion_ceiling": 10.4273197567537,
+    "lam_hat_conditional": null,
+    "lambda_normalised": null,
+    "observed_price_std": 16.823842057103313,
+    "model_price_std_at_hat": 10.4273197567537,
+    "cost_floor": 8.58
+  },
+  "effect_sizes": [],
+  "n": 840,
+  "n_justification": "840 hourly clearing prices; dispersion matching is a one-moment fit with dispersion monotone in lambda on this game (unit-tested), so the inverse is well-posed GIVEN the stylised model.",
+  "seed": 20260811,
+  "config_ref": "config/experiments/electricity_reading.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-11T02:54:49+00:00",
+  "notes": "CONDITIONAL pipeline: identification rests entirely on the stylised 2-generator uniform-price model (cost = observed price floor, offers = observed quantile ladder). Verdict on July-2026 SP15: MODEL REJECTED — the stylised duopoly's dispersion ceiling (max over all lambda) sits well below the observed spike-driven price std, so no lambda is reported. Scarcity spikes exceed what 2-agent undercutting can generate; a richer supply model is the follow-up. See F-0008/F-0009 for what IS claimed from this data."
+}

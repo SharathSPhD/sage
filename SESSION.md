@@ -203,3 +203,8 @@
 
 - Red-team numerically verified the Markov null (DB exact to 1e-10; FPR 1/30 at α=.01; robust to seeds/bins/ties/Bonferroni/order-2 leakage); blocking subsample condition resolved by weekly stratification (consistent-sign, concentrated in high-ramp weeks 4–5 at p≤.005; LOWO mapped) with the concentration acknowledged wherever the number is used. RTM re-probed at k=2: still at-null (chase item closed).
 - **/markets page live**: the actual July-2026 SP15 series with weekly-ratio shading, the verdict table against the reversible null, and the plain-language explanation — all rendered from the committed `electricity_series.json` artifact (no live dependency). Continuous-build rule satisfied for F-0009.
+
+## 2026-08-11 (cont.) — electricity plugin contract complete; conditional λ pipeline rejects its own model
+
+- BiddingOracle (uniform-price, D=1, ties split) + OfferGridBuilder + exact-linear offer-shift ConjugateFieldSpec + PLUGIN registration — five-object contract satisfied and contract-tested; clearing-price dispersion monotone in λ (the identification channel) unit-tested; auction α confirmed mixed.
+- The conditional λ̂ artifact recorded the honest outcome: MODEL REJECTED (dispersion ceiling 10.4 < observed 16.8) — no λ reported; richer supply model queued. Task #37 closed; /markets page live with F-0009.

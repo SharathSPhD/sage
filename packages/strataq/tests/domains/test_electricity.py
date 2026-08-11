@@ -145,3 +145,56 @@ class TestRateLimitBackoff:
             assert calls["n"] == 6  # all retries consumed
         else:
             raise AssertionError("expected TimeoutError")
+
+
+class TestBiddingOracle:
+    """Uniform-price auction oracle (2 generators, D=1): the cheaper offer
+    dispatches and sets the price; ties split the demand."""
+
+    def _game(self):
+        from strataq.domains.electricity.oracle import bidding_game
+
+        return bidding_game(costs=(20.0, 20.0), offers=(25.0, 35.0, 45.0, 60.0))
+
+    def test_payoff_logic(self):
+        game = self._game()
+        u1, u2 = game.payoffs
+        # gen1 offers 25, gen2 offers 45 -> gen1 dispatches at 25: profit 5; gen2 gets 0
+        assert float(u1[0, 2]) == 5.0
+        assert float(u2[0, 2]) == 0.0
+        # tie at 35: split -> each (35-20)/2
+        assert float(u1[1, 1]) == 7.5
+        assert float(u2[1, 1]) == 7.5
+
+    def test_alpha_between_anchors(self):
+        from strataq.finite.decompose.hodge import hodge_decompose
+
+        alpha = float(hodge_decompose(self._game()).alpha)
+        assert 0.05 < alpha < 0.95  # a genuine mixed game, not a degenerate anchor
+
+    def test_qre_dispersion_monotone_in_lambda(self):
+        """Sharper bidders concentrate on the aggressive offer — clearing-price
+        dispersion falls with λ (the identification channel for λ̂)."""
+        import numpy as np
+        from strataq.core.solve.fixedpoint import logit_qre
+        from strataq.domains.electricity.oracle import clearing_price_distribution
+
+        game = self._game()
+        disps = []
+        for lam in (0.05, 0.3, 2.0):
+            sigma = logit_qre(game, lam).sigma
+            prices, probs = clearing_price_distribution(sigma, offers=(25.0, 35.0, 45.0, 60.0))
+            mean = float(np.dot(prices, probs))
+            disps.append(float(np.dot(probs, (np.asarray(prices) - mean) ** 2)) ** 0.5)
+        assert disps[0] > disps[1] > disps[2]
+
+    def test_plugin_contract_complete(self):
+        from strataq.core.protocols import ConjugateFieldSpec
+        from strataq.domains import electricity as plug
+
+        assert plug.engine == "finite"
+        assert callable(plug.oracle_factory)
+        assert callable(plug.grid_factory)
+        assert isinstance(plug.field_spec, ConjugateFieldSpec)
+        assert plug.field_spec.linearity == "exact"
+        assert plug.learn.slug

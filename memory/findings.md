@@ -103,3 +103,7 @@ Entry format:
 ### F-0009 addendum 2 — RTM k=2 probe (chase item closed)
 
 - RTM 5-min vs its reversibilized-Markov null at k=2: stat 0.0833 vs null [med 0.0591, q99 0.1176] — still no detection (and k=1 re-confirmed: 0.0474 vs q99 0.1026). The RTM at-null verdict is robust to block order at this resolution; remaining RTM avenue is coarser Δt aggregation (30–60 min), queued low-priority.
+
+### F-0009 addendum 3 — bidding-oracle pipeline: stylised model REJECTED by the data
+
+- The electricity plugin's five-object contract is complete (uniform-price BiddingOracle, offer-ladder grid, exact-linear offer-shift conjugate field, CAISO loader, learn spec; α of the calibrated auction is mixed, not an anchor — unit-tested). The conditional λ̂ pipeline (match QRE clearing-price dispersion to observed) returned the RIGHT kind of answer on July-2026 SP15: **model rejected** — the stylised duopoly's dispersion ceiling (10.4 $/MWh, its λ→0 maximum) sits 40% below the observed spike-driven std (16.8), so no λ is reported (`electricity_lambda.json`, model_rejected=1, λ̂=null). Scarcity spikes exceed what 2-agent undercutting can generate; a richer supply model (capacity constraints / N>2 / demand uncertainty) is the follow-up before any market-λ claim.
