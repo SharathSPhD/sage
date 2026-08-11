@@ -31,8 +31,12 @@ gates:
     changelog_entry: true
 
   adversarial:
-    red_team_signoff: false  # results review GRANTED-CONDITIONAL; all three
-    # conditions now met and returned to the reviewer for the final call.
+    # Two independent reviews: the DESIGN was reviewed pre-results (2 blocking
+    # + 2 must-address, applied while the first run was stopped mid-flight and
+    # its verdict never produced), then the RESULTS were reviewed (1 blocking
+    # + 2 must-address). All seven dispositions below; final verdict GRANTED
+    # after C-1/C-2/C-3 were each registered in config before being run.
+    red_team_signoff: true
     objections:
       - id: D-1
         text: "DESIGN review (pre-results), BLOCKING: coverage alone is gameable — an arbitrarily wide interval covers everything"
