@@ -1,0 +1,39 @@
+# science.quench_multimode — third EFE campaign: refine F-0014's crossover
+# where it fails (the tau=0.3 first-order band and the loop-path ~1 dex miss).
+#
+# HYPOTHESES (each predicts log10 excess; NO winner pre-declared):
+#   H_gap_mid    — incumbent (F-0014): global F + (D_frozen - F)e^{-g tau},
+#                  gap at ramp midpoint.
+#   H_gap_start  — same, gap at lambda_start (red-team note: ~9% better).
+#   H_recursive  — per-step single-gap RECURSION: p_k = pi_k +
+#                  (p_{k-1} - pi_k) e^{-g_k tau} with g_k the gap AT lambda_k;
+#                  Y accumulates E_{p_{k-1}}[ln pi_{k-1} - ln pi_k] along the
+#                  recursion. Tracks the path, so loop-shaped NESS paths are
+#                  in scope by construction.
+#   H_recursive2 — the same recursion with a TWO-mode propagator (project
+#                  p - pi onto the two slowest right-eigenvectors of L_k).
+#
+# PRE-REGISTERED (this commit must LAND before the run; verify git log):
+#   probes = F-0014's grid PLUS the known failure cells (loop paths:
+#   alpha 0.85/0.95 with lam_end 6.0 at taus 0.02/0.1/0.3). sigma 0.15 dex;
+#   budget 12; min_probes 6; stop 0.95; adequacy: winner median < 2 sigma on
+#   consumed AND held-out, with consumed/held-out MAX reported (the F-0014
+#   lesson); sigma-sensitivity 0.30 must agree.
+seed: 20260815
+family:
+  alphas_probe: [0.0, 0.25, 0.5, 0.75, 0.85, 0.95]
+protocols: # (K, tau, lambda_end)
+  - [8, 0.02, 3.0]
+  - [8, 0.05, 3.0]
+  - [8, 0.1, 3.0]
+  - [8, 0.3, 3.0]
+  - [4, 0.1, 3.0]
+  - [8, 0.1, 6.0]
+  - [8, 0.02, 6.0]
+  - [8, 0.3, 6.0]
+sigma_dex: 0.15
+sigma_sensitivity: 0.30
+budget: 12
+min_probes: 6
+stop_confidence: 0.95
+adequacy_max_median_resid_sigmas: 2.0
