@@ -1,0 +1,53 @@
+campaign:
+  adequacy_max_median_resid_sigmas: 2.0
+  budget: 8
+  family:
+    alphas_probe:
+    - 0.25
+    - 0.5
+    - 0.75
+    - 0.85
+    - 0.95
+    scale: 1.0
+  gap_lambda: mid
+  protocols:
+  - - 8
+    - 2.0
+    - 3.0
+  - - 4
+    - 1.0
+    - 3.0
+  - - 8
+    - 2.0
+    - 6.0
+  - - 16
+    - 4.0
+    - 3.0
+  sigma_dex: 0.15
+  sigma_sensitivity: 0.3
+  stop_confidence: 0.95
+  validate_held_out: true
+mixture:
+  bf_decisive: 100.0
+  bf_occam_max: 10.0
+  grid:
+    hi: 12.0
+    lo: 0.1
+    points: 120
+  lam_clean: 1.2
+  lam_hi: 4.0
+  lam_lo: 0.4
+  n_clean: 3000
+recovery:
+  coverage_min_hits: 44
+  grid:
+    hi: 8.0
+    lo: 0.3
+    points: 600
+  lam_stars:
+  - 0.8
+  - 1.8
+  - 3.5
+  n_choices: 2000
+  n_seeds: 50
+seed: 20260813

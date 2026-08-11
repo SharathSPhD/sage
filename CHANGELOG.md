@@ -6,6 +6,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 ## [Unreleased]
 
 ### Added
+- `strataq.toolkit` + `strataq.thermo.nulls` — the plain-data product surface (unit product.toolkit): rationality posterior from choice counts, reciprocity verdict from any cross-response matrix, irreversibility verdict from any scalar series — one call each from plain lists, honesty warnings attached; the reversibilized-Markov null promoted from experiment code; README quickstart + tag-triggered PyPI trusted-publishing workflow.
+- `strataq.estimate.bayes` — Bayesian layer per ADR-0012: grid posterior over λ with a self-diagnosing resolution guard and calibrated coverage, the scale fold as an exact posterior reparameterisation, mixture-vs-single Bayes factors, and the EFE/BALD experiment-selection loop whose first campaign adjudicates F-0012's open mechanism (unit estimate.bayes).
 - `strataq.thermo.protocols` — Hatano–Sasa housekeeping/excess EPR split, stepwise λ-quench protocols with exact-transfer and sampled-path integral fluctuation theorems, and the pre-registered quench scan finding the driving-cost inversion across the α family (F-0012; unit thermo.protocols).
 - `strataq.domains.pricing` — Dominick's panel loader (HF DreamPrice CSO, gap-tolerant brand indices, margin-window cleaning) and the first empirical reciprocity measurement: R = 0.0011 from cross-brand cost pass-through (F-0011), plus a 30-store Edgeworth at-null scan.
 - Unit science.frontier: scale-folding identity for the α=0 criticality peak, the bisected λ_c(α) frontier, and F-0010 (universal coupling collapse at α=0.95 with a λ-amplified sign flip; pre-registered criterion failure documented).

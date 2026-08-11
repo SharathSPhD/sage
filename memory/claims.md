@@ -46,3 +46,9 @@ Source: PROGRAMME v3 §3; updated by the prior-art sweep of 2026-08-08 (`literat
 |---|---|---|
 | S1 | Sparse/entmax quantal response fits 9-ending price concentration better than logit | Hypothesis from research-main.md; test if it ever matters, not assumed |
 | S2 | λ vs collusion separability via (mean, dispersion) signature + ℛ + dissipation persistence | Separation will be partial; report what separates and what doesn't (PROGRAMME v3 §4.2) |
+
+## Product claims
+
+| ID | Claim | Falsifier | Status |
+|---|---|---|---|
+| P1 | The plain-data facade (unit product.toolkit, `strataq.toolkit`) exposes the gated instruments UNCHANGED — same machinery, same numbers, honesty warnings attached; the Bayesian λ CI it quotes is calibrated (unit estimate.bayes: 48/46/48 per λ* after the quantised-interval bug fix); the irreversibility verdict is the F-0009 null promoted to `strataq.thermo.nulls` | A facade number diverging from the research artifact it claims to reproduce (e.g. `reciprocity_read` off the committed F-0011 value), or a facade path that skips a guard the research path enforces | Acceptance artifact `toolkit_verdicts.json` (2026-08-12): F-0011 matrix reproduces 0.0011; driven series detected / random walk at-null; flat likelihood warned, never quoted |

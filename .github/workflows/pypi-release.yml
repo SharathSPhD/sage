@@ -1,0 +1,31 @@
+name: pypi-release
+
+# Publishes strataq to PyPI on a version tag (strataq-v*), via PyPI
+# Trusted Publishing (OIDC) — no long-lived token in the repo. One-time
+# operator action: on pypi.org, create the `strataq` project and add this
+# repo/workflow as a trusted publisher (Settings → Publishing).
+
+on:
+  push:
+    tags: ["strataq-v*"]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write # OIDC for trusted publishing
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Build sdist and wheel
+        run: uv build --package strataq --out-dir dist
+      - name: Smoke-test the wheel
+        run: |
+          uv venv /tmp/smoke && VIRTUAL_ENV=/tmp/smoke uv pip install dist/*.whl
+          /tmp/smoke/bin/python -c "import strataq.toolkit as tk; r = tk.reciprocity_read([[1.0, 0.2], [0.2, 0.9]]); assert r.r < 1e-12, r; print('wheel ok:', r.verdict)"
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist

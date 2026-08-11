@@ -1,0 +1,49 @@
+unit: product.toolkit
+claim: "strataq serves real users with their own data: strataq.toolkit answers the three headline questions (rationality posterior from choice counts, reciprocity verdict from any cross-response matrix, irreversibility verdict from any scalar series) in one call each from plain lists/numpy, every result carrying its honesty warnings; the decisive reversibilized-Markov null is promoted from experiment code into the library (strataq.thermo.nulls); README quickstart + tag-triggered PyPI trusted-publishing release workflow ship the package"
+tier: derived
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.9
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/toolkit.py
+      - packages/strataq/strataq/thermo/nulls.py
+      - packages/strataq/tests/test_toolkit.py
+
+  domain:
+    - id: toolkit_verdicts
+      spec: "facade verdicts on known cases: RPS whirlpool, coordination landscape, F-0011 matrix reads 0.0011, driven series detected, random walk at-null, flat likelihood warned — all via plain lists only"
+      artifact: benchmarks/results/toolkit_verdicts.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - packages/strataq/README.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: true
+    objections:
+      - id: O-1
+        text: "BLOCKING: NaN payoffs/series computed through silently; constant series returned a vacuous not-detected verdict"
+        disposition: addressed
+        where: "_require_finite guard on every entry point (payoffs, counts, chi, chi_se, series) raising instructive ValueErrors; constant series raises instead of returning a vacuous verdict; counts shape/negativity validated; 7 new tests"
+      - id: O-2
+        text: "MUST-ADDRESS: reciprocity_read classified noisy point estimates against hard thresholds with no uncertainty"
+        disposition: addressed
+        where: "chi_se parameter added: Monte-Carlo 95% CI on R with an uncertainty-aware verdict that refuses to classify across bands; without chi_se the verdict labels itself a point read, flags borderline values, and a warning says not to publish a classification from it; tested on the red-team's near-threshold case"
+      - id: O-3
+        text: "NOTE: power claim 'few hundred observations' vague; git-subdirectory pip syntax needs pip>=21.1"
+        disposition: addressed
+        where: "Docstring now states measured power (>=80% detection at n>=300; n~100 underpowered); README notes pip>=21.1; wheel build verified by the red-team from the monorepo root"
+

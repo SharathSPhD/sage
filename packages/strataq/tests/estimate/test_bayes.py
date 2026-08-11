@@ -18,6 +18,7 @@ from strataq.estimate.bayes import (
     grid_posterior,
     log_evidence,
     log_evidence_mixture,
+    refined_posterior,
     run_campaign,
     update_beliefs,
 )
@@ -49,13 +50,15 @@ class TestGridPosterior:
         assert abs(float(np.sum(post.weights)) - 1.0) < 1e-10
 
     def test_credible_interval_coverage(self):
-        """95% CI covers the truth on ≥ 8/10 seeds — on a grid FINE enough
-        to resolve the likelihood (the grid_resolved flag guards this)."""
-        fine = np.geomspace(0.5, 6.0, 600)
+        """95% CI covers the truth on ≥ 8/10 seeds via refined_posterior —
+        the entry point that enforces the resolution guard. (The guard's
+        PR ≥ 6 bar exists because a PR ≈ 3 posterior quantises its interval
+        to ~2 grid steps and measurably undercovers: 78% in the calibration
+        run that caught it.)"""
         hits = 0
         for s in range(10):
             counts = sample_choices(GAME, 1.8, 2000, jax.random.PRNGKey(100 + s))
-            post = grid_posterior(GAME, counts, fine)
+            post = refined_posterior(GAME, counts, GRID)
             assert post.grid_resolved
             lo, hi = post.credible_interval(0.95)
             hits += int(lo <= 1.8 <= hi)

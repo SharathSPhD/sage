@@ -1,0 +1,12 @@
+f0011_chi:
+- - 1.0697
+  - 0.0028
+- - 0.0005
+  - 0.9685
+f0011_r: 0.0011
+f0011_tol: 0.0003
+irreversibility:
+  driven_steps: 1200
+  n_surrogates: 150
+  walk_steps: 800
+seed: 20260813

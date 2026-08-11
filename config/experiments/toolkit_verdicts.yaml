@@ -1,0 +1,11 @@
+# product.toolkit acceptance cases — the stranger's five minutes, as an artifact.
+# Every case uses ONLY plain lists (the public contract); expectations are the
+# committed research results the facade must reproduce unchanged.
+seed: 20260813
+irreversibility:
+  n_surrogates: 150
+  driven_steps: 1200
+  walk_steps: 800
+f0011_chi: [[1.0697, 0.0028], [0.0005, 0.9685]]
+f0011_r: 0.0011
+f0011_tol: 0.0003

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T06:14:36+00:00",
+  "generated_at": "2026-08-11T07:01:01+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -252,6 +252,34 @@
         "adversarial": []
       },
       "checked_at": "2026-08-11T06:14:36+00:00"
+    },
+    "estimate.bayes": {
+      "unit": "estimate.bayes",
+      "claim": "Bayesian layer per ADR-0012: grid posterior over lambda with calibrated 95% coverage and a self-diagnosing grid-resolution guard; the F-0006 scale fold holds as an exact posterior reparameterisation; R1's mixture misspecification re-expressed as Bayes factors (decisive on mixture data, Occam-suppressed on clean); and an EFE/BALD experiment-selection loop whose first campaign adjudicates F-0012's open mechanism among four pre-declared quantitative hypotheses with an absolute adequacy guard and sigma-sensitivity re-run",
+      "tier": "derived",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-11T07:00:41+00:00"
+    },
+    "product.toolkit": {
+      "unit": "product.toolkit",
+      "claim": "strataq serves real users with their own data: strataq.toolkit answers the three headline questions (rationality posterior from choice counts, reciprocity verdict from any cross-response matrix, irreversibility verdict from any scalar series) in one call each from plain lists/numpy, every result carrying its honesty warnings; the decisive reversibilized-Markov null is promoted from experiment code into the library (strataq.thermo.nulls); README quickstart + tag-triggered PyPI trusted-publishing release workflow ship the package",
+      "tier": "derived",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-11T07:01:01+00:00"
     }
   }
 }

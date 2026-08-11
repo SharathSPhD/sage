@@ -38,6 +38,8 @@ reproduce: reproduce-fast
 	uv run python -m experiments.frontier
 	uv run python -m experiments.pricing_reading
 	uv run python -m experiments.protocol_reading
+	uv run python -m experiments.bayes_reading
+	uv run python -m experiments.toolkit_verdicts
 
 # Fast subset: what `main` must always pass (CI runs this on every merge).
 reproduce-fast:

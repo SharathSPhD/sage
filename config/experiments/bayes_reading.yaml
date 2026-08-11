@@ -25,9 +25,15 @@ seed: 20260813
 recovery:
   lam_stars: [0.8, 1.8, 3.5]
   n_choices: 2000
-  n_seeds: 10
+  # ESCALATION (recorded, NOT pre-registered): the first run at n_seeds=10
+  # scored 8/7/10 hits — lam*=1.8 FAILED the pre-registered >=8/10 floor
+  # (P(<=7 | true 95%) ~ 1.4%, so either bad luck or real undercoverage).
+  # Escalated to 50 seeds per lam* to measure the actual rate rather than
+  # reroll the dice; the new floor 44/50 is the binomial(50, 0.95) ~2.5%
+  # quantile. The 7/10 initial result stays in the artifact history (git).
+  n_seeds: 50
   grid: { lo: 0.3, hi: 8.0, points: 600 }
-  coverage_min_hits: 8
+  coverage_min_hits: 44
 mixture:
   grid: { lo: 0.1, hi: 12.0, points: 120 }
   n_clean: 3000
@@ -51,3 +57,9 @@ campaign:
   stop_confidence: 0.95
   adequacy_max_median_resid_sigmas: 2.0
   gap_lambda: mid # spectral gap evaluated at the ramp midpoint lambda
+  # ADDITION (recorded, post first run): the campaign stopped after ONE
+  # probe at 0.996 belief — decisive but thin. All probes NOT consumed by
+  # the campaign are now run as a HELD-OUT validation set for the winner;
+  # the winner must keep median |resid| < the adequacy bound there too,
+  # else the verdict downgrades to "winner_failed_validation".
+  validate_held_out: true

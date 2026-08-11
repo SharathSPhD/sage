@@ -27,3 +27,9 @@ returns a **warning, not a number**.
 Two rules for data use (Stage 3): report the whole family, never one number;
 and treat a flagged disagreement as a finding about the model, not a nuisance
 to be smoothed.
+
+## The Bayesian layer and the EFE experiment chooser (unit estimate.bayes, ADR-0012)
+
+Point estimators became posteriors: `grid_posterior` puts an exact discrete posterior over λ on a log grid (uniform-on-grid prior, deliberately — it makes the F-0006 scale fold an *exact reparameterisation in posterior space*: the posterior under payoffs s·u on grid g equals the posterior under u on grid s·g, weight for weight, tested to 1e-8). The posterior self-diagnoses grid coarseness: fewer than ~2 effective grid points (participation ratio) flags `grid_resolved = False`, and the credible interval must not be quoted until the grid is refined — coverage is calibrated (≥ 8/10 seeds per λ*, artifact `bayes_recovery.json`) only under that guard. R1's mixture-misspecification diagnostic is now a matched model comparison: an explicit two-λ mixture model decisively beats single-λ on mixture data (BF > 100) and is Occam-suppressed on clean data (BF < 10).
+
+The same unit carries the **EFE experiment chooser** (the active-inference pattern: competing quantitative hypotheses each predict every candidate probe's outcome; the next probe maximises BALD mutual information; beliefs update by Bayes; the campaign stops on concentration or budget). Its first campaign adjudicates F-0012's open mechanism among four pre-declared hypotheses — potential-scale fold, NESS-sensitivity floor, spectral gap, quadratic strawman — with a pre-registered absolute adequacy guard (a winner that doesn't actually fit is recorded as "all hypotheses inadequate") and a σ-sensitivity re-run. Artifact: `efe_mechanism_campaign.json`, full audit trail per round.

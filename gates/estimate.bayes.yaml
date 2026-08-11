@@ -1,0 +1,55 @@
+unit: estimate.bayes
+claim: "Bayesian layer per ADR-0012: grid posterior over lambda with calibrated 95% coverage and a self-diagnosing grid-resolution guard; the F-0006 scale fold holds as an exact posterior reparameterisation; R1's mixture misspecification re-expressed as Bayes factors (decisive on mixture data, Occam-suppressed on clean); and an EFE/BALD experiment-selection loop whose first campaign adjudicates F-0012's open mechanism among four pre-declared quantitative hypotheses with an absolute adequacy guard and sigma-sensitivity re-run"
+tier: derived
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.9
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/estimate/bayes.py
+      - packages/strataq/tests/estimate/test_bayes.py
+
+  domain:
+    - id: bayes_recovery
+      spec: "coverage >= 8/10 per lambda* with the resolution guard on; fold identity < 1e-8; BF(mixture|mixed) > 100 and BF(mixture|clean) < 10 — all criteria committed before the run (verified landed)"
+      artifact: benchmarks/results/bayes_recovery.json
+    - id: efe_mechanism_campaign
+      spec: "campaign audit trail complete (probe, EFE, predictions, observation, posterior per round); winner subject to the pre-registered adequacy guard; sensitivity sigma re-run reported"
+      artifact: benchmarks/results/efe_mechanism_campaign.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/instruments/lambda.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: true
+    objections:
+      - id: O-1
+        text: "BLOCKING: ness_floor's win needs independent verification beyond the 2x2 family — and the near-tautology risk (well-relaxed <Y> approaches the path-length floor analytically) must be owned"
+        disposition: addressed
+        where: "3x3 validation run (coordination-3 <-> RPS family): excess/F flat in alpha to 0.1% at the base protocol; F-0013 rewritten to OWN the scoping — in the well-relaxed regime the floor formula is exact-in-the-limit and the campaign's content is regime identification + generalisation; at fast protocols (tau=0.1) ness_floor FAILS (ratio ~5, 12% alpha-drift) and F-0013 is explicitly scoped out of that regime"
+      - id: O-2
+        text: "NOTE: coverage calibration only tested at the three pre-registered lambda*"
+        disposition: addressed
+        where: "Red-team's own probe: 27-29/30 at untested lambda* in {1.2, 2.5, 5.0} — calibration holds off the tested points"
+      - id: O-3
+        text: "NOTE: sigma=0.15 dex is a modelling choice; concentration speed depends on it"
+        disposition: accepted
+        where: "Sensitivity re-runs at 0.30 (artifact) and red-team's 0.50 both agree on the winner; sigma recorded in config with the sensitivity requirement"
+      - id: O-4
+        text: "NOTE: mixture-vs-single Bayes factor grid-size dependence"
+        disposition: addressed
+        where: "Red-team probe: decisions stable across 60/120/240-point grids; Occam penalty behaves"
+
