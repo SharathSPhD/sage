@@ -1,0 +1,37 @@
+# science.quench_regimes — the fast-quench EFE campaign (F-0013's open remainder).
+#
+# QUESTION: what governs excess dissipation when relaxation is cut short
+# (the lag-dominated regime where F-0013's floor formula fails)?
+#
+# HYPOTHESES (each predicts log10 excess for probe (alpha, K, tau, lam_end);
+# NO winner is pre-declared):
+#   H_frozen     — the tau->0 telescoping limit: excess = D(pi_start || pi_end),
+#                  K- and tau-independent.
+#   H_floor      — F-0013's slow-regime formula: excess = sum_k D(pi_{k-1}||pi_k).
+#   H_interp     — single-relaxation interpolation between the two limits:
+#                  excess = F + (D_frozen - F) * exp(-g * tau), g = spectral
+#                  gap at the ramp midpoint.
+#   H_geom       — strawman: geometric mean of the two limits.
+#
+# PRE-REGISTERED PROTOCOL (this commit must LAND before the run; verify via
+# git log — the upgraded O-3 rule):
+#   probes: alpha x tau grids below; observations = exact hatano_sasa_exact
+#   excess; sigma = 0.15 dex; budget 10; stop 0.95; adequacy guard: winner
+#   median |resid| < 2 sigma on consumed probes AND on ALL held-out probes,
+#   else "all_hypotheses_inadequate" / "winner_failed_validation".
+#   sigma-sensitivity re-run at 0.30 must agree.
+seed: 20260814
+family:
+  alphas_probe: [0.0, 0.25, 0.5, 0.75, 0.95]
+protocols: # (n_steps K, tau, lambda_end); lambda_start fixed 0.5
+  - [8, 0.02, 3.0]
+  - [8, 0.05, 3.0]
+  - [8, 0.1, 3.0]
+  - [8, 0.3, 3.0]
+  - [4, 0.1, 3.0]
+  - [8, 0.1, 6.0]
+sigma_dex: 0.15
+sigma_sensitivity: 0.30
+budget: 10
+stop_confidence: 0.95
+adequacy_max_median_resid_sigmas: 2.0
