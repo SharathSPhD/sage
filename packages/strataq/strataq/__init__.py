@@ -7,7 +7,12 @@ subpackage import. The facade fills in as Stage 1 units close their gates.
 The import name is ``strataq``, never ``sage`` (SageMath owns that name).
 """
 
-__version__ = "0.1.0.dev0"
+try:  # single source of truth: the installed distribution metadata
+    from importlib.metadata import version as _version
+
+    __version__ = _version("strataq")
+except Exception:  # editable/source checkout without metadata
+    __version__ = "0.1.0"
 
 # Float64 is a correctness requirement, not a preference: susceptibility and
 # dissipation computations are ill-conditioned near criticality (PROGRAMME v3 §8.1).

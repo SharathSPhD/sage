@@ -3,6 +3,18 @@
 All notable changes to this project are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: SemVer; stage completions are tagged `v0.<stage>.0`.
 
+## [strataq 0.1.0] — 2026-08-12
+
+**First public release: `pip install strataq`** ([pypi.org/project/strataq](https://pypi.org/project/strataq/)).
+
+### Fixed (found by the release smoke test — F-0018)
+- The packaged `strataq/core/base.yaml` fallback that `base_config()` documents was never shipped, so EVERY solver call failed in an installed wheel (`game_thermo`, `estimate_rationality` dead for outsiders; only the pure-numpy paths worked). Now shipped, with four release-integrity tests (existence, byte-identity drift guard vs the repo config, standalone schema load, version/pyproject match).
+- `__version__` was a hand-edited literal that had drifted from `pyproject.toml`; it now reads `importlib.metadata`.
+- The CI wheel smoke test checked only the numpy-only entry point — the exact blind spot the bug lived in; it now exercises a solver path too.
+
+### Changed
+- `.github/workflows/pypi-release.yml` publishes via the `PYPI_API_TOKEN` repository secret (trusted publishing not configured); tag `strataq-v*` triggers it.
+
 ## [Unreleased]
 
 ### Added

@@ -6,7 +6,7 @@ red-teamed machinery as the research findings, and every result carries its
 honesty warnings. Install:
 
 ```bash
-pip install "strataq @ git+https://github.com/SharathSPhD/sage.git#subdirectory=packages/strataq"
+pip install strataq
 ```
 
 No Python? Every recipe has a `curl` twin against the live API

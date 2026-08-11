@@ -304,3 +304,10 @@ If Oracle disappears, provision the Netcup box, change one secret, and redeploy.
 - [ ] `~/.oci/`, `*.pem`, `.env` gitignored and absent from `git log --all --stat`
 - [ ] Idle-reclaim cron installed, output visible on the dashboard
 - [ ] Health check green from outside the network
+
+
+## Verified 2026-08-12 (PI supplied credentials; ops closed)
+
+- **PyPI**: `strataq` 0.1.0 published and verified from the public index in a clean virtualenv (all four toolkit entry points). The release path is now `git tag strataq-v<version> && git push --tags` → the `pypi-release` workflow publishes via the `PYPI_API_TOKEN` repository secret. Two packaging defects were caught by the pre-upload smoke test and fixed first (F-0018).
+- **GHCR**: `ghcr.io/sharathsphd/sage-api` confirmed **public** (anonymous `docker pull` succeeds) and the pulled arm64 image RUNS — `/v1/health` and `/v1/toolkit/reciprocity` both answered correctly in a throwaway container. The image predates 0.1.0, so the next push to `services/api/**` or `packages/**` rebuilds it with the current version.
+- Credentials live only outside the repo (`~/.pypirc`, mode 0600) and in GitHub's encrypted secret store; nothing sensitive is committed.

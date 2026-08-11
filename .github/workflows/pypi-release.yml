@@ -1,9 +1,10 @@
 name: pypi-release
 
-# Publishes strataq to PyPI on a version tag (strataq-v*), via PyPI
-# Trusted Publishing (OIDC) — no long-lived token in the repo. One-time
-# operator action: on pypi.org, create the `strataq` project and add this
-# repo/workflow as a trusted publisher (Settings → Publishing).
+# Publishes strataq to PyPI on a version tag (strataq-v*) using the
+# PYPI_API_TOKEN repository secret (set 2026-08-12; the token itself never
+# appears in the repo). To migrate to Trusted Publishing (OIDC) later, add
+# this repo/workflow as a trusted publisher on pypi.org and swap the
+# password step for `permissions: id-token: write` + the OIDC action.
 
 on:
   push:
@@ -12,9 +13,7 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-    environment: pypi
     permissions:
-      id-token: write # OIDC for trusted publishing
       contents: read
     steps:
       - uses: actions/checkout@v4
@@ -22,10 +21,23 @@ jobs:
       - name: Build sdist and wheel
         run: uv build --package strataq --out-dir dist
       - name: Smoke-test the wheel
+        # MUST exercise a SOLVER path, not just the pure-numpy one: the
+        # 0.1.0 release found that an installed wheel could not run any
+        # solver call (the packaged base.yaml was missing) — and the
+        # numpy-only check passed straight through that defect.
         run: |
           uv venv /tmp/smoke && VIRTUAL_ENV=/tmp/smoke uv pip install dist/*.whl
-          /tmp/smoke/bin/python -c "import strataq.toolkit as tk; r = tk.reciprocity_read([[1.0, 0.2], [0.2, 0.9]]); assert r.r < 1e-12, r; print('wheel ok:', r.verdict)"
+          /tmp/smoke/bin/python - <<'PY'
+          import strataq, strataq.toolkit as tk
+          r = tk.reciprocity_read([[1.0, 0.2], [0.2, 0.9]])
+          assert r.r < 1e-12, r
+          g = tk.game_thermo([[[0.0, -1.0, 1.0], [1.0, 0.0, -1.0], [-1.0, 1.0, 0.0]],
+                              [[0.0, 1.0, -1.0], [-1.0, 0.0, 1.0], [1.0, -1.0, 0.0]]])
+          assert g.alpha > 0.9 and g.epr > 1e-3, g   # solver + config + dynamics
+          print("wheel ok:", strataq.__version__, g.verdict)
+          PY
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          packages-dir: dist
+        env:
+          UV_PUBLISH_USERNAME: __token__
+          UV_PUBLISH_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: uv publish dist/*

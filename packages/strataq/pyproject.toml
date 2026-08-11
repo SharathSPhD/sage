@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "strataq"
-version = "0.1.0.dev0"
+version = "0.1.0"
 description = "Computational framework for stochastic strategic interaction: QRE, potential and non-potential games, entropy-regularised response, non-equilibrium strategic dynamics."
 readme = "README.md"
 license = "Apache-2.0"

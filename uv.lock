@@ -3342,7 +3342,7 @@ wheels = [
 
 [[package]]
 name = "strataq"
-version = "0.1.0.dev0"
+version = "0.1.0"
 source = { editable = "packages/strataq" }
 dependencies = [
     { name = "equinox" },

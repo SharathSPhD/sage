@@ -69,7 +69,13 @@ The interactive companion lives at
 ## Install
 
 ```bash
-pip install strataq        # once published; until then (pip ≥ 21.1):
+pip install strataq
+```
+
+Published on PyPI: [pypi.org/project/strataq](https://pypi.org/project/strataq/).
+For the unreleased main branch (pip ≥ 21.1):
+
+```bash
 pip install "strataq @ git+https://github.com/SharathSPhD/sage.git#subdirectory=packages/strataq"
 ```
 
