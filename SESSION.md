@@ -181,3 +181,8 @@
 - Recovery: median rel. error 2.6% (MLE) / 2.8% (dispersion) / exact (χ) over 20 (game, λ*) cases; λ-mixture data widens the spread ×91 and flags; symmetric-RPS data warns "unidentified" instead of returning a number. Config gains an `estimate` section (two honest flatness knobs after red-team O-1).
 - Red-team: granted-conditional (inline-literal threshold; undisclosed CI inheritance); both closed + notes; recorded in the gate.
 - **App surface (continuous-build rule)**: /v1/estimate/lambda endpoint (sync-budget subset with pass-through warnings) + the Lab's "guess λ" panel — hidden-λ deal, client-drawn sample, your guess vs the live estimator family vs truth.
+
+## 2026-08-11 (cont.) — A2 dynamics theater live
+
+- Doc 05/06 panel deployed: the joint-profile lattice with π as node mass and the exact J* as animated directed flow (absolute noise floor keeps detailed-balance chains visually still); λ slider; live EPR badge; one-click trajectory sampling showing KLD/TUR converging to the exact meter. Verified on the deployed stack: RPS λ=1.5 exact 2.24 / KLD 2.24 / TUR cert 1.65.
+- Next per plan: A3 domain labs (Blotto + Sioux Falls) ∥ R2 ERCOT electricity plugin.
