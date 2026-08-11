@@ -78,3 +78,21 @@ def sample_trajectories(
         rate=rate,
         n_states=generator.shape[0],
     )
+
+
+def trajectory_from_series(states: Array, n_states: int, *, dt: float = 1.0) -> TrajectoryBatch:
+    """Wrap an OBSERVED discrete state sequence for the estimator layer.
+
+    Real data arrives at fixed sampling intervals, not exponential holding
+    times; the KLD block identity holds for any stationary discrete-time
+    chain with per-step entropy production converted to per-time by
+    rate = 1/dt. TUR windows use the fixed dt exactly.
+    """
+    seq = jnp.asarray(states, dtype=jnp.int32).reshape(1, -1)
+    n = seq.shape[1] - 1
+    return TrajectoryBatch(
+        states=seq,
+        dt=jnp.full((1, n), float(dt)),
+        rate=jnp.asarray(1.0 / float(dt)),
+        n_states=int(n_states),
+    )

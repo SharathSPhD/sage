@@ -1,0 +1,38 @@
+{
+  "benchmark_id": "electricity_irreversibility",
+  "unit": "domains.electricity",
+  "kind": "statistical",
+  "passed": false,
+  "metrics": {
+    "n_hours": 840.0,
+    "kld_epr_per_hour": 0.012130448591213566,
+    "kld_epr_k2_per_hour": 0.046456607574221306,
+    "surrogate_q99": 0.05119067884093855,
+    "surrogate_median": 0.012051563710924095,
+    "value_space_detected": 0.0,
+    "kld_embed_per_hour": 0.04465589955121747,
+    "surrogate_embed_q99": 0.08369636946458744,
+    "surrogate_embed_median": 0.05026659073832537,
+    "tur_point_per_hour": 0.0,
+    "tur_ci_low_per_hour": 0.0,
+    "mean_window_current": -0.25,
+    "horizon_hours": 51.0
+  },
+  "effect_sizes": [
+    {
+      "name": "phase-embedded KLD irreversibility vs shuffle null (nats/hour)",
+      "value": 0.04465589955121747,
+      "ci_low": 0.03225726891742558,
+      "ci_high": 0.08369636946458744,
+      "ci_level": 0.99,
+      "method": "re-embedded phase-randomised surrogate null (band shows the NULL, not the estimate)"
+    }
+  ],
+  "n": 840,
+  "n_justification": "840 hourly DAM LMPs (35 days, node TH_SP15_GEN-APND), 6 quantile bins -> 36 transition cells with ~23 observations per cell for k=1; the shuffle-surrogate null absorbs the plug-in bias at exactly this n, so detection is bias-robust by construction.",
+  "seed": 20260811,
+  "config_ref": "config/experiments/electricity_reading.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-11T01:05:59+00:00",
+  "notes": "First real-data instrument reading, with the methodological control in the same artifact: price-VALUE discretization is structurally blind to diurnal-loop irreversibility (the reversed loop retraces the same 1-D path), and reads at/below its surrogate null; the PHASE-SPACE embedding (price, Δ-sign) is where the loop stops retracing, and detection there means the day-ahead series is a measurably driven cycle, not an equilibrium fluctuation. TUR with held-out data-driven weights on the value chain is reported for completeness."
+}

@@ -1,0 +1,15 @@
+# First real-data contact for the irreversibility estimators: CAISO LMPs.
+defaults:
+  - _self_
+
+node: TH_SP15_GEN-APND
+markets:
+  dam: { market: DAM, start: 2026-07-01, days: 35, dt_hours: 1.0, n_bins: 6 }
+  rtm: { market: RTM, start: 2026-07-20, days: 14, dt_hours: 0.0833333, n_bins: 6 }
+
+surrogates: 200          # phase-randomised (FT) surrogates for the null
+seed: 20260811
+
+thresholds:
+  min_null_median: 1.0e-6   # surrogate machinery sanity
+  surrogate_alpha: 0.01     # detection = reading above the (1-alpha) null quantile

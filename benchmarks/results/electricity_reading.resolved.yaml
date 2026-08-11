@@ -1,0 +1,24 @@
+config:
+  defaults:
+  - _self_
+  markets:
+    dam:
+      days: 35
+      dt_hours: 1.0
+      market: DAM
+      n_bins: 6
+      start: 2026-07-01
+    rtm:
+      days: 14
+      dt_hours: 0.0833333
+      market: RTM
+      n_bins: 6
+      start: 2026-07-20
+  node: TH_SP15_GEN-APND
+  seed: 20260811
+  surrogates: 200
+  thresholds:
+    min_null_median: 1.0e-06
+    surrogate_alpha: 0.01
+library_version: 0.1.0.dev0
+run_at: '2026-08-11T01:07:29+00:00'

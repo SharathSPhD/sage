@@ -52,7 +52,10 @@ def kld_epr(batch: TrajectoryBatch, *, k: int = 1) -> Array:
     Plug-in over (k+1)-blocks of the skeleton chain, converted to CTMC time
     by the stored uniformisation rate. Blocks whose reversal was never
     observed are dropped (standard plug-in truncation; vanishes as data
-    grows since Glauber rates are strictly positive).
+    grows since Glauber rates are strictly positive). On OBSERVED data with
+    effectively one-way transitions (near-deterministic dynamics) the
+    truncation clips infinite contributions — the estimate is then a lower
+    bound, and a pure deterministic cycle reads 0, not ∞.
 
     **Choosing k**: the block identity holds for every k, but the plug-in
     needs n_samples ≫ n_states^(k+1) — data-starved k *underestimates*
