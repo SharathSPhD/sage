@@ -1,0 +1,53 @@
+# estimate.bayes readings (R6, ADR-0012). Two artifacts:
+#
+# 1. bayes_recovery — posterior calibration: coverage of the 95% credible
+#    interval across seeds and lambda*, the scale-fold reparameterisation
+#    identity in posterior space, and the mixture-vs-single Bayes factor
+#    (R1's misspecification diagnostic as model comparison).
+#
+# 2. efe_mechanism_campaign — the EFE auto-research loop pointed at
+#    F-0012's OPEN mechanism (why excess quench dissipation collapses
+#    with alpha). Four quantitative hypotheses; probes are exact quench
+#    computations; selection by expected information gain.
+#
+# EX-ANTE declarations (committed before the run; the standing rule after
+# the thermo.protocols O-3 failure is to VERIFY this commit landed via
+# git log before executing):
+#   - Recovery: coverage of the 95% CI must be >= 8/10 per lambda*; the
+#     fold identity must hold to 1e-8 in posterior weights; BF(mixture)
+#     must exceed 100 on mixture data AND stay below 10 on clean data.
+#   - Campaign: NO winner is predicted. The campaign is model comparison;
+#     whichever hypothesis wins must ALSO pass the absolute adequacy
+#     guard (median |residual| of the winner < 2 sigma on the probes
+#     actually run), otherwise the verdict is recorded as "all four
+#     hypotheses inadequate" — that is an acceptable outcome.
+seed: 20260813
+recovery:
+  lam_stars: [0.8, 1.8, 3.5]
+  n_choices: 2000
+  n_seeds: 10
+  grid: { lo: 0.3, hi: 8.0, points: 600 }
+  coverage_min_hits: 8
+mixture:
+  grid: { lo: 0.1, hi: 12.0, points: 120 }
+  n_clean: 3000
+  lam_clean: 1.2
+  lam_lo: 0.4
+  lam_hi: 4.0
+  bf_decisive: 100.0
+  bf_occam_max: 10.0
+campaign:
+  family:
+    alphas_probe: [0.25, 0.5, 0.75, 0.85, 0.95]
+    scale: 1.0
+  protocols: # (n_steps, tau, lambda_end); lambda_start fixed 0.5
+    - [8, 2.0, 3.0]
+    - [4, 1.0, 3.0]
+    - [8, 2.0, 6.0]
+    - [16, 4.0, 3.0]
+  sigma_dex: 0.15 # Gaussian obs-model error in log10-excess space
+  sigma_sensitivity: 0.30 # campaign re-run at this sigma must agree on the winner
+  budget: 8
+  stop_confidence: 0.95
+  adequacy_max_median_resid_sigmas: 2.0
+  gap_lambda: mid # spectral gap evaluated at the ramp midpoint lambda
