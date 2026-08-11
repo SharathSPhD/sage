@@ -227,3 +227,7 @@
 ## 2026-08-11 (cont.) — p1_instruments v0.2 (10 pages)
 
 - New §"Estimating λ" (R1's four routes + honesty protocol, recovery numbers, ×91 mixture diagnostic, and the first-market-contact model rejection), cross-referencing p3 for the dissipation claims. v0.1 → v0.2.
+
+## 2026-08-11 (cont.) — A5: the 5-minute tour live
+
+- /story: five narrative beats ("landscape or whirlpool?") threading the existing panels — noise dial, the loop, still-vs-turning water, the poke trick, real systems — ending at the Lab; landing hero leads with the tour. App workstream A1–A5 complete (Blotto lab the one optional remainder).
