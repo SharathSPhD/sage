@@ -52,6 +52,19 @@ all 19 unconsumed probes (median residual $0.002$ dex). Scope, stated
 plainly: in the well-relaxed regime the floor formula is exact-in-the-limit
 ($\langle Y\rangle \to F$), so the campaign's content there is regime
 identification plus generalisation (the $3{\times}3$ family agrees to
-$0.1\%$); at fast quenches ($\tau = 0.1$) lag dominates, the formula fails
-by design, and that regime's $\alpha$-dependence is open — the next
-campaign's target.
+$0.1\%$); at fast quenches lag dominates and the floor formula fails by design.
+A second campaign (F-0014) closed that remainder at first order — with its
+own instructive failure first: the selector stopped confidently after one
+probe and the pre-registered held-out guard \emph{refused} the verdict
+(\texttt{winner\_failed\_validation}), a lesson now institutionalised as
+the loop's \texttt{min\_probes} stopping gate. The validated picture:
+excess is bracketed by the path-length floor ($\tau \to \infty$) and the
+frozen divergence $D(\pi_{\mathrm{start}}\|\pi_{\mathrm{end}})$ — exact
+\emph{at} $\tau = 0$ but with a non-uniform approach — and a single
+spectral-gap crossover $\langle Y\rangle \approx F + (D_{\mathrm{frozen}}
+- F)e^{-g\tau}$ holds to $\sim 0.1$ dex on monotone NESS paths (held-out
+median $0.089$). Where the NESS path is loop-like ($\pi_{\mathrm{end}}
+\approx \pi_{\mathrm{start}}$ with excursions between, as at
+$\alpha = 0.95$ with a long ramp) the formula fails by $\sim 1$ dex, and
+that failure is reported, not averaged away; the multi-mode relaxation
+spectrum is the open refinement.
