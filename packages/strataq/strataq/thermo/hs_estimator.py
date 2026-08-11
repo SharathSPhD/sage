@@ -58,16 +58,30 @@ def sample_quench_states(
 ) -> list[np.ndarray]:
     """Sampled per-hold state windows for a stepwise quench.
 
-    Returns one ``(n_trajectories, n_sub_k)`` int array per hold k ≥ 1 —
-    exactly the shape of data a discretised observed quench would give.
-    Initial states are stationary at λ₀; each segment steps the EXACT
-    finite-time kernel e^{Lτ/n}.
+    Returns one ``(n_trajectories, n_sub)`` int array per hold — INCLUDING a
+    leading pre-quench window observed at λ₀ (stationary). That first window
+    is not book-keeping: without it the estimator can only form K−1 of the
+    K jump terms and silently drops the λ₀ → λ₁ contribution — the exact
+    bug behind F-0016's 2/5 coverage (root-caused 2026-08-12). Each segment
+    steps the EXACT finite-time kernel e^{Lτ/n}.
     """
     key = jax.random.PRNGKey(seed)
     key, init_key = jax.random.split(key)
-    pi0 = _stationary(glauber_generator(game, float(protocol.lambdas[0])))
+    gen0 = glauber_generator(game, float(protocol.lambdas[0]))
+    pi0 = _stationary(gen0)
     states = jax.random.categorical(init_key, jnp.log(pi0), shape=(n_trajectories,))
     windows: list[np.ndarray] = []
+    # pre-quench window: stationary observation at lambda_0 for one mean hold
+    tau0 = float(jnp.mean(protocol.taus))
+    n_sub0 = max(1, round(tau0 * steps_per_unit_time))
+    kernel0 = expm((tau0 / n_sub0) * gen0)
+    log_kernel0 = jnp.log(jnp.maximum(kernel0, _FLOOR))
+    seq0 = np.empty((n_trajectories, n_sub0), dtype=np.int64)
+    for t in range(n_sub0):
+        key, step_key = jax.random.split(key)
+        states = jax.random.categorical(step_key, log_kernel0[states])
+        seq0[:, t] = np.asarray(states)
+    windows.append(seq0)
     for k in range(1, protocol.lambdas.shape[0]):
         gen = glauber_generator(game, float(protocol.lambdas[k]))
         tau = float(protocol.taus[k - 1])
@@ -171,22 +185,34 @@ def hs_y_estimate(
     for k in range(1, len(windows)):
         s = windows[k - 1][:, -1]  # state at the switch
         y += np.log(pis[k - 1][s]) - np.log(pis[k][s])
-
-    z = (
-        1.959963984540054
-        if ci_level == 0.95
-        else float(
-            abs(np.quantile(np.random.default_rng(0).standard_normal(200000), (1 - ci_level) / 2))
-        )
-    )
     mean_y = float(np.mean(y))
-    half_y = z * float(np.std(y, ddof=1)) / float(np.sqrt(n_traj))
     vals = np.exp(-y)
     ift = float(np.mean(vals))
-    half_ift = z * float(np.std(vals, ddof=1)) / float(np.sqrt(n_traj))
+
+    # CI by trajectory bootstrap WITH pi_hat re-estimated per resample: the
+    # occupation estimates are shared across trajectories, so their noise is
+    # a common error invisible to a per-trajectory CLT (measured: seed-to-
+    # seed spread ~1.4x the CLT width — the residual coverage failure after
+    # the missing-window bug fix)
+    rng = np.random.default_rng(0)
+    n_boot = 200
+    boot_y = np.empty(n_boot)
+    boot_ift = np.empty(n_boot)
+    for b in range(n_boot):
+        idx = rng.integers(0, n_traj, size=n_traj)
+        rp = [pi_hat(w[idx]) for w in windows]
+        yb = np.zeros(n_traj)
+        for k in range(1, len(windows)):
+            s = windows[k - 1][idx, -1]
+            yb += np.log(rp[k - 1][s]) - np.log(rp[k][s])
+        boot_y[b] = float(np.mean(yb))
+        boot_ift[b] = float(np.mean(np.exp(-yb)))
+    tail = (1.0 - ci_level) / 2.0
+    y_lo, y_hi = (float(q) for q in np.quantile(boot_y, [tail, 1.0 - tail]))
+    ift_lo, ift_hi = (float(q) for q in np.quantile(boot_ift, [tail, 1.0 - tail]))
     # companion diagnostic (equivalence-style; known-insufficient alone —
     # F-0016): the whole IFT CI must sit inside [1 - tol, 1 + tol]
-    ift_ok = (1.0 - ift_tolerance) <= ift - half_ift and ift + half_ift <= 1.0 + ift_tolerance
+    ift_ok = (1.0 - ift_tolerance) <= ift_lo and ift_hi <= 1.0 + ift_tolerance
     warnings = []
     # PRIMARY gate (F-0016): every hold must be long relative to its own
     # data-estimated relaxation time, else pi_hat never settled
@@ -234,11 +260,11 @@ def hs_y_estimate(
         )
     return HSEstimate(
         mean_y=mean_y,
-        mean_y_ci_low=mean_y - half_y,
-        mean_y_ci_high=mean_y + half_y,
+        mean_y_ci_low=y_lo,
+        mean_y_ci_high=y_hi,
         ift_estimate=ift,
-        ift_ci_low=ift - half_ift,
-        ift_ci_high=ift + half_ift,
+        ift_ci_low=ift_lo,
+        ift_ci_high=ift_hi,
         usable=usable,
         n_trajectories=n_traj,
         warnings=warnings,

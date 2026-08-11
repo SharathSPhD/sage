@@ -294,3 +294,8 @@
 
 - The per-window relaxation gate closed round 1's false-pass regime (monotone boundary, τ=1 fooling case caught, admitted-hold coverage on the registered seed) — then round 2 broke it four measured ways: game-dependent underestimate up to ~19× (α=0), multi-seed coverage ~2/5 at the admitted hold, collapse at small n_trajectories, and the P1 re-scope owned as a criterion weakening (sweep PASS void for certification).
 - Response: signoff NOT flipped; module banner-marked EXPERIMENTAL; F-0016 carries the full four-mode failure map + redesign directions (split-sample π̂, explicit bias correction, game-adaptive safety, minimum-n analysis); docs/CHANGELOG corrected to the withheld status. Six tests remain green for what the module does.
+
+## 2026-08-12 (cont.) — hs_estimator: the missing-λ₀-window bug FIXED (bias closed); variance under-coverage remains open
+
+- Root-caused and fixed: the sampler emitted K−1 of K jump windows — with the pre-quench λ₀ window prepended, the estimator is unbiased across seeds (multi-seed mean within 0.01 of exact). Two refuted hypotheses (split-sample π̂, burn-in scaling) on the record first.
+- CI moved to a trajectory bootstrap with π̂ re-estimated per resample — still under-covers ~1.7× (common-mode π̂ noise; per-seed coverage 2-3/6). Unit stays OPEN, module banner stays on; the certification path is now a variance model (window-block bootstrap or autocorrelation-corrected delta method) + the game-adaptive safety and minimum-n items.
