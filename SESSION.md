@@ -186,3 +186,9 @@
 
 - Doc 05/06 panel deployed: the joint-profile lattice with π as node mass and the exact J* as animated directed flow (absolute noise floor keeps detailed-balance chains visually still); λ slider; live EPR badge; one-click trajectory sampling showing KLD/TUR converging to the exact meter. Verified on the deployed stack: RPS λ=1.5 exact 2.24 / KLD 2.24 / TUR cert 1.65.
 - Next per plan: A3 domain labs (Blotto + Sioux Falls) ∥ R2 ERCOT electricity plugin.
+
+## 2026-08-11 (cont.) — A3 (first half): Sioux Falls network lab live
+
+- /v1/domains/sioux_falls/{network,sue}: lazy-cached RoutingNetwork (top-12 OD, k=3), toll guards; API test asserts the physics (tolling the busiest link reduces its flow). Warm SUE solves 0.7s on the micro (16.8s one-time JAX trace).
+- /network page deployed: real TNTP node geometry, flows as width, v/c as colour, click-to-toll (the domain's conjugate field) with total-time delta vs untolled, θ dial, live KKT residual, gate ℛ reading. Verified on sage-labs.vercel.app.
+- Remaining in A3: Blotto allocation lab. Next research: R2 ERCOT.
