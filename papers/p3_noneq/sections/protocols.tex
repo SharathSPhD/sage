@@ -78,3 +78,23 @@ first two-mode ``result'' was retracted as an implementation artifact
 caught by adversarial review, and the corrected two-mode model
 \emph{still} loses to one mode — truncating the fast remainder at each
 switch errs more than damping the whole deviation at the gap rate.
+
+\paragraph{Quench dissipation from data (F-0016).} The identities above
+use the generator; data provides only state windows. The plug-in estimator
+(unit \texttt{thermo.hs\_estimator}) pools each hold's occupation into
+$\hat\pi_k$ and accumulates $\hat Y$ at the switches --- and its
+certification arc is the programme's discipline in miniature: a first
+adversarial review was \emph{withheld} (the natural self-check, the IFT
+$\langle e^{-\hat Y}\rangle = 1$, proved structurally insufficient --- a
+45\% bias can hide behind an IFT of $1.01$); the chase refuted two
+statistical suspects and then found a real defect (a missing pre-quench
+window silently dropping one jump term); a 20-seed study showed the
+corrected estimator unbiased with calibrated intervals (20/20 at nominal
+95\%); and the working gate is \emph{physical}, not statistical --- every
+hold must exceed four times its own autocorrelation-estimated relaxation
+time, with the IFT retained as a tested anomaly detector that does fire on
+genuinely non-stepwise input. One consequence deserves emphasis: because
+the spectral gap collapses as $\lambda$ concentrates
+(Section~\ref{sec:phase}), the holds a data-side reading requires grow
+precisely where stakes sharpen --- quench dissipation is hardest to
+measure exactly where strategic systems are most interesting.
