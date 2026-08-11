@@ -162,3 +162,20 @@ class TestEFE:
         # audit trail is complete: probe, scores, observation, posterior per round
         for step in result.history:
             assert step.efe > -1e-12 and abs(float(np.sum(step.beliefs)) - 1.0) < 1e-10
+
+    def test_min_probes_prevents_single_probe_stop(self):
+        """The fast-quench lesson: belief concentration after one probe can
+        be confidently wrong about the rest of the space — min_probes forces
+        continued consumption."""
+        hyps = _toy_hypotheses()
+        probes = [1.5, 2.0, 3.0, 4.0]
+        result = run_campaign(
+            hyps,
+            probes,
+            run_probe=lambda x: float(x) ** 2,
+            sigma=0.1,
+            budget=4,
+            stop_confidence=0.9,
+            min_probes=3,
+        )
+        assert len(result.history) >= 3

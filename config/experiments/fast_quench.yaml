@@ -35,3 +35,8 @@ sigma_sensitivity: 0.30
 budget: 10
 stop_confidence: 0.95
 adequacy_max_median_resid_sigmas: 2.0
+# ADDITION (recorded, after run 1): the campaign stopped at belief 1.0
+# after ONE probe and then FAILED held-out validation (the pre-registered
+# guard fired: verdict winner_failed_validation). min_probes=6 added to
+# force broader consumption; run 1's artifact stays in git history.
+min_probes: 6

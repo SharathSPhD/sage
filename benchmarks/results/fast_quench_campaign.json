@@ -1,0 +1,51 @@
+{
+  "benchmark_id": "fast_quench_campaign",
+  "unit": "science.quench_regimes",
+  "kind": "statistical",
+  "passed": true,
+  "metrics": {
+    "belief_frozen_limit": 4.138668017073232e-32,
+    "belief_slow_floor": 3.334505940471022e-20,
+    "belief_gap_interpolation": 0.9999478085475505,
+    "belief_geometric_strawman": 0.00005219145244955574,
+    "n_probes_run": 6.0,
+    "stopped_early": 1.0,
+    "winner_median_resid_dex": 0.1981395832201933,
+    "consumed_max_resid_dex": 1.061360469783656,
+    "heldout_n": 24.0,
+    "heldout_median_resid_dex": 0.0885814626138351,
+    "heldout_max_resid_dex": 0.4556328159659664,
+    "adequate": 1.0,
+    "heldout_validated": 1.0,
+    "sensitivity_sigma_agrees": 1.0,
+    "probe0_alpha": 0.95,
+    "probe1_alpha": 0.0,
+    "probe2_alpha": 0.0,
+    "probe3_alpha": 0.0,
+    "probe4_alpha": 0.25,
+    "probe5_alpha": 0.0,
+    "probe0_tau": 0.1,
+    "probe1_tau": 0.02,
+    "probe2_tau": 0.1,
+    "probe3_tau": 0.05,
+    "probe4_tau": 0.1,
+    "probe5_tau": 0.1
+  },
+  "effect_sizes": [
+    {
+      "name": "posterior belief in verdict 'gap_interpolation'",
+      "value": 0.9999478085475505,
+      "ci_low": 0.9999478085475505,
+      "ci_high": 0.9999478085475505,
+      "ci_level": 0.95,
+      "method": "EFE/BALD selection, sigma=0.15 dex, 6/30 probes consumed"
+    }
+  ],
+  "n": 6,
+  "n_justification": "budget 10 of 30 candidate probes; unconsumed probes all run as held-out validation — nothing silently skipped.",
+  "seed": 20260814,
+  "config_ref": "config/experiments/fast_quench.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-11T07:38:54+00:00",
+  "notes": "Fast-quench regime verdict: gap_interpolation. Hypotheses: frozen limit D(pi_start||pi_end) (the tau->0 telescoping identity), F-0013's slow floor, spectral-gap interpolation between them, geometric strawman."
+}

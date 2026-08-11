@@ -21,17 +21,17 @@ cross-response matrix (e.g. cost pass-through between two firms):
 
 ```python
 read = tk.reciprocity_read([[1.07, 0.003], [0.0005, 0.97]])
-read.r          # 0.0011 — this is the actual Dominick's grocery reading
-read.verdict    # "reciprocal (landscape-like): ..."
-read.warnings   # the honesty notes travel with the number
+read.r  # 0.0011 — this is the actual Dominick's grocery reading
+read.verdict  # "reciprocal (landscape-like): ..."
+read.warnings  # the honesty notes travel with the number
 ```
 
 **Is my time series irreversibly driven?** — the instrument that found the
 diurnal loop in day-ahead electricity prices:
 
 ```python
-verdict = tk.irreversibility_test(weekly_prices)   # any scalar series, ≥ a few hundred points
-verdict.detected, verdict.p_value                  # vs a reversible null with matched persistence
+verdict = tk.irreversibility_test(weekly_prices)  # any scalar series, ≥ a few hundred points
+verdict.detected, verdict.p_value  # vs a reversible null with matched persistence
 ```
 
 **How payoff-sensitive are my agents?** — a Bayesian posterior over the
@@ -39,14 +39,14 @@ logit rationality λ from observed choice frequencies:
 
 ```python
 est = tk.estimate_rationality([u1, u2], counts=[[412, 95, 493], [301, 402, 297]])
-est.mean, (est.ci_low, est.ci_high)   # calibrated 95% interval
-est.warnings                          # flags flat likelihoods instead of quoting noise
+est.mean, (est.ci_low, est.ci_high)  # calibrated 95% interval
+est.warnings  # flags flat likelihoods instead of quoting noise
 ```
 
 And for a game you can write down, the full dashboard:
 
 ```python
-tk.game_thermo([u1, u2], lam=1.5)   # harmonic fraction α, reciprocity ℛ, dissipation
+tk.game_thermo([u1, u2], lam=1.5)  # harmonic fraction α, reciprocity ℛ, dissipation
 ```
 
 ## The full library

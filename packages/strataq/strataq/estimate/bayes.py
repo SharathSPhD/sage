@@ -312,14 +312,20 @@ def run_campaign(
     sigma: float,
     budget: int,
     stop_confidence: float = 0.95,
+    min_probes: int = 1,
     prior: np.ndarray | None = None,
 ) -> CampaignResult:
     """Greedy EFE loop: score → run best un-run probe → update → repeat.
 
-    Stops when max belief ≥ ``stop_confidence`` or the budget is spent.
-    The full audit trail (probe chosen, its EFE, every hypothesis's
-    prediction, the observation, the posterior) is returned — campaigns
-    are artifacts, not black boxes.
+    Stops when max belief ≥ ``stop_confidence`` AND at least ``min_probes``
+    have been consumed, or when the budget is spent. ``min_probes`` exists
+    because belief concentration after a single probe can be confidently
+    WRONG about the rest of the probe space when the observation model
+    understates cross-probe disagreement — the fast-quench campaign's
+    winner_failed_validation verdict is the recorded case. The full audit
+    trail (probe chosen, its EFE, every hypothesis's prediction, the
+    observation, the posterior) is returned — campaigns are artifacts, not
+    black boxes.
     """
     beliefs = np.full(len(hypotheses), 1.0 / len(hypotheses)) if prior is None else prior.copy()
     remaining = list(probes)
@@ -342,7 +348,7 @@ def run_campaign(
                 beliefs=beliefs.copy(),
             )
         )
-        if float(np.max(beliefs)) >= stop_confidence:
+        if float(np.max(beliefs)) >= stop_confidence and len(history) >= min_probes:
             stopped = True
             break
     return CampaignResult(

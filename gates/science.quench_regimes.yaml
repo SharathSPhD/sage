@@ -1,0 +1,52 @@
+unit: science.quench_regimes
+claim: "Fast-quench dissipation is bracketed by the Fisher path-length floor (tau->inf) and the frozen divergence D(pi_start||pi_end) — exact AT tau=0 with a NON-UNIFORM approach (loop-like NESS paths break it; the alpha=0.95, lam_end=6 case fails the interpolation by ~1 dex and is reported, not averaged away). On monotone paths the single-gap crossover holds: held-out median 0.089 dex over 24 probes (max 0.46 at the tau=0.3 band); consumed max 1.06 dex on record. Run-1 winner_failed_validation is recorded and produced the min_probes STOPPING gate (the held-out guard stays the validator)"
+tier: derived
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.9
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/estimate/bayes.py
+      - packages/strataq/tests/estimate/test_bayes.py
+
+  domain:
+    - id: fast_quench_campaign
+      spec: "pre-registered guards enforced (adequacy on consumed, held-out validation, sigma-sensitivity); run-1 refusal recorded in findings; run-2 winner validated"
+      artifact: benchmarks/results/fast_quench_campaign.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/instruments/dissipation.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: true
+    objections:
+      - id: O-1
+        text: "BLOCKING: 'frozen divergence is a telescoping identity' overstated — exact only AT tau=0 with non-uniform approach; loop-like NESS paths (alpha=0.95, lam_end=6) break the interpolation by ~1 dex"
+        disposition: addressed
+        where: "F-0014, gate claim and docs rewritten: frozen limit exact AT tau=0, approach non-uniform, loop-path failure named with its numbers and scoped out of the formula's validity"
+      - id: O-2
+        text: "BLOCKING: max residual reported held-out-only (0.46) while the consumed probe0 hid 1.06 dex — the adequacy MEDIAN averaged over a known failure"
+        disposition: addressed
+        where: "consumed_max_resid_dex added to the artifact metrics (1.06 recorded); F-0014 caveats give the full accounting (consumed max, held-out max, where each sits)"
+      - id: O-3
+        text: "MUST-ADDRESS: min_probes=6 pads with low-EFE probes and must not be presented as validation"
+        disposition: addressed
+        where: "run_campaign docstring states min_probes is a STOPPING gate only and held-out validation remains the caller's job; F-0014 says the same"
+      - id: O-4
+        text: "NOTE: midpoint spectral-gap convention is ~9% worse than gap-at-lambda_start though sigma-insensitive; tau=0.3 residual band is systematic first-order error"
+        disposition: accepted
+        where: "Convention recorded as a choice (not tuned); the tau=0.3 band and the start-gap alternative noted in F-0014's caveats as the multi-mode refinement's entry points"
+

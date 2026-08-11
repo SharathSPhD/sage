@@ -266,3 +266,10 @@
 - /v1/toolkit/{reciprocity, irreversibility, rationality} deployed to the micro VM (validation as 422s, warnings in every response); live check reproduces F-0011 (r = 0.00113) over HTTP with the point-read honesty verdict.
 - /tools ("Your data") live in the app: paste-a-series irreversibility verdict + χ-matrix reciprocity read with optional SEs, defaults set to the real Dominick's estimates; nav updated; Vercel auto-deploys.
 - Remaining PI click for full PyPI publication: create the strataq project on pypi.org with this repo/workflow as trusted publisher, then `git tag strataq-v0.1.0 && git push --tags`.
+
+## 2026-08-12 (cont.) — science.quench_regimes GREEN (21st gate) — F-0014, the quench bracket + the guard that caught the machine
+
+- Second EFE campaign (pre-registration commit verified landed): run 1 stopped confidently after ONE probe and the pre-registered held-out guard REFUSED it (winner_failed_validation) — lesson institutionalised as run_campaign's min_probes stopping gate. Run 2 (min_probes=6): gap_interpolation at 0.9999, held-out median 0.089 dex over 24 probes.
+- **F-0014**: fast-quench excess bracketed by the path-length floor and the frozen divergence D(π_start‖π_end) — exact AT τ=0 with a NON-UNIFORM approach; single-gap crossover holds on monotone NESS paths; loop-like paths (α=0.95, long ramp) fail by ~1 dex and are reported, not averaged (consumed max 1.06 dex in the artifact after the red-team caught held-out-only reporting).
+- Red-team round 2 conditions all closed by correction: 'telescoping identity' language fixed, full residual accounting, min_probes labelled a stopping gate (held-out guard remains the validator), gap-convention choice recorded.
+- Docs cookbook shipped (mkdocs nav: "Cookbook (your data)"); p3 §protocols updated with the corrected F-0014 picture (10 pages).

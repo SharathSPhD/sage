@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T07:01:01+00:00",
+  "generated_at": "2026-08-11T07:39:24+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -280,6 +280,20 @@
         "adversarial": []
       },
       "checked_at": "2026-08-11T07:01:01+00:00"
+    },
+    "science.quench_regimes": {
+      "unit": "science.quench_regimes",
+      "claim": "Fast-quench dissipation is bracketed by the Fisher path-length floor (tau->inf) and the frozen divergence D(pi_start||pi_end) \u2014 exact AT tau=0 with a NON-UNIFORM approach (loop-like NESS paths break it; the alpha=0.95, lam_end=6 case fails the interpolation by ~1 dex and is reported, not averaged away). On monotone paths the single-gap crossover holds: held-out median 0.089 dex over 24 probes (max 0.46 at the tau=0.3 band); consumed max 1.06 dex on record. Run-1 winner_failed_validation is recorded and produced the min_probes STOPPING gate (the held-out guard stays the validator)",
+      "tier": "derived",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-11T07:39:24+00:00"
     }
   }
 }
