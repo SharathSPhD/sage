@@ -54,3 +54,24 @@ reported the rejection rather than a $\lambda$
 series, and a genuinely at-null real-time series --- belongs to the
 dissipation instruments and is developed in the companion paper
 \citep{p3}.
+
+\paragraph{From point estimates to posteriors.} Unit \texttt{estimate.bayes}
+(ADR-0012) upgrades route 1 to a grid posterior over $\lambda$ with
+calibrated frequentist coverage --- and the calibration study is itself the
+best advertisement for the discipline: the pre-registered coverage floor
+FAILED on first run (34/50 at $\lambda^* = 1.8$), was chased to a real
+defect (a posterior spanning fewer than ${\sim}6$ grid points quantises its
+credible interval to a couple of grid steps and undercovers at 78\%), and
+the fix --- a resolution guard that refuses to quote intervals from
+under-resolved grids, plus automatic refinement --- restored 48/46/48 per
+$\lambda^*$, confirmed off the tested points by the red-team's own probe.
+The scale fold $\sigma(\lambda, s\,u) = \sigma(s\lambda, u)$ reappears here
+as an exact reparameterisation of the posterior (error $0.0$): $(\lambda,
+\text{scale})$ is never identified from choices, and the API says so
+instead of hiding a ridge. The mixture diagnostic of the estimator family
+becomes a matched model comparison: an explicit two-$\lambda$ mixture model
+beats the single-$\lambda$ model decisively on mixture data (Bayes factor
+$>10^{2}$) and is Occam-suppressed on clean data ($0.11$). All of it is
+callable by outsiders on their own data --- \texttt{strataq.toolkit} and
+the public \texttt{/v1/toolkit} endpoints return these posteriors with
+their warnings attached.

@@ -1,0 +1,57 @@
+\section{Driving the system: quench thermodynamics}
+\label{sec:protocols}
+
+The readings so far are stationary. Real strategic environments are
+\emph{driven}: incentive sharpness moves — information arrives, stakes
+change, $\lambda$ ramps. Unit \texttt{thermo.protocols} instantiates the
+Hatano--Sasa decomposition \citep{hatanosasa2001, espositovdb2010} exactly on
+the Glauber chain: for any distribution $p$ evolving under the generator at
+the current $\lambda$,
+\[
+\sigma_{\mathrm{tot}}(p) \;=\; \underbrace{\sigma_{\mathrm{hk}}(p)}_{\text{holds the NESS}}
+\;+\; \underbrace{\sigma_{\mathrm{ex}}(p)}_{-\,\tfrac{d}{dt} D(p\,\|\,\pi)},
+\]
+both parts nonnegative, with $\sigma_{\mathrm{hk}} \equiv 0$ precisely under
+detailed balance — on potential games, dissipation is pure relaxation. For
+stepwise $\lambda$-protocols the Hatano--Sasa integral fluctuation theorem
+$\langle e^{-Y}\rangle = 1$ holds for \emph{every} game, including off
+detailed balance where Jarzynski does not apply. One honesty note our
+red-team insisted on and we verified: for stepwise protocols the
+weighted-transfer computation of $\langle e^{-Y}\rangle$ telescopes to $1$
+algebraically, so it is an identity verification, not a bug-catcher; the
+correctness test is the independent sampled-path check, powered at
+$\alpha = 0.5$ where $\langle Y\rangle \sim 10^{-2}$ (CI $[0.995, 1.003]
+\ni 1$; artifacts \texttt{protocol\_ift\_checks.json}).
+
+\paragraph{The driving-cost inversion (F-0012).} A pre-registered scan
+(predictions written in config before the run; the intended prior commit
+aborted on a hook failure and the audit gap is recorded, not smoothed over)
+ramped $\lambda: 0.5 \to 3$ across the $\alpha$ family. Excess dissipation
+obeys the discrete quasi-static law $\langle Y\rangle \propto 1/K$ in the
+number of steps (measured slopes $-1.02$, $-0.94$) and \emph{collapses}
+three orders of magnitude with $\alpha$ ($3.6\times10^{-2} \to
+2.8\times10^{-5}$ nats), while accumulated housekeeping grows to $12.4$ nats,
+exactly linear in protocol duration ($\sigma_{\mathrm{hk}}$ depends only on
+the generator and its $\pi$, so per-hold constancy is structural; the
+informative number is the burn \emph{rate}, $0.77$ nats per unit time at
+$\alpha = 0.95$). The cost of driving inverts across the family: potential
+games pay per \emph{change} and drive for free in the fine-step limit;
+near-harmonic games pay \emph{rent per unit time} whether driven or not.
+
+\paragraph{The mechanism, found by the machine (F-0013).} Why does excess
+collapse? Four quantitative hypotheses — a payoff-scale fold, the
+NESS-sensitivity floor $F = \sum_k D(\pi_{k-1}\|\pi_k)$, a spectral-gap lag
+model, and a quadratic strawman — were handed to an expected-free-energy
+experiment selector (unit \texttt{estimate.bayes}): each hypothesis predicts
+every candidate probe's outcome, the next probe maximises the BALD mutual
+information between hypothesis and outcome, and beliefs update by Bayes. The
+campaign chose the single most discriminating probe available
+($\alpha = 0.95$, $1.19$ nats of expected information) and resolved in one
+round: the \emph{floor} hypothesis at posterior $0.996$, then validated on
+all 19 unconsumed probes (median residual $0.002$ dex). Scope, stated
+plainly: in the well-relaxed regime the floor formula is exact-in-the-limit
+($\langle Y\rangle \to F$), so the campaign's content there is regime
+identification plus generalisation (the $3{\times}3$ family agrees to
+$0.1\%$); at fast quenches ($\tau = 0.1$) lag dominates, the formula fails
+by design, and that regime's $\alpha$-dependence is open — the next
+campaign's target.
