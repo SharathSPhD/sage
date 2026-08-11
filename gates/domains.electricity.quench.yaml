@@ -1,5 +1,5 @@
 unit: domains.electricity.quench
-claim: "REVISED after red-team round 1 (WITHHELD; all four objections absorbed): the honest R7 deliverable is the DRIFT DIAGNOSIS — 5 of 7 months individually fire the anomaly detector, so the trading day is not one repeated quench protocol at monthly granularity — plus the closed-loop affinity ~7.0 nats/day (day-block bootstrap [6.22, 8.50]) as a DESCRIPTIVE number: the application is outside the certified 4-state scope and the IFT companion is uninformative on closed cycles, both stated. The half-counted open chain, the iid CI, and the mixing-artifact admission of round 1 are corrected on the record (F-0017 rewritten; original in git history)"
+claim: "THIRD revision after two red-team rounds (both overturned the headline; the arc is in F-0017). The unit claims exactly one in-scope number and one negative result: (1) the closed daily-loop affinity of 211 CAISO DAM day-pairs, Y_loop ~ 7.0 nats/day with day-block bootstrap [6.22, 8.50] — DESCRIPTIVE only (6 states extends rather than inherits the 4-state certification; the IFT companion cannot constrain a closed cycle); (2) the monthly scan supports NO causal statement — a seeded shuffle control (permanent artifact metric) attributes 0/7 months to temporal drift, and one month s anomaly flag FLIPS under a physically-null permutation, so monthly reads at n~30 are sampling noise. The earlier drift diagnosis is retracted; answering the premise needs small-n certification or coarser windows"
 tier: derived
 
 gates:
@@ -14,7 +14,7 @@ gates:
 
   domain:
     - id: day_quench_read
-      spec: "registered D1-D4 executed verbatim: gate flags reported as-is, seasonal halves labelled indicative-only, drops counted"
+      spec: "registered D1-D4 executed verbatim: gate flags reported as-is, drops counted, closed cycle, day-block bootstrap as the quoted interval, and the seeded SHUFFLE CONTROL per month with its four-way cause labels (drift / not_drift / UNSTABLE / clean)"
       artifact: benchmarks/results/day_quench_read.json
 
   statistical:
@@ -30,5 +30,23 @@ gates:
     changelog_entry: true
 
   adversarial:
-    red_team_signoff: false
-    objections: []
+    red_team_signoff: false  # round 2 GRANTED-CONDITIONAL; the condition was
+    # met by implementing the shuffle control, whose result overturned BOTH
+    # sides' interpretation — returned to the reviewer for the final call.
+    objections:
+      - id: O-1
+        text: "BLOCKING (round 1): the diurnal protocol is circular; the open-chain framing half-counted it (+3.7 nats/day missing)"
+        disposition: addressed
+        where: "Trajectories are day-PAIRS carrying the wrap-around jump; loop total 7.00 with alignment verified by the reviewer"
+      - id: O-2
+        text: "BLOCKING (round 1): 6 states is outside the estimator's certified 4-state scope"
+        disposition: addressed
+        where: "Stated in the artifact method string, F-0017 and this claim: extends, not inherits"
+      - id: O-3
+        text: "BLOCKING (round 1): serially-correlated days made the iid CI ~28% too narrow"
+        disposition: addressed
+        where: "7-day-block bootstrap [6.22, 8.50] is the quoted interval everywhere; iid demoted"
+      - id: O-4
+        text: "BLOCKING (round 1): the full-window pass was regime-mixing cancellation; (round 2) the drift diagnosis must be stratified by a shuffle control"
+        disposition: addressed
+        where: "Shuffle control implemented as a seeded artifact metric — and it retracts the drift story entirely (0/7 drift-attributable; one month UNSTABLE under a physically-null permutation). F-0017 rewritten to claim only the in-scope full-window number plus the negative result; the reviewer's own one-off split did not reproduce and both readings are on the record"

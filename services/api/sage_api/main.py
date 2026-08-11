@@ -397,7 +397,9 @@ def _sioux() -> dict[str, Any]:
         from strataq.domains.congestion import load_sioux_falls, routing_network_from_tntp
 
         tntp = load_sioux_falls()
-        od_pairs = sorted(tntp.demand, key=tntp.demand.get, reverse=True)[:12]
+        # explicit lambda, not dict.get: mypy cannot narrow the overloaded
+        # bound method to the Callable sorted() wants
+        od_pairs = sorted(tntp.demand, key=lambda od: tntp.demand[od], reverse=True)[:12]
         network = routing_network_from_tntp(tntp, od_pairs, k_routes=3)
         _SIOUX.update(
             tntp=tntp,

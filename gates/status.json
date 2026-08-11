@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T13:26:06+00:00",
+  "generated_at": "2026-08-11T21:10:38+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -153,7 +153,7 @@
         "documentation": [],
         "adversarial": []
       },
-      "checked_at": "2026-08-08T22:05:36+00:00"
+      "checked_at": "2026-08-11T21:09:42+00:00"
     },
     "web.scaffold": {
       "unit": "web.scaffold",
@@ -325,13 +325,11 @@
     },
     "domains.electricity.quench": {
       "unit": "domains.electricity.quench",
-      "claim": "The certified HS estimator applied to real market data with its gates in charge (registered D1-D4, no outcome declared): 212 CAISO DAM days as repeated diurnal quenches yield an ADMITTED excess-dissipation read of 3.27 nats/day [2.84, 3.90] (IFT companion clean), sitting at ~3x F-0009's stationary pair-level EPR on the same market \u2014 different observables, sensible ordering; and the anomaly detector FIRED on the winter half (IFT [0.07, 0.40]) \u2014 seasonal drift breaks the repeated-protocol premise and the instrument refused instead of quoting, its first catch on real data. Serial-day correlation and regime-mixing caveats stated in F-0017",
+      "claim": "THIRD revision after two red-team rounds (both overturned the headline; the arc is in F-0017). The unit claims exactly one in-scope number and one negative result: (1) the closed daily-loop affinity of 211 CAISO DAM day-pairs, Y_loop ~ 7.0 nats/day with day-block bootstrap [6.22, 8.50] \u2014 DESCRIPTIVE only (6 states extends rather than inherits the 4-state certification; the IFT companion cannot constrain a closed cycle); (2) the monthly scan supports NO causal statement \u2014 a seeded shuffle control (permanent artifact metric) attributes 0/7 months to temporal drift, and one month s anomaly flag FLIPS under a physically-null permutation, so monthly reads at n~30 are sampling noise. The earlier drift diagnosis is retracted; answering the premise needs small-n certification or coarser windows",
       "tier": "derived",
       "green": false,
       "sections": {
-        "code": [
-          "types_clean: experiments/day_quench_reading.py:30: error: Missing type arguments for generic type \"list\"  [type-arg]\nexperiments/day_quench_reading.py:56: error: Missing type arguments for generic type \"dict\"  [type-arg]\nFound 2 errors in 1 file (checked 1 source file)\n"
-        ],
+        "code": [],
         "domain": [],
         "statistical": [],
         "documentation": [],
@@ -339,7 +337,7 @@
           "red_team_signoff: not granted"
         ]
       },
-      "checked_at": "2026-08-11T13:26:06+00:00"
+      "checked_at": "2026-08-11T21:10:38+00:00"
     }
   }
 }

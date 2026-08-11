@@ -52,7 +52,18 @@
     "month04_anomaly": 1.0,
     "month05_anomaly": 0.0,
     "month06_anomaly": 1.0,
-    "month07_anomaly": 0.0
+    "month07_anomaly": 0.0,
+    "month01_anomaly_shuffled": 1.0,
+    "month02_anomaly_shuffled": 1.0,
+    "month03_anomaly_shuffled": 1.0,
+    "month04_anomaly_shuffled": 1.0,
+    "month05_anomaly_shuffled": 1.0,
+    "month06_anomaly_shuffled": 1.0,
+    "month07_anomaly_shuffled": 0.0,
+    "n_months_drift": 0.0,
+    "n_months_not_drift": 5.0,
+    "n_months_unstable": 1.0,
+    "n_months_clean": 1.0
   },
   "effect_sizes": [
     {
@@ -68,7 +79,7 @@
   "n_justification": "211 complete days (2 dropped for missing hours) — the estimator's validated scope needs >= 200 trajectories; the seasonal halves are ~half that and labelled indicative-only per D4.",
   "seed": 20260818,
   "config_ref": "config/experiments/day_quench.yaml",
-  "library_version": "0.1.0.dev0",
-  "timestamp": "2026-08-11T13:33:58+00:00",
-  "notes": "R7 verdict: admitted: first data-side excess-dissipation read. Full-window warnings: []. Registered design D1-D4; the certified instrument's gates were in charge and their flags are reported verbatim."
+  "library_version": "0.1.0",
+  "timestamp": "2026-08-11T21:08:03+00:00",
+  "notes": "R7 verdict: admitted: first data-side excess-dissipation read. Full-window warnings: []. Registered design D1-D4; the certified instrument's gates were in charge and their flags are reported verbatim. Monthly causes {1: 'not_drift', 2: 'not_drift', 3: 'not_drift', 4: 'not_drift', 5: 'UNSTABLE', 6: 'not_drift', 7: 'clean'} — 'drift' = anomaly resolves when day order is shuffled; 'month_specific' = anomaly SURVIVES the shuffle, so it is a property of that month (thin n, price distribution), NOT drift."
 }

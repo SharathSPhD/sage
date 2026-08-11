@@ -156,5 +156,6 @@ __all__ = [
     "TNTPGridBuilder",
     "TNTPLoader",
     "load_best_known_flows",
+    "load_sioux_falls",
     "routing_network_from_tntp",
 ]

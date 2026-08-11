@@ -11,6 +11,7 @@ from __future__ import annotations
 from datetime import UTC, date, datetime
 from itertools import pairwise
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import strataq
@@ -27,8 +28,8 @@ UNIT = "domains.electricity.quench"
 
 
 def day_windows(
-    ts: list, prices: list[float], boundaries: list[int], n_bins: int
-) -> tuple[list[np.ndarray], int, int, list]:
+    ts: list[datetime], prices: list[float], boundaries: list[int], n_bins: int
+) -> tuple[list[np.ndarray], int, int, list[date]]:
     """(windows per hold, n_states, n_days_dropped): days as trajectories.
 
     Each complete 24-hour day is phase-embedded on its own (23 samples after
@@ -60,7 +61,12 @@ def day_windows(
     return windows, n_states, dropped, sorted(complete)[:-1]
 
 
-def read(windows: list[np.ndarray], n_states: int, durations: list[float], cfg: dict) -> HSEstimate:
+def read(
+    windows: list[np.ndarray],
+    n_states: int,
+    durations: list[float],
+    cfg: dict[str, Any],
+) -> HSEstimate:
     return hs_y_estimate(
         windows,
         n_states=n_states,
@@ -102,7 +108,13 @@ def main() -> int:
         block_means.append(eb.mean_y)
     blk_lo, blk_hi = (float(q) for q in np.quantile(block_means, [0.025, 0.975]))
 
-    # monthly anomaly scan (red-team: regime mixing) — group day indices by month
+    # monthly anomaly scan (red-team round 1: regime mixing) PLUS the
+    # SHUFFLE CONTROL (red-team round 2): re-reading each month with the day
+    # ORDER randomised destroys temporal drift while preserving the month's
+    # thinness and price distribution. An anomaly that SURVIVES the shuffle is
+    # therefore NOT drift — it is a month-specific statistical property. This
+    # control is what separates the two causes, and it is the reason the
+    # finding's headline had to be stratified rather than unified.
     months = sorted({d.month for d in month_of})
     monthly = {}
     for mth in months:
@@ -110,7 +122,22 @@ def main() -> int:
         if len(sel) < 20:
             continue
         em = read([w[sel] for w in windows], n_states, durations, cfg)
-        monthly[mth] = (em.ift_estimate, float(any("ANOMALY" in x for x in em.warnings)))
+        anomaly = float(any("ANOMALY" in x for x in em.warnings))
+        shuf = rng.permutation(sel)
+        es = read([w[shuf] for w in windows], n_states, durations, cfg)
+        anomaly_shuffled = float(any("ANOMALY" in x for x in es.warnings))
+        # Four outcomes, and the fourth is the decisive one:
+        #   anomaly & !shuffled -> "drift"      (resolves when order dies)
+        #   anomaly &  shuffled -> "not_drift"  (survives order destruction)
+        #  !anomaly &  shuffled -> "UNSTABLE"   (the flag FLIPS under a
+        #       permutation that cannot change any physical property — the
+        #       month's read is sampling noise, not structure)
+        #  !anomaly & !shuffled -> "clean"
+        if anomaly:
+            cause = "drift" if not anomaly_shuffled else "not_drift"
+        else:
+            cause = "UNSTABLE" if anomaly_shuffled else "clean"
+        monthly[mth] = (em.ift_estimate, anomaly, anomaly_shuffled, cause)
 
     def block(e: HSEstimate, label: str) -> dict[str, float]:
         return {
@@ -148,6 +175,11 @@ def main() -> int:
             "blockboot_ci_high": blk_hi,
             **{f"month{m:02d}_ift": v[0] for m, v in monthly.items()},
             **{f"month{m:02d}_anomaly": v[1] for m, v in monthly.items()},
+            **{f"month{m:02d}_anomaly_shuffled": v[2] for m, v in monthly.items()},
+            "n_months_drift": float(sum(1 for v in monthly.values() if v[3] == "drift")),
+            "n_months_not_drift": float(sum(1 for v in monthly.values() if v[3] == "not_drift")),
+            "n_months_unstable": float(sum(1 for v in monthly.values() if v[3] == "UNSTABLE")),
+            "n_months_clean": float(sum(1 for v in monthly.values() if v[3] == "clean")),
         },
         effect_sizes=[
             EffectSize(
@@ -177,7 +209,11 @@ def main() -> int:
         notes=(
             f"R7 verdict: {verdict}. Full-window warnings: {full.warnings}. "
             "Registered design D1-D4; the certified instrument's gates were in "
-            "charge and their flags are reported verbatim."
+            "charge and their flags are reported verbatim. Monthly causes "
+            + str({m: v[3] for m, v in monthly.items()})
+            + " — 'drift' = anomaly resolves when day order is shuffled; "
+            "'month_specific' = anomaly SURVIVES the shuffle, so it is a "
+            "property of that month (thin n, price distribution), NOT drift."
         ),
     )
     path = RESULTS / "day_quench_read.json"
