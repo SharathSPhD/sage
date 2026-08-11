@@ -319,3 +319,8 @@
 
 - v2 registration (commit landed pre-run) passed C1–C5 (one recorded C4 probe-point escalation out of the measured marginal zone; calibration 20/20). Fresh red-team's two blocking conditions closed and verified in-repo: the IFT anomaly companion PROVEN to fire on a continuous-ramp non-stepwise input (CI [1.03, 1.10] excludes 1 — permanent test), and the unit/scope contracts made explicit (mandatory λ₀ window, one-time-unit rule with worked example, validated scope 2×2 α∈{0, 0.25} n≥200).
 - Verdict GRANTED, zero remaining objections, banner LIFTED. F-0016 closed: two refuted hypotheses, one found-and-fixed bug, five recorded escalations, two red-team rounds — the adversarial machinery converged.
+
+## 2026-08-12 (cont.) — continuous-build surfaces for the 23rd gate
+
+- p3 §protocols gains the data-side quench paragraph (the certification arc in miniature + the gap-collapse consequence: quench dissipation is hardest to measure exactly where strategic systems are most interesting). 10 pages.
+- /findings gains the F-0016 card ("The estimator that had to earn it" — withheld → certified).
