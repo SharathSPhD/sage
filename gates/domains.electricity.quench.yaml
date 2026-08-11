@@ -30,9 +30,14 @@ gates:
     changelog_entry: true
 
   adversarial:
-    red_team_signoff: false  # round 2 GRANTED-CONDITIONAL; the condition was
-    # met by implementing the shuffle control, whose result overturned BOTH
-    # sides' interpretation — returned to the reviewer for the final call.
+    # Round 1 WITHHELD (four blocking objections) -> round 2
+    # GRANTED-CONDITIONAL (shuffle control demanded) -> round 3 GRANTED after
+    # the control was implemented as a seeded permanent metric. The reviewer
+    # verified the closure alignment (mean_y 7.000012), the block-bootstrap
+    # width ratio (1.57x, consistent with rho ~ 0.6), and diagnosed why their
+    # own one-off shuffle disagreed: it consumed RNG state after the 200-draw
+    # block bootstrap, so the seeded artifact control is authoritative.
+    red_team_signoff: true
     objections:
       - id: O-1
         text: "BLOCKING (round 1): the diurnal protocol is circular; the open-chain framing half-counted it (+3.7 nats/day missing)"

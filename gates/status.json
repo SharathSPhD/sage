@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T21:10:38+00:00",
+  "generated_at": "2026-08-11T21:12:51+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -327,17 +327,15 @@
       "unit": "domains.electricity.quench",
       "claim": "THIRD revision after two red-team rounds (both overturned the headline; the arc is in F-0017). The unit claims exactly one in-scope number and one negative result: (1) the closed daily-loop affinity of 211 CAISO DAM day-pairs, Y_loop ~ 7.0 nats/day with day-block bootstrap [6.22, 8.50] \u2014 DESCRIPTIVE only (6 states extends rather than inherits the 4-state certification; the IFT companion cannot constrain a closed cycle); (2) the monthly scan supports NO causal statement \u2014 a seeded shuffle control (permanent artifact metric) attributes 0/7 months to temporal drift, and one month s anomaly flag FLIPS under a physically-null permutation, so monthly reads at n~30 are sampling noise. The earlier drift diagnosis is retracted; answering the premise needs small-n certification or coarser windows",
       "tier": "derived",
-      "green": false,
+      "green": true,
       "sections": {
         "code": [],
         "domain": [],
         "statistical": [],
         "documentation": [],
-        "adversarial": [
-          "red_team_signoff: not granted"
-        ]
+        "adversarial": []
       },
-      "checked_at": "2026-08-11T21:10:38+00:00"
+      "checked_at": "2026-08-11T21:12:51+00:00"
     }
   }
 }
