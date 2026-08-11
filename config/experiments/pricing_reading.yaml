@@ -1,0 +1,21 @@
+# Dominick's pricing readings — unit domains.pricing.
+defaults:
+  - _self_
+
+seed: 20260811
+brands: { campbell: 51000, progresso: 41196 }
+exclude_sale: true
+
+passthrough:
+  bootstrap: 500
+  # Ex-ante prediction (stated before the run): a single retailer managing
+  # one category toward one objective should show near-SYMMETRIC cross-brand
+  # cost pass-through (potential-like, small R); a large R falsifies the
+  # single-objective category-management model.
+  symmetric_R_max: 0.35
+
+edgeworth:
+  n_stores: 30
+  n_bins: 3
+  surrogates: 150
+  alpha: 0.01

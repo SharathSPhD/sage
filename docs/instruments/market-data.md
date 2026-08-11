@@ -55,3 +55,7 @@ informational reports, paced requests with backoff, local caching).
 Artifacts: `electricity_irreversibility_dam.json`,
 `electricity_irreversibility_rtm.json` (regenerate: `make reproduce`; the
 CAISO cache makes reruns cheap and identical).
+
+## The reciprocity meter's first empirical read (unit domains.pricing, F-0011)
+
+From the Dominick's canned-soup panel (HF `qbz506/dreamprice-dominicks-cso`; single-chain scanner data): own-cost pass-through 1.07 (Campbell) and 0.97 (Progresso); cross terms 0.003 and 0.0005 with the asymmetry CI covering zero; **ℛ = 0.0011 [0.00005, 0.005]** by cluster bootstrap over 86 stores, re-demeaned within every resample (the within transform is part of the estimator, so it resamples too). The ex-ante prediction — stated in config before the run — was exactly this: one retailer pricing both brands toward one category objective must respond symmetrically, so the meter should read ≈ 0. It does. The multi-agent reciprocity question needs cross-chain data; this dataset cannot ask it, and the finding says so. Companion scan: 0/30 stores show Edgeworth irreversibility in weekly category indices vs the reversibilized-Markov null (0.3 false positives expected) — at-null, conservative under the sample's week gaps.

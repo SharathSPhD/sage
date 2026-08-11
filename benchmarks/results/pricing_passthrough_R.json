@@ -1,0 +1,38 @@
+{
+  "benchmark_id": "pricing_passthrough_R",
+  "unit": "domains.pricing",
+  "kind": "statistical",
+  "passed": true,
+  "metrics": {
+    "chi_cc": 1.0697300337918385,
+    "chi_cp": 0.0028269924886687265,
+    "chi_pc": 0.0005364200045461061,
+    "chi_pp": 0.9684883165285852,
+    "R_empirical": 0.0011224257982100365,
+    "R_ci_low": 0.00004778562071941612,
+    "R_ci_high": 0.004993334763269472,
+    "asymmetry": 0.0022905724841226203,
+    "asymmetry_ci_low": -0.005056128695759886,
+    "asymmetry_ci_high": 0.010199798293663674,
+    "symmetric_verdict": 1.0,
+    "n_store_weeks": 22655.0,
+    "n_stores": 86.0
+  },
+  "effect_sizes": [
+    {
+      "name": "empirical reciprocity defect R (2-brand pass-through)",
+      "value": 0.0011224257982100365,
+      "ci_low": 0.00004778562071941612,
+      "ci_high": 0.004993334763269472,
+      "ci_level": 0.95,
+      "method": "cluster bootstrap over stores (500 resamples)"
+    }
+  ],
+  "n": 22655,
+  "n_justification": "22655 store-weeks with both brand indices present across 86 stores; two-way (store, week) demeaning; cluster bootstrap respects within-store dependence.",
+  "seed": 20260811,
+  "config_ref": "config/experiments/pricing_reading.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-11T05:55:26+00:00",
+  "notes": "The programme's N2 promise on real data: R from cross-brand wholesale-cost pass-through. IDENTIFICATION HONESTY: this is ONE retailer pricing both brands (category management), so the ex-ante prediction — stated in the config before the run — is near-SYMMETRIC cross-pass-through (potential-like, small R with CI covering zero asymmetry); a large R would falsify the single-objective model of category pricing. Regular (non-sale) prices only; brand indices are store-week means over each manufacturer's UPCs (gap-tolerant to the HF row subsample)."
+}

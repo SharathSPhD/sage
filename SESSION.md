@@ -231,3 +231,11 @@
 ## 2026-08-11 (cont.) — A5: the 5-minute tour live
 
 - /story: five narrative beats ("landscape or whirlpool?") threading the existing panels — noise dial, the loop, still-vs-turning water, the poke trick, real systems — ending at the Lab; landing hero leads with the tour. App workstream A1–A5 complete (Blotto lab the one optional remainder).
+
+## 2026-08-11 (cont.) — R4: domains.pricing GREEN (17th gate) — F-0011, the reciprocity meter's first empirical read
+
+- HF Dominick's panel (`qbz506/dreamprice-dominicks-cso`, per the PI: use what's on HF) → gap-tolerant loader (margin-window cleaning, cost from gross margin), brand indices, category series; 3 tests.
+- **F-0011**: Campbell↔Progresso cross-brand cost pass-through, two-way demeaned, cluster-bootstrapped (re-demeaned per resample): own 1.07/0.97, cross ~0.003/0.0005, asymmetry CI ∋ 0, **ℛ_emp = 0.0011 [0.00005, 0.005]** — the single-retailer symmetry prediction stated in config before the run, confirmed. N2 executed; C2's first empirical anchor. Edgeworth scan 0/30 at-null (lag-1 ac ≈ 0.57, so it's about price dynamics, not basket noise).
+- χ row-ordering bug caught by economic sanity inspection pre-review; disclosed in F-0011.
+- Red-team granted after one blocking condition (bootstrap re-demeaning — closed by strengthening, CI unchanged); the mechanical-correlation attack on cost=price·(1−margin) CLEARED numerically (residual corr 0.94–0.96, margin CV 0.26–0.35). O-1..O-4 dispositions in the gate.
+- App surface: /findings gains the F-0011 card + a predict-then-reveal empirical pass-through matrix panel (committed-artifact provenance badge).

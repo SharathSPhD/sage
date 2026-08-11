@@ -10,7 +10,7 @@ export function PanelShell({
   children,
 }: {
   title: string;
-  provenance: "client" | "live";
+  provenance: "client" | "live" | "artifact";
   children: React.ReactNode;
 }) {
   return (
@@ -20,7 +20,11 @@ export function PanelShell({
           ▶ try it · {title}
         </div>
         <span className="badge" data-tone={provenance === "live" ? "ok" : undefined}>
-          {provenance === "live" ? "live float64 solver" : "in-browser · goldens-checked"}
+          {provenance === "live"
+            ? "live float64 solver"
+            : provenance === "artifact"
+              ? "committed artifact · seeded"
+              : "in-browser · goldens-checked"}
         </span>
       </div>
       <div style={{ marginTop: "0.9rem" }}>{children}</div>

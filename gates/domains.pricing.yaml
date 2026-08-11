@@ -1,0 +1,55 @@
+unit: domains.pricing
+claim: "The reciprocity meter's first empirical measurement: from the PI's HF Dominick's panel (gap-tolerant brand-level indices, two-way demeaning, cluster bootstrap over 86 stores), cross-brand cost pass-through is near-perfectly reciprocal (R = 0.0011 [0.0001, 0.005], asymmetry CI covering zero) — confirming the ex-ante single-retailer prediction stated in config before the run; and 30 stores' weekly category price indices are at-null for Edgeworth irreversibility (0/30 vs 0.3 expected false positives, conservative under subsample gaps)"
+tier: derived
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.85
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/domains/pricing/dominicks.py
+      - packages/strataq/strataq/domains/pricing/__init__.py
+      - packages/strataq/tests/domains/test_pricing.py
+
+  domain:
+    - id: pricing_passthrough_R
+      spec: "own pass-through in [0.7, 1.3] both brands; asymmetry CI covers zero; R with cluster-bootstrap CI reported; ex-ante symmetric prediction adjudicated"
+      artifact: benchmarks/results/pricing_passthrough_R.json
+    - id: pricing_edgeworth_scan
+      spec: "per-store Markov-null scan across >=25 stores with detection count vs alpha*n"
+      artifact: benchmarks/results/pricing_edgeworth_scan.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/instruments/market-data.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: true
+    objections:
+      - id: O-1
+        text: "BLOCKING: cluster bootstrap resampled already-demeaned rows; the within transform is part of the estimator and must be recomputed per resample"
+        disposition: addressed
+        where: "Bootstrap now resamples the raw joined panel, relabels duplicated store draws as distinct clusters, and re-demeans within every resample (experiments/pricing_reading.py). R CI moved [0.0001, 0.0050] -> [0.00005, 0.0050]; asymmetry CI unchanged to 4 decimals — the red-team's mitigation analysis (between-store demeaning variation ~1e-5 after convergence) confirmed"
+      - id: O-2
+        text: "MUST-ADDRESS: mechanical-correlation trap — COST is derived from PRICE (cost = price*(1-margin)), so own pass-through ~1 could be the accounting identity, not economics"
+        disposition: addressed
+        where: "Cleared numerically by the red-team: residual price-cost correlation after two-way demeaning is 0.94-0.96 (not ~1), univariate R^2 ~0.90, margin CV 0.26-0.35 — identification comes from idiosyncratic margin movement; the cross terms use the OTHER brand's cost and are never mechanically linked, so R survives regardless. Recorded in F-0011"
+      - id: O-3
+        text: "NOTE: the 'ex-ante' config prediction is same-session (config mtime 81s before results), not externally pre-registered; and single-retailer symmetry is exact only under a symmetric demand Jacobian"
+        disposition: accepted
+        where: "Wording locked to 'stated in config before the run' (never 'pre-registered') across findings/docs; the demand-symmetry caveat is on record in F-0011 — the observed near-zero cross terms make R ~ 0 robust to it. Standing rule for future empirical units: pre-register predictions in a separately committed doc"
+      - id: O-4
+        text: "NOTE: the Edgeworth at-null could be basket-composition noise rather than price dynamics"
+        disposition: addressed
+        where: "Refuted numerically: category-series lag-1 autocorrelation ~0.57 across stores — persistent signal, not white basket churn; week gaps bias toward reversibility so non-detections are conservative. Recorded in F-0011"

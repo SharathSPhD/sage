@@ -1,0 +1,18 @@
+config:
+  brands:
+    campbell: 51000
+    progresso: 41196
+  defaults:
+  - _self_
+  edgeworth:
+    alpha: 0.01
+    n_bins: 3
+    n_stores: 30
+    surrogates: 150
+  exclude_sale: true
+  passthrough:
+    bootstrap: 500
+    symmetric_R_max: 0.35
+  seed: 20260811
+library_version: 0.1.0.dev0
+run_at: '2026-08-11T05:54:27+00:00'

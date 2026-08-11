@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T03:49:43+00:00",
+  "generated_at": "2026-08-11T05:55:42+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -224,6 +224,20 @@
         "adversarial": []
       },
       "checked_at": "2026-08-11T03:49:43+00:00"
+    },
+    "domains.pricing": {
+      "unit": "domains.pricing",
+      "claim": "The reciprocity meter's first empirical measurement: from the PI's HF Dominick's panel (gap-tolerant brand-level indices, two-way demeaning, cluster bootstrap over 86 stores), cross-brand cost pass-through is near-perfectly reciprocal (R = 0.0011 [0.0001, 0.005], asymmetry CI covering zero) \u2014 confirming the ex-ante single-retailer prediction stated in config before the run; and 30 stores' weekly category price indices are at-null for Edgeworth irreversibility (0/30 vs 0.3 expected false positives, conservative under subsample gaps)",
+      "tier": "derived",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-11T05:55:42+00:00"
     }
   }
 }

@@ -9,6 +9,16 @@ export interface Charts {
   frontier: { alphas: number[]; lambda_c: number[] };
   estimators: { alphas: number[]; exact: number[]; kld: number[]; tur_ci_low: number[] };
   crossover_signs: { lambdas: number[]; corr_a095: number[]; m4_a095: number };
+  passthrough: {
+    chi: number[][];
+    R: number;
+    R_ci: number[];
+    asym_ci: number[];
+    n_stores: number;
+    n_store_weeks: number;
+    edgeworth_detections: number;
+    edgeworth_tested: number;
+  };
 }
 
 type Tone = "ok" | "warn" | "hot" | undefined;
@@ -30,6 +40,7 @@ const FINDINGS: {
   { id: "F-0008", kind: "certified null + retraction", tone: "warn", title: "Value-space blindness, and a retracted claim", body: "Price-value discretization is provably blind to loop irreversibility; an intermediate 'certified null' claim was retracted on adversarial review when the null class failed to bracket the data. The retraction is part of the record.", playable: { href: "/markets", label: "markets" } },
   { id: "F-0009", kind: "detection", tone: "ok", title: "The day-ahead market is a driven cycle", body: "Against a persistence-matched reversible null: pair-level detailed balance violated at ~1.1 nats/day (p < 0.01), concentrated in scarcity weeks; verified for null validity, FPR, seeds, bins, ties, multiple testing, and order-2 leakage.", playable: { href: "/markets", label: "markets" } },
   { id: "F-0010", kind: "failed criterion → finding", tone: "warn", title: "Universal collapse, λ-dependent sign", body: "The initial criterion (reversal in ≥3/4 conditions) failed 2/4 — and the failure is the finding: what's universal at α = 0.95 is decorrelation; anti-alignment is a λ-amplified second effect within ~2 null-SD per point." },
+  { id: "F-0011", kind: "empirical read", tone: "ok", title: "The reciprocity meter's first real-data read: ℛ ≈ 0.001", body: "Cross-brand wholesale-cost pass-through (Campbell ↔ Progresso, Dominick's scanner panel, 86 stores): the prediction stated in config before the run — one retailer pricing both brands must respond symmetrically — confirmed. Own pass-through 1.07/0.97, asymmetry CI covering zero. A χ row-ordering bug caught pre-review is on the record." },
 ];
 
 function LineChart({
@@ -81,6 +92,73 @@ function LineChart({
         {x[0]} … {x[x.length - 1]}
       </text>
     </svg>
+  );
+}
+
+function PassthroughMatrix({ pt }: { pt: Charts["passthrough"] }) {
+  const [revealed, setRevealed] = useState(false);
+  const cell = (v: number, own: boolean) => (
+    <td
+      className="mono"
+      style={{
+        padding: "0.55rem 0.9rem",
+        textAlign: "right",
+        fontSize: "0.95rem",
+        color: own ? "var(--text)" : "var(--accent)",
+        borderTop: "1px solid var(--border)",
+      }}
+    >
+      {revealed ? v.toFixed(4) : "?"}
+    </td>
+  );
+  return (
+    <PanelShell title="F-0011 · the empirical pass-through matrix" provenance="artifact">
+      <p style={{ fontSize: "0.85rem", color: "var(--text-dim)", marginTop: 0 }}>
+        Poke Campbell&apos;s wholesale cost, read both shelf prices; poke Progresso&apos;s, read
+        both again. That is the poke panel&apos;s procedure run on {pt.n_store_weeks.toLocaleString()}{" "}
+        real store-weeks. One retailer prices both brands — so before revealing: should the two{" "}
+        <em>cross</em>-readings agree (a landscape) or disagree (a whirlpool)?
+      </p>
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ borderCollapse: "collapse", margin: "0.3rem 0" }}>
+          <thead>
+            <tr>
+              {["∂ log p / ∂ log c", "Campbell cost", "Progresso cost"].map((h) => (
+                <th key={h} className="mono" style={{ padding: "0.35rem 0.9rem", fontSize: "0.72rem", color: "var(--text-faint)", textAlign: "right", fontWeight: 400 }}>
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="mono" style={{ padding: "0.55rem 0.9rem", fontSize: "0.78rem", color: "var(--text-faint)", borderTop: "1px solid var(--border)" }}>Campbell price</td>
+              {cell(pt.chi[0][0], true)}
+              {cell(pt.chi[0][1], false)}
+            </tr>
+            <tr>
+              <td className="mono" style={{ padding: "0.55rem 0.9rem", fontSize: "0.78rem", color: "var(--text-faint)", borderTop: "1px solid var(--border)" }}>Progresso price</td>
+              {cell(pt.chi[1][0], false)}
+              {cell(pt.chi[1][1], true)}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {revealed ? (
+        <p style={{ fontSize: "0.78rem", color: "var(--text-faint)", margin: "0.4rem 0 0" }}>
+          Own pass-through is textbook (≈ 1); the cross terms are tiny and their{" "}
+          <em>difference</em> has CI [{pt.asym_ci[0]}, {pt.asym_ci[1]}] ∋ 0 — so ℛ ={" "}
+          <strong>{pt.R}</strong> [{pt.R_ci[0]}, {pt.R_ci[1]}], cluster-bootstrapped over{" "}
+          {pt.n_stores} stores. A landscape, exactly where a single-retailer category objective
+          demands one. Companion scan: {pt.edgeworth_detections}/{pt.edgeworth_tested} stores
+          show Edgeworth-cycle irreversibility in weekly category indices — at-null.
+        </p>
+      ) : (
+        <button data-primary="true" onClick={() => setRevealed(true)}>
+          I&apos;ve committed to a guess — reveal the matrix
+        </button>
+      )}
+    </PanelShell>
   );
 }
 
@@ -147,6 +225,8 @@ export function FindingsGallery({ charts }: { charts: Charts }) {
           </p>
         </PanelShell>
       </div>
+
+      <PassthroughMatrix pt={charts.passthrough} />
 
       <PanelShell title="thermo.estimators · data-side meters vs the exact one" provenance="client">
         <LineChart

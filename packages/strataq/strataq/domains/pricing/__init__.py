@@ -1,5 +1,10 @@
-"""Domain plugin 'pricing' — not yet implemented.
+"""Pricing domain: Dominick's scanner data through the instruments (loader slice)."""
 
-When it lands, this module exports exactly one object: PLUGIN, a
-strataq.core.protocols.DomainPlugin. Five things, zero core changes.
-"""
+from strataq.domains.pricing.dominicks import (
+    brand_index,
+    category_price_series,
+    load_panel,
+    load_panel_with_stats,
+)
+
+__all__ = ["brand_index", "category_price_series", "load_panel", "load_panel_with_stats"]
