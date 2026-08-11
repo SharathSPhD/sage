@@ -117,3 +117,10 @@ Entry format:
 - Criterion revision (documented, not silent): the artifact's pass criterion is revised from "reversal in ≥3/4 conditions" to "collapse (corr < 0.35 at α=0.95) in ALL conditions, with the sign pattern recorded as data"; the original criterion and its failure are in this entry and the artifact notes.
 - Chase status: parked with a sharp question for p3: is sign(corr at α=0.95) a function of distance INTO the wedge (ρ−1) rather than of λ per se? One regression on existing per-game data would answer it.
 - Resolution / follow-up: p3_noneq decoupling section gains the λ-gradient; C1's crossover row in claims.md updated.
+
+### F-0010 addendum — the wedge-depth hypothesis REFUTED (the last open chase of this run)
+
+- Date: 2026-08-11
+- Test: pooled per-game (ρ(SB), EPR, ℛ) at α=0.95 across λ∈{0.8,1.2,2.0}, 60 games each (same seeds as the crossover sweep).
+- Observed: **0 of 180 games are supercritical** at these λ (consistent with the measured frontier: λ_c(0.80)≈3.0 descending ⇒ λ_c(0.95) still above 2). Yet the within-level sign flips with λ across exactly these conditions (+0.25 → +0.03 → −0.23). Conclusion: the F-0004/F-0010 decoupling and its λ-dependent sign occur ENTIRELY OUTSIDE the supercritical wedge — wedge depth is not the driver, and F-0006's "suspicious coincidence" (decoupling regime sitting inside the wedge on the coarse map) was a coincidence of the coarse grid's λ range, not a mechanism. The remaining candidate driver is λ-dependent equilibrium concentration itself (C shrinking, reweighting the χ scale) — a p3 discussion point, not a claim.
+- Methods note: a pooled-across-λ Spearman (+0.89) was computed and DISCARDED as λ-confounded (both meters grow with λ) — the same confound F-0004 taught us marginally over α; recorded so nobody re-runs the wrong cut.
