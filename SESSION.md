@@ -260,3 +260,9 @@
 - Red-team WITHHELD first pass (usage attack): NaN computed through silently, constant series gave a vacuous verdict, noisy χ classified against hard thresholds with no uncertainty. All closed by strengthening: loud validation everywhere, chi_se → Monte-Carlo CI with a verdict that refuses to classify across bands, measured power documented (≥80% at n≥300). 17 tests; acceptance artifact reproduces F-0011's number through the public contract.
 - Packaging: README quickstart rewritten for adopters; tag-triggered PyPI trusted-publishing workflow (wheel build verified). Operator action for the PI: create the `strataq` project on pypi.org and add this repo/workflow as a trusted publisher — then `git tag strataq-v0.1.0` publishes.
 - Claims ledger gains the Product claims section (P1: facade fidelity, falsifiable).
+
+## 2026-08-12 (cont.) — P1 complete: the product surface is live end to end
+
+- /v1/toolkit/{reciprocity, irreversibility, rationality} deployed to the micro VM (validation as 422s, warnings in every response); live check reproduces F-0011 (r = 0.00113) over HTTP with the point-read honesty verdict.
+- /tools ("Your data") live in the app: paste-a-series irreversibility verdict + χ-matrix reciprocity read with optional SEs, defaults set to the real Dominick's estimates; nav updated; Vercel auto-deploys.
+- Remaining PI click for full PyPI publication: create the strataq project on pypi.org with this repo/workflow as trusted publisher, then `git tag strataq-v0.1.0 && git push --tags`.
