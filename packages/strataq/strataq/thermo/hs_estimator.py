@@ -105,6 +105,9 @@ class HSEstimate:
     ift_estimate: float
     ift_ci_low: float
     ift_ci_high: float
+    boot_se: float  # bootstrap SE of mean_y — the baseline an interval's
+    # half-width should be compared against; a much wider interval buys
+    # coverage with uselessness (R8 red-team objection 2)
     usable: bool  # the IFT diagnostic passed; only then quote mean_y
     n_trajectories: int
     warnings: list[str] = field(default_factory=list)
@@ -152,6 +155,7 @@ def hs_y_estimate(
     relax_safety: float = 4.0,
     ift_tolerance: float = 0.05,
     ci_level: float = 0.95,
+    interval_method: str = "percentile",
 ) -> HSEstimate:
     """Estimate ⟨Y⟩ from per-hold observed state windows.
 
@@ -172,6 +176,24 @@ def hs_y_estimate(
     states, n_trajectories ≥ 200; the relaxation-time underestimate is
     game-dependent and only measured there — treat other games' gate
     margins as unverified.
+
+    ``interval_method`` selects the CI construction: ``percentile`` (the
+    certified incumbent), ``bootstrap_t`` (studentised — the principled
+    small-n route, since the bootstrap itself estimates the pivot's tail
+    shape), or ``t_widened``. **``t_widened`` is an admitted HEURISTIC**: it
+    scales a nonparametric percentile half-width by the parametric ratio
+    t_{n-1}/z, mixing frameworks without theoretical justification, and it
+    is retained only as an empirical comparator (R8 red-team objection 4).
+    Its validity is whatever the registered coverage evidence says. Compare
+    any interval's half-width against ``boot_se``: coverage bought by
+    unbounded width is not usable precision.
+
+    S3 note (R8 red-team objection 3): the flag-stability criterion permutes
+    trajectory ORDER, which is null for the physics but NOT for this
+    estimator's machinery — the relaxation SE comes from a 4-way split
+    (``window[i::4]``), so a permutation reassigns split groups. A flip
+    therefore indicts the JOINT system (physics + SE estimation), not
+    physical nullity alone.
 
     **The primary usability gate** (F-0016): with ``hold_durations`` (the τ
     of each hold, in the same time units the data was sampled at), every
@@ -233,8 +255,37 @@ def hs_y_estimate(
         boot_y[b] = float(np.mean(yb))
         boot_ift[b] = float(np.mean(np.exp(-yb)))
     tail = (1.0 - ci_level) / 2.0
+    if interval_method not in ("percentile", "bootstrap_t", "t_widened"):
+        raise ValueError(
+            f"interval_method must be percentile | bootstrap_t | t_widened, got {interval_method!r}"
+        )
     y_lo, y_hi = (float(q) for q in np.quantile(boot_y, [tail, 1.0 - tail]))
     ift_lo, ift_hi = (float(q) for q in np.quantile(boot_ift, [tail, 1.0 - tail]))
+    if interval_method != "percentile":
+        # R8 small-n corrections. bootstrap_t: studentise the resample means
+        # by the resample SD, so the interval inherits the t-shape the CLT
+        # loses at small n. t_widened: keep the percentile shape but scale its
+        # half-width by t_{n-1}/z — the cheap correction, kept as a comparator
+        # so the choice is made on registered coverage, not on preference.
+        se_boot = float(np.std(boot_y, ddof=1))
+        if interval_method == "bootstrap_t" and se_boot > 0:
+            piv = (boot_y - mean_y) / se_boot
+            q_lo, q_hi = (float(q) for q in np.quantile(piv, [tail, 1.0 - tail]))
+            y_lo, y_hi = mean_y - q_hi * se_boot, mean_y - q_lo * se_boot
+        elif interval_method == "t_widened":
+            # Student-t / normal quantile ratio at n-1 df, computed from the
+            # t density by quadrature (no scipy dependency in the library)
+            dfree = max(n_traj - 1, 1)
+            grid = np.linspace(-12.0, 12.0, 240001)
+            dens = (1.0 + grid**2 / dfree) ** (-(dfree + 1) / 2.0)
+            cdf = np.cumsum(dens)
+            cdf /= cdf[-1]
+            t_q = float(np.interp(1.0 - tail, cdf, grid))
+            z_q = 1.959963984540054 if ci_level == 0.95 else t_q
+            scale = max(t_q / z_q, 1.0)
+            centre = 0.5 * (y_lo + y_hi)
+            half = 0.5 * (y_hi - y_lo) * scale
+            y_lo, y_hi = centre - half, centre + half
     # companion diagnostic — ROLE CHANGED with the relaxation gate primary
     # (F-0016 history): as an ANOMALY DETECTOR it flags only when the IFT CI
     # EXCLUDES 1 (gross violation: non-stepwise-stationary system or broken
@@ -278,6 +329,13 @@ def hs_y_estimate(
                 "settled; pi_hat is biased there and mean_y must not be quoted"
             )
     usable = relax_ok and ift_ok
+    if interval_method == "t_widened":
+        warnings.append(
+            "interval_method='t_widened' is a heuristic t/z widening of a "
+            "nonparametric percentile interval, not a justified method — it is "
+            "kept as an empirical comparator only; prefer 'bootstrap_t' unless "
+            "the registered coverage evidence says otherwise"
+        )
     if relax_ok and not ift_ok:
         warnings.append(
             "IFT companion ANOMALY: <e^{-Y_hat}> CI excludes 1 despite settled "
@@ -303,6 +361,7 @@ def hs_y_estimate(
         ift_estimate=ift,
         ift_ci_low=ift_lo,
         ift_ci_high=ift_hi,
+        boot_se=float(np.std(boot_y, ddof=1)),
         usable=usable,
         n_trajectories=n_traj,
         warnings=warnings,

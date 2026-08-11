@@ -37,3 +37,56 @@ coverage_band: [17, 20]
 gate_agreement_min: 18
 flag_flip_max: 1
 interval_candidates: [percentile, bootstrap_t, t_widened]
+
+# ============================================================================
+# AMENDMENTS (design red-team, dispatched BEFORE results and applied BEFORE
+# any verdict existed — the pre-amendment run was STOPPED mid-flight and its
+# verdict was never produced or read; this file is authoritative).
+# ============================================================================
+#
+# S1b (WIDTH GUARD — blocking objection 2): coverage alone is gameable, since
+#   an arbitrarily wide interval covers everything. A cell passes only if its
+#   MEDIAN half-width across seeds is <= max_width_times_se x the bootstrap SE
+#   of mean_y (now exposed as HSEstimate.boot_se). This kills "coverage bought
+#   by uselessness" and would catch a sign/scale bug in t_widened.
+max_width_times_se: 2.0
+#
+# SELECTION VALIDATION (blocking objection 1): 15 (n x method) cells are
+#   screened and the SMALLEST passing n is certified — a best-of-15 rule that
+#   passes by chance with near-certainty if a method merely undercovers a
+#   little. The winning cell must therefore REPEAT on a disjoint seed stream
+#   (fresh offset), passing S1 + S1b + S2 + S3 again, or the certification is
+#   refused. Chosen over a Bonferroni band because it tests the actual claim.
+selection_validation: held_out_confirmation
+holdout_seed_offset: 500000
+#
+# SCOPE VALIDATION (must-address objection 5): a floor certified at one
+#   (alpha, tau) would travel to CAISO data with different relaxation
+#   structure. The certified cell must ALSO hold coverage at a SECOND point.
+#   DEVIATION FROM THE REVIEWER'S LITERAL SUGGESTION, with reason: they
+#   proposed (alpha=0.25, tau=16), but the relaxation gate REFUSES tau=16 on
+#   this family (measured in the v2 certification), so coverage there is
+#   undefined and the test would be vacuous. Instead the secondary point is a
+#   DIFFERENT GAME at a settled hold — alpha=0.0, tau=150, admitted 4/4 in the
+#   v2 run — which tests exactly the transfer concern they raised (different
+#   relaxation structure), not merely a different tau.
+s1_scope_validation:
+  primary: { alpha: 0.25, tau: 32.0 }
+  secondary: { alpha: 0.0, tau: 150.0, steps_per_unit_time: 10, n_seeds: 8 }
+  secondary_coverage_min_fraction: 0.75
+#
+# INTERPRETATION NOTES (must-address objections 3, 4 and the two notes; no
+# criterion changes, but the verdict must be read with these in mind):
+#   S2_interpretation: gate agreement measures the usability gate's STABILITY
+#     across n, not coverage. S1 and S2 are logically independent: a perfectly
+#     stable gate can admit under-relaxed holds.
+#   S3_interpretation: the trajectory-order permutation is null for the
+#     physics but NOT for the 4-way-split SE machinery, so a flip indicts the
+#     joint system. At n=30 each split group holds ~7 trajectories and the
+#     group-level SE carries O(20%) noise of its own.
+#   t_widened: an admitted heuristic (nonparametric interval scaled by a
+#     parametric t/z ratio); retained as an empirical comparator only, and it
+#     now emits a warning saying so. bootstrap_t is the principled route.
+#   quadrature: the Student-t CDF is integrated on a 240k grid; measured error
+#     < 5e-5 for n >= 10 (about 5e-3 at n=5), so it is immaterial over the
+#     tested n_grid, whose floor is 20.

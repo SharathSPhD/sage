@@ -122,3 +122,84 @@ class TestAnomalyDetector:
         assert not est.usable
         assert not (est.ift_ci_low <= 1.0 <= est.ift_ci_high)  # the CI EXCLUDES 1
         assert any("ANOMALY" in w for w in est.warnings)
+
+
+class TestIntervalMethods:
+    """R8: the interval method becomes selectable so small-n coverage can be
+    certified (or refused) on evidence rather than by preference. The
+    percentile bootstrap is the incumbent; bootstrap-t studentises each
+    resample; t_widened scales the percentile half-width by the Student-t
+    quantile for n-1 df (the small-n correction)."""
+
+    def test_all_methods_agree_at_large_n(self):
+        """At n=400 the three intervals must be close — a method that moves
+        the answer where the CLT already holds is suspect."""
+        proto = _proto(32.0)
+        windows = sample_quench_states(
+            GAME, proto, n_trajectories=400, steps_per_unit_time=25, seed=11
+        )
+        widths = {}
+        for method in ("percentile", "bootstrap_t", "t_widened"):
+            est = hs_y_estimate(
+                windows,
+                n_states=4,
+                hold_durations=[32.0] * len(windows),
+                interval_method=method,
+            )
+            widths[method] = est.mean_y_ci_high - est.mean_y_ci_low
+        base = widths["percentile"]
+        for method, w in widths.items():
+            assert 0.5 * base <= w <= 2.0 * base, (method, widths)
+
+    def test_t_widened_is_wider_at_small_n(self):
+        """The correction must actually widen where it is meant to."""
+        proto = _proto(32.0)
+        windows = sample_quench_states(
+            GAME, proto, n_trajectories=25, steps_per_unit_time=25, seed=12
+        )
+        kw = {"n_states": 4, "hold_durations": [32.0] * len(windows)}
+        pct = hs_y_estimate(windows, interval_method="percentile", **kw)
+        wide = hs_y_estimate(windows, interval_method="t_widened", **kw)
+        assert (wide.mean_y_ci_high - wide.mean_y_ci_low) > (pct.mean_y_ci_high - pct.mean_y_ci_low)
+
+    def test_unknown_method_raises(self):
+        proto = _proto(32.0)
+        windows = sample_quench_states(
+            GAME, proto, n_trajectories=25, steps_per_unit_time=25, seed=13
+        )
+        try:
+            hs_y_estimate(
+                windows,
+                n_states=4,
+                hold_durations=[32.0] * len(windows),
+                interval_method="wishful",
+            )
+        except ValueError as e:
+            assert "interval_method" in str(e)
+        else:
+            raise AssertionError("unknown interval method must raise")
+
+    def test_boot_se_exposed_and_width_comparable(self):
+        """R8 objection 2: callers must be able to guard interval
+        informativeness, so the bootstrap SE is part of the read."""
+        proto = _proto(32.0)
+        windows = sample_quench_states(
+            GAME, proto, n_trajectories=60, steps_per_unit_time=25, seed=14
+        )
+        est = hs_y_estimate(windows, n_states=4, hold_durations=[32.0] * len(windows))
+        assert est.boot_se > 0.0
+        half = 0.5 * (est.mean_y_ci_high - est.mean_y_ci_low)
+        assert half <= 4.0 * est.boot_se  # sane percentile interval
+
+    def test_t_widened_warns_about_being_heuristic(self):
+        proto = _proto(32.0)
+        windows = sample_quench_states(
+            GAME, proto, n_trajectories=25, steps_per_unit_time=25, seed=15
+        )
+        est = hs_y_estimate(
+            windows,
+            n_states=4,
+            hold_durations=[32.0] * len(windows),
+            interval_method="t_widened",
+        )
+        assert any("heuristic" in w for w in est.warnings)
