@@ -223,3 +223,7 @@
 ## 2026-08-11 (cont.) — A4 findings gallery live
 
 - /findings: all ten findings as status-chipped cards — discoveries, corrections, certified nulls, the refuted repair, the retraction, the failed-criterion finding, in equal typography — plus inline charts from committed artifacts (decoupling collapse behind a you-predict-it reveal, the λ_c frontier, estimator tracking) and play-with-it links. Deployed and verified.
+
+## 2026-08-11 (cont.) — p1_instruments v0.2 (10 pages)
+
+- New §"Estimating λ" (R1's four routes + honesty protocol, recovery numbers, ×91 mixture diagnostic, and the first-market-contact model rejection), cross-referencing p3 for the dissipation claims. v0.1 → v0.2.
