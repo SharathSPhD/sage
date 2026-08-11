@@ -11,6 +11,7 @@ const LINKS = [
   { href: "/markets", label: "Markets" },
   { href: "/findings", label: "Findings" },
   { href: "/tools", label: "Your data" },
+  { href: "/blotto", label: "Blotto" },
 ];
 
 export function NavLinks() {

@@ -236,3 +236,22 @@ def test_toolkit_rationality_flat_warns():
     )
     assert r.status_code == 200
     assert any("flat likelihood" in w for w in r.json()["warnings"])
+
+
+def test_blotto_read_symmetric():
+    r = client.post("/v1/domains/blotto/read", json={"budget_a": 3, "budget_b": 3})
+    assert r.status_code == 200
+    body = r.json()
+    assert abs(body["alpha"] - 0.69) < 0.05  # the F-0005 calibration number
+    assert body["epr"] is not None
+    assert abs(sum(body["sigma_a"]) - 1.0) < 1e-8
+    assert len(body["allocations_a"]) == len(body["sigma_a"])
+
+
+def test_blotto_large_budget_omits_epr_with_warning():
+    r = client.post("/v1/domains/blotto/read", json={"budget_a": 7, "budget_b": 7})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["epr"] is None
+    assert body["warnings"]
+    assert body["alpha"] > 0.0

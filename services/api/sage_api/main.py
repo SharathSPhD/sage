@@ -588,3 +588,61 @@ def toolkit_rationality(payload: ToolkitRationalityPayload) -> dict[str, Any]:
         "grid_resolved": est.grid_resolved,
         "warnings": est.warnings,
     }
+
+
+# ---------------------------------------------------------------------------
+# /v1/domains/blotto — the allocation lab's backend (plan-v2 A3 second half).
+# Budgets are the conjugate field: slide them and read alpha / R / EPR move.
+# ---------------------------------------------------------------------------
+
+
+class BlottoPayload(BaseModel):
+    budget_a: int = Field(ge=1, le=8)
+    budget_b: int = Field(ge=1, le=8)
+    n_fields: int = Field(default=3, ge=2, le=3)
+    field_values: list[float] | None = None
+    lam: float = Field(default=1.5, gt=0.0, le=20.0)
+
+
+@app.post("/v1/domains/blotto/read")
+def blotto_read(payload: BlottoPayload) -> dict[str, Any]:
+    """Full instrument read of a Colonel Blotto game at the given budgets.
+
+    Returns each player's QRE allocation mix (for the heatmap), alpha, R,
+    and — when the joint space fits the dense guard — the dissipation read.
+    """
+    from strataq.domains.blotto.oracle import BlottoOracle, blotto_game_tensors
+    from strataq.finite.decompose.hodge import alpha as harmonic_fraction
+    from strataq.finite.response.reciprocity import reciprocity_defect
+
+    values = payload.field_values or [1.0] * payload.n_fields
+    if len(values) != payload.n_fields:
+        raise HTTPException(status_code=422, detail="field_values length must equal n_fields")
+    oracle = BlottoOracle(jnp.asarray(values, dtype=jnp.float64))
+    u_a, u_b, grid_a, grid_b = blotto_game_tensors(oracle, (payload.budget_a, payload.budget_b))
+    game = DenseTensorGame((u_a, u_b))
+    n_states = len(grid_a) * len(grid_b)
+    point = logit_qre(game, payload.lam)
+    a_val = float(harmonic_fraction(game))
+    r_val = float(reciprocity_defect(game, point))
+    out: dict[str, Any] = {
+        "allocations_a": [list(g) for g in grid_a],
+        "allocations_b": [list(g) for g in grid_b],
+        "sigma_a": [float(x) for x in point.sigma[0]],
+        "sigma_b": [float(x) for x in point.sigma[1]],
+        "alpha": a_val,
+        "r": r_val,
+        "n_joint_states": n_states,
+        "warnings": [],
+    }
+    if n_states <= settings.max_profile_states:
+        reading = thermo_read(game, payload.lam)
+        out["epr"] = float(reading.epr)
+        out["max_current"] = float(reading.max_current)
+    else:
+        out["epr"] = None
+        out["warnings"].append(
+            f"joint space {n_states} exceeds the dense dynamics guard "
+            f"({settings.max_profile_states}); alpha and R are exact, EPR omitted"
+        )
+    return out

@@ -273,3 +273,8 @@
 - **F-0014**: fast-quench excess bracketed by the path-length floor and the frozen divergence D(π_start‖π_end) — exact AT τ=0 with a NON-UNIFORM approach; single-gap crossover holds on monotone NESS paths; loop-like paths (α=0.95, long ramp) fail by ~1 dex and are reported, not averaged (consumed max 1.06 dex in the artifact after the red-team caught held-out-only reporting).
 - Red-team round 2 conditions all closed by correction: 'telescoping identity' language fixed, full residual accounting, min_probes labelled a stopping gate (held-out guard remains the validator), gap-convention choice recorded.
 - Docs cookbook shipped (mkdocs nav: "Cookbook (your data)"); p3 §protocols updated with the corrected F-0014 picture (10 pages).
+
+## 2026-08-12 (cont.) — A3 second half: the Blotto allocation lab live
+
+- /v1/domains/blotto/read: full instrument read at chosen budgets (QRE allocation mixes, α, ℛ; EPR when the joint space fits the dense guard, honest warning when it doesn't). 2 endpoint tests; α reproduces F-0005's 0.69 at equal budget 3.
+- /blotto in the app: budget sliders (the conjugate field) + λ, live α/ℛ/EPR meters, both colonels' allocation mixes as ranked bars, guided things-to-try. Nav updated. App workstream A1–A5 now fully complete.
