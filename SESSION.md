@@ -309,3 +309,8 @@
 
 - Relaxation threshold → τ̂ + 2SE (0/10 flicker); IFT companion → anomaly detector (excludes-1), its equivalence form having been pure power-starved flicker once certification moved to the relaxation gate (escalations 3+4 recorded in config). τ=32: 10/10 usable, 10/10 coverage; τ=24 the honest conservative margin (5/10 admitted, all cover). Registered sweep PASSES with a monotone boundary.
 - Remaining before re-registration + fresh red-team: game-adaptive safety (α=0), minimum-n analysis. Banner stays on.
+
+## 2026-08-12 (cont.) — hs_estimator: alpha=0 resolved by the gate itself; min-n warning added; ready for re-registration
+
+- α=0 needed no game tuning: the noise-aware gate demands τ ≥ ~86 there (the true basin-hopping timescale), refuses everything shorter, and at τ=110 admits with full coverage (3/4 usable, 3/3 cover). The red-team's ~19x underestimate was the pre-fix machinery on unsettled windows; settled-hold underestimate is ~1.32x, inside safety 4.
+- Thin-statistics warning below n=100 added (validated at n ≥ 200). The unit's remaining path: fresh registered config + fresh red-team.

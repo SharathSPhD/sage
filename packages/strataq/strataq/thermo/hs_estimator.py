@@ -272,6 +272,12 @@ def hs_y_estimate(
             "holds — the system is likely not stepwise-stationary (or the "
             "sampling is broken); do NOT quote mean_y from this read"
         )
+    if n_traj < 100:
+        warnings.append(
+            f"n_trajectories={n_traj} is thin: the bootstrap CI and the "
+            "relaxation-SE machinery are validated at n >= 200; below ~100 "
+            "treat every number here as indicative only"
+        )
     min_len = min(w.shape[1] for w in windows)
     if min_len * n_traj < 20 * n_states:
         warnings.append(
