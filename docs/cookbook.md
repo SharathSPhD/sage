@@ -25,11 +25,11 @@ import strataq.toolkit as tk
 # the actual Dominick's grocery estimates (finding F-0011):
 read = tk.reciprocity_read(
     [[1.0697, 0.0028], [0.0005, 0.9685]],
-    chi_se=[[0.02, 0.001], [0.001, 0.02]],   # your regression's standard errors
+    chi_se=[[0.02, 0.001], [0.001, 0.02]],  # your regression's standard errors
 )
-print(read.r)        # 0.0011
+print(read.r)  # 0.0011
 print(read.verdict)  # reciprocal (landscape-like) — 95% CI [...]
-print(read.warnings) # the fine print travels with the number
+print(read.warnings)  # the fine print travels with the number
 ```
 
 ```bash
@@ -54,7 +54,7 @@ market's diurnal loop (F-0009) and certified retail category prices at-null
 
 ```python
 verdict = tk.irreversibility_test(weekly_prices, n_bins=3, n_surrogates=200)
-verdict.detected     # True: no reversible chain with these pair statistics does this
+verdict.detected  # True: no reversible chain with these pair statistics does this
 verdict.p_value
 ```
 
@@ -69,10 +69,10 @@ logit rationality λ **with a defensible interval**:
 
 ```python
 est = tk.estimate_rationality(
-    [u_row_player, u_col_player],        # one matrix per player
+    [u_row_player, u_col_player],  # one matrix per player
     counts=[[412, 95, 493], [301, 402, 297]],
 )
-est.mean, (est.ci_low, est.ci_high)      # calibrated 95% credible interval
+est.mean, (est.ci_low, est.ci_high)  # calibrated 95% credible interval
 est.warnings
 ```
 
