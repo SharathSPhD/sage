@@ -1,5 +1,5 @@
 unit: thermo.hs_estimator.smalln
-claim: "REFUSED, with the refusal boundary as the deliverable (F-0019): no (n, interval-method) cell passes the registered S1/S1b/S2/S3, so the n >= 200 floor stands and monthly market windows are not self-certifying reads. The mechanism is the finding — interval COVERAGE holds at every n down to 20 (19-20/20, width ~1.9x SE, all three constructions), so the estimator NUMBER is fine on a month of data; what fails is the DECISION machinery (gate agreement 10/20 at n=20-30 rising to 17/20 at n=200; permutation flag-flips 4-6 falling to 1), which mechanistically explains F-0017 flag instability. Recorded caveat: n=200 also fails S2 (17 vs 18), so either the bar is slightly strict or the existing floor is marginal on decision stability — unresolved by design, and the criteria were red-teamed BEFORE any result existed (first run stopped mid-flight, verdict never read)"
+claim: "REFUSED as registered, with two mandated diagnostics that sharpen the result (F-0019). (1) The refusal stands: no (n, interval-method) cell passes S1/S1b/S2/S3, so the n >= 200 floor holds and a month of market data is not a self-certifying read. (2) Interval COVERAGE is not the constraint — it holds at every n down to 20 (19-20/20, width ~1.9x bootstrap SE, all three constructions). (3) C-1: against the generator EXACT settling status (no sampling noise) n=200 scores 19/20 and PASSES the bar, so the earlier 17/20 was the finite-sample reference own noise and the existing floor is SOLID, not marginal; small-n still fails (10/20 at n=30) regardless of reference. (4) C-2: a within-group permutation preserving the SE split collapses flag flips 6->0 (n=30), 3->0 (n=100), so the small-n instability is substantially an ARTIFACT of the i::4 split implementation, not the physics — the gate can be fixed rather than the floor raised (R9). (5) C-3: the import-the-full-window-verdict shortcut is rejected in writing with its reason. Criteria were red-teamed BEFORE any result existed and again after"
 tier: derived
 
 gates:
@@ -31,5 +31,34 @@ gates:
     changelog_entry: true
 
   adversarial:
-    red_team_signoff: false
-    objections: []
+    red_team_signoff: false  # results review GRANTED-CONDITIONAL; all three
+    # conditions now met and returned to the reviewer for the final call.
+    objections:
+      - id: D-1
+        text: "DESIGN review (pre-results), BLOCKING: coverage alone is gameable — an arbitrarily wide interval covers everything"
+        disposition: addressed
+        where: "S1b width guard registered (median half-width <= 2x bootstrap SE); HSEstimate exposes boot_se; applied before the authoritative run"
+      - id: D-2
+        text: "DESIGN review, BLOCKING: certifying the smallest of 15 screened cells is a best-of-15 selection that passes by chance"
+        disposition: addressed
+        where: "Held-out confirmation on a disjoint seed stream added as a hard requirement before any certification"
+      - id: D-3
+        text: "DESIGN review, MUST-ADDRESS: a floor certified at one (alpha, tau) would travel to CAISO data with different relaxation structure"
+        disposition: addressed
+        where: "Secondary-point transfer validation added, with a recorded deviation: the reviewer's tau=16 is gate-refused on this family so coverage there is undefined; a different GAME at a settled hold tests the transfer concern instead"
+      - id: D-4
+        text: "DESIGN review, MUST-ADDRESS: S3's permutation is null for physics but not for the 4-way SE split; t_widened mixes frameworks"
+        disposition: addressed
+        where: "Both documented in config and docstring; t_widened now warns that it is a heuristic comparator. C-2 later QUANTIFIED the split effect and it dominates"
+      - id: C-1
+        text: "RESULTS review, BLOCKING: adjudicate the n=200 S2 failure against the TRUE settling criterion rather than a finite-sample reference"
+        disposition: addressed
+        where: "Exact spectral-gap reference: n=200 scores 19/20 (passes); the floor is solid and the 17/20 was reference noise. Small-n unchanged"
+      - id: C-2
+        text: "RESULTS review, MUST-ADDRESS: decompose S3 instability into physics vs the i::4 split machinery"
+        disposition: addressed
+        where: "Within-group permutation: flips 6->0 (n=30), 5->1 (n=50), 3->0 (n=100) — the split dominates; F-0019 rewritten to call the refusal implementation-bound and R9 registered to fix the gate"
+      - id: C-3
+        text: "RESULTS review, MUST-ADDRESS: reject the import-the-full-window-verdict chase item in writing"
+        disposition: addressed
+        where: "Rejected in F-0019 and the docs with the reason (a slow subset can hide inside a passing aggregate); only a purpose-built small-n certification or verdict-free quoting is legitimate"
