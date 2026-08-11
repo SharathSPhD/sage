@@ -1,5 +1,6 @@
 "use client";
 
+import { DynamicsTheater } from "./DynamicsTheater";
 import { FreeEnergyDial } from "./FreeEnergyDial";
 import { OnePriceObjection } from "./OnePriceObjection";
 import { PokePanel } from "./PokePanel";
@@ -14,6 +15,8 @@ const REGISTRY: Record<string, React.ComponentType> = {
   "01-softmax-and-lambda": SoftmaxCollapse,
   "02-the-fixed-point": SimplexPortrait,
   "04-maxent": FreeEnergyDial,
+  "05-gibbs-and-potential-games": DynamicsTheater,
+  "06-detailed-balance-and-currents": DynamicsTheater,
   "07-reciprocity": PokePanel,
   "08-elasticity-vs-lambda": TwoDials,
   "09-the-one-price-objection": OnePriceObjection,
