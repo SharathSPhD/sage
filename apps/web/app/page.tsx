@@ -38,11 +38,11 @@ export default function Home() {
           nobody knows the answer.
         </p>
         <div style={{ display: "flex", gap: "0.8rem", flexWrap: "wrap" }}>
-          <Link href="/lab">
-            <button data-primary="true">Open the Lab</button>
+          <Link href="/story">
+            <button data-primary="true">Take the 5-minute tour</button>
           </Link>
-          <Link href="/learn">
-            <button>Start with the ideas</button>
+          <Link href="/lab">
+            <button>Open the Lab</button>
           </Link>
         </div>
       </section>
