@@ -239,3 +239,10 @@
 - χ row-ordering bug caught by economic sanity inspection pre-review; disclosed in F-0011.
 - Red-team granted after one blocking condition (bootstrap re-demeaning — closed by strengthening, CI unchanged); the mechanical-correlation attack on cost=price·(1−margin) CLEARED numerically (residual corr 0.94–0.96, margin CV 0.26–0.35). O-1..O-4 dispositions in the gate.
 - App surface: /findings gains the F-0011 card + a predict-then-reveal empirical pass-through matrix panel (committed-artifact provenance badge).
+
+## 2026-08-12 — R5: thermo.protocols GREEN (18th gate) — F-0012, the driving-cost inversion
+
+- `strataq.thermo.protocols`: Hatano–Sasa housekeeping/excess split (σ_hk ≡ 0 iff detailed balance; σ_ex = −dD/dt verified), stepwise λ-quench protocols, Jarzynski + Hatano–Sasa IFTs; 13 tests.
+- **F-0012**: excess ⟨Y⟩ collapses across α (0.036 → 2.8×10⁻⁵) while housekeeping grows to 12.4 nats at a constant 0.77 nats/time burn rate; refinement slopes ≈ −1 (the ~1/K law). Pay-per-change vs pay-rent inversion.
+- Red-team granted after 3 blocking conditions, all closed by strengthening or honest narrowing: (O-1) the exact-transfer IFT is a telescoping identity — relabelled, and a POWERED sampled check at α=0.5 added (CI [0.995, 1.003] ∋ 1, sampled Y 0.0076 vs exact 0.0068); (O-2) the first-pass mechanism ("λ-insensitive NESS") REFUTED by the red-team's asymmetric-mix probe — mechanism now recorded as OPEN; (O-3) the intended pre-registration commit had ABORTED on a hook failure (config staged, not committed, when results existed) — recorded plainly in F-0012; standing rule upgraded to verify the commit landed via git log before running.
+- App surface: /findings gains the F-0012 card + two artifact-badged charts (excess collapse, housekeeping rent).

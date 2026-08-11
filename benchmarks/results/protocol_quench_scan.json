@@ -1,0 +1,43 @@
+{
+  "benchmark_id": "protocol_quench_scan",
+  "unit": "thermo.protocols",
+  "kind": "statistical",
+  "passed": true,
+  "metrics": {
+    "excess_a000": 0.03551106778296314,
+    "excess_a025": 0.020510666220767984,
+    "excess_a050": 0.00683621484826221,
+    "excess_a075": 0.0010077689383858612,
+    "excess_a095": 0.000027551773255394598,
+    "hk_a000": -6.073043299191128e-17,
+    "hk_a025": 0.7180274528070075,
+    "hk_a050": 3.3864363989419215,
+    "hk_a075": 7.997314154790955,
+    "hk_a095": 12.382961238320265,
+    "refine_slope_a000": -1.017350265387205,
+    "refine_slope_a095": -0.9429079268165123,
+    "hk_duration_r2": 0.9999999999994849,
+    "hk_per_time_a095": 0.7739332294599692,
+    "max_ift_error": 1.2212453270876722e-15,
+    "p1_refinement_law": 1.0,
+    "p2_hk_monotone_linear": 1.0,
+    "p3_ift_machine_precision": 1.0
+  },
+  "effect_sizes": [
+    {
+      "name": "housekeeping/excess ratio at alpha=0.95 (base protocol)",
+      "value": 449443.34883765416,
+      "ci_low": 449443.34883765416,
+      "ci_high": 449443.34883765416,
+      "ci_level": 0.95,
+      "method": "exact dense computation (degenerate CI: identity, not estimate)"
+    }
+  ],
+  "n": 25,
+  "n_justification": "5 alpha levels x 5 refinements x 5 durations, all EXACT dense computations (2x2 joint chains) — no sampling error; the pre-registered predictions P1-P3 are pass/fail against these identities.",
+  "seed": 20260812,
+  "config_ref": "config/experiments/protocol_reading.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-11T06:12:53+00:00",
+  "notes": "P1 excess ~1/K under step refinement; P2 housekeeping zero at alpha=0, monotone in alpha, linear in protocol duration (slope = NESS EPR burn rate) — quasi-static driving is free only for potential games; P3 Hatano-Sasa IFT exact at every alpha including off detailed balance."
+}

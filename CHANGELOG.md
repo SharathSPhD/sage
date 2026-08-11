@@ -6,6 +6,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 ## [Unreleased]
 
 ### Added
+- `strataq.thermo.protocols` — Hatano–Sasa housekeeping/excess EPR split, stepwise λ-quench protocols with exact-transfer and sampled-path integral fluctuation theorems, and the pre-registered quench scan finding the driving-cost inversion across the α family (F-0012; unit thermo.protocols).
 - `strataq.domains.pricing` — Dominick's panel loader (HF DreamPrice CSO, gap-tolerant brand indices, margin-window cleaning) and the first empirical reciprocity measurement: R = 0.0011 from cross-brand cost pass-through (F-0011), plus a 30-store Edgeworth at-null scan.
 - Unit science.frontier: scale-folding identity for the α=0 criticality peak, the bisected λ_c(α) frontier, and F-0010 (universal coupling collapse at α=0.95 with a λ-amplified sign flip; pre-registered criterion failure documented).
 - `strataq.domains.electricity` — CAISO OASIS LMP loader (DAM hourly / RTM 5-minute, cached, coverage-guarded, rate-limit backoff), quantile discretization, phase-space embedding, and `trajectory_from_series` bridging observed data into the irreversibility estimators. First real-data reading: certified null (F-0008).

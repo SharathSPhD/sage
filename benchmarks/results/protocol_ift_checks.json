@@ -1,0 +1,35 @@
+{
+  "benchmark_id": "protocol_ift_checks",
+  "unit": "thermo.protocols",
+  "kind": "statistical",
+  "passed": true,
+  "metrics": {
+    "sampled_ift_estimate_a050": 0.9991184594045343,
+    "sampled_ift_ci_low_a050": 0.9949943357402478,
+    "sampled_ift_ci_high_a050": 1.0032425830688207,
+    "sampled_mean_y_a050": 0.0075865247363975635,
+    "exact_mean_y_a050": 0.00683621484826221,
+    "sampled_ift_estimate_a095": 0.9999663850538923,
+    "sampled_ift_ci_low_a095": 0.999703148302098,
+    "sampled_ift_ci_high_a095": 1.0002296218056865,
+    "sampled_mean_y_a095": 0.00006066477720727037,
+    "exact_mean_y_a095": 0.000027551773255394598
+  },
+  "effect_sizes": [
+    {
+      "name": "sampled <e^{-Y}> at alpha=0.5 (the POWERED check: Y is O(1e-2))",
+      "value": 0.9991184594045343,
+      "ci_low": 0.9949943357402478,
+      "ci_high": 1.0032425830688207,
+      "ci_level": 0.95,
+      "method": "CLT band over 3000 exact-kernel quench paths"
+    }
+  ],
+  "n": 3000,
+  "n_justification": "3000 trajectories: enough for the CLT band on e^{-Y} (heavy right tail noted) while keeping the run minutes-scale. Two alpha points: 0.5 carries the statistical power (Y ~ 1e-2); 0.95 is retained but LOW-POWER (Y ~ 6e-5, red-team O-4) — its bracket verdict is not evidence of kernel correctness.",
+  "seed": 20260812,
+  "config_ref": "config/experiments/protocol_reading.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-11T06:12:54+00:00",
+  "notes": "The estimator-side IFT check — the only non-tautological IFT verification (the exact transfer telescopes): finite-sample <e^{-Y}> brackets 1 at both alpha points, and the sampled mean Y agrees with the exact lagging-p computation."
+}

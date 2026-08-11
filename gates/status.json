@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T05:55:42+00:00",
+  "generated_at": "2026-08-11T06:14:36+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -238,6 +238,20 @@
         "adversarial": []
       },
       "checked_at": "2026-08-11T05:55:42+00:00"
+    },
+    "thermo.protocols": {
+      "unit": "thermo.protocols",
+      "claim": "Exact housekeeping/excess decomposition and quench fluctuation theorems for the Glauber chain: sigma_tot = sigma_hk + sigma_ex with sigma_hk = 0 iff detailed balance and sigma_ex = -dD(p||pi)/dt; the Hatano-Sasa IFT <e^{-Y}> = 1 verified by the POWERED sampled-path check at alpha=0.5 (the exact transfer telescopes and is an identity verification only); the quench scan (predictions written in config before the run; the intended prior commit aborted \u2014 recorded) finds the driving-cost inversion (F-0012): excess collapses with alpha while housekeeping grows to 12.4 nats at a constant per-hold burn rate; the collapse's mechanism is OPEN",
+      "tier": "exact",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-11T06:14:36+00:00"
     }
   }
 }

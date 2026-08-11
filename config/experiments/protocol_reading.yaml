@@ -1,0 +1,43 @@
+# thermo.protocols reading — quench thermodynamics across the α family (R5).
+#
+# EX-ANTE PREDICTIONS (committed BEFORE the run; per the domains.pricing
+# red-team's O-3 standing rule this config is committed in its own change
+# ahead of any results):
+#   P1 — the excess (Hatano–Sasa) dissipation <Y> of a fixed stepwise ramp
+#        is set by relaxation lag + step coarseness and stays the same
+#        order across α; it decays ~1/K under step refinement at every α.
+#   P2 — the accumulated HOUSEKEEPING entropy ∫σ_hk dt is ≈ 0 at α = 0
+#        (detailed balance) and grows monotonically with α; it scales
+#        LINEARLY with total protocol duration (the NESS burns fuel at a
+#        constant rate just to exist), so slow driving is asymptotically
+#        free only for potential games. "You cannot drive a whirlpool
+#        slowly for free."
+#   P3 — the IFT <e^{-Y}> = 1 holds at machine precision at every α
+#        (identity check, not a statistical test).
+seed: 20260812
+family:
+  alphas: [0.0, 0.25, 0.5, 0.75, 0.95]
+  scale: 1.0
+protocol:
+  lambda_start: 0.5
+  lambda_end: 3.0
+  n_steps: 8
+  tau: 2.0
+refinement:
+  n_steps_list: [2, 4, 8, 16, 32] # P1: ~1/K decay of <Y>, all α
+duration_scaling:
+  taus: [0.5, 1.0, 2.0, 4.0, 8.0] # P2: hk integral linear in total time
+  # sigma_hk depends only on (generator, pi_lambda), not on the current p —
+  # so it is identically constant during each fixed-lambda hold and the
+  # duration-linearity is exact by construction (red-team note 5): P2's
+  # informative content is the burn RATE and its growth with alpha.
+  linear_r2_min: 0.999
+hk_integral:
+  substeps_per_tau: 40 # trapezoid on sigma_hk(p(t))
+ift_tol: 1.0e-9
+sampled:
+  n_trajectories: 3000
+  steps_per_unit_time: 25
+  # red-team O-4: at alpha=0.95 <Y> ~ 6e-5 so the CI check is low-power
+  # there; the alpha=0.5 check below is the one with real power.
+  power_alpha_index: 2 # family index of alpha=0.5

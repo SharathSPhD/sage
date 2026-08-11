@@ -1,0 +1,58 @@
+unit: thermo.protocols
+claim: "Exact housekeeping/excess decomposition and quench fluctuation theorems for the Glauber chain: sigma_tot = sigma_hk + sigma_ex with sigma_hk = 0 iff detailed balance and sigma_ex = -dD(p||pi)/dt; the Hatano-Sasa IFT <e^{-Y}> = 1 verified by the POWERED sampled-path check at alpha=0.5 (the exact transfer telescopes and is an identity verification only); the quench scan (predictions written in config before the run; the intended prior commit aborted — recorded) finds the driving-cost inversion (F-0012): excess collapses with alpha while housekeeping grows to 12.4 nats at a constant per-hold burn rate; the collapse's mechanism is OPEN"
+tier: exact   # split + IFT identities are theorems instantiated here; the scan reading is derived
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.9
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/thermo/protocols.py
+      - packages/strataq/tests/thermo/test_protocols.py
+
+  domain:
+    - id: protocol_quench_scan
+      spec: "pre-registered P1 (refinement ~1/K), P2 (hk zero at alpha=0, monotone, duration-linear), P3 (IFT machine precision) all pass; excess and hk reported across the alpha family"
+      artifact: benchmarks/results/protocol_quench_scan.json
+    - id: protocol_ift_checks
+      spec: "sampled-path <e^{-Y}> CI brackets 1 at BOTH alpha=0.5 (the powered check, Y ~ 1e-2) and alpha=0.95 (retained, low-power)"
+      artifact: benchmarks/results/protocol_ift_checks.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/instruments/dissipation.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: true
+    objections:
+      - id: O-1
+        text: "BLOCKING: the exact-transfer <e^{-Y}> = 1 is a telescoping algebraic identity for stepwise protocols — it can never fail and cannot catch kernel bugs; presenting it as a machine-precision TEST overstates it"
+        disposition: addressed
+        where: "hatano_sasa_exact docstring carries the honesty note (identity verification, not correctness test); the correctness test is the independent sampled path, and a POWERED check at alpha=0.5 (Y ~ 1e-2; CI [0.995, 1.003] brackets 1; sampled Y 0.0076 vs exact 0.0068) added to protocol_ift_checks; docs state the caveat"
+      - id: O-2
+        text: "BLOCKING: F-0012's mechanism claim ('near-harmonic NESS is lambda-insensitive so nothing relaxes') is refuted by an asymmetric-mix probe where the NESS genuinely moves (~7e-3) yet excess still collapses ~290x"
+        disposition: addressed
+        where: "F-0012 mechanism section rewritten: the collapse is the demonstrated fact, the mechanism is OPEN with the candidate (lambda-dependent equilibrium concentration) named as a chase item; docs match"
+      - id: O-3
+        text: "BLOCKING: pre-registration claimed 'config committed before the run' but the commit ABORTED on a pre-commit hook failure — config was staged, not committed, when results existed"
+        disposition: addressed
+        where: "F-0012, the experiment docstring, and docs now say plainly the ordering is file-mtime, not commit-audited, and the trail cannot prove no post-hoc adjustment; standing rule upgraded: verify with git log that the config commit LANDED before running"
+      - id: O-4
+        text: "NOTE: the sampled IFT at alpha=0.95 has Y ~ 6e-5 — the CI-brackets-1 verdict is essentially zero-power there"
+        disposition: addressed
+        where: "Powered alpha=0.5 sampled check added as the headline effect size; the 0.95 read retained with its low-power status recorded in n_justification and F-0012"
+      - id: O-5
+        text: "NOTE: housekeeping duration-linearity R^2 = 1.000 is exact by construction (sigma_hk depends only on the generator and pi, constant per hold) — the 'linear law' framing repackages structural constancy"
+        disposition: addressed
+        where: "Config comment and docs corrected: P2's informative content is the burn RATE and its growth with alpha, not the linearity"

@@ -9,6 +9,12 @@ export interface Charts {
   frontier: { alphas: number[]; lambda_c: number[] };
   estimators: { alphas: number[]; exact: number[]; kld: number[]; tur_ci_low: number[] };
   crossover_signs: { lambdas: number[]; corr_a095: number[]; m4_a095: number };
+  quench: {
+    alphas: number[];
+    excess_log10: number[];
+    housekeeping: number[];
+    burn_rate_a095: number;
+  };
   passthrough: {
     chi: number[][];
     R: number;
@@ -41,6 +47,7 @@ const FINDINGS: {
   { id: "F-0009", kind: "detection", tone: "ok", title: "The day-ahead market is a driven cycle", body: "Against a persistence-matched reversible null: pair-level detailed balance violated at ~1.1 nats/day (p < 0.01), concentrated in scarcity weeks; verified for null validity, FPR, seeds, bins, ties, multiple testing, and order-2 leakage.", playable: { href: "/markets", label: "markets" } },
   { id: "F-0010", kind: "failed criterion → finding", tone: "warn", title: "Universal collapse, λ-dependent sign", body: "The initial criterion (reversal in ≥3/4 conditions) failed 2/4 — and the failure is the finding: what's universal at α = 0.95 is decorrelation; anti-alignment is a λ-amplified second effect within ~2 null-SD per point." },
   { id: "F-0011", kind: "empirical read", tone: "ok", title: "The reciprocity meter's first real-data read: ℛ ≈ 0.001", body: "Cross-brand wholesale-cost pass-through (Campbell ↔ Progresso, Dominick's scanner panel, 86 stores): the prediction stated in config before the run — one retailer pricing both brands must respond symmetrically — confirmed. Own pass-through 1.07/0.97, asymmetry CI covering zero. A χ row-ordering bug caught pre-review is on the record." },
+  { id: "F-0012", kind: "discovery · mechanism open", tone: "ok", title: "The driving cost inverts: pay per change vs pay rent", body: "Quenching λ across the α family: potential games pay only for change (excess ∝ 1/steps, quasi-static driving is free) and nothing to exist; near-harmonic games pay almost nothing for change but burn constant housekeeping rent just to hold their steady state. The first-pass mechanism was refuted by the red-team's own probe — the collapse is real, its cause is open." },
 ];
 
 function LineChart({
@@ -227,6 +234,37 @@ export function FindingsGallery({ charts }: { charts: Charts }) {
       </div>
 
       <PassthroughMatrix pt={charts.passthrough} />
+
+      <div className="panel-cols">
+        <PanelShell title="F-0012 · pay per change: excess dissipation vs α" provenance="artifact">
+          <LineChart
+            x={charts.quench.alphas}
+            series={[{ ys: charts.quench.excess_log10, color: "var(--accent)", label: "log₁₀ excess ⟨Y⟩" }]}
+            yLabel="log₁₀ nats per ramp (λ 0.5 → 3.0)"
+          />
+          <p style={{ fontSize: "0.78rem", color: "var(--text-faint)", margin: "0.4rem 0 0" }}>
+            The cost of *changing* λ collapses three orders of magnitude toward the harmonic
+            end — and honesty note: the first-pass explanation for why was refuted by the
+            red-team&apos;s own probe. The collapse is measured; its mechanism is an open chase
+            item, on the record.
+          </p>
+        </PanelShell>
+
+        <PanelShell title="F-0012 · pay rent: housekeeping vs α" provenance="artifact">
+          <LineChart
+            x={charts.quench.alphas}
+            series={[{ ys: charts.quench.housekeeping, color: "var(--amber)", label: "∫σ_hk dt (nats)" }]}
+            yLabel="housekeeping over the same ramp"
+            yZeroLine
+          />
+          <p style={{ fontSize: "0.78rem", color: "var(--text-faint)", margin: "0.4rem 0 0" }}>
+            The fuel burned just to *hold* the steady state: exactly zero for potential games,
+            {" "}{charts.quench.housekeeping[charts.quench.housekeeping.length - 1].toFixed(1)} nats
+            at α = 0.95 — at a constant {charts.quench.burn_rate_a095} nats per unit time,
+            charged whether you drive or not. Quasi-static driving is free only on a landscape.
+          </p>
+        </PanelShell>
+      </div>
 
       <PanelShell title="thermo.estimators · data-side meters vs the exact one" provenance="client">
         <LineChart
