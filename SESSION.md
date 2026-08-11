@@ -278,3 +278,9 @@
 
 - /v1/domains/blotto/read: full instrument read at chosen budgets (QRE allocation mixes, α, ℛ; EPR when the joint space fits the dense guard, honest warning when it doesn't). 2 endpoint tests; α reproduces F-0005's 0.69 at equal budget 3.
 - /blotto in the app: budget sliders (the conjugate field) + λ, live α/ℛ/EPR meters, both colonels' allocation mixes as ranked bars, guided things-to-try. Nav updated. App workstream A1–A5 now fully complete.
+
+## 2026-08-12 (cont.) — science.quench_multimode GREEN (22nd gate) — F-0015, the path-aware quench model + a retraction done right
+
+- Third EFE campaign (pre-registration verified landed; F-0014's failure cells in the grid by construction; full hypothesis × probe residual table in the artifact): **recursive_1mode** — the per-step single-gap recursion tracking p along the ramp — at belief 1.0, held-out validated; dominates the incumbent on median (0.076 vs 0.13 dex) AND worst case (0.44 vs 1.11; loop-path improvement +0.67 dex).
+- Red-team round 3 caught two things that matter: (1) run-1's two-mode anti-result was an implementation ARTIFACT (eigenbasis mix-up + truncated lstsq) — retracted on the record; the fixed implementation still loses to one mode, and the lesson is re-attributed to fast-remainder truncation; (2) 2×2-only validation — 3×3 probes added (config addition recorded), claim holds within adequacy there with honestly larger errors.
+- p3 §protocols carries the recursion + the retraction note (10 pages).

@@ -37,3 +37,15 @@ budget: 12
 min_probes: 6
 stop_confidence: 0.95
 adequacy_max_median_resid_sigmas: 2.0
+# ADDITIONS (recorded, after run 1 + red-team round 3):
+# - family_3x3: the red-team measured 6.7x degradation on a 27-state game —
+#   3x3 probes added so the claim is tested, not scoped away.
+# - the two-mode implementation of run 1 was BUGGY (left/right eigenvector
+#   mix-up + truncated lstsq): its 'anti-result' was an artifact and is
+#   retracted; the fixed implementation (full eigenbasis solve, conjugate
+#   pairs kept together) replaces it. Run-1 artifact stays in git history.
+family_3x3:
+  alphas_probe: [0.25, 0.75, 0.95]
+  protocols:
+    - [8, 0.1, 3.0]
+    - [8, 0.3, 6.0]

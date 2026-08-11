@@ -1,0 +1,48 @@
+unit: science.quench_multimode
+claim: "The per-step single-gap recursion supersedes the global crossover on a grid that now includes 3x3 games: grid median 0.076 dex, worst 0.44 (at alpha=0, tau=0.3 — a different cell from the incumbent's 1.11 at alpha>=0.5 long ramps; loop-path improvement +0.67 dex), held-out validated, full per-hypothesis accounting. Two-mode: run-1 anti-result RETRACTED as an implementation artifact; the corrected implementation still loses to one mode — the recorded lesson is about truncating the fast remainder, not non-normality"
+tier: derived
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.9
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/estimate/bayes.py
+      - packages/strataq/tests/estimate/test_bayes.py
+
+  domain:
+    - id: quench_multimode_campaign
+      spec: "pre-registered guards enforced; failure cells of F-0014 in the probe grid by construction; full grid table (every hypothesis x every probe) reported — no residual hidden"
+      artifact: benchmarks/results/quench_multimode_campaign.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/instruments/dissipation.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: true
+    objections:
+      - id: O-1
+        text: "BLOCKING: claim validated only on 4-state (2x2) chains where a single slow mode is near-guaranteed; red-team measured 6.7x degradation at 27 states"
+        disposition: addressed
+        where: "3x3 probes (coordination-3 <-> RPS, 6 cells including the failure protocol) added to the grid (config addition recorded); recursive_1mode holds within the adequacy bound there (0.198 dex at the measured cell) and the finding states 3x3 errors are systematically larger"
+      - id: O-2
+        text: "BLOCKING: the two-mode implementation mixed eigenvector bases and truncated with lstsq — its anti-result was an artifact"
+        disposition: addressed
+        where: "Implementation fixed (full left-eigenbasis linear solve for row-distribution evolution, conjugate pairs together, remainder dropped explicitly); run-1 anti-result RETRACTED in F-0015; the corrected model still loses to 1-mode and the finding re-attributes the lesson to remainder truncation"
+      - id: O-3
+        text: "NOTE: worst-case framing conflated different cells (incumbent 1.11 at alpha>=0.5 long ramps vs winner 0.44 at alpha=0 crossover)"
+        disposition: addressed
+        where: "F-0015 and the gate claim now map the failure geography explicitly and separate the loop-path story (+0.67 dex) from the medians"
+

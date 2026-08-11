@@ -41,6 +41,7 @@ reproduce: reproduce-fast
 	uv run python -m experiments.bayes_reading
 	uv run python -m experiments.toolkit_verdicts
 	uv run python -m experiments.fast_quench_campaign
+	uv run python -m experiments.quench_multimode_campaign
 
 # Fast subset: what `main` must always pass (CI runs this on every merge).
 reproduce-fast:

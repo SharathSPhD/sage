@@ -1,0 +1,45 @@
+{
+  "benchmark_id": "quench_multimode_campaign",
+  "unit": "science.quench_multimode",
+  "kind": "statistical",
+  "passed": true,
+  "metrics": {
+    "belief_gap_mid_global": 1.4071512210884208e-18,
+    "belief_gap_start_global": 7.316926595156982e-18,
+    "belief_recursive_1mode": 1.0,
+    "belief_recursive_2mode": 5.624556496483517e-27,
+    "n_probes_run": 6.0,
+    "winner_median_resid_dex": 0.1606331820578759,
+    "consumed_max_resid_dex": 0.44166959761023633,
+    "heldout_median_resid_dex": 0.07416724194588814,
+    "heldout_max_resid_dex": 0.35886294274243746,
+    "adequate": 1.0,
+    "heldout_validated": 1.0,
+    "sensitivity_sigma_agrees": 1.0,
+    "grid_median_gap_mid_global": 0.13095277641413516,
+    "grid_median_gap_start_global": 0.13000745578274864,
+    "grid_median_recursive_1mode": 0.07611110004913019,
+    "grid_median_recursive_2mode": 0.5096129691053206,
+    "grid_max_gap_mid_global": 1.105889544940477,
+    "grid_max_gap_start_global": 1.1058895449404744,
+    "grid_max_recursive_1mode": 0.44166959761023633,
+    "grid_max_recursive_2mode": 0.9785280691312936
+  },
+  "effect_sizes": [
+    {
+      "name": "posterior belief in verdict 'recursive_1mode'",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "ci_level": 0.95,
+      "method": "EFE/BALD, sigma=0.15 dex, min_probes=6, 6/54 consumed; full grid table attached"
+    }
+  ],
+  "n": 6,
+  "n_justification": "budget 12 of 54 probes (failure cells from F-0014 included by construction); ALL probes also evaluated for every hypothesis in the grid_median/grid_max table — no residual hidden.",
+  "seed": 20260815,
+  "config_ref": "config/experiments/quench_multimode.yaml",
+  "library_version": "0.1.0.dev0",
+  "timestamp": "2026-08-11T07:55:11+00:00",
+  "notes": "Multimode refinement verdict: recursive_1mode. The recursive models track the NESS path per step, putting F-0014's loop-path failures in scope by construction; the two-mode variant adds the next relaxation mode."
+}

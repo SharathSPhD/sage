@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T07:39:24+00:00",
+  "generated_at": "2026-08-11T07:56:53+00:00",
   "units": {
     "stage0": {
       "unit": "stage0",
@@ -294,6 +294,20 @@
         "adversarial": []
       },
       "checked_at": "2026-08-11T07:39:24+00:00"
+    },
+    "science.quench_multimode": {
+      "unit": "science.quench_multimode",
+      "claim": "The per-step single-gap recursion supersedes the global crossover on a grid that now includes 3x3 games: grid median 0.076 dex, worst 0.44 (at alpha=0, tau=0.3 \u2014 a different cell from the incumbent's 1.11 at alpha>=0.5 long ramps; loop-path improvement +0.67 dex), held-out validated, full per-hypothesis accounting. Two-mode: run-1 anti-result RETRACTED as an implementation artifact; the corrected implementation still loses to one mode \u2014 the recorded lesson is about truncating the fast remainder, not non-normality",
+      "tier": "derived",
+      "green": true,
+      "sections": {
+        "code": [],
+        "domain": [],
+        "statistical": [],
+        "documentation": [],
+        "adversarial": []
+      },
+      "checked_at": "2026-08-11T07:56:53+00:00"
     }
   }
 }
