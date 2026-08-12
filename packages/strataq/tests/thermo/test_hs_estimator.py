@@ -10,7 +10,11 @@ import jax.numpy as jnp
 import numpy as np
 from strataq.finite.decompose.generate import make_family
 from strataq.finite.games.library import coordination, matching_pennies
-from strataq.thermo.hs_estimator import hs_y_estimate, sample_quench_states
+from strataq.thermo.hs_estimator import (
+    hs_y_estimate,
+    relaxation_gate,
+    sample_quench_states,
+)
 from strataq.thermo.protocols import QuenchProtocol, hatano_sasa_exact
 
 # alpha=0.25 with a steep ramp: exact <Y> ~ 0.25 at fast holds — enough
@@ -203,3 +207,130 @@ class TestIntervalMethods:
             interval_method="t_widened",
         )
         assert any("heuristic" in w for w in est.warnings)
+
+
+class TestRelaxationGateSE:
+    """R9 (unit thermo.hs_estimator.gate_se): the relaxation gate's SE must
+    not depend on the ARBITRARY ORDER of the trajectories.
+
+    R8/F-0019 localised the small-n flag instability to the incumbent 4-way
+    ``i::4`` trajectory split: a permutation that cannot change any physical
+    property reshuffles which trajectories share a split group, so the SE —
+    and with it the ``tau_hat + 2 SE`` threshold — moves. Criteria G1-G5 are
+    registered in config/experiments/gate_se.yaml.
+    """
+
+    METHODS = ("split", "jackknife", "delta", "bootstrap")
+
+    @staticmethod
+    def _windows(n: int, tau: float = 32.0, seed: int = 7) -> list[np.ndarray]:
+        return sample_quench_states(
+            GAME, _proto(tau), n_trajectories=n, steps_per_unit_time=25, seed=seed
+        )
+
+    def _gate(self, w, method, tau=32.0, **kw):
+        return relaxation_gate(
+            w,
+            n_states=4,
+            hold_durations=[tau] * len(w),
+            se_method=method,
+            **kw,
+        )
+
+    def test_point_estimate_identical_across_methods(self):
+        """The SE method must change ONLY the SE. If a candidate moves
+        tau_hat itself it is a different estimator, not a different error
+        bar, and every downstream comparison would be confounded."""
+        w = self._windows(60)
+        ref = self._gate(w, "split").tau_hats
+        for method in self.METHODS:
+            got = self._gate(w, method).tau_hats
+            assert got == ref, (method, got, ref)
+
+    def test_jackknife_and_delta_are_exactly_order_invariant(self):
+        """G1 at its strongest: not 'approximately stable across seeds' but
+        INVARIANT to the permutation, to floating-point tolerance."""
+        w = self._windows(50)
+        perm = np.random.default_rng(0).permutation(50)
+        for method in ("jackknife", "delta"):
+            base = self._gate(w, method)
+            shuf = self._gate([x[perm] for x in w], method)
+            for t0, t1 in zip(base.ses, shuf.ses, strict=True):
+                assert abs(t1 - t0) <= 1e-9 * max(abs(t0), 1e-12), (method, t0, t1)
+            assert base.ok == shuf.ok
+
+    def test_incumbent_split_se_is_order_dependent(self):
+        """The R8 diagnosis as an executable characterisation: the incumbent
+        SE MOVES under the physically-null permutation. This test documents
+        the defect R9 exists to fix — if it ever starts passing trivially
+        (identical SEs), the split implementation changed underneath us."""
+        w = self._windows(50)
+        perm = np.random.default_rng(1).permutation(50)
+        base = self._gate(w, "split")
+        shuf = self._gate([x[perm] for x in w], "split")
+        rel = [abs(b - s) / max(abs(b), 1e-12) for b, s in zip(base.ses, shuf.ses, strict=True)]
+        assert max(rel) > 0.01, rel  # measured: O(10-100%) movement
+
+    def test_jackknife_closed_form_equals_brute_force_leave_one_out(self):
+        """The O(nT) sufficient-statistic jackknife must equal the O(n^2 T)
+        definition. This is the algebra's only real check: a wrong
+        leave-one-out would still be order-invariant and would still look
+        plausible, so G1 could not catch it."""
+        n = 24
+        w = self._windows(n, seed=9)
+        fast = self._gate(w, "jackknife").ses
+        for wi, se_fast in zip(w, fast, strict=True):
+            dt = 32.0 / wi.shape[1]
+            reps = [
+                relaxation_gate(
+                    [np.delete(wi, j, axis=0)],
+                    n_states=4,
+                    hold_durations=[32.0],
+                    se_method="delta",  # any method: only tau_hat is read
+                ).tau_hats[0]
+                for j in range(n)
+            ]
+            arr = np.asarray(reps)
+            se_slow = float(np.sqrt((n - 1) / n * np.sum((arr - arr.mean()) ** 2)))
+            assert abs(se_fast - se_slow) <= 1e-8 * max(se_slow, 1e-12), (
+                se_fast,
+                se_slow,
+                dt,
+            )
+
+    def test_every_method_still_refuses_unsettled_holds(self):
+        """G4 in miniature, as a unit test rather than only a campaign
+        metric: a candidate that passes G1-G3 by shrinking the SE toward
+        zero must still REFUSE a hold that never settled."""
+        for method in self.METHODS:
+            w = self._windows(50, tau=1.0, seed=3)
+            gate = self._gate(w, method, tau=1.0)
+            assert not gate.ok, method
+            assert gate.offenders, method
+
+    def test_unknown_se_method_raises(self):
+        w = self._windows(20)
+        try:
+            self._gate(w, "vibes")
+        except ValueError as e:
+            assert "se_method" in str(e)
+        else:
+            raise AssertionError("unknown se_method must raise")
+
+    def test_tiny_n_falls_back_to_maximally_cautious_se(self):
+        """With too few trajectories to estimate a spread at all, the SE must
+        equal the estimate itself (the incumbent's rule, kept): the gate then
+        demands 3x the hold and refuses rather than guessing."""
+        w = self._windows(3)
+        for method in self.METHODS:
+            gate = self._gate(w, method)
+            for tau_hat, se in zip(gate.tau_hats, gate.ses, strict=True):
+                assert se == tau_hat, (method, tau_hat, se)
+
+    def test_hs_y_estimate_threads_the_se_method(self):
+        w = self._windows(60)
+        kw = {"n_states": 4, "hold_durations": [32.0] * len(w)}
+        base = hs_y_estimate(w, **kw)
+        jack = hs_y_estimate(w, relax_se_method="jackknife", **kw)
+        assert base.mean_y == jack.mean_y  # the SE method cannot move <Y>
+        assert isinstance(jack.usable, bool)

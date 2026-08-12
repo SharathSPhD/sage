@@ -41,7 +41,14 @@ from strataq.core.dynamics.markov import stationary_distribution as _stationary
 from strataq.finite.games.tensor import DenseTensorGame
 from strataq.thermo.protocols import QuenchProtocol
 
-__all__ = ["HSEstimate", "hs_y_estimate", "sample_quench_states"]
+__all__ = [
+    "SE_METHODS",
+    "HSEstimate",
+    "RelaxationGate",
+    "hs_y_estimate",
+    "relaxation_gate",
+    "sample_quench_states",
+]
 
 _FLOOR = 1e-300
 
@@ -113,36 +120,218 @@ class HSEstimate:
     warnings: list[str] = field(default_factory=list)
 
 
-def _relaxation_time(window: np.ndarray, n_states: int, dt: float) -> tuple[float, float]:
+SE_METHODS = ("split", "jackknife", "delta", "bootstrap")
+
+
+def _tau_from_stats(
+    match_sum: float, n_pairs: float, counts: np.ndarray, lag: int, dt: float
+) -> float:
+    """tau_hat from the three sufficient statistics of the lag autocorrelation.
+
+    Every SE candidate reduces to calls of this function on subsetted or
+    resampled statistics, which is why the point estimate is identical across
+    methods by construction rather than by test (the test exists anyway).
+    """
+    pi = counts / max(float(counts.sum()), 1e-300)
+    base = float(np.sum(pi**2))
+    rho = (match_sum / max(n_pairs, 1e-300) - base) / max(1.0 - base, 1e-12)
+    rho = min(max(rho, 1e-12), 1.0 - 1e-12)
+    return float(-lag * dt / np.log(rho))
+
+
+def _window_stats(
+    window: np.ndarray, n_states: int, lag: int
+) -> tuple[np.ndarray, np.ndarray, float]:
+    """PER-TRAJECTORY sufficient statistics: (matches, state counts, pairs/traj).
+
+    This decomposition is what makes an exactly order-invariant SE affordable.
+    tau_hat depends on the window only through pooled matched pairs and pooled
+    state occupancy, so leave-one-out becomes SUBTRACTION (O(nT) total) rather
+    than n recomputations (O(n^2 T)), and resampling becomes a gather over n
+    rows rather than over n x T states.
+    """
+    n_traj, n_obs = window.shape
+    matches = (window[:, :-lag] == window[:, lag:]).sum(axis=1).astype(float)
+    flat = (window + n_states * np.arange(n_traj, dtype=window.dtype)[:, None]).reshape(-1)
+    counts = np.bincount(flat, minlength=n_traj * n_states).reshape(n_traj, n_states).astype(float)
+    return matches, counts, float(n_obs - lag)
+
+
+def _relaxation_time(
+    window: np.ndarray,
+    n_states: int,
+    dt: float,
+    se_method: str = "split",
+    bootstrap_resamples: int = 200,
+) -> tuple[float, float]:
     """Data-side relaxation-time estimate (value, SE) from autocorrelation.
 
     Categorical autocorrelation at lag N/4 (long lags see the slow modes a
-    lag-1 estimate under-weights), fitted as a single exponential; the SE
-    comes from a 4-way trajectory split. The gate uses tau_hat + 2 SE so a
-    noisy estimate cannot FLICKER a marginal hold into the usable set
-    (measured flicker: usable 4/20 at a boundary hold before this).
+    lag-1 estimate under-weights), fitted as a single exponential. The gate
+    uses tau_hat + 2 SE so a noisy estimate cannot FLICKER a marginal hold
+    into the usable set (measured flicker: usable 4/20 at a boundary hold
+    before this).
+
+    ``se_method`` selects how that SE is obtained (R9, criteria G1-G5 in
+    config/experiments/gate_se.yaml). The point estimate is IDENTICAL for
+    every method; only the error bar changes:
+
+    ``split``
+        The incumbent 4-way ``i::4`` trajectory split. Kept for comparison
+        and reproducibility of pre-R9 reads, but it is ORDER-DEPENDENT: a
+        permutation of the trajectories — which cannot change any physical
+        property — reshuffles the split groups and moves the SE. R8/F-0019
+        measured the consequence (anomaly-flag flips 6/20 at n=30, collapsing
+        to 0/20 under a permutation that preserves the split's composition).
+    ``jackknife``
+        Leave-one-out over trajectories, in closed form via the sufficient
+        statistics. EXACTLY order-invariant (the set of n replicates is
+        permutation-invariant) and it recomputes pi_hat per replicate, so it
+        carries the stationary-distribution noise ``delta`` drops.
+    ``delta``
+        Per-trajectory match-rate variance propagated through dtau/drho.
+        Cheapest and also exactly order-invariant, but it treats pi_hat as
+        fixed; agreement with ``jackknife`` is the evidence that the dropped
+        term is immaterial.
+    ``bootstrap``
+        Trajectory resampling. Invariant only IN DISTRIBUTION — with a fixed
+        resampling seed, permuting trajectories changes which ones land in
+        each resample, leaving a residual of order SE/sqrt(2B).
     """
+    if se_method not in SE_METHODS:
+        raise ValueError(f"se_method must be one of {SE_METHODS}, got {se_method!r}")
     # lag N/4 sees slow modes far better than lag 1, but still UNDERESTIMATES
     # them (~25% measured on a gap-collapsed window: 5.2 vs true 6.6) — the
     # default relax_safety of 4 exists to absorb exactly that bias
     lag = max(1, window.shape[1] // 4)
-
-    def one(win: np.ndarray) -> float:
-        a, b = win[:, :-lag].reshape(-1), win[:, lag:].reshape(-1)
-        pi = np.bincount(win.reshape(-1), minlength=n_states) / win.size
-        base = float(np.sum(pi**2))
-        rho = (float(np.mean(a == b)) - base) / max(1.0 - base, 1e-12)
-        rho = min(max(rho, 1e-12), 1.0 - 1e-12)
-        return float(-lag * dt / np.log(rho))
-
-    est = one(window)
     n_traj = window.shape[0]
-    if n_traj >= 8:
-        groups = [one(window[i::4]) for i in range(4)]
-        se = float(np.std(groups, ddof=1)) / 2.0
-    else:
-        se = est  # too few trajectories to estimate SE: maximally cautious
-    return est, se
+    matches, counts, pairs = _window_stats(window, n_states, lag)
+    total_m, total_c = float(matches.sum()), counts.sum(axis=0)
+    est = _tau_from_stats(total_m, n_traj * pairs, total_c, lag, dt)
+
+    # too few trajectories to estimate a spread at all: maximally cautious,
+    # so the gate demands ~3x the hold and refuses rather than guessing
+    min_n = 8 if se_method == "split" else 4
+    if n_traj < min_n:
+        return est, est
+
+    if se_method == "split":
+        groups = [
+            _tau_from_stats(
+                float(matches[i::4].sum()),
+                matches[i::4].size * pairs,
+                counts[i::4].sum(axis=0),
+                lag,
+                dt,
+            )
+            for i in range(4)
+        ]
+        return est, float(np.std(groups, ddof=1)) / 2.0
+
+    if se_method == "jackknife":
+        loo = np.asarray(
+            [
+                _tau_from_stats(
+                    total_m - float(matches[j]),
+                    (n_traj - 1) * pairs,
+                    total_c - counts[j],
+                    lag,
+                    dt,
+                )
+                for j in range(n_traj)
+            ]
+        )
+        var = (n_traj - 1) / n_traj * float(np.sum((loo - loo.mean()) ** 2))
+        return est, float(np.sqrt(max(var, 0.0)))
+
+    if se_method == "delta":
+        # tau = -lag*dt/ln(rho), rho = (m - base)/(1 - base):
+        #   dtau/dm = lag*dt / (rho ln^2 rho) * 1/(1 - base)
+        pi = total_c / max(float(total_c.sum()), 1e-300)
+        base = float(np.sum(pi**2))
+        rho = (total_m / (n_traj * pairs) - base) / max(1.0 - base, 1e-12)
+        rho = min(max(rho, 1e-12), 1.0 - 1e-12)
+        se_m = float(np.std(matches / pairs, ddof=1)) / np.sqrt(n_traj)
+        grad = lag * dt / (rho * np.log(rho) ** 2) / max(1.0 - base, 1e-12)
+        return est, float(abs(grad) * se_m)
+
+    # bootstrap: resample trajectory indices, recompute from the statistics
+    rng = np.random.default_rng(0)
+    idx = rng.integers(0, n_traj, size=(bootstrap_resamples, n_traj))
+    reps = [
+        _tau_from_stats(float(matches[row].sum()), n_traj * pairs, counts[row].sum(axis=0), lag, dt)
+        for row in idx
+    ]
+    return est, float(np.std(reps, ddof=1))
+
+
+@dataclass(frozen=True)
+class RelaxationGate:
+    """Did every hold window actually settle? (R9 — the gate, standalone.)
+
+    Extracted from ``hs_y_estimate`` so the settling question can be asked
+    on its own — it is the precondition for any plug-in stationary quantity,
+    not just Hatano-Sasa Y — and so its SE machinery is testable in isolation.
+    """
+
+    ok: bool
+    tau_hats: tuple[float, ...]
+    ses: tuple[float, ...]
+    thresholds: tuple[float, ...]  # tau_hat + se_sigma x SE, what the gate compares
+    offenders: tuple[int, ...]
+    se_method: str
+    warnings: list[str] = field(default_factory=list)
+
+
+def relaxation_gate(
+    windows: list[np.ndarray],
+    *,
+    n_states: int,
+    hold_durations: list[float],
+    relax_safety: float = 4.0,
+    se_method: str = "split",
+    bootstrap_resamples: int = 200,
+    se_sigma: float = 2.0,
+) -> RelaxationGate:
+    """Per-window settling check: every hold must exceed ``relax_safety`` x
+    its own noise-inflated relaxation-time estimate.
+
+    ``se_sigma`` (default 2.0, the historical hard-coded value) is the number
+    of SEs added before comparison. It is exposed rather than buried because
+    once the SE is accurate (R9) the right multiplier becomes a separate,
+    answerable question — but changing it is NOT part of R9 and the default
+    preserves every previously recorded verdict.
+    """
+    reads = [
+        _relaxation_time(w, n_states, float(tau) / w.shape[1], se_method, bootstrap_resamples)
+        for w, tau in zip(windows, hold_durations, strict=True)
+    ]
+    tau_hats = tuple(t for t, _ in reads)
+    ses = tuple(s for _, s in reads)
+    thresholds = tuple(t + se_sigma * s for t, s in reads)
+    offenders = tuple(
+        k
+        for k, (tau, thr) in enumerate(zip(hold_durations, thresholds, strict=True))
+        if float(tau) < relax_safety * thr
+    )
+    warns: list[str] = []
+    if offenders:
+        worst = max(offenders, key=lambda k: thresholds[k] / float(hold_durations[k]))
+        warns.append(
+            f"relaxation gate failed for {len(offenders)} window(s) (worst: window "
+            f"{worst}, hold {float(hold_durations[worst]):g} < {relax_safety} x "
+            f"estimated relaxation time {thresholds[worst]:.2f}) — the hold never "
+            "settled; pi_hat is biased there and mean_y must not be quoted"
+        )
+    return RelaxationGate(
+        ok=not offenders,
+        tau_hats=tau_hats,
+        ses=ses,
+        thresholds=thresholds,
+        offenders=offenders,
+        se_method=se_method,
+        warnings=warns,
+    )
 
 
 def hs_y_estimate(
@@ -156,6 +345,7 @@ def hs_y_estimate(
     ift_tolerance: float = 0.05,
     ci_level: float = 0.95,
     interval_method: str = "percentile",
+    relax_se_method: str = "split",
 ) -> HSEstimate:
     """Estimate ⟨Y⟩ from per-hold observed state windows.
 
@@ -188,12 +378,17 @@ def hs_y_estimate(
     any interval's half-width against ``boot_se``: coverage bought by
     unbounded width is not usable precision.
 
+    ``relax_se_method`` selects how the relaxation gate's SE is estimated
+    (see ``relaxation_gate``). The default ``split`` is the incumbent 4-way
+    trajectory split, kept as the default so no previously recorded verdict
+    moves silently; ``jackknife`` and ``delta`` are exactly order-invariant.
+
     S3 note (R8 red-team objection 3): the flag-stability criterion permutes
-    trajectory ORDER, which is null for the physics but NOT for this
-    estimator's machinery — the relaxation SE comes from a 4-way split
-    (``window[i::4]``), so a permutation reassigns split groups. A flip
-    therefore indicts the JOINT system (physics + SE estimation), not
-    physical nullity alone.
+    trajectory ORDER, which is null for the physics but NOT for the default
+    SE machinery — the ``split`` SE is computed from ``window[i::4]``, so a
+    permutation reassigns split groups. A flip therefore indicts the JOINT
+    system (physics + SE estimation), not physical nullity alone; R8 measured
+    that the split dominates, which is why the alternatives exist (R9).
 
     **The primary usability gate** (F-0016): with ``hold_durations`` (the τ
     of each hold, in the same time units the data was sampled at), every
@@ -307,27 +502,15 @@ def hs_y_estimate(
     else:
         if len(hold_durations) != len(windows):
             raise ValueError("hold_durations must have one entry per window")
-        relax_reads = [
-            _relaxation_time(w, n_states, float(tau) / w.shape[1])
-            for w, tau in zip(windows, hold_durations, strict=True)
-        ]
-        # noise-aware threshold: tau_hat + 2 SE, so estimate noise cannot
-        # flicker a marginal hold into the usable set
-        relax_times = [tr + 2.0 * se for tr, se in relax_reads]
-        offenders = [
-            k
-            for k, (tau, tr) in enumerate(zip(hold_durations, relax_times, strict=True))
-            if float(tau) < relax_safety * tr
-        ]
-        relax_ok = not offenders
-        if offenders:
-            worst = max(offenders, key=lambda k: relax_times[k] / float(hold_durations[k]))
-            warnings.append(
-                f"relaxation gate failed for {len(offenders)} window(s) (worst: window "
-                f"{worst}, hold {float(hold_durations[worst]):g} < {relax_safety} x "
-                f"estimated relaxation time {relax_times[worst]:.2f}) — the hold never "
-                "settled; pi_hat is biased there and mean_y must not be quoted"
-            )
+        gate = relaxation_gate(
+            windows,
+            n_states=n_states,
+            hold_durations=hold_durations,
+            relax_safety=relax_safety,
+            se_method=relax_se_method,
+        )
+        relax_ok = gate.ok
+        warnings.extend(gate.warnings)
     usable = relax_ok and ift_ok
     if interval_method == "t_widened":
         warnings.append(

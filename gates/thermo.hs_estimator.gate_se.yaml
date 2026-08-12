@@ -1,0 +1,38 @@
+# thermo.hs_estimator.gate_se (R9) — a split-independent SE for the
+# relaxation gate. Claim filled from the registered run's adjudication.
+unit: thermo.hs_estimator.gate_se
+claim: "PENDING RUN"
+tier: derived
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.9
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - packages/strataq/strataq/thermo/hs_estimator.py
+      - packages/strataq/tests/thermo/test_hs_estimator.py
+
+  domain:
+    - id: gate_se_reading
+      spec: "registered G1-G5 evaluated for all four SE candidates on identical sampled data; the adopted method (or the refusal) follows from the thresholds, not from inspection after the fact"
+      artifact: benchmarks/results/gate_se_read.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/reference.md
+      - docs/instruments/dissipation.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: false
+    objections: []

@@ -41,6 +41,33 @@ One-call dashboard: `alpha` (harmonic fraction), `r` (reciprocity defect at
 the QRE), `epr` (entropy production of the joint revision dynamics),
 `verdict`.
 
+## `strataq.thermo.hs_estimator` (did my data settle?)
+
+### `relaxation_gate(windows, *, n_states, hold_durations, relax_safety=4.0, se_method="split", se_sigma=2.0) → RelaxationGate`
+
+The settling check, usable on its own. Any plug-in estimate of a
+*stationary* quantity — an occupation distribution, a stationary current, a
+Hatano–Sasa Y — is meaningless if the system never reached stationarity
+inside the observation window, and this answers that question from the state
+sequences alone. Returns `ok`, plus per-window `tau_hats`, `ses`,
+`thresholds` (`tau_hat + se_sigma x SE`, what the gate actually compares
+against the hold) and the `offenders` list, so a refusal tells you *which*
+hold was too short and by how much.
+
+`se_method` selects the error bar on the relaxation-time estimate:
+
+| method | order-invariant? | notes |
+|---|---|---|
+| `split` | **no** | the incumbent 4-way `i::4` trajectory split; the default, so no previously recorded verdict moves |
+| `jackknife` | yes, exactly | leave-one-out over trajectories in closed form; also carries the pi-hat noise |
+| `delta` | yes, exactly | cheapest, but treats pi-hat as fixed — measured to *overstate* the SE, since a trajectory's occupancy moves the match rate and the baseline together |
+| `bootstrap` | in distribution only | trajectory resampling; a fixed seed leaves an O(SE/sqrt(2B)) residual |
+
+Order-invariance matters because the trajectory ORDER is not a physical
+property: permuting it must not change a verdict, and with `split` it can
+(R8/F-0019 measured 6 flips in 20 seeds at n=30). See F-0019/F-0020 and
+`config/experiments/gate_se.yaml` for the registered evidence.
+
 ## `strataq.estimate.bayes` (power users)
 
 `grid_posterior` / `refined_posterior` (the resolution-guard-enforcing
