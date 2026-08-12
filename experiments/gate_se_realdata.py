@@ -118,8 +118,16 @@ def main() -> int:
         kind="statistical",
         passed=True,
         metrics=metrics,
-        n_samples=n_days,
-        seeds=[int(cfg["seed"])],
+        n=n_days,
+        n_justification=(
+            f"{n_days} CAISO day-pairs, the same panel R7 read; the monthly cells carry "
+            "~30 day-pairs each, which is exactly the small-n regime R8 refused. No "
+            "criterion is attached, so no power claim is made"
+        ),
+        seed=int(cfg["seed"]),
+        config_ref="config/experiments/day_quench.yaml",
+        library_version=strataq.__version__,
+        timestamp=datetime.now(UTC).isoformat(timespec="seconds"),
         notes=(
             "R9 downstream obligation on REAL data (R7's CAISO day-pair panel, "
             f"{n_days} day-pairs): every SE candidate re-reads the monthly scan with "

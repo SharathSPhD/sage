@@ -241,10 +241,10 @@ def main() -> int:
                     value=c.flips / n_seeds,
                     ci_low=lo,
                     ci_high=hi,
-                    method=f"Jeffreys binomial interval over {n_seeds} seeds",
-                    interpretation=(
-                        f"G1 at n={n}, {method}: {c.flips}/{n_seeds} flag flips under the "
-                        f"physically-null full trajectory permutation (bar <= {flip_max}"
+                    method=(
+                        f"Jeffreys binomial interval over {n_seeds} seeds. G1 at n={n}, "
+                        f"{method}: {c.flips}/{n_seeds} flag flips under the physically-null "
+                        f"full trajectory permutation (bar <= {flip_max}"
                         + (
                             f"; R8 baseline with the incumbent split: {r8_flip_baseline[n]}"
                             if n in r8_flip_baseline
@@ -261,12 +261,12 @@ def main() -> int:
                     value=c.agree / n_seeds,
                     ci_low=alo,
                     ci_high=ahi,
-                    method=f"Jeffreys binomial interval over {n_seeds} seeds",
-                    interpretation=(
-                        f"G2/G3 at n={n}, {method}: {c.agree}/{n_seeds} agreement with the "
-                        "EXACT spectral-gap settling status (bar "
-                        f"{agree_min_lg if n in large else agree_min}; R8 baseline with the "
-                        "incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+                    method=(
+                        f"Jeffreys binomial interval over {n_seeds} seeds. G2/G3 at n={n}, "
+                        f"{method}: {c.agree}/{n_seeds} agreement with the EXACT spectral-gap "
+                        f"settling status (bar {agree_min_lg if n in large else agree_min}; "
+                        "R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, "
+                        "19 at n=200)"
                     ),
                 )
             )
@@ -279,13 +279,10 @@ def main() -> int:
                     method=(
                         f"worst-window |median SE / oracle SE - 1|; the interval spans the "
                         f"oracle's own relative SE (1/sqrt(2*({reps}-1)) = {oracle_rel_se:.3f}) "
-                        "since the reference is itself an SD from a finite sample"
-                    ),
-                    interpretation=(
-                        f"G5 at n={n}, {method}: worst-window SE deviation "
-                        f"{c.se_ratio_max:.3f} (bar <= {tol}; median over windows "
-                        f"{c.se_ratio_med:.3f}). A value ABOVE the bar overstates the "
-                        "uncertainty, one below understates it — both fail"
+                        "since the reference is itself an SD from a finite sample. G5 at "
+                        f"n={n}, {method}: deviation {c.se_ratio_max:.3f} (bar <= {tol}; "
+                        f"median over windows {c.se_ratio_med:.3f}). A value ABOVE the bar "
+                        "overstates the uncertainty, one below understates it - both fail"
                     ),
                 )
             )
@@ -297,8 +294,19 @@ def main() -> int:
         passed=True,  # ran per registration; the adjudication is the finding
         metrics=metrics,
         effect_sizes=effects,
-        n_samples=n_seeds,
-        seeds=[seed],
+        n=n_seeds * len(all_n) * len(methods),
+        n_justification=(
+            f"{n_seeds} seeds x {len(all_n)} n-levels x {len(methods)} SE candidates, each "
+            "seed also re-read under the full trajectory permutation (G1) and, at the "
+            "unsettled holds, under three short taus (G4). 20 seeds gives a Jeffreys "
+            "interval of roughly +/-0.2 on a proportion, which is why the registered bars "
+            "are counts against a threshold rather than significance tests; the G5 oracle "
+            f"uses {reps} independent draws (relative SE {oracle_rel_se:.3f})"
+        ),
+        seed=seed,
+        config_ref="config/experiments/gate_se.yaml",
+        library_version=strataq.__version__,
+        timestamp=datetime.now(UTC).isoformat(timespec="seconds"),
         notes=(
             f"{verdict}. Registered G1-G5 (config/experiments/gate_se.yaml, commits "
             "verified landed before the run). Per-candidate criterion flags in "

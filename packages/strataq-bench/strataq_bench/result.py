@@ -13,11 +13,31 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
+
+# Pydantic defaults to extra="ignore", which silently DROPS misspelled keyword
+# arguments: an experiment can pass `n_samples=` / `seeds=` / `interpretation=`
+# and land an impoverished artifact with no error anywhere (observed while
+# writing R9 — only the two REQUIRED fields raised, so three wrong names went
+# through unnoticed). Forbidding extras turns every such typo into an immediate
+# failure at the point of construction. Verified against every committed
+# benchmarks/results/*.json before landing, so no existing artifact is
+# invalidated by the stricter policy.
+#
+# ser_json_inf_nan="constants": pydantic's DEFAULT writes float('nan') out as
+# JSON `null`, so a metric deliberately set to NaN ("no estimate — the model
+# was rejected") lands on disk as a value the schema itself cannot read back.
+# Two committed artifacts predate this and still carry nulls
+# (electricity_lambda, frontier_lambda_c); nothing broke only because the gate
+# runner reads raw JSON rather than validating. Writing NaN as `NaN` keeps the
+# sentinel round-trippable.
+_STRICT = ConfigDict(extra="forbid", ser_json_inf_nan="constants")
 
 
 class EffectSize(BaseModel):
     """An effect size with its confidence interval — the unit of quantitative claim."""
+
+    model_config = _STRICT
 
     name: str
     value: float
@@ -29,6 +49,8 @@ class EffectSize(BaseModel):
 
 class BenchmarkResult(BaseModel):
     """One benchmark outcome, self-describing and reproducible."""
+
+    model_config = _STRICT
 
     benchmark_id: str = Field(description="Stable id, e.g. 'reciprocity_potential'.")
     unit: str = Field(description="Gate unit this feeds, e.g. 'finite.response.reciprocity'.")
