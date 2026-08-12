@@ -1,0 +1,103 @@
+# thermo.hs_estimator.gate_se (R9) — a split-independent SE for the
+# relaxation gate.
+#
+# R8 (F-0019) refused the small-n certification and then localised the
+# refusal: a WITHIN-GROUP permutation that preserves the i::4 SE split's
+# composition collapsed the anomaly-flag flips 6->0 (n=30), 5->1 (n=50),
+# 3->0 (n=100). The instability is therefore in the SE MACHINERY, not the
+# physics. This unit replaces the 4-way-split SE with a split-independent
+# estimator, or publishes which candidate came closest and why the residual
+# survives. Both outcomes are acceptable findings.
+#
+# BASELINE (measured by R8, benchmarks/results/smalln_certification.json —
+# not re-derived here, so the comparison is auditable):
+#   gate-vs-TRUE-settling agreement: 10/20 (n=30), 15/20 (n=50),
+#   16/20 (n=100), 19/20 (n=200); full-permutation flag flips at the
+#   certified interval: 4 (n=20), 6 (n=30), 5 (n=50), 3 (n=100), 1 (n=200);
+#   true_max_relax_time = 6.5925, so relax_safety=4 needs tau >= 26.37 and
+#   the primary hold tau=32 IS genuinely settled.
+#
+# REGISTERED CRITERIA (this commit must LAND before any run — verify with
+# git log; the standing rule since the thermo.protocols O-3 failure):
+#   G1 (order-invariance) — under the FULL trajectory permutation (the
+#       physically-null shuffle that indicted the split), the gate's
+#       admit/refuse flag must flip on <= 1 of 20 seeds at every n in
+#       g_grid. This is the criterion R8 failed and it is the real bar.
+#   G2 (accuracy toward truth, ONE-SIDED — read with G4) — the gate decision
+#       must agree with the EXACT spectral-gap settling status on >= 18 of 20
+#       seeds at every n in g_grid. Baseline: 10, 15, 16.
+#   G3 (no regression) — agreement >= 19/20 at n in g_grid_large. A fix that
+#       buys small-n agreement by degrading the certified range is refused.
+#   G4 (refusal power — the guard on G2) — on genuinely unsettled holds
+#       (unsettled_taus, every one far below the 26.37 requirement) the gate
+#       must REFUSE on 20 of 20 seeds at EVERY n and for EVERY candidate.
+#       G2 alone is gameable: the primary truth is "settled", so an SE driven
+#       to zero scores 20/20. G2 and G4 are only meaningful jointly, and G4
+#       is registered as absolute (no tolerance) for that reason.
+#   G5 (the SE must be more ACCURATE, not merely narrower) — the anticipated
+#       red-team objection, registered as a criterion rather than left to the
+#       review. An ORACLE SE is measured for each n as the standard deviation
+#       of the tau-hat point estimate across oracle_replicates INDEPENDENT
+#       window draws (this is the true sampling SE of the statistic the gate
+#       adds 2 SE of). A candidate passes G5 only if
+#         | median_seeds(SE_candidate) / oracle_SE - 1 | <= se_accuracy_tol
+#       at every n in g_grid. A candidate that shrinks the SE below the
+#       oracle FAILS G5 even if it passes G1-G3, and a candidate that is
+#       merely wider fails it too. The incumbent split is measured on the
+#       same scale so the comparison is like-for-like.
+#
+# CANDIDATES (all four measured at every n; no candidate may be added after
+# seeing results without a recorded note):
+#   split      — INCUMBENT, the 4-way i::4 trajectory split. Baseline only;
+#                not eligible for adoption.
+#   jackknife  — leave-one-out over trajectories. Order-invariant EXACTLY
+#                (the set of n replicates is permutation-invariant) and it
+#                recomputes pi-hat per replicate, so it carries the
+#                stationary-distribution noise the delta method drops.
+#   delta      — per-trajectory match-rate variance propagated through
+#                d tau / d rho analytically. Cheapest; DROPS the pi-hat
+#                sampling noise, so delta ~= jackknife is itself the evidence
+#                that the dropped term is immaterial (reported either way).
+#   bootstrap  — trajectory resampling. Invariant only IN DISTRIBUTION, not
+#                exactly: with a fixed seed, permuting trajectories changes
+#                which land in each resample, leaving a residual of order
+#                SE / sqrt(2B). Registered as a candidate anyway because G1
+#                measures that residual instead of assuming it negligible.
+#
+# DECISION RULE (fixed before results):
+#   - The adopted method is the candidate passing G1-G5 with the highest
+#     minimum margin across criteria; ties break toward the cheaper method.
+#   - Adoption CHANGES THE DEFAULT, which is a behaviour change for every
+#     downstream read. The unit is not closed until the affected artifacts
+#     (day_quench / R7, smalln_certification / R8, hs_estimator v2) are
+#     re-run under the new default and any verdict change is reported --
+#     including if a previously admitted read becomes refused.
+#   - Passing G1-G5 does NOT certify monthly market windows. That is a
+#     SEPARATE registered unit which must re-establish S1/S1b coverage at
+#     small n; R9 fixes machinery only. Claiming the extension here would
+#     repeat exactly the shortcut C-3 rejected.
+#   - If no candidate passes: publish the closest candidate, its failing
+#     criterion and the residual mechanism; the default stays `split`.
+seed: 20260826
+family: { alpha: 0.25 }
+protocol: { lambdas: [0.5, 1.5, 2.5, 3.5, 4.5, 5.5], tau: 32.0 }
+g_grid: [30, 50, 100]
+g_grid_large: [200]
+n_seeds: 20
+steps_per_unit_time: 25
+pseudocount: 0.5
+relax_safety: 4.0
+se_candidates: [split, jackknife, delta, bootstrap]
+bootstrap_resamples: 200
+
+# G1/G2/G3/G4 thresholds
+flag_flip_max: 1
+agreement_min: 18
+agreement_min_large: 19
+unsettled_taus: [0.5, 1.0, 2.0]
+unsettled_refusal_required: 20
+unsettled_n_grid: [30, 100]
+
+# G5 oracle
+oracle_replicates: 40
+se_accuracy_tol: 0.35
