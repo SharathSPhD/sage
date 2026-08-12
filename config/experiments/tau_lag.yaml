@@ -147,3 +147,50 @@ holdout_seed_offset: 700000
 flag_flip_max: 1
 flip_rate_max: 0.10
 indeterminate_max_fraction: 0.20
+
+# ============================================================================
+# AMENDMENT (pre-results, BEFORE any implementation or run exists — recorded
+# because the registered T1 was wrong in a way that would have made the
+# instrument useless, and the reasoning belongs on the record)
+# ============================================================================
+# T1 as first registered admitted only TWO outcomes per window: MEASURED (rho
+# inside the band) or REFUSED as unmeasurable. That is backwards for one of
+# the two ways a window can leave the band.
+#
+# If rho is below rho_min at the SHORTEST candidate lag, the correlation died
+# within lag_min*dt, so the relaxation time is BELOW that — and since the hold
+# is the whole window, the hold then exceeds the relaxation time by a factor of
+# order 1/lag_candidates_fraction[0] = 50. That is the BEST settling case
+# available, not a failure. Refusing it would refuse precisely the windows that
+# are most obviously settled, and would have made the gate refuse most of R7's
+# real panel (T7 would have reported that as a "finding" when it was a design
+# bug — worth noting that a criterion can look like it is measuring the world
+# when it is measuring my own mistake).
+#
+# The genuinely dangerous case is the OPPOSITE end: rho still ABOVE rho_max at
+# the LARGEST candidate lag means the correlation has not decayed within half
+# the window, so the relaxation time is comparable to or longer than the
+# observation itself and cannot be estimated from it. THAT is unmeasurable.
+#
+# T1 (AMENDED) — every window must be classified into exactly one of three
+#   explicit outcomes, and none may be silent:
+#     MEASURED  — some candidate lag puts rho inside rho_band; tau_hat is that
+#                 fit. Prefer the LARGEST such lag (long lags see the slow mode
+#                 the gate cares about; that was the original N/4 rationale and
+#                 it stays, now with a measurability guard).
+#     BOUNDED   — rho < rho_min already at the smallest candidate lag. tau_hat
+#                 is reported as an UPPER BOUND of lag_min*dt, the gate compares
+#                 against that bound, and the read carries an explicit
+#                 "relaxation time below resolution" note. Admissible.
+#     REFUSED   — rho > rho_max at the largest candidate lag. Unmeasurable from
+#                 this window; the gate must refuse and say why.
+#   Zero tolerance stands for silence: a clip-floor tau_hat reported as MEASURED
+#   fails T1.
+# T5 (CLARIFIED) — the refusal that must FIRE is the REFUSED case specifically
+#   (a window whose correlation has not decayed within half its length), not
+#   the BOUNDED case. A test constructed with a hold far shorter than the
+#   relaxation time must produce REFUSED.
+# T7 (UNCHANGED but now meaningful) — the real-data refusal rate is still
+#   reported either way; with three outcomes it is now a measurement of the
+#   data rather than of this criterion's own error. Report the per-hold split
+#   across MEASURED / BOUNDED / REFUSED.
