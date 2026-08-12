@@ -1,0 +1,5410 @@
+{
+ "generated_from": "docs/context_graph.py build",
+ "repo": "/home/sharaths/projects/sage",
+ "nodes": [
+  {
+   "id": "unit:api.core",
+   "type": "unit",
+   "file": "gates/api.core.yaml",
+   "tier": "exact",
+   "green": true,
+   "claim": "The instruments are servable: every reading (solve, decompose, response, dynamics, branch) is available over HTTP with provenance and honesty warnings attached, size-guarded, and reads identical values to the library on calibration-known games"
+  },
+  {
+   "id": "artifact:blotto_readings.json",
+   "type": "artifact",
+   "path": "benchmarks/results/blotto_readings.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 7,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "code:services/api/sage_api/main.py",
+   "type": "code",
+   "path": "services/api/sage_api/main.py"
+  },
+  {
+   "id": "test:services/api/tests/test_api.py",
+   "type": "test",
+   "path": "services/api/tests/test_api.py"
+  },
+  {
+   "id": "doc:services/api/CLAUDE.md",
+   "type": "doc",
+   "path": "services/api/CLAUDE.md"
+  },
+  {
+   "id": "unit:domains.blotto",
+   "type": "unit",
+   "file": "gates/domains.blotto.yaml",
+   "tier": "exact",
+   "green": true,
+   "claim": "Blotto is a five-object plugin on Engine 1 with budgets as a live conjugate field; the instruments read high alpha, positive reciprocity defect and positive dissipation on non-degenerate instances, and exact zero on the degenerate constant-payoff instance"
+  },
+  {
+   "id": "code:packages/strataq/strataq/domains/blotto/__init__.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/domains/blotto/__init__.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/domains/blotto/oracle.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/domains/blotto/oracle.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/domains/test_blotto.py",
+   "type": "test",
+   "path": "packages/strataq/tests/domains/test_blotto.py"
+  },
+  {
+   "id": "doc:docs/domains/blotto.md",
+   "type": "doc",
+   "path": "docs/domains/blotto.md"
+  },
+  {
+   "id": "unit:domains.congestion",
+   "type": "unit",
+   "file": "gates/domains.congestion.yaml",
+   "tier": "exact",
+   "green": true,
+   "claim": "Congestion is a five-object plugin on Engine 2 with link tolls as an exactly linear conjugate field; on real Sioux Falls data the meters read their theoretical values: R = 0, DF symmetric, Fisk KKT satisfied"
+  },
+  {
+   "id": "artifact:sioux_falls_calibration.json",
+   "type": "artifact",
+   "path": "benchmarks/results/sioux_falls_calibration.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 6,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "code:packages/strataq/strataq/domains/congestion/__init__.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/domains/congestion/__init__.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/domains/congestion/tntp.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/domains/congestion/tntp.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/domains/test_congestion.py",
+   "type": "test",
+   "path": "packages/strataq/tests/domains/test_congestion.py"
+  },
+  {
+   "id": "doc:docs/domains/congestion.md",
+   "type": "doc",
+   "path": "docs/domains/congestion.md"
+  },
+  {
+   "id": "unit:domains.electricity.quench",
+   "type": "unit",
+   "file": "gates/domains.electricity.quench.yaml",
+   "tier": "derived",
+   "green": true,
+   "claim": "THIRD revision after two red-team rounds (both overturned the headline; the arc is in F-0017). The unit claims exactly one in-scope number and one negative result: (1) the closed daily-loop affinity of 211 CAISO DAM day-pairs, Y_loop ~ 7.0 nats/day with day-block bootstrap [6.22, 8.50] \u2014 DESCRIPTIVE only (6 states extends rather than inherits the 4-state certification; the IFT companion cannot constrain a closed cycle); (2) the monthly scan supports NO causal statement \u2014 a seeded shuffle control (permanent artifact metric) attributes 0/7 months to temporal drift, and one month s anomaly flag FLIPS under a physically-null permutation, so monthly reads at n~30 are sampling noise. The earlier drift diagnosis is retracted; answering the premise needs small-n certification or coarser windows"
+  },
+  {
+   "id": "artifact:day_quench_read.json",
+   "type": "artifact",
+   "path": "benchmarks/results/day_quench_read.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 60,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "code:experiments/day_quench_reading.py",
+   "type": "code",
+   "path": "experiments/day_quench_reading.py"
+  },
+  {
+   "id": "doc:docs/instruments/market-data.md",
+   "type": "doc",
+   "path": "docs/instruments/market-data.md"
+  },
+  {
+   "id": "objection:domains.electricity.quench:O-1",
+   "type": "objection",
+   "text": "BLOCKING (round 1): the diurnal protocol is circular; the open-chain framing half-counted it (+3.7 nats/day missing)",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:domains.electricity.quench:O-2",
+   "type": "objection",
+   "text": "BLOCKING (round 1): 6 states is outside the estimator's certified 4-state scope",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:domains.electricity.quench:O-3",
+   "type": "objection",
+   "text": "BLOCKING (round 1): serially-correlated days made the iid CI ~28% too narrow",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:domains.electricity.quench:O-4",
+   "type": "objection",
+   "text": "BLOCKING (round 1): the full-window pass was regime-mixing cancellation; (round 2) the drift diagnosis must be stratified by a shuffle control",
+   "disposition": "addressed"
+  },
+  {
+   "id": "unit:domains.electricity",
+   "type": "unit",
+   "file": "gates/domains.electricity.yaml",
+   "tier": "derived",
+   "green": true,
+   "claim": "Real market price series flow into the gated irreversibility estimators through an honest pipeline (coverage-guarded CAISO loader, discretization whose loop-blindness is proven and controlled, (price, delta-sign) phase embedding, FT AND amplitude-adjusted surrogate nulls with a below-band honesty flag). First readings, scoped to n<=4032 / 6 bins / this embedding: DAM hourly at-null (consistent with a linear time-reversible process); RTM 5-min NO DETECTION with the null-mismatch flag raised (the linear+marginal surrogate class cannot bracket its delta-sign persistence) \u2014 finding F-0008 as revised"
+  },
+  {
+   "id": "artifact:electricity_irreversibility_dam.json",
+   "type": "artifact",
+   "path": "benchmarks/results/electricity_irreversibility_dam.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 18,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "artifact:electricity_irreversibility_rtm.json",
+   "type": "artifact",
+   "path": "benchmarks/results/electricity_irreversibility_rtm.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 18,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "code:packages/strataq/strataq/domains/electricity/caiso.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/domains/electricity/caiso.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/domains/electricity/__init__.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/domains/electricity/__init__.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/domains/test_electricity.py",
+   "type": "test",
+   "path": "packages/strataq/tests/domains/test_electricity.py"
+  },
+  {
+   "id": "objection:domains.electricity:O-1",
+   "type": "objection",
+   "text": "BLOCKING: plain-FT surrogates Gaussianize a kurtosis-132 marginal \u2014 the null was biased (sign-flip rate 49% vs data 40%; embedded null 5.8x the reading)",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:domains.electricity:O-2",
+   "type": "objection",
+   "text": "BLOCKING: the RTM reading sits 5-6x BELOW its null \u2014 'at-null/certified null' was a mischaracterization",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:domains.electricity:O-3",
+   "type": "objection",
+   "text": "BLOCKING: claim scope overreached a single embedding and bin count",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:domains.electricity:O-4",
+   "type": "objection",
+   "text": "429 backoff path untested",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:domains.electricity:O-5",
+   "type": "objection",
+   "text": "OASIS terms uncited",
+   "disposition": "addressed"
+  },
+  {
+   "id": "unit:domains.pricing",
+   "type": "unit",
+   "file": "gates/domains.pricing.yaml",
+   "tier": "derived",
+   "green": true,
+   "claim": "The reciprocity meter's first empirical measurement: from the PI's HF Dominick's panel (gap-tolerant brand-level indices, two-way demeaning, cluster bootstrap over 86 stores), cross-brand cost pass-through is near-perfectly reciprocal (R = 0.0011 [0.0001, 0.005], asymmetry CI covering zero) \u2014 confirming the ex-ante single-retailer prediction stated in config before the run; and 30 stores' weekly category price indices are at-null for Edgeworth irreversibility (0/30 vs 0.3 expected false positives, conservative under subsample gaps)"
+  },
+  {
+   "id": "artifact:pricing_passthrough_R.json",
+   "type": "artifact",
+   "path": "benchmarks/results/pricing_passthrough_R.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 13,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "artifact:pricing_edgeworth_scan.json",
+   "type": "artifact",
+   "path": "benchmarks/results/pricing_edgeworth_scan.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 12,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "code:packages/strataq/strataq/domains/pricing/dominicks.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/domains/pricing/dominicks.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/domains/pricing/__init__.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/domains/pricing/__init__.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/domains/test_pricing.py",
+   "type": "test",
+   "path": "packages/strataq/tests/domains/test_pricing.py"
+  },
+  {
+   "id": "objection:domains.pricing:O-1",
+   "type": "objection",
+   "text": "BLOCKING: cluster bootstrap resampled already-demeaned rows; the within transform is part of the estimator and must be recomputed per resample",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:domains.pricing:O-2",
+   "type": "objection",
+   "text": "MUST-ADDRESS: mechanical-correlation trap \u2014 COST is derived from PRICE (cost = price*(1-margin)), so own pass-through ~1 could be the accounting identity, not economics",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:domains.pricing:O-3",
+   "type": "objection",
+   "text": "NOTE: the 'ex-ante' config prediction is same-session (config mtime 81s before results), not externally pre-registered; and single-retailer symmetry is exact only under a symmetric demand Jacobian",
+   "disposition": "accepted"
+  },
+  {
+   "id": "objection:domains.pricing:O-4",
+   "type": "objection",
+   "text": "NOTE: the Edgeworth at-null could be basket-composition noise rather than price dynamics",
+   "disposition": "addressed"
+  },
+  {
+   "id": "unit:dynamics.exact",
+   "type": "unit",
+   "file": "gates/dynamics.exact.yaml",
+   "tier": "exact",
+   "green": true,
+   "claim": "Glauber-logit dynamics are Gibbs-reversible exactly on potential games (pi = e^{lambda Phi}/Z, J* = 0, EPR = 0) and settle into a dissipative NESS off potentiality, with dissipation co-moving with harmonic fraction and reciprocity defect"
+  },
+  {
+   "id": "artifact:gibbs_agreement.json",
+   "type": "artifact",
+   "path": "benchmarks/results/gibbs_agreement.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 1,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "artifact:equilibrium_reads_zero.json",
+   "type": "artifact",
+   "path": "benchmarks/results/equilibrium_reads_zero.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 2,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "artifact:ness_reads_positive.json",
+   "type": "artifact",
+   "path": "benchmarks/results/ness_reads_positive.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 2,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "artifact:chain_comovement.json",
+   "type": "artifact",
+   "path": "benchmarks/results/chain_comovement.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 15,
+   "n_effect_sizes": 2
+  },
+  {
+   "id": "code:packages/strataq/strataq/core/dynamics/markov.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/core/dynamics/markov.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/core/dynamics/currents.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/core/dynamics/currents.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/core/dynamics/entropy.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/core/dynamics/entropy.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/thermo/exact.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/thermo/exact.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/thermo/test_exact.py",
+   "type": "test",
+   "path": "packages/strataq/tests/thermo/test_exact.py"
+  },
+  {
+   "id": "doc:docs/instruments/dissipation.md",
+   "type": "doc",
+   "path": "docs/instruments/dissipation.md"
+  },
+  {
+   "id": "objection:dynamics.exact:O-1",
+   "type": "objection",
+   "text": "marginal rho(EPR,R)=0.993 masks conditional decoupling: within-level rho falls to -0.355 at alpha=0.95",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:dynamics.exact:O-2",
+   "type": "objection",
+   "text": "C1 falsifier already triggered in the artifact but ledger/docs did not flag it",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:dynamics.exact:O-3",
+   "type": "objection",
+   "text": "coordination(2,3) potentiality subtlety",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:dynamics.exact:O-4",
+   "type": "objection",
+   "text": "unused floor parameter in entropy_production_rate could in principle clamp a negative (bug-masking)",
+   "disposition": "addressed"
+  },
+  {
+   "id": "unit:estimate.bayes",
+   "type": "unit",
+   "file": "gates/estimate.bayes.yaml",
+   "tier": "derived",
+   "green": true,
+   "claim": "Bayesian layer per ADR-0012: grid posterior over lambda with calibrated 95% coverage and a self-diagnosing grid-resolution guard; the F-0006 scale fold holds as an exact posterior reparameterisation; R1's mixture misspecification re-expressed as Bayes factors (decisive on mixture data, Occam-suppressed on clean); and an EFE/BALD experiment-selection loop whose first campaign adjudicates F-0012's open mechanism among four pre-declared quantitative hypotheses with an absolute adequacy guard and sigma-sensitivity re-run"
+  },
+  {
+   "id": "artifact:bayes_recovery.json",
+   "type": "artifact",
+   "path": "benchmarks/results/bayes_recovery.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 6,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "artifact:efe_mechanism_campaign.json",
+   "type": "artifact",
+   "path": "benchmarks/results/efe_mechanism_campaign.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 15,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "code:packages/strataq/strataq/estimate/bayes.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/estimate/bayes.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/estimate/test_bayes.py",
+   "type": "test",
+   "path": "packages/strataq/tests/estimate/test_bayes.py"
+  },
+  {
+   "id": "doc:docs/instruments/lambda.md",
+   "type": "doc",
+   "path": "docs/instruments/lambda.md"
+  },
+  {
+   "id": "objection:estimate.bayes:O-1",
+   "type": "objection",
+   "text": "BLOCKING: ness_floor's win needs independent verification beyond the 2x2 family \u2014 and the near-tautology risk (well-relaxed <Y> approaches the path-length floor analytically) must be owned",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:estimate.bayes:O-2",
+   "type": "objection",
+   "text": "NOTE: coverage calibration only tested at the three pre-registered lambda*",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:estimate.bayes:O-3",
+   "type": "objection",
+   "text": "NOTE: sigma=0.15 dex is a modelling choice; concentration speed depends on it",
+   "disposition": "accepted"
+  },
+  {
+   "id": "objection:estimate.bayes:O-4",
+   "type": "objection",
+   "text": "NOTE: mixture-vs-single Bayes factor grid-size dependence",
+   "disposition": "addressed"
+  },
+  {
+   "id": "unit:estimate.lambda",
+   "type": "unit",
+   "file": "gates/estimate.lambda.yaml",
+   "tier": "derived",
+   "green": true,
+   "claim": "lambda is estimable four structurally different ways (frequency MLE, autodiff MLE, chi moment-matching, dispersion inversion), the family agrees on well-specified data, and its disagreement -- plus explicit unidentifiability warnings -- is a working misspecification diagnostic rather than a number that lies"
+  },
+  {
+   "id": "artifact:estimator_recovery.json",
+   "type": "artifact",
+   "path": "benchmarks/results/estimator_recovery.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 43,
+   "n_effect_sizes": 3
+  },
+  {
+   "id": "artifact:estimator_misspecification.json",
+   "type": "artifact",
+   "path": "benchmarks/results/estimator_misspecification.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 4,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "code:packages/strataq/strataq/estimate/lam.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/estimate/lam.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/estimate/__init__.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/estimate/__init__.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/estimate/test_lambda.py",
+   "type": "test",
+   "path": "packages/strataq/tests/estimate/test_lambda.py"
+  },
+  {
+   "id": "objection:estimate.lambda:O-1",
+   "type": "objection",
+   "text": "flat-likelihood guard used a hardcoded 1e-3 scale (config x literal), inconsistent with the dispersion guard and 40x off the documented threshold",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:estimate.lambda:O-2",
+   "type": "objection",
+   "text": "lambda_mle_implicit silently inherited the grid MLE's profile-likelihood CI",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:estimate.lambda:O-3",
+   "type": "objection",
+   "text": "moment_chi validated only against the oracle chi; agreement-flag precedence (warnings suppress the flag) undocumented",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:estimate.lambda:O-4",
+   "type": "objection",
+   "text": "verified clean: unrolled-solve convergence to 1e-11 at lambda=20; profile CI drop 1.92 correct; mixture flag fires (gap 0.709 > 0.25); bootstrap determinism intentional",
+   "disposition": "addressed"
+  },
+  {
+   "id": "unit:finite.response.reciprocity",
+   "type": "unit",
+   "file": "gates/finite.response.reciprocity.yaml",
+   "tier": "derived",
+   "green": true,
+   "claim": "reciprocity_defect reads 0 on exact potential games and rises with harmonic fraction"
+  },
+  {
+   "id": "artifact:reciprocity_potential.json",
+   "type": "artifact",
+   "path": "benchmarks/results/reciprocity_potential.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 6,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "artifact:reciprocity_harmonic.json",
+   "type": "artifact",
+   "path": "benchmarks/results/reciprocity_harmonic.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 4,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "artifact:reciprocity_alpha_sweep.json",
+   "type": "artifact",
+   "path": "benchmarks/results/reciprocity_alpha_sweep.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 3,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "artifact:chi_fd_agreement.json",
+   "type": "artifact",
+   "path": "benchmarks/results/chi_fd_agreement.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 2,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "artifact:spectrum_reality.json",
+   "type": "artifact",
+   "path": "benchmarks/results/spectrum_reality.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 3,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "code:packages/strataq/strataq/finite/response/tangent.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/finite/response/tangent.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/finite/response/susceptibility.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/finite/response/susceptibility.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/finite/response/reciprocity.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/finite/response/reciprocity.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/finite/response/spectral.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/finite/response/spectral.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/finite/decompose/kron.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/finite/decompose/kron.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/finite/decompose/hodge.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/finite/decompose/hodge.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/finite/decompose/generate.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/finite/decompose/generate.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/finite/games/tensor.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/finite/games/tensor.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/finite/games/normalise.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/finite/games/normalise.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/finite/games/library.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/finite/games/library.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/core/solve/fixedpoint.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/core/solve/fixedpoint.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/core/types.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/core/types.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/core/defaults.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/core/defaults.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/finite/test_solve.py",
+   "type": "test",
+   "path": "packages/strataq/tests/finite/test_solve.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/finite/test_response.py",
+   "type": "test",
+   "path": "packages/strataq/tests/finite/test_response.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/finite/test_decompose.py",
+   "type": "test",
+   "path": "packages/strataq/tests/finite/test_decompose.py"
+  },
+  {
+   "id": "doc:docs/instruments/reciprocity.md",
+   "type": "doc",
+   "path": "docs/instruments/reciprocity.md"
+  },
+  {
+   "id": "doc:apps/web/content/learn/07-reciprocity.mdx",
+   "type": "doc",
+   "path": "apps/web/content/learn/07-reciprocity.mdx"
+  },
+  {
+   "id": "objection:finite.response.reciprocity:O-1",
+   "type": "objection",
+   "text": "'R is lambda-free' overstated: only the symmetry statement (R=0 iff potential) is lambda-free; the magnitude scales with lambda",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:finite.response.reciprocity:O-2",
+   "type": "objection",
+   "text": "monotone_in_alpha correlation could be confounded by lambda / game structure",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:finite.response.reciprocity:O-3",
+   "type": "objection",
+   "text": "N3 spectral verification was spot-checked in tests but not a regenerable gate artifact",
+   "disposition": "addressed"
+  },
+  {
+   "id": "unit:population.core",
+   "type": "unit",
+   "file": "gates/population.core.yaml",
+   "tier": "exact",
+   "green": true,
+   "claim": "Engine 2 exists and is exact: Fisk SUE solves the Beckmann-entropy convex program (KKT to 1e-10), the Beckmann gradient IS the route cost (autodiff, 1e-12), DF is symmetric for separable BPR costs, and toll susceptibility matches finite differences with zero reciprocity defect"
+  },
+  {
+   "id": "artifact:population_identities.json",
+   "type": "artifact",
+   "path": "benchmarks/results/population_identities.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 5,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "code:packages/strataq/strataq/population/games/routing.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/population/games/routing.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/population/response/susceptibility.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/population/response/susceptibility.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/core/linalg.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/core/linalg.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/population/test_routing.py",
+   "type": "test",
+   "path": "packages/strataq/tests/population/test_routing.py"
+  },
+  {
+   "id": "unit:product.toolkit",
+   "type": "unit",
+   "file": "gates/product.toolkit.yaml",
+   "tier": "derived",
+   "green": true,
+   "claim": "strataq serves real users with their own data: strataq.toolkit answers the three headline questions (rationality posterior from choice counts, reciprocity verdict from any cross-response matrix, irreversibility verdict from any scalar series) in one call each from plain lists/numpy, every result carrying its honesty warnings; the decisive reversibilized-Markov null is promoted from experiment code into the library (strataq.thermo.nulls); README quickstart + tag-triggered PyPI trusted-publishing release workflow ship the package"
+  },
+  {
+   "id": "artifact:toolkit_verdicts.json",
+   "type": "artifact",
+   "path": "benchmarks/results/toolkit_verdicts.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 9,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "code:packages/strataq/strataq/toolkit.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/toolkit.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/thermo/nulls.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/thermo/nulls.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/test_toolkit.py",
+   "type": "test",
+   "path": "packages/strataq/tests/test_toolkit.py"
+  },
+  {
+   "id": "doc:packages/strataq/README.md",
+   "type": "doc",
+   "path": "packages/strataq/README.md"
+  },
+  {
+   "id": "objection:product.toolkit:O-1",
+   "type": "objection",
+   "text": "BLOCKING: NaN payoffs/series computed through silently; constant series returned a vacuous not-detected verdict",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:product.toolkit:O-2",
+   "type": "objection",
+   "text": "MUST-ADDRESS: reciprocity_read classified noisy point estimates against hard thresholds with no uncertainty",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:product.toolkit:O-3",
+   "type": "objection",
+   "text": "NOTE: power claim 'few hundred observations' vague; git-subdirectory pip syntax needs pip>=21.1",
+   "disposition": "addressed"
+  },
+  {
+   "id": "unit:science.decoupling",
+   "type": "unit",
+   "file": "gates/science.decoupling.yaml",
+   "tier": "derived",
+   "green": true,
+   "claim": "Measured on the chain_comovement families (paired design): R's within-level variation at alpha=0.95 is denominator-driven (rho(R, 1/den) = 0.993); the numerator ||chi - chi^T|| also loses its EPR coupling there (rho = -0.37, 95% CI excluding 0), refuting the corrected-meter hypothesis that was proposed post-hoc to explain F-0004; coupling holds (rho >= 0.55) for alpha <= 0.65 at lambda = 1.2 on 3x3 two-player families. The 'distinct mathematical objects' reading (local fixed-point derivative vs joint-chain flux functional) is interpretation - argued, not proved"
+  },
+  {
+   "id": "artifact:decoupling_mechanism.json",
+   "type": "artifact",
+   "path": "benchmarks/results/decoupling_mechanism.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 62,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "code:experiments/decoupling_mechanism.py",
+   "type": "code",
+   "path": "experiments/decoupling_mechanism.py"
+  },
+  {
+   "id": "unit:science.frontier",
+   "type": "unit",
+   "file": "gates/science.frontier.yaml",
+   "tier": "derived",
+   "green": true,
+   "claim": "F-0006's and F-0004's open questions are resolved by sweep: the alpha=0 criticality peak is a pure lambda-x-payoff-scale fold (exact identity, verified numerically); the supercritical frontier lambda_c(alpha) is a clean monotone-descending curve (7.8 at alpha=0.55 to 3.0 at 0.80, no crossing below alpha~0.5 by lambda=15 at this sampling); and F-0004's reversal decomposes into a UNIVERSAL coupling collapse at alpha=0.95 plus a lambda-amplified sign flip (F-0010 \u2014 the pre-registered reversal criterion failed 2/4 and the failure is the finding)"
+  },
+  {
+   "id": "artifact:frontier_scale_folding.json",
+   "type": "artifact",
+   "path": "benchmarks/results/frontier_scale_folding.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 8,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "artifact:frontier_lambda_c.json",
+   "type": "artifact",
+   "path": "benchmarks/results/frontier_lambda_c.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 24,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "artifact:frontier_crossover.json",
+   "type": "artifact",
+   "path": "benchmarks/results/frontier_crossover.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 20,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "code:experiments/frontier.py",
+   "type": "code",
+   "path": "experiments/frontier.py"
+  },
+  {
+   "id": "objection:science.frontier:O-1",
+   "type": "objection",
+   "text": "'exact identity verified numerically' conflated the algebraic claim with a grid-resolution consistency check",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:science.frontier:O-2",
+   "type": "objection",
+   "text": "BLOCKING: lambda_c bisection on the median could hide multi-crossing / median-switching pathologies",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:science.frontier:O-3",
+   "type": "objection",
+   "text": "collapse threshold 0.35 lacked rationale and had a tight margin at lambda=0.8",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:science.frontier:O-4",
+   "type": "objection",
+   "text": "'lambda-amplified sign flip' over-read three points each within ~2 null-SD",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:science.frontier:O-5",
+   "type": "objection",
+   "text": "'pre-registered' overstated the audit trail of the initial criterion",
+   "disposition": "addressed"
+  },
+  {
+   "id": "unit:science.phase_map",
+   "type": "unit",
+   "file": "gates/science.phase_map.yaml",
+   "tier": "exact",
+   "green": true,
+   "claim": "The (lambda, alpha) phase surface is measured: the alpha=0 row reads zero on R and EPR at every lambda (calibration holds across the map); the MEDIAN game first crosses rho=1 at alpha=0.5; separately, a 0.2 fraction of individual games crosses at alpha=0.4; the frontier descends in alpha; on potential games rho(SB) is non-monotone in lambda (criticality escape via equilibrium concentration, F-0006). R inside the supercritical wedge is direction-only (near-singular resolvent)"
+  },
+  {
+   "id": "artifact:phase_map.json",
+   "type": "artifact",
+   "path": "benchmarks/results/phase_map.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 5,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "code:experiments/phase_map.py",
+   "type": "code",
+   "path": "experiments/phase_map.py"
+  },
+  {
+   "id": "doc:docs/progress/phase_map.svg",
+   "type": "doc",
+   "path": "docs/progress/phase_map.svg"
+  },
+  {
+   "id": "unit:science.quench_multimode",
+   "type": "unit",
+   "file": "gates/science.quench_multimode.yaml",
+   "tier": "derived",
+   "green": true,
+   "claim": "The per-step single-gap recursion supersedes the global crossover on a grid that now includes 3x3 games: grid median 0.076 dex, worst 0.44 (at alpha=0, tau=0.3 \u2014 a different cell from the incumbent's 1.11 at alpha>=0.5 long ramps; loop-path improvement +0.67 dex), held-out validated, full per-hypothesis accounting. Two-mode: run-1 anti-result RETRACTED as an implementation artifact; the corrected implementation still loses to one mode \u2014 the recorded lesson is about truncating the fast remainder, not non-normality"
+  },
+  {
+   "id": "artifact:quench_multimode_campaign.json",
+   "type": "artifact",
+   "path": "benchmarks/results/quench_multimode_campaign.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 20,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "objection:science.quench_multimode:O-1",
+   "type": "objection",
+   "text": "BLOCKING: claim validated only on 4-state (2x2) chains where a single slow mode is near-guaranteed; red-team measured 6.7x degradation at 27 states",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:science.quench_multimode:O-2",
+   "type": "objection",
+   "text": "BLOCKING: the two-mode implementation mixed eigenvector bases and truncated with lstsq \u2014 its anti-result was an artifact",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:science.quench_multimode:O-3",
+   "type": "objection",
+   "text": "NOTE: worst-case framing conflated different cells (incumbent 1.11 at alpha>=0.5 long ramps vs winner 0.44 at alpha=0 crossover)",
+   "disposition": "addressed"
+  },
+  {
+   "id": "unit:science.quench_regimes",
+   "type": "unit",
+   "file": "gates/science.quench_regimes.yaml",
+   "tier": "derived",
+   "green": true,
+   "claim": "Fast-quench dissipation is bracketed by the Fisher path-length floor (tau->inf) and the frozen divergence D(pi_start||pi_end) \u2014 exact AT tau=0 with a NON-UNIFORM approach (loop-like NESS paths break it; the alpha=0.95, lam_end=6 case fails the interpolation by ~1 dex and is reported, not averaged away). On monotone paths the single-gap crossover holds: held-out median 0.089 dex over 24 probes (max 0.46 at the tau=0.3 band); consumed max 1.06 dex on record. Run-1 winner_failed_validation is recorded and produced the min_probes STOPPING gate (the held-out guard stays the validator)"
+  },
+  {
+   "id": "artifact:fast_quench_campaign.json",
+   "type": "artifact",
+   "path": "benchmarks/results/fast_quench_campaign.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 26,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "objection:science.quench_regimes:O-1",
+   "type": "objection",
+   "text": "BLOCKING: 'frozen divergence is a telescoping identity' overstated \u2014 exact only AT tau=0 with non-uniform approach; loop-like NESS paths (alpha=0.95, lam_end=6) break the interpolation by ~1 dex",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:science.quench_regimes:O-2",
+   "type": "objection",
+   "text": "BLOCKING: max residual reported held-out-only (0.46) while the consumed probe0 hid 1.06 dex \u2014 the adequacy MEDIAN averaged over a known failure",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:science.quench_regimes:O-3",
+   "type": "objection",
+   "text": "MUST-ADDRESS: min_probes=6 pads with low-EFE probes and must not be presented as validation",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:science.quench_regimes:O-4",
+   "type": "objection",
+   "text": "NOTE: midpoint spectral-gap convention is ~9% worse than gap-at-lambda_start though sigma-insensitive; tau=0.3 residual band is systematic first-order error",
+   "disposition": "accepted"
+  },
+  {
+   "id": "unit:solve.advanced",
+   "type": "unit",
+   "file": "gates/solve.advanced.yaml",
+   "tier": "exact",
+   "green": true,
+   "claim": "Mirror descent, damped iteration and Gambit's homotopy agree on the QRE; implicit differentiation through the fixed point reproduces the Result 1 resolvent exactly"
+  },
+  {
+   "id": "artifact:gambit_agreement.json",
+   "type": "artifact",
+   "path": "benchmarks/results/gambit_agreement.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 2,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "artifact:solver_cross_agreement.json",
+   "type": "artifact",
+   "path": "benchmarks/results/solver_cross_agreement.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 1,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "artifact:implicit_chi_agreement.json",
+   "type": "artifact",
+   "path": "benchmarks/results/implicit_chi_agreement.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 2,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "code:packages/strataq/strataq/core/solve/mirror.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/core/solve/mirror.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/core/solve/implicit.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/core/solve/implicit.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/finite/test_solve_advanced.py",
+   "type": "test",
+   "path": "packages/strataq/tests/finite/test_solve_advanced.py"
+  },
+  {
+   "id": "unit:solve.branch",
+   "type": "unit",
+   "file": "gates/solve.branch.yaml",
+   "tier": "exact",
+   "green": true,
+   "claim": "Pseudo-arclength continuation traces the principal QRE branch from the centroid through criticality: it passes through the fixed-lambda solver's points to 1e-7, matches Gambit's homotopy along the branch, and continues through rho = 1 (coordination pitchfork) without stalling"
+  },
+  {
+   "id": "artifact:branch_agreement.json",
+   "type": "artifact",
+   "path": "benchmarks/results/branch_agreement.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 2,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "code:packages/strataq/strataq/core/solve/homotopy.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/core/solve/homotopy.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/finite/test_homotopy.py",
+   "type": "test",
+   "path": "packages/strataq/tests/finite/test_homotopy.py"
+  },
+  {
+   "id": "unit:stage0",
+   "type": "unit",
+   "file": "gates/stage0.yaml",
+   "tier": "exact",
+   "green": true,
+   "claim": "The SAGE foundation exists and enforces its own rules: workspace builds, contract protocols are real and tested, hooks fire, gates run, memory is seeded, CI is green, dashboard renders"
+  },
+  {
+   "id": "code:packages/strataq/strataq/core/protocols.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/core/protocols.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/core/config.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/core/config.py"
+  },
+  {
+   "id": "code:packages/strataq-bench/strataq_bench/result.py",
+   "type": "code",
+   "path": "packages/strataq-bench/strataq_bench/result.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/test_protocols.py",
+   "type": "test",
+   "path": "packages/strataq/tests/test_protocols.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/test_import_guard.py",
+   "type": "test",
+   "path": "packages/strataq/tests/test_import_guard.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/test_config_schema.py",
+   "type": "test",
+   "path": "packages/strataq/tests/test_config_schema.py"
+  },
+  {
+   "id": "test:packages/strataq-bench/tests/test_result_schema.py",
+   "type": "test",
+   "path": "packages/strataq-bench/tests/test_result_schema.py"
+  },
+  {
+   "id": "test:.claude/hooks/tests/test_hooks.py",
+   "type": "test",
+   "path": ".claude/hooks/tests/test_hooks.py"
+  },
+  {
+   "id": "doc:README.md",
+   "type": "doc",
+   "path": "README.md"
+  },
+  {
+   "id": "doc:CLAUDE.md",
+   "type": "doc",
+   "path": "CLAUDE.md"
+  },
+  {
+   "id": "doc:research/README.md",
+   "type": "doc",
+   "path": "research/README.md"
+  },
+  {
+   "id": "doc:memory/claims.md",
+   "type": "doc",
+   "path": "memory/claims.md"
+  },
+  {
+   "id": "doc:memory/decisions.md",
+   "type": "doc",
+   "path": "memory/decisions.md"
+  },
+  {
+   "id": "doc:memory/glossary.md",
+   "type": "doc",
+   "path": "memory/glossary.md"
+  },
+  {
+   "id": "doc:docs/index.md",
+   "type": "doc",
+   "path": "docs/index.md"
+  },
+  {
+   "id": "doc:docs/architecture/patterns.md",
+   "type": "doc",
+   "path": "docs/architecture/patterns.md"
+  },
+  {
+   "id": "objection:stage0:O-1",
+   "type": "objection",
+   "text": "import-sage guard bypassed by dynamic imports (__import__, import_module)",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:stage0:O-2",
+   "type": "objection",
+   "text": "SAGE_ADR_REF is a blanket override for boundary and anti-gaming guards",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:stage0:O-3",
+   "type": "objection",
+   "text": "gate regression check has no baseline before the first commit",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:stage0:O-4",
+   "type": "objection",
+   "text": "git-CLI commits can bypass Claude Code hooks; CI is detection-after-the-fact",
+   "disposition": "accepted"
+  },
+  {
+   "id": "objection:stage0:O-5",
+   "type": "objection",
+   "text": "hook tests did not cover dynamic-import variants",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:stage0:O-6",
+   "type": "objection",
+   "text": "diff-based guards unguarded on the very first commit",
+   "disposition": "accepted"
+  },
+  {
+   "id": "unit:thermo.estimators",
+   "type": "unit",
+   "file": "gates/thermo.estimators.yaml",
+   "tier": "exact",
+   "green": true,
+   "claim": "Irreversibility is estimable from trajectories alone: the KLD k-th order Markov estimator recovers the exact Schnakenberg EPR on synthetic Glauber data, and the TUR bound is a certified lower bound that degrades gracefully, tight near equilibrium and loosening toward harmonic games"
+  },
+  {
+   "id": "artifact:estimator_ground_truth.json",
+   "type": "artifact",
+   "path": "benchmarks/results/estimator_ground_truth.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 16,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "artifact:estimator_alpha_sweep.json",
+   "type": "artifact",
+   "path": "benchmarks/results/estimator_alpha_sweep.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 44,
+   "n_effect_sizes": 3
+  },
+  {
+   "id": "code:packages/strataq/strataq/core/dynamics/sample.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/core/dynamics/sample.py"
+  },
+  {
+   "id": "code:packages/strataq/strataq/thermo/estimators.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/thermo/estimators.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/thermo/test_estimators.py",
+   "type": "test",
+   "path": "packages/strataq/tests/thermo/test_estimators.py"
+  },
+  {
+   "id": "doc:docs/instruments/estimators.md",
+   "type": "doc",
+   "path": "docs/instruments/estimators.md"
+  },
+  {
+   "id": "objection:thermo.estimators:O-1",
+   "type": "objection",
+   "text": "BLOCKING: artifact notes called the TUR point estimate a 'certified lower bound' while it exceeded the exact EPR at 2 of 10 sweep levels (max ratio 1.073)",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.estimators:O-2",
+   "type": "objection",
+   "text": "docstring 'every k targets the same rate' true only as a population identity; empirically k=4 reads ~17% low, k=5 ~59% low at the validation sample size",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.estimators:O-3",
+   "type": "objection",
+   "text": "empirical_flux_weights test derived weights and evaluated the bound on the same batch (selection bias)",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.estimators:O-4",
+   "type": "objection",
+   "text": "artifact notes conflated point estimate with certified bound",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.estimators:O-5",
+   "type": "objection",
+   "text": "window_currents and _reversed_codes untested directly",
+   "disposition": "addressed"
+  },
+  {
+   "id": "unit:thermo.hs_estimator.gate_se",
+   "type": "unit",
+   "file": "gates/thermo.hs_estimator.gate_se.yaml",
+   "tier": "derived",
+   "green": true,
+   "claim": "REFUSED as registered, and the refusal separates two failure modes R8 had fused (F-0020). (1) G1 order-invariance is SOLVED: jackknife, delta and bootstrap all give 0/20 anomaly-flag flips under the physically-null full trajectory permutation at n=30/50/100, against the incumbent split's 7/6/0 \u2014 R8's C-2 prediction confirmed. (2) G5 (SE accuracy against an oracle SE from 40 independent draws, own relative SE 0.113) discriminates as designed and bootstrap wins: 0.18-0.29 deviation vs split 0.44-0.49 and jackknife 0.32-0.52; delta fails catastrophically on ONE window (~1e8) because its dtau/drho gradient explodes at the rho clip floor. (3) G4 refusal power is clean for every candidate (60/60 at n=30 and n=100) \u2014 nothing bought agreement by breaking the gate. (4) G2 fails at n=30 for ALL candidates; bootstrap misses on that single cell alone (12/20 vs an 18 bar) with all four other criteria passed. The mechanism is that tau_hat's own across-seed SD is 0.967 at n=30 (35-40% of tau_hat), so an ACCURATE SE must refuse genuinely settled holds \u2014 the binding constraint is the variance of the relaxation-time ESTIMATE, not the error bar. This partially RETRACTS F-0019's extrapolation: stability was implementation-bound and is fixed, quotability is not and needs a lower-variance tau_hat. (5) Real data (R7 CAISO panel): flip rate 0.214 -> 0.050, month 06 collapsing 17/20 -> 0/20, and admission MOVES (month 07 refused under split, admitted under all alternatives) with the estimate provably identical. (6) A SECOND order-dependence found outside R9's scope: the CI/IFT bootstrap resamples indices from a fixed seed, so the whole residual is a thresholded-Monte-Carlo-boolean problem (R10). Default left at split per the letter of the registered rule, with the rule's gap \u2014 the incumbent fails three criteria while bootstrap fails one \u2014 put to the reviewer rather than resolved unilaterally"
+  },
+  {
+   "id": "artifact:gate_se_realdata.json",
+   "type": "artifact",
+   "path": "benchmarks/results/gate_se_realdata.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 135,
+   "n_effect_sizes": 11
+  },
+  {
+   "id": "artifact:gate_se_read.json",
+   "type": "artifact",
+   "path": "benchmarks/results/gate_se_read.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 105,
+   "n_effect_sizes": 48
+  },
+  {
+   "id": "code:packages/strataq/strataq/thermo/hs_estimator.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/thermo/hs_estimator.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/thermo/test_hs_estimator.py",
+   "type": "test",
+   "path": "packages/strataq/tests/thermo/test_hs_estimator.py"
+  },
+  {
+   "id": "doc:docs/reference.md",
+   "type": "doc",
+   "path": "docs/reference.md"
+  },
+  {
+   "id": "objection:thermo.hs_estimator.gate_se:C-1",
+   "type": "objection",
+   "text": "MUST-ADDRESS: jackknife's G5 deviation worsens monotonically with n (0.321 -> 0.433 -> 0.519 -> 0.654), which is backwards for a consistent estimator and is unexplained. Provide a mechanism or file as an open chase item",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator.gate_se:C-2",
+   "type": "objection",
+   "text": "MUST-ADDRESS: the registered rule keeps `split` as default when nothing passes, but did not anticipate the incumbent failing three criteria while bootstrap fails one. Leaving a dominated default is questionable for users; confirm the decision or revise the rule",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator.gate_se:N-1",
+   "type": "objection",
+   "text": "NOTE: the aggregate G2 mechanism over-predicts the refusal rate (~81% from a normal approximation vs ~40% observed), so the story is sound but simplified",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator.gate_se:N-2",
+   "type": "objection",
+   "text": "NOTE: delta's gradient explosion at the rho clip floor is documented but its mechanism belongs in the main artifact, not only a side note",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator.gate_se:N-3",
+   "type": "objection",
+   "text": "NOTE: the month-05 residual (identical flip rate across all four SE methods) confirms a second order-dependence; appropriate as a chase item",
+   "disposition": "accepted"
+  },
+  {
+   "id": "objection:thermo.hs_estimator.gate_se:SELF-1",
+   "type": "objection",
+   "text": "SELF-IDENTIFIED, flagged to the reviewer before their report: G5 as registered stores only |ratio - 1|, so the DIRECTION of the error is not recoverable from the artifact -- a candidate that dangerously understates uncertainty scores identically to one that harmlessly overstates it",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator.gate_se:SELF-2",
+   "type": "objection",
+   "text": "SELF-IDENTIFIED: G1 is a THEOREM for jackknife and delta (permutation-invariance by construction), so passing it is arithmetic rather than evidence",
+   "disposition": "addressed"
+  },
+  {
+   "id": "unit:thermo.hs_estimator.smalln",
+   "type": "unit",
+   "file": "gates/thermo.hs_estimator.smalln.yaml",
+   "tier": "derived",
+   "green": true,
+   "claim": "REFUSED as registered, with two mandated diagnostics that sharpen the result (F-0019). (1) The refusal stands: no (n, interval-method) cell passes S1/S1b/S2/S3, so the n >= 200 floor holds and a month of market data is not a self-certifying read. (2) Interval COVERAGE is not the constraint \u2014 it holds at every n down to 20 (19-20/20, width ~1.9x bootstrap SE, all three constructions). (3) C-1: against the generator EXACT settling status (no sampling noise) n=200 scores 19/20 and PASSES the bar, so the earlier 17/20 was the finite-sample reference own noise and the existing floor is SOLID, not marginal; small-n still fails (10/20 at n=30) regardless of reference. (4) C-2: a within-group permutation preserving the SE split collapses flag flips 6->0 (n=30), 3->0 (n=100), so the small-n instability is substantially an ARTIFACT of the i::4 split implementation, not the physics \u2014 the gate can be fixed rather than the floor raised (R9). (5) C-3: the import-the-full-window-verdict shortcut is rejected in writing with its reason. Criteria were red-teamed BEFORE any result existed and again after"
+  },
+  {
+   "id": "artifact:smalln_certification.json",
+   "type": "artifact",
+   "path": "benchmarks/results/smalln_certification.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 76,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "objection:thermo.hs_estimator.smalln:D-1",
+   "type": "objection",
+   "text": "DESIGN review (pre-results), BLOCKING: coverage alone is gameable \u2014 an arbitrarily wide interval covers everything",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator.smalln:D-2",
+   "type": "objection",
+   "text": "DESIGN review, BLOCKING: certifying the smallest of 15 screened cells is a best-of-15 selection that passes by chance",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator.smalln:D-3",
+   "type": "objection",
+   "text": "DESIGN review, MUST-ADDRESS: a floor certified at one (alpha, tau) would travel to CAISO data with different relaxation structure",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator.smalln:D-4",
+   "type": "objection",
+   "text": "DESIGN review, MUST-ADDRESS: S3's permutation is null for physics but not for the 4-way SE split; t_widened mixes frameworks",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator.smalln:C-1",
+   "type": "objection",
+   "text": "RESULTS review, BLOCKING: adjudicate the n=200 S2 failure against the TRUE settling criterion rather than a finite-sample reference",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator.smalln:C-2",
+   "type": "objection",
+   "text": "RESULTS review, MUST-ADDRESS: decompose S3 instability into physics vs the i::4 split machinery",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator.smalln:C-3",
+   "type": "objection",
+   "text": "RESULTS review, MUST-ADDRESS: reject the import-the-full-window-verdict chase item in writing",
+   "disposition": "addressed"
+  },
+  {
+   "id": "unit:thermo.hs_estimator",
+   "type": "unit",
+   "file": "gates/thermo.hs_estimator.yaml",
+   "tier": "derived",
+   "green": true,
+   "claim": "CERTIFIED within validated scope after a WITHHELD-then-GRANTED arc (F-0016): Hatano-Sasa Y from observed quench trajectories \u2014 plug-in with the mandatory pre-quench window, calibrated trajectory-bootstrap CI (20/20 at nominal 95%), primary relaxation gate (hold >= 4 x (lag-N/4 tau_hat + 2 SE), zero flicker at settled holds, conservative-only at margins, correct on the alpha=0 basin-hopping family with no game tuning), and a TESTED IFT anomaly companion that fires on genuinely non-stepwise input. v2 criteria C1-C5 all pass on a registration whose commit landed pre-run; scope and unit contracts explicit in the docstring"
+  },
+  {
+   "id": "artifact:hs_estimator_sweep.json",
+   "type": "artifact",
+   "path": "benchmarks/results/hs_estimator_sweep.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 43,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "objection:thermo.hs_estimator:O-1",
+   "type": "objection",
+   "text": "BLOCKING: safety factor 4 calibrated on one case; the relaxation underestimate reaches ~19x at alpha=0",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator:O-2",
+   "type": "objection",
+   "text": "BLOCKING: single-seed coverage - multi-seed shows ~2/5 at the admitted hold (residual bias beyond the CI)",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator:O-3",
+   "type": "objection",
+   "text": "BLOCKING: the autocorrelation gate breaks at small n_trajectories (24x underestimate at n=1)",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator:O-4",
+   "type": "objection",
+   "text": "BLOCKING: P1 was re-scoped from 'tau>=4' to 'gate-admitted holds' - a weakening to fit the implementation",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator:O-5",
+   "type": "objection",
+   "text": "NOTE: even at its most honest, the gate refuses 7/8 holds - the usefulness scope must be stated",
+   "disposition": "accepted"
+  },
+  {
+   "id": "objection:thermo.hs_estimator:R2-F1",
+   "type": "objection",
+   "text": "BLOCKING (review 2): the IFT anomaly companion was untested against the failure it exists to catch",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator:R2-F3",
+   "type": "objection",
+   "text": "BLOCKING (review 2): the hold_durations time-unit contract was implicit \u2014 a unit mismatch rescales the gate silently",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator:R2-F7",
+   "type": "objection",
+   "text": "NOTE (review 2): docstring falsely said the pre-quench window 'may be omitted'",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.hs_estimator:R2-F2F6",
+   "type": "objection",
+   "text": "NOTE (review 2): validated scope (2x2 families, alpha in {0, 0.25}, n>=200) must be declared",
+   "disposition": "addressed"
+  },
+  {
+   "id": "unit:thermo.protocols",
+   "type": "unit",
+   "file": "gates/thermo.protocols.yaml",
+   "tier": "exact",
+   "green": true,
+   "claim": "Exact housekeeping/excess decomposition and quench fluctuation theorems for the Glauber chain: sigma_tot = sigma_hk + sigma_ex with sigma_hk = 0 iff detailed balance and sigma_ex = -dD(p||pi)/dt; the Hatano-Sasa IFT <e^{-Y}> = 1 verified by the POWERED sampled-path check at alpha=0.5 (the exact transfer telescopes and is an identity verification only); the quench scan (predictions written in config before the run; the intended prior commit aborted \u2014 recorded) finds the driving-cost inversion (F-0012): excess collapses with alpha while housekeeping grows to 12.4 nats at a constant per-hold burn rate; the collapse's mechanism is OPEN"
+  },
+  {
+   "id": "artifact:protocol_quench_scan.json",
+   "type": "artifact",
+   "path": "benchmarks/results/protocol_quench_scan.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 18,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "artifact:protocol_ift_checks.json",
+   "type": "artifact",
+   "path": "benchmarks/results/protocol_ift_checks.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 10,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "code:packages/strataq/strataq/thermo/protocols.py",
+   "type": "code",
+   "path": "packages/strataq/strataq/thermo/protocols.py"
+  },
+  {
+   "id": "test:packages/strataq/tests/thermo/test_protocols.py",
+   "type": "test",
+   "path": "packages/strataq/tests/thermo/test_protocols.py"
+  },
+  {
+   "id": "objection:thermo.protocols:O-1",
+   "type": "objection",
+   "text": "BLOCKING: the exact-transfer <e^{-Y}> = 1 is a telescoping algebraic identity for stepwise protocols \u2014 it can never fail and cannot catch kernel bugs; presenting it as a machine-precision TEST overstates it",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.protocols:O-2",
+   "type": "objection",
+   "text": "BLOCKING: F-0012's mechanism claim ('near-harmonic NESS is lambda-insensitive so nothing relaxes') is refuted by an asymmetric-mix probe where the NESS genuinely moves (~7e-3) yet excess still collapses ~290x",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.protocols:O-3",
+   "type": "objection",
+   "text": "BLOCKING: pre-registration claimed 'config committed before the run' but the commit ABORTED on a pre-commit hook failure \u2014 config was staged, not committed, when results existed",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.protocols:O-4",
+   "type": "objection",
+   "text": "NOTE: the sampled IFT at alpha=0.95 has Y ~ 6e-5 \u2014 the CI-brackets-1 verdict is essentially zero-power there",
+   "disposition": "addressed"
+  },
+  {
+   "id": "objection:thermo.protocols:O-5",
+   "type": "objection",
+   "text": "NOTE: housekeeping duration-linearity R^2 = 1.000 is exact by construction (sigma_hk depends only on the generator and pi, constant per hold) \u2014 the 'linear law' framing repackages structural constancy",
+   "disposition": "addressed"
+  },
+  {
+   "id": "unit:web.scaffold",
+   "type": "unit",
+   "file": "gates/web.scaffold.yaml",
+   "tier": "exact",
+   "green": true,
+   "claim": "SAGE Labs exists as a buildable Next.js app: Learn renders the single-source docs/theory explainers (three authored: softmax/lambda, reciprocity, the one-price objection stated honestly); the Lab reads all three meters live from the API with a lambda slider and the reproduce-in-Python funnel; next build passes with 9 static pages"
+  },
+  {
+   "id": "code:docs/theory/01-softmax-and-lambda.md",
+   "type": "code",
+   "path": "docs/theory/01-softmax-and-lambda.md"
+  },
+  {
+   "id": "code:docs/theory/07-reciprocity.md",
+   "type": "code",
+   "path": "docs/theory/07-reciprocity.md"
+  },
+  {
+   "id": "code:docs/theory/09-the-one-price-objection.md",
+   "type": "code",
+   "path": "docs/theory/09-the-one-price-objection.md"
+  },
+  {
+   "id": "doc:apps/web/CLAUDE.md",
+   "type": "doc",
+   "path": "apps/web/CLAUDE.md"
+  },
+  {
+   "id": "config:bayes_reading.yaml",
+   "type": "config",
+   "path": "config/experiments/bayes_reading.yaml",
+   "registers_criteria": false
+  },
+  {
+   "id": "config:day_quench.yaml",
+   "type": "config",
+   "path": "config/experiments/day_quench.yaml",
+   "registers_criteria": false
+  },
+  {
+   "id": "config:dynamics_calibration.yaml",
+   "type": "config",
+   "path": "config/experiments/dynamics_calibration.yaml",
+   "registers_criteria": false
+  },
+  {
+   "id": "config:electricity_reading.yaml",
+   "type": "config",
+   "path": "config/experiments/electricity_reading.yaml",
+   "registers_criteria": false
+  },
+  {
+   "id": "config:estimator_recovery.yaml",
+   "type": "config",
+   "path": "config/experiments/estimator_recovery.yaml",
+   "registers_criteria": false
+  },
+  {
+   "id": "config:estimator_validation.yaml",
+   "type": "config",
+   "path": "config/experiments/estimator_validation.yaml",
+   "registers_criteria": false
+  },
+  {
+   "id": "config:fast_quench.yaml",
+   "type": "config",
+   "path": "config/experiments/fast_quench.yaml",
+   "registers_criteria": false
+  },
+  {
+   "id": "config:frontier.yaml",
+   "type": "config",
+   "path": "config/experiments/frontier.yaml",
+   "registers_criteria": false
+  },
+  {
+   "id": "config:gate_se.yaml",
+   "type": "config",
+   "path": "config/experiments/gate_se.yaml",
+   "registers_criteria": true
+  },
+  {
+   "id": "config:hs_estimator.yaml",
+   "type": "config",
+   "path": "config/experiments/hs_estimator.yaml",
+   "registers_criteria": false
+  },
+  {
+   "id": "config:hs_estimator_v2.yaml",
+   "type": "config",
+   "path": "config/experiments/hs_estimator_v2.yaml",
+   "registers_criteria": true
+  },
+  {
+   "id": "config:phase_map.yaml",
+   "type": "config",
+   "path": "config/experiments/phase_map.yaml",
+   "registers_criteria": false
+  },
+  {
+   "id": "config:pricing_reading.yaml",
+   "type": "config",
+   "path": "config/experiments/pricing_reading.yaml",
+   "registers_criteria": false
+  },
+  {
+   "id": "config:protocol_reading.yaml",
+   "type": "config",
+   "path": "config/experiments/protocol_reading.yaml",
+   "registers_criteria": false
+  },
+  {
+   "id": "config:quench_multimode.yaml",
+   "type": "config",
+   "path": "config/experiments/quench_multimode.yaml",
+   "registers_criteria": false
+  },
+  {
+   "id": "config:reciprocity_calibration.yaml",
+   "type": "config",
+   "path": "config/experiments/reciprocity_calibration.yaml",
+   "registers_criteria": false
+  },
+  {
+   "id": "config:smalln_certification.yaml",
+   "type": "config",
+   "path": "config/experiments/smalln_certification.yaml",
+   "registers_criteria": true
+  },
+  {
+   "id": "config:tau_lag.yaml",
+   "type": "config",
+   "path": "config/experiments/tau_lag.yaml",
+   "registers_criteria": true
+  },
+  {
+   "id": "config:toolkit_verdicts.yaml",
+   "type": "config",
+   "path": "config/experiments/toolkit_verdicts.yaml",
+   "registers_criteria": false
+  },
+  {
+   "id": "experiment:bayes_reading",
+   "type": "experiment",
+   "path": "experiments/bayes_reading.py"
+  },
+  {
+   "id": "experiment:blotto_calibration",
+   "type": "experiment",
+   "path": "experiments/blotto_calibration.py"
+  },
+  {
+   "id": "experiment:congestion_calibration",
+   "type": "experiment",
+   "path": "experiments/congestion_calibration.py"
+  },
+  {
+   "id": "experiment:day_quench_reading",
+   "type": "experiment",
+   "path": "experiments/day_quench_reading.py"
+  },
+  {
+   "id": "experiment:decoupling_mechanism",
+   "type": "experiment",
+   "path": "experiments/decoupling_mechanism.py"
+  },
+  {
+   "id": "experiment:dynamics_calibration",
+   "type": "experiment",
+   "path": "experiments/dynamics_calibration.py"
+  },
+  {
+   "id": "experiment:electricity_reading",
+   "type": "experiment",
+   "path": "experiments/electricity_reading.py"
+  },
+  {
+   "id": "experiment:estimator_recovery",
+   "type": "experiment",
+   "path": "experiments/estimator_recovery.py"
+  },
+  {
+   "id": "experiment:estimator_validation",
+   "type": "experiment",
+   "path": "experiments/estimator_validation.py"
+  },
+  {
+   "id": "experiment:fast_quench_campaign",
+   "type": "experiment",
+   "path": "experiments/fast_quench_campaign.py"
+  },
+  {
+   "id": "experiment:frontier",
+   "type": "experiment",
+   "path": "experiments/frontier.py"
+  },
+  {
+   "id": "experiment:gate_se_reading",
+   "type": "experiment",
+   "path": "experiments/gate_se_reading.py"
+  },
+  {
+   "id": "experiment:gate_se_realdata",
+   "type": "experiment",
+   "path": "experiments/gate_se_realdata.py"
+  },
+  {
+   "id": "experiment:hs_estimator_reading",
+   "type": "experiment",
+   "path": "experiments/hs_estimator_reading.py"
+  },
+  {
+   "id": "experiment:phase_map",
+   "type": "experiment",
+   "path": "experiments/phase_map.py"
+  },
+  {
+   "id": "experiment:pricing_reading",
+   "type": "experiment",
+   "path": "experiments/pricing_reading.py"
+  },
+  {
+   "id": "experiment:protocol_reading",
+   "type": "experiment",
+   "path": "experiments/protocol_reading.py"
+  },
+  {
+   "id": "experiment:quench_multimode_campaign",
+   "type": "experiment",
+   "path": "experiments/quench_multimode_campaign.py"
+  },
+  {
+   "id": "experiment:reciprocity_calibration",
+   "type": "experiment",
+   "path": "experiments/reciprocity_calibration.py"
+  },
+  {
+   "id": "experiment:smalln_certification",
+   "type": "experiment",
+   "path": "experiments/smalln_certification.py"
+  },
+  {
+   "id": "experiment:solver_validation",
+   "type": "experiment",
+   "path": "experiments/solver_validation.py"
+  },
+  {
+   "id": "experiment:toolkit_verdicts",
+   "type": "experiment",
+   "path": "experiments/toolkit_verdicts.py"
+  },
+  {
+   "id": "artifact:electricity_irreversibility.json",
+   "type": "artifact",
+   "path": "benchmarks/results/electricity_irreversibility.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 13,
+   "n_effect_sizes": 1
+  },
+  {
+   "id": "artifact:electricity_lambda.json",
+   "type": "artifact",
+   "path": "benchmarks/results/electricity_lambda.json",
+   "benchmark_result_shaped": true,
+   "n_metrics": 7,
+   "n_effect_sizes": 0
+  },
+  {
+   "id": "artifact:electricity_series.json",
+   "type": "artifact",
+   "path": "benchmarks/results/electricity_series.json",
+   "benchmark_result_shaped": false
+  },
+  {
+   "id": "artifact:phase_map_surface.json",
+   "type": "artifact",
+   "path": "benchmarks/results/phase_map_surface.json",
+   "benchmark_result_shaped": false
+  },
+  {
+   "id": "finding:F-0001",
+   "type": "finding",
+   "title": "\u211b exceeds 1 on matching pennies (\u211b is not a fraction)",
+   "chase_status": "resolved (definitional, not a bug). RPS-3 reads 0.69, RPS-5 reads 0.43, MP reads 1.20 \u2014 the 2\u00d72 tangent space (1-D per player) makes MP the most purely rotational response geometry available.",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0002",
+   "type": "finding",
+   "title": "\u211b magnitude scales with \u03bb (only the zero/nonzero reading is \u03bb-free)",
+   "chase_status": "resolved (theory understood; docs/ledger corrected). The \u03bb-free property is Result 2's *symmetry* statement: \u211b = 0 \u27fa potential, at every \u03bb.",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0003",
+   "type": "finding",
+   "title": "EPR, \u211b and \u03b1 co-move almost perfectly on random 3\u00d73 families",
+   "chase_status": "superseded by F-0004 \u2014 the marginal agreement is \u03b1-driven confounding, discovered by red-team stratification.",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0004",
+   "type": "finding",
+   "title": "The meters DECOUPLE at high \u03b1: within-level \u03c1(EPR, \u211b) reverses sign",
+   "chase_status": "**resolved by F-0007** (mechanism experiment, same games, paired design). Half the hypothesis held: \u211b's high-\u03b1 variation IS denominator-driven (\u03c1(\u211b, 1/\u2016\u03c7+\u03c7\u1d40\u2016) = 0.993 at \u03b1 = 0.95). But the numerator fix fails \u2014 see F-0007.",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0005",
+   "type": "finding",
+   "title": "Blotto is mixed, not pure harmonic: \u03b1 = 0.69 on the symmetric budget-3 game",
+   "chase_status": "parked (consistent with theory; RPS by contrast reads exactly 1). Worth revisiting when the \u03b1 > 0 anchor is used quantitatively: the bracket's right end sits at ~0.7, not 1.0.",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0006",
+   "type": "finding",
+   "title": "The criticality wedge: potential games ESCAPE criticality at high \u03bb; the supercritical frontier descends with \u03b1",
+   "chase_status": "chasing. (1) Is the \u03b1 = 0 peak location \u03bb \u2248 1.7 tied to the payoff scale (scale = 2.0 here \u2014 test the folding); (2) is the wedge boundary a clean curve \u03bb_c(\u03b1) (finer grid); (3) does the wedge boundary coincide with where within-level \u211b\u2013EPR coupling degrades (F-0004's \u03b1 \u2248 0.75 is suspiciously inside the wedge)?",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0007",
+   "type": "finding",
+   "title": "The response layer and the dissipation layer are distinct observables (H1 refuted, H2 confirmed)",
+   "chase_status": "resolved as a structural fact, and it is the *better* result: \u03c7^eq is a local derivative at the QRE point; EPR is a global functional of the stationary flux of the joint-profile chain. They co-vary exactly while a potential component modulates both (\u03b1 \u2264 0.65) and part company when it vanishes. **\u211b remains the potentiality *test* (= 0 iff potential, exact at every \u03bb); EPR remains the dissipation *gauge*; neither substitutes for the other across the harmonic regime.** Negative result for the corrected-meter idea, written down plainly.",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0008",
+   "type": "finding",
+   "title": "First real-data reading: DAM at-null; RTM escapes its null on the LOW side (REVISED after red-team)",
+   "chase_status": "chasing. (1) Constrained surrogates that match \u0394-sign persistence (IAAFT with iteration, Markov-matched or block surrogates) to get a bracketing null for RTM; (2) the RTM persistence anomaly itself \u2014 WHY do real-time prices ramp so much more persistently than their linear image? (candidate: dispatch inertia / ramp constraints \u2014 possibly the irreversibility hiding in a statistic the KLD at k=1 cannot see); (3) finer bins, longer windows, spike-conditioned reads.",
+   "retraction": true
+  },
+  {
+   "id": "finding:F-0009",
+   "type": "finding",
+   "title": "First positive real-data detection: DAM hourly prices violate pair-level detailed balance (diurnal-loop signature)",
+   "chase_status": "chasing \u2014 (1) independent red-team verification of the Markov-null construction; (2) RTM at k=2 / coarser \u0394t; (3) effect size in physical terms (nats/day of the diurnal cycle \u2248 1.1) for p3_noneq's data section.",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0010",
+   "type": "finding",
+   "title": "The F-0004 reversal is \u03bb-dependent: universal COLLAPSE, conditional SIGN FLIP",
+   "chase_status": "parked with a sharp question for p3: is sign(corr at \u03b1=0.95) a function of distance INTO the wedge (\u03c1\u22121) rather than of \u03bb per se? One regression on existing per-game data would answer it.",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0011",
+   "type": "finding",
+   "title": "The reciprocity meter's first empirical read: \u211b \u2248 0.001 on real pass-through data, exactly where theory demands zero",
+   "chase_status": "parked with two sharp follow-ups: (1) the TRUE multi-retailer reciprocity question needs cross-CHAIN data (Dominick's vs competitors) \u2014 this dataset cannot ask it; (2) item-level Edgeworth at finer resolution once a non-subsampled panel slice is used.",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0012",
+   "type": "finding",
+   "title": "The driving cost inverts across the family: potential games pay per change, harmonic games pay per unit time",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0013",
+   "type": "finding",
+   "title": "F-0012's mechanism resolved by the EFE campaign: the excess collapse is the shrinking NESS path length",
+   "chase_status": "CLOSED with a scope correction (red-team A2, validated 2026-08-12). 3\u00d73 family (coordination-3 \u2194 RPS): excess/F flat in \u03b1 to 0.1% at the base protocol \u2014 the formula generalises. BUT the red-team's near-tautology point is right and now owned: in the WELL-RELAXED regime (\u03c4 \u2273 1) \u27e8Y\u27e9 \u2192 \u03a3_k D(\u03c0_{k\u22121}\u2016\u03c0_k) is an understood analytic limit (excess/F \u2248 1.03 uniformly), so there the 'mechanism' is the statement that the campaign's probes sat in that regime and the floor formula is exact-in-the-limit. At FAST protocols (\u03c4 = 0.1) the lag term dominates (excess/F \u2248 5) and drifts 12% with \u03b1 \u2014 ness_floor is NOT adequate there, and F-0013's formula is scoped to well-relaxed quenches. The fast regime's \u03b1-dependence is the genuinely open remainder.",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0014",
+   "type": "finding",
+   "title": "Fast quenches: dissipation bracketed by two exact limits; the guards caught the machine being confidently wrong first",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0015",
+   "type": "finding",
+   "title": "The recursive lag model supersedes the global crossover; naive two-mode projection anti-helps",
+   "chase_status": "parked at 0.44 dex worst-case (2\u00d72) / ~0.36 (3\u00d73 held-out max); the principled multi-mode treatment must handle the truncated remainder (e.g. damp it at a fast effective rate instead of dropping it) \u2014 recorded, not attempted.",
+   "retraction": true
+  },
+  {
+   "id": "finding:F-0016",
+   "type": "finding",
+   "title": "OPEN: the IFT cannot self-calibrate the plug-in Hatano\u2013Sasa estimator; the gap collapse is why holds never settle",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0017",
+   "type": "finding",
+   "title": "CORRECTION (2026-08-12, from R9)",
+   "chase_status": "parked with the honest requirement stated \u2014 answering the premise question needs either the small-n extension of the estimator's certification (so n \u2248 30 windows become quotable) or coarser windows with many more days; a 4-state (2-bin) embedding would also return the application inside certified scope. DST (the Mar UTC-boundary shift) remains an untested rival explanation for any residual seasonal pattern.",
+   "retraction": true
+  },
+  {
+   "id": "finding:F-0019",
+   "type": "finding",
+   "title": "Small-n REFUSED, and the binding constraint is not what anyone assumed: the *number* survives at n=20, the instrument's own *verdict* does not",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0020",
+   "type": "finding",
+   "title": "The gate's order-dependence is FIXED and the small-n floor still does not move: two failure modes that R8 had fused into one",
+   "chase_status": "chasing (R10 \u2014 the CI/IFT interval's order-dependence and its thresholded-boolean problem; and a lower-variance \u03c4\u0302 as the actual route to small-n agreement).",
+   "retraction": false
+  },
+  {
+   "id": "finding:F-0021",
+   "type": "finding",
+   "title": "The relaxation-time estimator silently degenerates on fast-mixing windows: one root cause behind three different SE failures",
+   "chase_status": "chasing (R10, now with a specific design rather than a direction).",
+   "retraction": false
+  },
+  {
+   "id": "adr:ADR-0001",
+   "type": "adr",
+   "title": "ADR-0001 \u2014 Repo/package naming: repo `sage`, package `strataq`"
+  },
+  {
+   "id": "adr:ADR-0002",
+   "type": "adr",
+   "title": "ADR-0002 \u2014 Fresh monorepo at `~/projects/sage`, not in `~/projects/QRE`"
+  },
+  {
+   "id": "adr:ADR-0003",
+   "type": "adr",
+   "title": "ADR-0003 \u2014 Python version policy"
+  },
+  {
+   "id": "adr:ADR-0004",
+   "type": "adr",
+   "title": "ADR-0004 \u2014 Engine 3 (`bayesian/`) is deferred, in writing"
+  },
+  {
+   "id": "adr:ADR-0005",
+   "type": "adr",
+   "title": "ADR-0005 \u2014 Package layout: `packages/strataq/strataq/\u2026`"
+  },
+  {
+   "id": "adr:ADR-0006",
+   "type": "adr",
+   "title": "ADR-0006 \u2014 Dominick's licence handling"
+  },
+  {
+   "id": "adr:ADR-0007",
+   "type": "adr",
+   "title": "ADR-0007 \u2014 N3 tier upgrade (conjectured \u2192 derived)"
+  },
+  {
+   "id": "adr:ADR-0008",
+   "type": "adr",
+   "title": "ADR-0008 \u2014 Boundary rule refinement: plugins may import their own engine"
+  },
+  {
+   "id": "adr:ADR-0009",
+   "type": "adr",
+   "title": "ADR-0009 \u2014 ADR escape hatch readable from commit messages in CI"
+  },
+  {
+   "id": "adr:ADR-0010",
+   "type": "adr",
+   "title": "ADR-0010 \u2014 Backend hosting: Oracle Always Free VM replaces Render"
+  },
+  {
+   "id": "adr:ADR-0011",
+   "type": "adr",
+   "title": "ADR-0011 \u2014 Interim backend on Always Free x86 micro; A1 retry continues; PAYG declined"
+  },
+  {
+   "id": "adr:ADR-0012",
+   "type": "adr",
+   "title": "ADR-0012 \u2014 R6 decision: Bayesian inference engine next; deeper empirics wait for data"
+  },
+  {
+   "id": "adr:ADR-0013",
+   "type": "adr",
+   "title": "ADR-0013 \u2014 Papers consolidate to p1 + p3; p2/p4 stubs folded"
+  },
+  {
+   "id": "claim:K1",
+   "type": "claim",
+   "text": "Logit response = argmax of E[U] + \u03bb\u207b\u00b9H(\u03c3) (entropy-regularised best response; Gibbs variational principle)"
+  },
+  {
+   "id": "claim:K2",
+   "type": "claim",
+   "text": "Log-partition \u03c8 is the CGF: \u2207\u03c8 = \u03bb\u03c3, \u2207\u00b2\u03c8 = \u03bb\u00b2C with C = diag(\u03c3) \u2212 \u03c3\u03c3\u1d40"
+  },
+  {
+   "id": "claim:K3",
+   "type": "claim",
+   "text": "Exact potential \u03a6 \u27f9 Glauber/logit dynamics reversible, \u03c0 \u221d e^{\u03bb\u03a6}, J* = 0, EPR = 0. Extended 2026-08-12 (unit thermo.protocols, F-0012): the Hatano\u2013Sasa split \u03c3_tot = \u03c3_hk + \u03c3_ex instantiated exactly (\u03c3_hk \u2261 0 iff potential; \u03c3_ex = \u2212dD(p\u2016\u03c0)/dt verified); both quench IFTs hold at machine precision \u2014 Jarzynski \u27e8e^{\u03a3\u0394\u03bb\u03a6}\u27e9 = Z_K/Z_0 on potential games, Hatano\u2013Sasa \u27e8e^{\u2212Y}\u27e9 = 1 on EVERY game including "
+  },
+  {
+   "id": "claim:K4",
+   "type": "claim",
+   "text": "Externality symmetry (B = B\u1d40 on the appropriate space) \u27fa **full** potential game; on the tangent space / normalised game \u27fa potential game. **The full-vs-effective distinction is mandatory** \u2014 full symmetry is sufficient but not necessary for potentiality of the raw game (arXiv:2405.07224 Lemma C.2, Example C.2)"
+  },
+  {
+   "id": "claim:K5",
+   "type": "claim",
+   "text": "Hodge/flow decomposition: \ud835\udca2 = \ud835\udca2_pot \u2295 \ud835\udca2_harm \u2295 \ud835\udca2_nonstrat, orthogonal; nonstrategic components do not affect QRE"
+  },
+  {
+   "id": "claim:K6",
+   "type": "claim",
+   "text": "\u03bb has a rational-inattention foundation: inverse shadow price of Shannon information"
+  },
+  {
+   "id": "claim:K7",
+   "type": "claim",
+   "text": "Partial susceptibility \u03c7^part = \u03bbC (static FDT, opponents frozen)"
+  },
+  {
+   "id": "claim:K8",
+   "type": "claim",
+   "text": "Logit route choice in congestion games = Fisk (1980) SUE, convex potential \u03a3\u2090\u222bc\u2090 + \u03bb\u207b\u00b9\u03a3 x\u2090log x\u2090"
+  },
+  {
+   "id": "claim:K9",
+   "type": "claim",
+   "text": "For a stationary Markov chain, the (k+1)-block KLD between forward and reversed path measures equals k \u00b7 (per-step entropy production); uniformised skeleton per-step EP = EPR/\u039b"
+  },
+  {
+   "id": "claim:K10",
+   "type": "claim",
+   "text": "Finite-time TUR: \u03c3 \u2265 2\u27e8J_T\u27e9\u00b2/(Var(J_T)\u00b7T) for any time-integrated current of a stationary CTMC"
+  },
+  {
+   "id": "claim:N2",
+   "type": "claim",
+   "text": "\u211b = \u2016\u03c7^eq \u2212 \u03c7^eq\u1d40\u2016_F / \u2016\u03c7^eq + \u03c7^eq\u1d40\u2016_F is an **observable proxy for harmonic content**, estimable from cross-agent cost-shock pass-through asymmetry without knowing payoffs. **\u03bb-free as a symmetry statement only** (whether \u211b = 0 is \u03bb-independent; the magnitude scales with \u03bb \u2014 findings F-0002, red-team O-1)"
+  },
+  {
+   "id": "claim:N3",
+   "type": "claim",
+   "text": "No Hopf bifurcation of logit dynamics in full potential games: B = B\u1d40 \u27f9 SB \u223c S^{1/2}BS^{1/2} symmetric \u27f9 real spectrum \u27f9 no complex pair crossing"
+  },
+  {
+   "id": "claim:C1",
+   "type": "claim",
+   "text": "The chain cycling \u2192 non-potential \u2192 broken reciprocity \u2192 positive dissipation holds *tightly* (the four meters co-move monotonically along \u03b1)"
+  },
+  {
+   "id": "claim:C2",
+   "type": "claim",
+   "text": "\u211b measured from real pass-through asymmetry (Dominick's/ERCOT) is comparable in magnitude to synthetic games at matched \u03b1"
+  },
+  {
+   "id": "claim:P1",
+   "type": "claim",
+   "text": "The plain-data facade (unit product.toolkit, `strataq.toolkit`) exposes the gated instruments UNCHANGED \u2014 same machinery, same numbers, honesty warnings attached; the Bayesian \u03bb CI it quotes is calibrated (unit estimate.bayes: 48/46/48 per \u03bb* after the quantised-interval bug fix); the irreversibility verdict is the F-0009 null promoted to `strataq.thermo.nulls`"
+  },
+  {
+   "id": "concept:logit-qre",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "concept:precision-lambda",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "concept:strategic-resolvent",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "concept:reciprocity-defect-R",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "concept:harmonic-fraction-alpha",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "concept:potentiality-spectrum",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "concept:no-hopf-in-potential",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "concept:glauber-dynamics",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "concept:detailed-balance",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "concept:schnakenberg-epr",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "concept:irreversibility",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "concept:hatano-sasa-split",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "concept:housekeeping-vs-excess",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "concept:tangent-space-projection",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "concept:helmert-basis",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "doc:research/THERMOQRE_PROGRAMME_v3.md",
+   "type": "doc",
+   "curated": true
+  },
+  {
+   "id": "doc:research/THERMOQRE_PROGRAMME_v2.md",
+   "type": "doc",
+   "curated": true
+  },
+  {
+   "id": "doc:research/THERMOQRE_DOMAINS_v1.md",
+   "type": "doc",
+   "curated": true
+  },
+  {
+   "id": "doc:memory/literature-nearest-live-work.md",
+   "type": "doc",
+   "curated": true
+  },
+  {
+   "id": "paper:arXiv-2405.07224",
+   "type": "paper",
+   "curated": true
+  },
+  {
+   "id": "explainer:01-softmax-and-lambda",
+   "type": "explainer",
+   "curated": true
+  },
+  {
+   "id": "route:/lab",
+   "type": "route",
+   "curated": true
+  },
+  {
+   "id": "explainer:06-detailed-balance-and-currents",
+   "type": "explainer",
+   "curated": true
+  },
+  {
+   "id": "explainer:07-reciprocity",
+   "type": "explainer",
+   "curated": true
+  },
+  {
+   "id": "explainer:09-the-one-price-objection",
+   "type": "explainer",
+   "curated": true
+  },
+  {
+   "id": "explainer:10-the-same-machinery-everywhere",
+   "type": "explainer",
+   "curated": true
+  },
+  {
+   "id": "module:strataq",
+   "type": "module",
+   "curated": true
+  },
+  {
+   "id": "module:strataq.toolkit",
+   "type": "module",
+   "curated": true
+  },
+  {
+   "id": "module:strataq.thermo.hs_estimator",
+   "type": "module",
+   "curated": true
+  },
+  {
+   "id": "module:strataq.finite.response.reciprocity",
+   "type": "module",
+   "curated": true
+  },
+  {
+   "id": "module:strataq.finite.response.susceptibility",
+   "type": "module",
+   "curated": true
+  },
+  {
+   "id": "module:strataq.finite.decompose.hodge",
+   "type": "module",
+   "curated": true
+  },
+  {
+   "id": "module:strataq.core.dynamics.markov",
+   "type": "module",
+   "curated": true
+  },
+  {
+   "id": "module:strataq.core.dynamics.entropy",
+   "type": "module",
+   "curated": true
+  },
+  {
+   "id": "module:strataq.thermo.protocols",
+   "type": "module",
+   "curated": true
+  },
+  {
+   "id": "module:strataq.finite.response.tangent",
+   "type": "module",
+   "curated": true
+  },
+  {
+   "id": "module:strataq.core.solve.implicit",
+   "type": "module",
+   "curated": true
+  },
+  {
+   "id": "func:relaxation_gate",
+   "type": "func",
+   "curated": true
+  },
+  {
+   "id": "func:hs_y_estimate",
+   "type": "func",
+   "curated": true
+  },
+  {
+   "id": "module:strataq.core.protocols",
+   "type": "module",
+   "curated": true
+  },
+  {
+   "id": "protocol:DomainPlugin",
+   "type": "protocol",
+   "curated": true
+  },
+  {
+   "id": "domain:blotto",
+   "type": "domain",
+   "curated": true
+  },
+  {
+   "id": "domain:congestion",
+   "type": "domain",
+   "curated": true
+  },
+  {
+   "id": "domain:electricity",
+   "type": "domain",
+   "curated": true
+  },
+  {
+   "id": "domain:pricing",
+   "type": "domain",
+   "curated": true
+  },
+  {
+   "id": "hook:check_boundary.py",
+   "type": "hook",
+   "curated": true
+  },
+  {
+   "id": "endpoint:POST /v1/solve/qre",
+   "type": "endpoint",
+   "curated": true
+  },
+  {
+   "id": "endpoint:POST /v1/response",
+   "type": "endpoint",
+   "curated": true
+  },
+  {
+   "id": "route:/network",
+   "type": "route",
+   "curated": true
+  },
+  {
+   "id": "endpoint:POST /v1/domains/sioux_falls/sue",
+   "type": "endpoint",
+   "curated": true
+  },
+  {
+   "id": "route:/blotto",
+   "type": "route",
+   "curated": true
+  },
+  {
+   "id": "endpoint:POST /v1/domains/blotto/read",
+   "type": "endpoint",
+   "curated": true
+  },
+  {
+   "id": "route:/tools",
+   "type": "route",
+   "curated": true
+  },
+  {
+   "id": "endpoint:POST /v1/toolkit/rationality",
+   "type": "endpoint",
+   "curated": true
+  },
+  {
+   "id": "route:/markets",
+   "type": "route",
+   "curated": true
+  },
+  {
+   "id": "route:/phase",
+   "type": "route",
+   "curated": true
+  },
+  {
+   "id": "route:/findings",
+   "type": "route",
+   "curated": true
+  },
+  {
+   "id": "endpoint:POST /v1/toolkit/reciprocity",
+   "type": "endpoint",
+   "curated": true
+  },
+  {
+   "id": "func:toolkit.reciprocity_read",
+   "type": "func",
+   "curated": true
+  },
+  {
+   "id": "package:strataq-0.1.0",
+   "type": "package",
+   "curated": true
+  },
+  {
+   "id": "workflow:pypi-release",
+   "type": "workflow",
+   "curated": true
+  },
+  {
+   "id": "workflow:ci",
+   "type": "workflow",
+   "curated": true
+  },
+  {
+   "id": "workflow:gates",
+   "type": "workflow",
+   "curated": true
+  },
+  {
+   "id": "deploy:oracle-vm",
+   "type": "deploy",
+   "curated": true
+  },
+  {
+   "id": "deploy:vercel",
+   "type": "deploy",
+   "curated": true
+  },
+  {
+   "id": "process:pre-registration",
+   "type": "process",
+   "curated": true
+  },
+  {
+   "id": "process:verify-commit-landed",
+   "type": "process",
+   "curated": true
+  },
+  {
+   "id": "process:no-post-hoc-criteria",
+   "type": "process",
+   "curated": true
+  },
+  {
+   "id": "process:adversarial-review",
+   "type": "process",
+   "curated": true
+  },
+  {
+   "id": "process:objection-disposition",
+   "type": "process",
+   "curated": true
+  },
+  {
+   "id": "process:continuous-build",
+   "type": "process",
+   "curated": true
+  },
+  {
+   "id": "process:worktree-workflow",
+   "type": "process",
+   "curated": true
+  },
+  {
+   "id": "doc:docs/ONBOARDING.md",
+   "type": "doc",
+   "curated": true
+  },
+  {
+   "id": "concept:tau-hat-degeneracy",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "task:R10",
+   "type": "task",
+   "curated": true
+  },
+  {
+   "id": "concept:ci-bootstrap-order-dependence",
+   "type": "concept",
+   "curated": true
+  },
+  {
+   "id": "process:default-flip-to-bootstrap",
+   "type": "process",
+   "curated": true
+  },
+  {
+   "id": "operator-action:dominicks-registration",
+   "type": "operator-action",
+   "curated": true
+  },
+  {
+   "id": "user:PI",
+   "type": "user",
+   "curated": true
+  },
+  {
+   "id": "operator-action:ghcr-visibility",
+   "type": "operator-action",
+   "curated": true
+  }
+ ],
+ "edges": [
+  {
+   "src": "unit:api.core",
+   "rel": "PRODUCES",
+   "dst": "artifact:blotto_readings.json",
+   "note": "R < 1e-10 on coordination and > 0.1 on RPS THROUGH the HTTP layer; detailed-balance split correct; supercritical warning fires; guards enforce limits (encoded as the test suite \u2014 no separate artifact "
+  },
+  {
+   "src": "unit:api.core",
+   "rel": "REFERENCES",
+   "dst": "code:services/api/sage_api/main.py",
+   "note": ""
+  },
+  {
+   "src": "unit:api.core",
+   "rel": "TESTED_BY",
+   "dst": "test:services/api/tests/test_api.py",
+   "note": ""
+  },
+  {
+   "src": "unit:api.core",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:services/api/CLAUDE.md",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.blotto",
+   "rel": "PRODUCES",
+   "dst": "artifact:blotto_readings.json",
+   "note": "alpha > 0.6 and R > 0.1 on symmetric budget-3 Blotto; EPR > 1e-4 on the asymmetric 2-field instance; EPR < 1e-12 on the degenerate equal-values instance; readings live under budget shifts"
+  },
+  {
+   "src": "unit:domains.blotto",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/domains/blotto/__init__.py",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.blotto",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/domains/blotto/oracle.py",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.blotto",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/domains/test_blotto.py",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.blotto",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/domains/blotto.md",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.congestion",
+   "rel": "PRODUCES",
+   "dst": "artifact:sioux_falls_calibration.json",
+   "note": "R < 1e-10, DF defect < 1e-12, KKT < 1e-8 on Sioux Falls (top-8 OD, k=3 routes); UE link-flow gap reported as diagnostic only"
+  },
+  {
+   "src": "unit:domains.congestion",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/domains/congestion/__init__.py",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.congestion",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/domains/congestion/tntp.py",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.congestion",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/domains/test_congestion.py",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.congestion",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/domains/congestion.md",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.electricity.quench",
+   "rel": "PRODUCES",
+   "dst": "artifact:day_quench_read.json",
+   "note": "registered D1-D4 executed verbatim: gate flags reported as-is, drops counted, closed cycle, day-block bootstrap as the quoted interval, and the seeded SHUFFLE CONTROL per month with its four-way cause"
+  },
+  {
+   "src": "unit:domains.electricity.quench",
+   "rel": "REFERENCES",
+   "dst": "code:experiments/day_quench_reading.py",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.electricity.quench",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/market-data.md",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.electricity.quench",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:domains.electricity.quench:O-1",
+   "note": "Trajectories are day-PAIRS carrying the wrap-around jump; loop total 7.00 with alignment verified by the reviewer"
+  },
+  {
+   "src": "unit:domains.electricity.quench",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:domains.electricity.quench:O-2",
+   "note": "Stated in the artifact method string, F-0017 and this claim: extends, not inherits"
+  },
+  {
+   "src": "unit:domains.electricity.quench",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:domains.electricity.quench:O-3",
+   "note": "7-day-block bootstrap [6.22, 8.50] is the quoted interval everywhere; iid demoted"
+  },
+  {
+   "src": "unit:domains.electricity.quench",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:domains.electricity.quench:O-4",
+   "note": "Shuffle control implemented as a seeded artifact metric \u2014 and it retracts the drift story entirely (0/7 drift-attributable; one month UNSTABLE under a physically-null permutation). F-0017 rewritten to claim only the in-scope full-window number plus the negative result; the reviewer's own one-off spl"
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "PRODUCES",
+   "dst": "artifact:electricity_irreversibility_dam.json",
+   "note": "methodology holds on DAM hourly data: coverage >= 90%, sane FT-surrogate nulls, value-space blindness control on-null; detection flag recorded as a finding either way"
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "PRODUCES",
+   "dst": "artifact:electricity_irreversibility_rtm.json",
+   "note": "same on RTM 5-minute data (12x the sampling rate)"
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/domains/electricity/caiso.py",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/domains/electricity/__init__.py",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/domains/test_electricity.py",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/market-data.md",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:domains.electricity:O-1",
+   "note": "AAFT surrogates (rank-remap onto the data's sorted values) added as the primary null; detection requires exceeding BOTH FT and AAFT upper quantiles; benchmarks rerun; AAFT band is the reported EffectSize CI (permanence condition: never revert to FT-only)"
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:domains.electricity:O-2",
+   "note": "null_mismatch_low flag (reading < AAFT q01) computed in every artifact (permanence condition); RTM verdict everywhere is 'no detection AND no certified null \u2014 the linear+marginal class cannot bracket the data's delta-sign persistence'; F-0008 rewritten as REVISED with the retraction on the audit tra"
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:domains.electricity:O-3",
+   "note": "Gate claim, ledger row R3 and docs scoped to n<=4032 / 6 bins / (price, delta-sign) embedding; DAM (at-null) and RTM (no-detection + flag) distinguished"
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:domains.electricity:O-4",
+   "note": "TestRateLimitBackoff monkeypatch test: all 6 retries consumed, then raise"
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:domains.electricity:O-5",
+   "note": "market-data.md data-source note (posted terms, paced requests, caching)"
+  },
+  {
+   "src": "unit:domains.pricing",
+   "rel": "PRODUCES",
+   "dst": "artifact:pricing_passthrough_R.json",
+   "note": "own pass-through in [0.7, 1.3] both brands; asymmetry CI covers zero; R with cluster-bootstrap CI reported; ex-ante symmetric prediction adjudicated"
+  },
+  {
+   "src": "unit:domains.pricing",
+   "rel": "PRODUCES",
+   "dst": "artifact:pricing_edgeworth_scan.json",
+   "note": "per-store Markov-null scan across >=25 stores with detection count vs alpha*n"
+  },
+  {
+   "src": "unit:domains.pricing",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/domains/pricing/dominicks.py",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.pricing",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/domains/pricing/__init__.py",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.pricing",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/domains/test_pricing.py",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.pricing",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/market-data.md",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.pricing",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:domains.pricing:O-1",
+   "note": "Bootstrap now resamples the raw joined panel, relabels duplicated store draws as distinct clusters, and re-demeans within every resample (experiments/pricing_reading.py). R CI moved [0.0001, 0.0050] -> [0.00005, 0.0050]; asymmetry CI unchanged to 4 decimals \u2014 the red-team's mitigation analysis (betw"
+  },
+  {
+   "src": "unit:domains.pricing",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:domains.pricing:O-2",
+   "note": "Cleared numerically by the red-team: residual price-cost correlation after two-way demeaning is 0.94-0.96 (not ~1), univariate R^2 ~0.90, margin CV 0.26-0.35 \u2014 identification comes from idiosyncratic margin movement; the cross terms use the OTHER brand's cost and are never mechanically linked, so R "
+  },
+  {
+   "src": "unit:domains.pricing",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:domains.pricing:O-3",
+   "note": "Wording locked to 'stated in config before the run' (never 'pre-registered') across findings/docs; the demand-symmetry caveat is on record in F-0011 \u2014 the observed near-zero cross terms make R ~ 0 robust to it. Standing rule for future empirical units: pre-register predictions in a separately commit"
+  },
+  {
+   "src": "unit:domains.pricing",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:domains.pricing:O-4",
+   "note": "Refuted numerically: category-series lag-1 autocorrelation ~0.57 across stores \u2014 persistent signal, not white basket churn; week gaps bias toward reversibility so non-detections are conservative. Recorded in F-0011"
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "PRODUCES",
+   "dst": "artifact:gibbs_agreement.json",
+   "note": "stationary pi matches exp(lambda Phi)/Z to 1e-10 on congestion n=2/3 across lambda in {0.7, 1.2, 2.0}"
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "PRODUCES",
+   "dst": "artifact:equilibrium_reads_zero.json",
+   "note": "EPR < 1e-12 and max |J*| < 1e-12 on exact potential games"
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "PRODUCES",
+   "dst": "artifact:ness_reads_positive.json",
+   "note": "EPR > 1e-3 and circulation present on RPS and matching pennies"
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "PRODUCES",
+   "dst": "artifact:chain_comovement.json",
+   "note": "Spearman rho(EPR, alpha) > 0.9 and rho(EPR, R) > 0.8 over 100 games x 10 alpha levels at fixed lambda"
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/core/dynamics/markov.py",
+   "note": ""
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/core/dynamics/currents.py",
+   "note": ""
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/core/dynamics/entropy.py",
+   "note": ""
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/thermo/exact.py",
+   "note": ""
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/thermo/test_exact.py",
+   "note": ""
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/dissipation.md",
+   "note": ""
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:dynamics.exact:O-1",
+   "note": "Independently verified, then made permanent: chain_comovement.json now carries per-level within_level_rho_* metrics; docs/instruments/dissipation.md leads with the stratified analysis; findings F-0004 records the discovery (the programme's first); F-0003 marked superseded"
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:dynamics.exact:O-2",
+   "note": "memory/claims.md C1 now states 'Falsifier PARTIALLY REALISED' with the stratified numbers and the refined conjecture; dissipation.md states it plainly"
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:dynamics.exact:O-3",
+   "note": "Red-team's own follow-up found the test correct (common-interest games are exact potential with Phi = v; Glauber-reversibility confirmed numerically). No artifact claims a Gibbs form for coordination (phi: None is skipped in gibbs_agreement); scope already honest"
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:dynamics.exact:O-4",
+   "note": "Parameter removed; docstring now states nonnegativity is structural (strictly positive logit rates, (x-y)log(x/y) >= 0), not clamped"
+  },
+  {
+   "src": "unit:estimate.bayes",
+   "rel": "PRODUCES",
+   "dst": "artifact:bayes_recovery.json",
+   "note": "coverage >= 8/10 per lambda* with the resolution guard on; fold identity < 1e-8; BF(mixture|mixed) > 100 and BF(mixture|clean) < 10 \u2014 all criteria committed before the run (verified landed)"
+  },
+  {
+   "src": "unit:estimate.bayes",
+   "rel": "PRODUCES",
+   "dst": "artifact:efe_mechanism_campaign.json",
+   "note": "campaign audit trail complete (probe, EFE, predictions, observation, posterior per round); winner subject to the pre-registered adequacy guard; sensitivity sigma re-run reported"
+  },
+  {
+   "src": "unit:estimate.bayes",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/estimate/bayes.py",
+   "note": ""
+  },
+  {
+   "src": "unit:estimate.bayes",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/estimate/test_bayes.py",
+   "note": ""
+  },
+  {
+   "src": "unit:estimate.bayes",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/lambda.md",
+   "note": ""
+  },
+  {
+   "src": "unit:estimate.bayes",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:estimate.bayes:O-1",
+   "note": "3x3 validation run (coordination-3 <-> RPS family): excess/F flat in alpha to 0.1% at the base protocol; F-0013 rewritten to OWN the scoping \u2014 in the well-relaxed regime the floor formula is exact-in-the-limit and the campaign's content is regime identification + generalisation; at fast protocols (t"
+  },
+  {
+   "src": "unit:estimate.bayes",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:estimate.bayes:O-2",
+   "note": "Red-team's own probe: 27-29/30 at untested lambda* in {1.2, 2.5, 5.0} \u2014 calibration holds off the tested points"
+  },
+  {
+   "src": "unit:estimate.bayes",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:estimate.bayes:O-3",
+   "note": "Sensitivity re-runs at 0.30 (artifact) and red-team's 0.50 both agree on the winner; sigma recorded in config with the sensitivity requirement"
+  },
+  {
+   "src": "unit:estimate.bayes",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:estimate.bayes:O-4",
+   "note": "Red-team probe: decisions stable across 60/120/240-point grids; Occam penalty behaves"
+  },
+  {
+   "src": "unit:estimate.lambda",
+   "rel": "PRODUCES",
+   "dst": "artifact:estimator_recovery.json",
+   "note": "median relative error over identified (game, lambda*) cases: MLE < 10%, dispersion < 20%, chi moment-matching < 5% (oracle-chi anchor); unidentified cases excluded via the estimators' own warnings"
+  },
+  {
+   "src": "unit:estimate.lambda",
+   "rel": "PRODUCES",
+   "dst": "artifact:estimator_misspecification.json",
+   "note": "lambda-mixture data widens the agreement gap by > 2x over clean data; symmetric-RPS data yields an unidentifiability warning, never a bare number"
+  },
+  {
+   "src": "unit:estimate.lambda",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/estimate/lam.py",
+   "note": ""
+  },
+  {
+   "src": "unit:estimate.lambda",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/estimate/__init__.py",
+   "note": ""
+  },
+  {
+   "src": "unit:estimate.lambda",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/estimate/test_lambda.py",
+   "note": ""
+  },
+  {
+   "src": "unit:estimate.lambda",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/lambda.md",
+   "note": ""
+  },
+  {
+   "src": "unit:estimate.lambda",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:estimate.lambda:O-1",
+   "note": "Two honest config knobs now: flat_ll_per_obs (nats per observation, MLE) and flat_entropy_threshold (nats, dispersion); no inline literal; schema updated"
+  },
+  {
+   "src": "unit:estimate.lambda",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:estimate.lambda:O-2",
+   "note": "Disclosed in the docstring and as an explicit warnings entry on every estimate"
+  },
+  {
+   "src": "unit:estimate.lambda",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:estimate.lambda:O-3",
+   "note": "moment_chi docstring states the measurement requirement and what the gate does/does not bound; protocol docstring documents the precedence (identification warnings suppress; both always visible); ci-inheritance disclosure no longer suppresses the flag"
+  },
+  {
+   "src": "unit:estimate.lambda",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:estimate.lambda:O-4",
+   "note": "No change required; recorded as verification"
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "PRODUCES",
+   "dst": "artifact:reciprocity_potential.json",
+   "note": "R < 1e-10 on 5 verified exact potential games (congestion n=2/3, coordination x2, common-interest)"
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "PRODUCES",
+   "dst": "artifact:reciprocity_harmonic.json",
+   "note": "R > 0.1 on pure harmonic games (RPS n=3/5, matching pennies)"
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "PRODUCES",
+   "dst": "artifact:reciprocity_alpha_sweep.json",
+   "note": "Spearman rho(R, alpha) > 0.9, p < 0.01, over 200 sampled games per alpha level"
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "PRODUCES",
+   "dst": "artifact:chi_fd_agreement.json",
+   "note": "chi_eq matches finite-difference of logit_qre to 1e-6 on 50 random games"
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "PRODUCES",
+   "dst": "artifact:spectrum_reality.json",
+   "note": "SB spectrum effectively real (rel imag < 1e-8) on all potential games across lambda in 0.5..10; complex on harmonic games (N3)"
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/finite/response/tangent.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/finite/response/susceptibility.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/finite/response/reciprocity.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/finite/response/spectral.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/finite/decompose/kron.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/finite/decompose/hodge.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/finite/decompose/generate.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/finite/games/tensor.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/finite/games/normalise.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/finite/games/library.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/core/solve/fixedpoint.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/core/types.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/core/defaults.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/finite/test_solve.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/finite/test_response.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/finite/test_decompose.py",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/reciprocity.md",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:apps/web/content/learn/07-reciprocity.mdx",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:finite.response.reciprocity:O-1",
+   "note": "docs/instruments/reciprocity.md and memory/claims.md N2 corrected; findings F-0002 records the probe (R ~ lambda on matching pennies) and the small-lambda mechanism"
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:finite.response.reciprocity:O-2",
+   "note": "The sweep holds lambda fixed at 1.2 (config), so lambda cannot drive rho; docs state this explicitly and scope the claim as rank-order evidence, naming RPS-3 vs RPS-5 as the structure effect at equal alpha"
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:finite.response.reciprocity:O-3",
+   "note": "New domain gate spectrum_reality + benchmarks/results/spectrum_reality.json generated by the calibration experiment across a lambda grid"
+  },
+  {
+   "src": "unit:population.core",
+   "rel": "PRODUCES",
+   "dst": "artifact:population_identities.json",
+   "note": "Beckmann grad = route costs (1e-12); Fisk KKT (1e-10); DF symmetry (1e-14); toll-chi vs FD (1e-5); R = 0 (1e-10) on the Braess diamond"
+  },
+  {
+   "src": "unit:population.core",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/population/games/routing.py",
+   "note": ""
+  },
+  {
+   "src": "unit:population.core",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/population/response/susceptibility.py",
+   "note": ""
+  },
+  {
+   "src": "unit:population.core",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/core/linalg.py",
+   "note": ""
+  },
+  {
+   "src": "unit:population.core",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/population/test_routing.py",
+   "note": ""
+  },
+  {
+   "src": "unit:population.core",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/domains/congestion.md",
+   "note": ""
+  },
+  {
+   "src": "unit:product.toolkit",
+   "rel": "PRODUCES",
+   "dst": "artifact:toolkit_verdicts.json",
+   "note": "facade verdicts on known cases: RPS whirlpool, coordination landscape, F-0011 matrix reads 0.0011, driven series detected, random walk at-null, flat likelihood warned \u2014 all via plain lists only"
+  },
+  {
+   "src": "unit:product.toolkit",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/toolkit.py",
+   "note": ""
+  },
+  {
+   "src": "unit:product.toolkit",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/thermo/nulls.py",
+   "note": ""
+  },
+  {
+   "src": "unit:product.toolkit",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/test_toolkit.py",
+   "note": ""
+  },
+  {
+   "src": "unit:product.toolkit",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:packages/strataq/README.md",
+   "note": ""
+  },
+  {
+   "src": "unit:product.toolkit",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:product.toolkit:O-1",
+   "note": "_require_finite guard on every entry point (payoffs, counts, chi, chi_se, series) raising instructive ValueErrors; constant series raises instead of returning a vacuous verdict; counts shape/negativity validated; 7 new tests"
+  },
+  {
+   "src": "unit:product.toolkit",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:product.toolkit:O-2",
+   "note": "chi_se parameter added: Monte-Carlo 95% CI on R with an uncertainty-aware verdict that refuses to classify across bands; without chi_se the verdict labels itself a point read, flags borderline values, and a warning says not to publish a classification from it; tested on the red-team's near-threshold"
+  },
+  {
+   "src": "unit:product.toolkit",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:product.toolkit:O-3",
+   "note": "Docstring now states measured power (>=80% detection at n>=300; n~100 underpowered); README notes pip>=21.1; wheel build verified by the red-team from the monorepo root"
+  },
+  {
+   "src": "unit:science.decoupling",
+   "rel": "PRODUCES",
+   "dst": "artifact:decoupling_mechanism.json",
+   "note": "regression-encodes the measured facts: rho(R,1/den) > 0.9 at alpha=0.95; |rho(num,EPR)| < 0.5 there; rho(num,EPR) > 0.55 for alpha <= 0.65"
+  },
+  {
+   "src": "unit:science.decoupling",
+   "rel": "REFERENCES",
+   "dst": "code:experiments/decoupling_mechanism.py",
+   "note": ""
+  },
+  {
+   "src": "unit:science.decoupling",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/dissipation.md",
+   "note": ""
+  },
+  {
+   "src": "unit:science.frontier",
+   "rel": "PRODUCES",
+   "dst": "artifact:frontier_scale_folding.json",
+   "note": "lam_peak * scale invariant across scales {1,2,4} within grid tolerance"
+  },
+  {
+   "src": "unit:science.frontier",
+   "rel": "PRODUCES",
+   "dst": "artifact:frontier_lambda_c.json",
+   "note": "lambda_c(alpha) monotone descending (<=1 violation at 5% tolerance) over >=6 finite levels"
+  },
+  {
+   "src": "unit:science.frontier",
+   "rel": "PRODUCES",
+   "dst": "artifact:frontier_crossover.json",
+   "note": "coupling collapse at alpha=0.95 (< 0.35) in ALL lambda/size conditions; sign pattern recorded as data (criterion revision documented in F-0010 and in the artifact notes)"
+  },
+  {
+   "src": "unit:science.frontier",
+   "rel": "REFERENCES",
+   "dst": "code:experiments/frontier.py",
+   "note": ""
+  },
+  {
+   "src": "unit:science.frontier",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/dissipation.md",
+   "note": ""
+  },
+  {
+   "src": "unit:science.frontier",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:science.frontier:O-1",
+   "note": "Claims separated: the identity sigma(lam, s*u)=sigma(s*lam, u) is now checked SHARPLY (identity_max_abs_err = 0.0 in the artifact); the peak-location sweep is labelled a grid-coarseness consistency check only"
+  },
+  {
+   "src": "unit:science.frontier",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:science.frontier:O-2",
+   "note": "m(lambda) = median over the FIXED game set is a well-defined function; single-crossing now VERIFIED on a coarse grid at every level before bisection (crossings_a* metrics, all = 1 where finite; gate fails otherwise); claim reframed as a median-curve statistic; the 5-game phase-map vs 40-game onset d"
+  },
+  {
+   "src": "unit:science.frontier",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:science.frontier:O-3",
+   "note": "Rationale locked in frontier.yaml (half the ~0.90 baseline minus one Spearman null-SD at n=60, rounded); margin at the tightest condition stated; changing the value now requires a findings entry"
+  },
+  {
+   "src": "unit:science.frontier",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:science.frontier:O-4",
+   "note": "All texts (artifact notes, F-0010, claims row, docs) now say lambda-DEPENDENT across the three lambdas tested, individual signs within ~2 null-SD, robust fact = the collapse"
+  },
+  {
+   "src": "unit:science.frontier",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:science.frontier:O-5",
+   "note": "Reworded everywhere to 'initial criterion / ex-ante hypothesis, not externally locked'; the failure and revision remain fully documented"
+  },
+  {
+   "src": "unit:science.phase_map",
+   "rel": "PRODUCES",
+   "dst": "artifact:phase_map.json",
+   "note": "alpha=0 row: max R < 1e-8 and max EPR < 1e-10 across all lambdas; surface + SVG regenerable from seed"
+  },
+  {
+   "src": "unit:science.phase_map",
+   "rel": "REFERENCES",
+   "dst": "code:experiments/phase_map.py",
+   "note": ""
+  },
+  {
+   "src": "unit:science.phase_map",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/progress/phase_map.svg",
+   "note": ""
+  },
+  {
+   "src": "unit:science.quench_multimode",
+   "rel": "PRODUCES",
+   "dst": "artifact:quench_multimode_campaign.json",
+   "note": "pre-registered guards enforced; failure cells of F-0014 in the probe grid by construction; full grid table (every hypothesis x every probe) reported \u2014 no residual hidden"
+  },
+  {
+   "src": "unit:science.quench_multimode",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/estimate/bayes.py",
+   "note": ""
+  },
+  {
+   "src": "unit:science.quench_multimode",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/estimate/test_bayes.py",
+   "note": ""
+  },
+  {
+   "src": "unit:science.quench_multimode",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/dissipation.md",
+   "note": ""
+  },
+  {
+   "src": "unit:science.quench_multimode",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:science.quench_multimode:O-1",
+   "note": "3x3 probes (coordination-3 <-> RPS, 6 cells including the failure protocol) added to the grid (config addition recorded); recursive_1mode holds within the adequacy bound there (0.198 dex at the measured cell) and the finding states 3x3 errors are systematically larger"
+  },
+  {
+   "src": "unit:science.quench_multimode",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:science.quench_multimode:O-2",
+   "note": "Implementation fixed (full left-eigenbasis linear solve for row-distribution evolution, conjugate pairs together, remainder dropped explicitly); run-1 anti-result RETRACTED in F-0015; the corrected model still loses to 1-mode and the finding re-attributes the lesson to remainder truncation"
+  },
+  {
+   "src": "unit:science.quench_multimode",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:science.quench_multimode:O-3",
+   "note": "F-0015 and the gate claim now map the failure geography explicitly and separate the loop-path story (+0.67 dex) from the medians"
+  },
+  {
+   "src": "unit:science.quench_regimes",
+   "rel": "PRODUCES",
+   "dst": "artifact:fast_quench_campaign.json",
+   "note": "pre-registered guards enforced (adequacy on consumed, held-out validation, sigma-sensitivity); run-1 refusal recorded in findings; run-2 winner validated"
+  },
+  {
+   "src": "unit:science.quench_regimes",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/estimate/bayes.py",
+   "note": ""
+  },
+  {
+   "src": "unit:science.quench_regimes",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/estimate/test_bayes.py",
+   "note": ""
+  },
+  {
+   "src": "unit:science.quench_regimes",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/dissipation.md",
+   "note": ""
+  },
+  {
+   "src": "unit:science.quench_regimes",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:science.quench_regimes:O-1",
+   "note": "F-0014, gate claim and docs rewritten: frozen limit exact AT tau=0, approach non-uniform, loop-path failure named with its numbers and scoped out of the formula's validity"
+  },
+  {
+   "src": "unit:science.quench_regimes",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:science.quench_regimes:O-2",
+   "note": "consumed_max_resid_dex added to the artifact metrics (1.06 recorded); F-0014 caveats give the full accounting (consumed max, held-out max, where each sits)"
+  },
+  {
+   "src": "unit:science.quench_regimes",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:science.quench_regimes:O-3",
+   "note": "run_campaign docstring states min_probes is a STOPPING gate only and held-out validation remains the caller's job; F-0014 says the same"
+  },
+  {
+   "src": "unit:science.quench_regimes",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:science.quench_regimes:O-4",
+   "note": "Convention recorded as a choice (not tuned); the tau=0.3 band and the start-gap alternative noted in F-0014's caveats as the multi-mode refinement's entry points"
+  },
+  {
+   "src": "unit:solve.advanced",
+   "rel": "PRODUCES",
+   "dst": "artifact:gambit_agreement.json",
+   "note": "fixed-lambda QRE matches pygambit logit_solve_lambda to 1e-8 on 32 games x 2 lambdas"
+  },
+  {
+   "src": "unit:solve.advanced",
+   "rel": "PRODUCES",
+   "dst": "artifact:solver_cross_agreement.json",
+   "note": "damped and mirror land on the same QRE to 1e-9 on 30 random games x 2 lambdas"
+  },
+  {
+   "src": "unit:solve.advanced",
+   "rel": "PRODUCES",
+   "dst": "artifact:implicit_chi_agreement.json",
+   "note": "jacrev through qre_sigma equals chi_equilibrium to 1e-8 on 20 random games"
+  },
+  {
+   "src": "unit:solve.advanced",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/core/solve/mirror.py",
+   "note": ""
+  },
+  {
+   "src": "unit:solve.advanced",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/core/solve/implicit.py",
+   "note": ""
+  },
+  {
+   "src": "unit:solve.advanced",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/finite/test_solve_advanced.py",
+   "note": ""
+  },
+  {
+   "src": "unit:solve.advanced",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/reciprocity.md",
+   "note": ""
+  },
+  {
+   "src": "unit:solve.branch",
+   "rel": "PRODUCES",
+   "dst": "artifact:branch_agreement.json",
+   "note": "branch passes through fixed-lambda QRE points to 1e-7 on 7 games x 2 probes"
+  },
+  {
+   "src": "unit:solve.branch",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/core/solve/homotopy.py",
+   "note": ""
+  },
+  {
+   "src": "unit:solve.branch",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/finite/test_homotopy.py",
+   "note": ""
+  },
+  {
+   "src": "unit:solve.branch",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/reciprocity.md",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/core/protocols.py",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/core/config.py",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq-bench/strataq_bench/result.py",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/test_protocols.py",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/test_import_guard.py",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/test_config_schema.py",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq-bench/tests/test_result_schema.py",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "TESTED_BY",
+   "dst": "test:.claude/hooks/tests/test_hooks.py",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:README.md",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:CLAUDE.md",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:research/README.md",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:memory/claims.md",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:memory/decisions.md",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:memory/glossary.md",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/index.md",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/architecture/patterns.md",
+   "note": ""
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:stage0:O-1",
+   "note": ".claude/hooks/check_import_sage.py \u2014 pattern extended; tests added (test_blocks_dynamic_import_forms); exec-string smuggling documented as out of scope with the no-sage-module test as backstop"
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:stage0:O-2",
+   "note": "check_boundary.py / check_tests_and_gates.py \u2014 adr_ref_valid(): the referenced ADR must exist in memory/decisions.md; bogus refs ignored (tests added)"
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:stage0:O-3",
+   "note": "gates/status.json committed in the initial commit as the baseline; CI gates.yml checks regression from then on"
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:stage0:O-4",
+   "note": "gates/README.md \u2014 three-layer model stated once; branch protection on main is the non-skippable backstop; pre-commit installed at setup"
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:stage0:O-5",
+   "note": "test_hooks.py::test_blocks_dynamic_import_forms"
+  },
+  {
+   "src": "unit:stage0",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:stage0:O-6",
+   "note": "gates/README.md \u2014 initial commit itself is red-team-reviewed (this review); baseline exists from commit one onward"
+  },
+  {
+   "src": "unit:thermo.estimators",
+   "rel": "PRODUCES",
+   "dst": "artifact:estimator_ground_truth.json",
+   "note": "KLD(k=1) within 15% of exact EPR on RPS and matching pennies, < 5e-3 on potential games; TUR a certified lower bound on named games at lambda=1.5"
+  },
+  {
+   "src": "unit:thermo.estimators",
+   "rel": "PRODUCES",
+   "dst": "artifact:estimator_alpha_sweep.json",
+   "note": "Spearman rho(KLD, exact) > 0.95 across 10 alpha levels; TUR bootstrap-lower bound <= exact EPR at every level with EPR above noise floor"
+  },
+  {
+   "src": "unit:thermo.estimators",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/core/dynamics/sample.py",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.estimators",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/thermo/estimators.py",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.estimators",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/thermo/test_estimators.py",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.estimators",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/estimators.md",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.estimators",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.estimators:O-1",
+   "note": "Certification moved into the library API: tur_epr_bound_ci returns the bootstrap-lower quantile and is what artifacts certify (alpha_*_tur_ci_low <= exact at every level); tur_epr_bound docstring states it is a point estimate NOT guaranteed below the true EPR with the ~7% exceedance quoted; both art"
+  },
+  {
+   "src": "unit:thermo.estimators",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.estimators:O-2",
+   "note": "Module + kld_epr docstrings state the n >> n_states^(k+1) requirement and the underestimation direction; test_data_starved_k_underestimates pins the failure mode"
+  },
+  {
+   "src": "unit:thermo.estimators",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.estimators:O-3",
+   "note": "test_data_driven_weights_on_held_out_split derives weights and evaluates on independently sampled batches"
+  },
+  {
+   "src": "unit:thermo.estimators",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.estimators:O-4",
+   "note": "Same fix as O-1; docs/instruments/estimators.md rule 3 names both functions and the 2-of-10 exceedance"
+  },
+  {
+   "src": "unit:thermo.estimators",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.estimators:O-5",
+   "note": "Direct tests added for digit reversal, fixed-horizon truncation, and the certified quantile ordering"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "PRODUCES",
+   "dst": "artifact:gate_se_realdata.json",
+   "note": "the downstream obligation on REAL data: every candidate re-reads R7's CAISO monthly windows plus 20 physically-null day-order shuffles each, so instability is a measured RATE; also corrects R7's own o"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "PRODUCES",
+   "dst": "artifact:gate_se_read.json",
+   "note": "registered G1-G5 evaluated for all four SE candidates on identical sampled data; the adopted method (or the refusal) follows from the thresholds, not from inspection after the fact"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/thermo/hs_estimator.py",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/thermo/test_hs_estimator.py",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/reference.md",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/dissipation.md",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator.gate_se:C-1",
+   "note": "Resolved with a ROOT CAUSE, not a chase item (F-0021). Signed per-window ratios localise the failure to the pre-quench window, and the cause is upstream of every SE: at lag N/4 the autocorrelation has already decayed into noise, so rho is 0 or NEGATIVE there (-0.0185, -0.0033 at n=30, both clipped t"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator.gate_se:C-2",
+   "note": "Resolved concretely, not by deference. The certified adjudication stands as registered (REFUSED, nothing adopted). The DEFAULT stays `split` for two stated reasons -- flipping it would silently change behaviour in a package already on PyPI, and would break reproduction of every recorded R7/R8 artifa"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator.gate_se:N-1",
+   "note": "Explained by the same F-0021 mechanism: the per-window behaviour is heterogeneous, with windows 0-2 degenerate-and-PERMISSIVE (tau_hat pinned tiny) and windows 3-5 carrying the actual decision, so an aggregate model mixing them necessarily mis-predicts. Recorded in F-0021"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator.gate_se:N-2",
+   "note": "Promoted to F-0021 as one of three symptoms of a single root cause, with the gradient lag*dt/(rho ln^2 rho) written out, plus the docstring and reference-doc warnings"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator.gate_se:N-3",
+   "note": "Agreed and kept as R10. Mechanism verified directly (mean_y identical to six decimals under permutation while the IFT bound swings 0.970-1.246) and captured in TestIntervalOrderDependence so the fix cannot land silently"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator.gate_se:SELF-1",
+   "note": "A real defect in my own criterion. Resolved by measuring the signed per-window ratios post-hoc, which is what exposed the understatement direction and hence F-0021 -- the very failure the criterion as written could not see. Future SE criteria must be signed"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator.gate_se:SELF-2",
+   "note": "Acknowledged in the config and the finding; compensated by the real-data flip-rate check on R7's CAISO panel, which is not arithmetic -- split 0.214 vs 0.050, Jeffreys intervals non-overlapping ([0.153, 0.288] vs [0.023, 0.096]). The reviewer judged this adequate"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.smalln",
+   "rel": "PRODUCES",
+   "dst": "artifact:smalln_certification.json",
+   "note": "registered S1-S3 evaluated on every (n, interval method) cell with the per-seed permutation re-read; the certified floor (or the refusal) follows from the criteria, not from selection after the fact"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.smalln",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/thermo/hs_estimator.py",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.hs_estimator.smalln",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/thermo/test_hs_estimator.py",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.hs_estimator.smalln",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/dissipation.md",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.hs_estimator.smalln",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator.smalln:D-1",
+   "note": "S1b width guard registered (median half-width <= 2x bootstrap SE); HSEstimate exposes boot_se; applied before the authoritative run"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.smalln",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator.smalln:D-2",
+   "note": "Held-out confirmation on a disjoint seed stream added as a hard requirement before any certification"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.smalln",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator.smalln:D-3",
+   "note": "Secondary-point transfer validation added, with a recorded deviation: the reviewer's tau=16 is gate-refused on this family so coverage there is undefined; a different GAME at a settled hold tests the transfer concern instead"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.smalln",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator.smalln:D-4",
+   "note": "Both documented in config and docstring; t_widened now warns that it is a heuristic comparator. C-2 later QUANTIFIED the split effect and it dominates"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.smalln",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator.smalln:C-1",
+   "note": "Exact spectral-gap reference: n=200 scores 19/20 (passes); the floor is solid and the 17/20 was reference noise. Small-n unchanged"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.smalln",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator.smalln:C-2",
+   "note": "Within-group permutation: flips 6->0 (n=30), 5->1 (n=50), 3->0 (n=100) \u2014 the split dominates; F-0019 rewritten to call the refusal implementation-bound and R9 registered to fix the gate"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.smalln",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator.smalln:C-3",
+   "note": "Rejected in F-0019 and the docs with the reason (a slow subset can hide inside a passing aggregate); only a purpose-built small-n certification or verdict-free quoting is legitimate"
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "PRODUCES",
+   "dst": "artifact:hs_estimator_sweep.json",
+   "note": "P1 every gate-admitted hold covers exact <Y>; P2 short holds refused; P3 monotone usable boundary \u2014 after two recorded diagnostic failures and two recorded escalations (all in config comments and F-00"
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/thermo/hs_estimator.py",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/thermo/test_hs_estimator.py",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/dissipation.md",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator:O-1",
+   "note": "F-0016 + module banner; fixed safety factors abandoned as an approach in the continuation notes"
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator:O-2",
+   "note": "F-0016 names the plug-in's in-sample correlation bias as the redesign target (split-sample pi_hat / explicit bias correction)"
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator:O-3",
+   "note": "Module banner states the failure; minimum-n analysis deferred to the redesign"
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator:O-4",
+   "note": "Owned in F-0016: the original criterion was never met, the sweep's PASS is void for certification, and the unit is NOT green"
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator:O-5",
+   "note": "F-0016: the usable regime demands tau ~ 25x the inverse gap - data-side quench estimation on concentration ramps is presently impractical, which is itself the finding"
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator:R2-F1",
+   "note": "test_ift_fires_on_continuous_ramp: a continuous lambda ramp chopped into fake holds \u2014 CI [1.028, 1.103] excludes 1, usable=False, ANOMALY warning; permanent test"
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator:R2-F3",
+   "note": "Docstring states the one-unit contract with the implied-spacing formula, a worked example, and the plain statement that data-side detection is impossible"
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator:R2-F7",
+   "note": "Corrected to MUST, citing the F-0016 missing-window bug"
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.hs_estimator:R2-F2F6",
+   "note": "VALIDATED SCOPE block in the docstring and the module header"
+  },
+  {
+   "src": "unit:thermo.protocols",
+   "rel": "PRODUCES",
+   "dst": "artifact:protocol_quench_scan.json",
+   "note": "pre-registered P1 (refinement ~1/K), P2 (hk zero at alpha=0, monotone, duration-linear), P3 (IFT machine precision) all pass; excess and hk reported across the alpha family"
+  },
+  {
+   "src": "unit:thermo.protocols",
+   "rel": "PRODUCES",
+   "dst": "artifact:protocol_ift_checks.json",
+   "note": "sampled-path <e^{-Y}> CI brackets 1 at BOTH alpha=0.5 (the powered check, Y ~ 1e-2) and alpha=0.95 (retained, low-power)"
+  },
+  {
+   "src": "unit:thermo.protocols",
+   "rel": "REFERENCES",
+   "dst": "code:packages/strataq/strataq/thermo/protocols.py",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.protocols",
+   "rel": "TESTED_BY",
+   "dst": "test:packages/strataq/tests/thermo/test_protocols.py",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.protocols",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/instruments/dissipation.md",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.protocols",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.protocols:O-1",
+   "note": "hatano_sasa_exact docstring carries the honesty note (identity verification, not correctness test); the correctness test is the independent sampled path, and a POWERED check at alpha=0.5 (Y ~ 1e-2; CI [0.995, 1.003] brackets 1; sampled Y 0.0076 vs exact 0.0068) added to protocol_ift_checks; docs sta"
+  },
+  {
+   "src": "unit:thermo.protocols",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.protocols:O-2",
+   "note": "F-0012 mechanism section rewritten: the collapse is the demonstrated fact, the mechanism is OPEN with the candidate (lambda-dependent equilibrium concentration) named as a chase item; docs match"
+  },
+  {
+   "src": "unit:thermo.protocols",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.protocols:O-3",
+   "note": "F-0012, the experiment docstring, and docs now say plainly the ordering is file-mtime, not commit-audited, and the trail cannot prove no post-hoc adjustment; standing rule upgraded: verify with git log that the config commit LANDED before running"
+  },
+  {
+   "src": "unit:thermo.protocols",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.protocols:O-4",
+   "note": "Powered alpha=0.5 sampled check added as the headline effect size; the 0.95 read retained with its low-power status recorded in n_justification and F-0012"
+  },
+  {
+   "src": "unit:thermo.protocols",
+   "rel": "SIGNED_OFF",
+   "dst": "objection:thermo.protocols:O-5",
+   "note": "Config comment and docs corrected: P2's informative content is the burn RATE and its growth with alpha, not the linearity"
+  },
+  {
+   "src": "unit:web.scaffold",
+   "rel": "PRODUCES",
+   "dst": "artifact:blotto_readings.json",
+   "note": "next build exit 0 with /learn/* static pages; live smoke: /v1/response returns R=0.866 on RPS through HTTP (recorded in session log; app is a shim over gate-closed API)"
+  },
+  {
+   "src": "unit:web.scaffold",
+   "rel": "REFERENCES",
+   "dst": "code:docs/theory/01-softmax-and-lambda.md",
+   "note": ""
+  },
+  {
+   "src": "unit:web.scaffold",
+   "rel": "REFERENCES",
+   "dst": "code:docs/theory/07-reciprocity.md",
+   "note": ""
+  },
+  {
+   "src": "unit:web.scaffold",
+   "rel": "REFERENCES",
+   "dst": "code:docs/theory/09-the-one-price-objection.md",
+   "note": ""
+  },
+  {
+   "src": "unit:web.scaffold",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:apps/web/CLAUDE.md",
+   "note": ""
+  },
+  {
+   "src": "unit:estimate.bayes",
+   "rel": "PRODUCES",
+   "dst": "experiment:bayes_reading",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:bayes_reading",
+   "rel": "REGISTERS",
+   "dst": "config:bayes_reading.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:bayes_reading.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:estimate.bayes",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "unit:domains.blotto",
+   "rel": "PRODUCES",
+   "dst": "experiment:blotto_calibration",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:blotto_calibration",
+   "rel": "PRODUCES",
+   "dst": "artifact:blotto_readings.json",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.electricity.quench",
+   "rel": "PRODUCES",
+   "dst": "experiment:day_quench_reading",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:day_quench_reading",
+   "rel": "REGISTERS",
+   "dst": "config:day_quench.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:day_quench.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:domains.electricity.quench",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "experiment:day_quench_reading",
+   "rel": "PRODUCES",
+   "dst": "artifact:day_quench_read.json",
+   "note": ""
+  },
+  {
+   "src": "unit:science.decoupling",
+   "rel": "PRODUCES",
+   "dst": "experiment:decoupling_mechanism",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:decoupling_mechanism",
+   "rel": "REGISTERS",
+   "dst": "config:dynamics_calibration.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:dynamics_calibration.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:science.decoupling",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "experiment:decoupling_mechanism",
+   "rel": "PRODUCES",
+   "dst": "artifact:decoupling_mechanism.json",
+   "note": ""
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "PRODUCES",
+   "dst": "experiment:dynamics_calibration",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:dynamics_calibration",
+   "rel": "REGISTERS",
+   "dst": "config:dynamics_calibration.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:dynamics_calibration.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:dynamics.exact",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "PRODUCES",
+   "dst": "experiment:electricity_reading",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:electricity_reading",
+   "rel": "REGISTERS",
+   "dst": "config:electricity_reading.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:electricity_reading.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:domains.electricity",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "unit:estimate.lambda",
+   "rel": "PRODUCES",
+   "dst": "experiment:estimator_recovery",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:estimator_recovery",
+   "rel": "REGISTERS",
+   "dst": "config:estimator_recovery.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:estimator_recovery.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:estimate.lambda",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "unit:thermo.estimators",
+   "rel": "PRODUCES",
+   "dst": "experiment:estimator_validation",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:estimator_validation",
+   "rel": "REGISTERS",
+   "dst": "config:estimator_validation.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:estimator_validation.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:thermo.estimators",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "unit:science.quench_regimes",
+   "rel": "PRODUCES",
+   "dst": "experiment:fast_quench_campaign",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:fast_quench_campaign",
+   "rel": "REGISTERS",
+   "dst": "config:fast_quench.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:fast_quench.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:science.quench_regimes",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "experiment:fast_quench_campaign",
+   "rel": "PRODUCES",
+   "dst": "artifact:fast_quench_campaign.json",
+   "note": ""
+  },
+  {
+   "src": "unit:science.frontier",
+   "rel": "PRODUCES",
+   "dst": "experiment:frontier",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:frontier",
+   "rel": "REGISTERS",
+   "dst": "config:frontier.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:frontier.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:science.frontier",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "PRODUCES",
+   "dst": "experiment:gate_se_reading",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:gate_se_reading",
+   "rel": "REGISTERS",
+   "dst": "config:gate_se.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:gate_se.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:thermo.hs_estimator.gate_se",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "experiment:gate_se_reading",
+   "rel": "PRODUCES",
+   "dst": "artifact:gate_se_read.json",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "PRODUCES",
+   "dst": "experiment:gate_se_realdata",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:gate_se_realdata",
+   "rel": "PRODUCES",
+   "dst": "artifact:gate_se_realdata.json",
+   "note": ""
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "PRODUCES",
+   "dst": "experiment:hs_estimator_reading",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:hs_estimator_reading",
+   "rel": "REGISTERS",
+   "dst": "config:hs_estimator_v2.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:hs_estimator_v2.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:thermo.hs_estimator",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "experiment:hs_estimator_reading",
+   "rel": "PRODUCES",
+   "dst": "artifact:hs_estimator_sweep.json",
+   "note": ""
+  },
+  {
+   "src": "unit:science.phase_map",
+   "rel": "PRODUCES",
+   "dst": "experiment:phase_map",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:phase_map",
+   "rel": "REGISTERS",
+   "dst": "config:phase_map.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:phase_map.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:science.phase_map",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "experiment:phase_map",
+   "rel": "PRODUCES",
+   "dst": "artifact:phase_map.json",
+   "note": ""
+  },
+  {
+   "src": "unit:domains.pricing",
+   "rel": "PRODUCES",
+   "dst": "experiment:pricing_reading",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:pricing_reading",
+   "rel": "REGISTERS",
+   "dst": "config:pricing_reading.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:pricing_reading.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:domains.pricing",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "unit:thermo.protocols",
+   "rel": "PRODUCES",
+   "dst": "experiment:protocol_reading",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:protocol_reading",
+   "rel": "REGISTERS",
+   "dst": "config:protocol_reading.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:protocol_reading.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:thermo.protocols",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "unit:science.quench_multimode",
+   "rel": "PRODUCES",
+   "dst": "experiment:quench_multimode_campaign",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:quench_multimode_campaign",
+   "rel": "REGISTERS",
+   "dst": "config:quench_multimode.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:quench_multimode.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:science.quench_multimode",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "experiment:quench_multimode_campaign",
+   "rel": "PRODUCES",
+   "dst": "artifact:quench_multimode_campaign.json",
+   "note": ""
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "PRODUCES",
+   "dst": "experiment:reciprocity_calibration",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:reciprocity_calibration",
+   "rel": "REGISTERS",
+   "dst": "config:reciprocity_calibration.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:reciprocity_calibration.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:finite.response.reciprocity",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.smalln",
+   "rel": "PRODUCES",
+   "dst": "experiment:smalln_certification",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:smalln_certification",
+   "rel": "REGISTERS",
+   "dst": "config:smalln_certification.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:smalln_certification.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:thermo.hs_estimator.smalln",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "experiment:smalln_certification",
+   "rel": "PRODUCES",
+   "dst": "artifact:smalln_certification.json",
+   "note": ""
+  },
+  {
+   "src": "unit:solve.advanced",
+   "rel": "PRODUCES",
+   "dst": "experiment:solver_validation",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "unit:product.toolkit",
+   "rel": "PRODUCES",
+   "dst": "experiment:toolkit_verdicts",
+   "note": "the experiment that generates this unit's artifact"
+  },
+  {
+   "src": "experiment:toolkit_verdicts",
+   "rel": "REGISTERS",
+   "dst": "config:toolkit_verdicts.yaml",
+   "note": "criteria this experiment runs against"
+  },
+  {
+   "src": "config:toolkit_verdicts.yaml",
+   "rel": "REGISTERS",
+   "dst": "unit:product.toolkit",
+   "note": "pre-registered criteria for the unit"
+  },
+  {
+   "src": "experiment:toolkit_verdicts",
+   "rel": "PRODUCES",
+   "dst": "artifact:toolkit_verdicts.json",
+   "note": ""
+  },
+  {
+   "src": "unit:estimate.bayes",
+   "rel": "PRODUCES",
+   "dst": "artifact:bayes_recovery.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:domains.blotto",
+   "rel": "PRODUCES",
+   "dst": "artifact:blotto_readings.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:solve.branch",
+   "rel": "PRODUCES",
+   "dst": "artifact:branch_agreement.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "PRODUCES",
+   "dst": "artifact:chain_comovement.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "PRODUCES",
+   "dst": "artifact:chi_fd_agreement.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:domains.electricity.quench",
+   "rel": "PRODUCES",
+   "dst": "artifact:day_quench_read.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:science.decoupling",
+   "rel": "PRODUCES",
+   "dst": "artifact:decoupling_mechanism.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:estimate.bayes",
+   "rel": "PRODUCES",
+   "dst": "artifact:efe_mechanism_campaign.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "PRODUCES",
+   "dst": "artifact:electricity_irreversibility.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "PRODUCES",
+   "dst": "artifact:electricity_irreversibility_dam.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "PRODUCES",
+   "dst": "artifact:electricity_irreversibility_rtm.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "PRODUCES",
+   "dst": "artifact:electricity_lambda.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "PRODUCES",
+   "dst": "artifact:equilibrium_reads_zero.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:thermo.estimators",
+   "rel": "PRODUCES",
+   "dst": "artifact:estimator_alpha_sweep.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:thermo.estimators",
+   "rel": "PRODUCES",
+   "dst": "artifact:estimator_ground_truth.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:estimate.lambda",
+   "rel": "PRODUCES",
+   "dst": "artifact:estimator_misspecification.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:estimate.lambda",
+   "rel": "PRODUCES",
+   "dst": "artifact:estimator_recovery.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:science.quench_regimes",
+   "rel": "PRODUCES",
+   "dst": "artifact:fast_quench_campaign.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:science.frontier",
+   "rel": "PRODUCES",
+   "dst": "artifact:frontier_crossover.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:science.frontier",
+   "rel": "PRODUCES",
+   "dst": "artifact:frontier_lambda_c.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:science.frontier",
+   "rel": "PRODUCES",
+   "dst": "artifact:frontier_scale_folding.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:solve.advanced",
+   "rel": "PRODUCES",
+   "dst": "artifact:gambit_agreement.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "PRODUCES",
+   "dst": "artifact:gate_se_read.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "PRODUCES",
+   "dst": "artifact:gate_se_realdata.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "PRODUCES",
+   "dst": "artifact:gibbs_agreement.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "PRODUCES",
+   "dst": "artifact:hs_estimator_sweep.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:solve.advanced",
+   "rel": "PRODUCES",
+   "dst": "artifact:implicit_chi_agreement.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:dynamics.exact",
+   "rel": "PRODUCES",
+   "dst": "artifact:ness_reads_positive.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:science.phase_map",
+   "rel": "PRODUCES",
+   "dst": "artifact:phase_map.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:population.core",
+   "rel": "PRODUCES",
+   "dst": "artifact:population_identities.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:domains.pricing",
+   "rel": "PRODUCES",
+   "dst": "artifact:pricing_edgeworth_scan.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:domains.pricing",
+   "rel": "PRODUCES",
+   "dst": "artifact:pricing_passthrough_R.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:thermo.protocols",
+   "rel": "PRODUCES",
+   "dst": "artifact:protocol_ift_checks.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:thermo.protocols",
+   "rel": "PRODUCES",
+   "dst": "artifact:protocol_quench_scan.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:science.quench_multimode",
+   "rel": "PRODUCES",
+   "dst": "artifact:quench_multimode_campaign.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "PRODUCES",
+   "dst": "artifact:reciprocity_alpha_sweep.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "PRODUCES",
+   "dst": "artifact:reciprocity_harmonic.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "PRODUCES",
+   "dst": "artifact:reciprocity_potential.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:domains.congestion",
+   "rel": "PRODUCES",
+   "dst": "artifact:sioux_falls_calibration.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.smalln",
+   "rel": "PRODUCES",
+   "dst": "artifact:smalln_certification.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:solve.advanced",
+   "rel": "PRODUCES",
+   "dst": "artifact:solver_cross_agreement.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:finite.response.reciprocity",
+   "rel": "PRODUCES",
+   "dst": "artifact:spectrum_reality.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "unit:product.toolkit",
+   "rel": "PRODUCES",
+   "dst": "artifact:toolkit_verdicts.json",
+   "note": "artifact declares this unit"
+  },
+  {
+   "src": "finding:F-0003",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0004",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0003",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0004",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0004",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0007",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0004",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0007",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0006",
+   "rel": "REFERENCES",
+   "dst": "artifact:phase_map_surface.json",
+   "note": ""
+  },
+  {
+   "src": "finding:F-0006",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0004",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0007",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0004",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "unit:domains.electricity",
+   "rel": "EVIDENCES",
+   "dst": "finding:F-0008",
+   "note": "finding recorded for this unit"
+  },
+  {
+   "src": "finding:F-0009",
+   "rel": "REFERENCES",
+   "dst": "artifact:electricity_lambda.json",
+   "note": ""
+  },
+  {
+   "src": "finding:F-0009",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0008",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0009",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0008",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0009",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0008",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "unit:science.frontier",
+   "rel": "EVIDENCES",
+   "dst": "finding:F-0010",
+   "note": "finding recorded for this unit"
+  },
+  {
+   "src": "finding:F-0010",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0004",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0010",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0004",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0010",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0004",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0010",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0007",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0010",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0004",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0010",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0006",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0010",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0004",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "unit:domains.pricing",
+   "rel": "EVIDENCES",
+   "dst": "finding:F-0011",
+   "note": "finding recorded for this unit"
+  },
+  {
+   "src": "unit:thermo.protocols",
+   "rel": "EVIDENCES",
+   "dst": "finding:F-0012",
+   "note": "finding recorded for this unit"
+  },
+  {
+   "src": "unit:estimate.bayes",
+   "rel": "EVIDENCES",
+   "dst": "finding:F-0013",
+   "note": "finding recorded for this unit"
+  },
+  {
+   "src": "finding:F-0013",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0012",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0013",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0012",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0013",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0012",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "unit:science.quench_regimes",
+   "rel": "EVIDENCES",
+   "dst": "finding:F-0014",
+   "note": "finding recorded for this unit"
+  },
+  {
+   "src": "finding:F-0014",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0013",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0014",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0013",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "unit:science.quench_multimode",
+   "rel": "EVIDENCES",
+   "dst": "finding:F-0015",
+   "note": "finding recorded for this unit"
+  },
+  {
+   "src": "finding:F-0015",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0014",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0015",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0014",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0015",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0014",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0015",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0014",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0015",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0014",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "EVIDENCES",
+   "dst": "finding:F-0016",
+   "note": "finding recorded for this unit"
+  },
+  {
+   "src": "finding:F-0016",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0006",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0016",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0006",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "unit:domains.electricity.quench",
+   "rel": "EVIDENCES",
+   "dst": "finding:F-0017",
+   "note": "finding recorded for this unit"
+  },
+  {
+   "src": "finding:F-0017",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0009",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.smalln",
+   "rel": "EVIDENCES",
+   "dst": "finding:F-0019",
+   "note": "finding recorded for this unit"
+  },
+  {
+   "src": "finding:F-0019",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0017",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "EVIDENCES",
+   "dst": "finding:F-0020",
+   "note": "finding recorded for this unit"
+  },
+  {
+   "src": "finding:F-0020",
+   "rel": "REFERENCES",
+   "dst": "artifact:gate_se_read.json",
+   "note": ""
+  },
+  {
+   "src": "finding:F-0020",
+   "rel": "REFERENCES",
+   "dst": "artifact:gate_se_realdata.json",
+   "note": ""
+  },
+  {
+   "src": "finding:F-0020",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0019",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0020",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0017",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0017",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0020",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "EVIDENCES",
+   "dst": "finding:F-0021",
+   "note": "finding recorded for this unit"
+  },
+  {
+   "src": "finding:F-0021",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0020",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "finding:F-0021",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0016",
+   "note": "cross-referenced"
+  },
+  {
+   "src": "unit:thermo.protocols",
+   "rel": "EVIDENCES",
+   "dst": "claim:K3",
+   "note": "claim entered from this unit"
+  },
+  {
+   "src": "unit:science.quench_multimode",
+   "rel": "EVIDENCES",
+   "dst": "claim:K3",
+   "note": "claim entered from this unit"
+  },
+  {
+   "src": "unit:thermo.hs_estimator",
+   "rel": "EVIDENCES",
+   "dst": "claim:K3",
+   "note": "claim entered from this unit"
+  },
+  {
+   "src": "unit:domains.electricity.quench",
+   "rel": "EVIDENCES",
+   "dst": "claim:K3",
+   "note": "claim entered from this unit"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.smalln",
+   "rel": "EVIDENCES",
+   "dst": "claim:K3",
+   "note": "claim entered from this unit"
+  },
+  {
+   "src": "unit:thermo.hs_estimator.gate_se",
+   "rel": "EVIDENCES",
+   "dst": "claim:K3",
+   "note": "claim entered from this unit"
+  },
+  {
+   "src": "claim:K3",
+   "rel": "REFERENCES",
+   "dst": "finding:F-0012",
+   "note": ""
+  },
+  {
+   "src": "claim:K3",
+   "rel": "REFERENCES",
+   "dst": "finding:F-0013",
+   "note": ""
+  },
+  {
+   "src": "claim:K3",
+   "rel": "REFERENCES",
+   "dst": "finding:F-0014",
+   "note": ""
+  },
+  {
+   "src": "claim:K3",
+   "rel": "REFERENCES",
+   "dst": "finding:F-0015",
+   "note": ""
+  },
+  {
+   "src": "claim:K3",
+   "rel": "REFERENCES",
+   "dst": "finding:F-0016",
+   "note": ""
+  },
+  {
+   "src": "claim:K3",
+   "rel": "REFERENCES",
+   "dst": "finding:F-0017",
+   "note": ""
+  },
+  {
+   "src": "claim:K3",
+   "rel": "REFERENCES",
+   "dst": "finding:F-0019",
+   "note": ""
+  },
+  {
+   "src": "claim:K3",
+   "rel": "REFERENCES",
+   "dst": "finding:F-0020",
+   "note": ""
+  },
+  {
+   "src": "claim:K3",
+   "rel": "REFERENCES",
+   "dst": "finding:F-0019",
+   "note": ""
+  },
+  {
+   "src": "claim:N2",
+   "rel": "REFERENCES",
+   "dst": "finding:F-0002",
+   "note": ""
+  },
+  {
+   "src": "unit:product.toolkit",
+   "rel": "EVIDENCES",
+   "dst": "claim:P1",
+   "note": "claim entered from this unit"
+  },
+  {
+   "src": "unit:estimate.bayes",
+   "rel": "EVIDENCES",
+   "dst": "claim:P1",
+   "note": "claim entered from this unit"
+  },
+  {
+   "src": "claim:P1",
+   "rel": "REFERENCES",
+   "dst": "finding:F-0009",
+   "note": ""
+  },
+  {
+   "src": "concept:logit-qre",
+   "rel": "DEFINES",
+   "dst": "concept:precision-lambda",
+   "note": "sigma proportional to exp(lambda U); lambda is precision, inverse information cost"
+  },
+  {
+   "src": "concept:strategic-resolvent",
+   "rel": "DERIVES_FROM",
+   "dst": "concept:logit-qre",
+   "note": "differentiating the fixed point gives chi_eq = (I-SB)^-1 S"
+  },
+  {
+   "src": "concept:reciprocity-defect-R",
+   "rel": "DERIVES_FROM",
+   "dst": "concept:strategic-resolvent",
+   "note": "R ="
+  },
+  {
+   "src": "concept:reciprocity-defect-R",
+   "rel": "MEASURES",
+   "dst": "concept:harmonic-fraction-alpha",
+   "note": "Spearman rho(R, alpha) = 0.982 at n=2000"
+  },
+  {
+   "src": "concept:harmonic-fraction-alpha",
+   "rel": "DEFINES",
+   "dst": "concept:potentiality-spectrum",
+   "note": "Candogan flow decomposition on the NORMALISED game"
+  },
+  {
+   "src": "concept:no-hopf-in-potential",
+   "rel": "DERIVES_FROM",
+   "dst": "concept:strategic-resolvent",
+   "note": "SB similar to symmetric implies real spectrum implies no Hopf"
+  },
+  {
+   "src": "concept:glauber-dynamics",
+   "rel": "DEFINES",
+   "dst": "concept:detailed-balance",
+   "note": "potential games are reversible with Gibbs stationary distribution"
+  },
+  {
+   "src": "concept:schnakenberg-epr",
+   "rel": "MEASURES",
+   "dst": "concept:irreversibility",
+   "note": "exact entropy production, zero iff detailed balance"
+  },
+  {
+   "src": "concept:hatano-sasa-split",
+   "rel": "DEFINES",
+   "dst": "concept:housekeeping-vs-excess",
+   "note": "sigma_tot = sigma_hk + sigma_ex; housekeeping vanishes iff detailed balance"
+  },
+  {
+   "src": "concept:tangent-space-projection",
+   "rel": "REQUIRES",
+   "dst": "concept:helmert-basis",
+   "note": "choice covariance is rank deficient; skipping this fakes criticality"
+  },
+  {
+   "src": "doc:research/THERMOQRE_PROGRAMME_v3.md",
+   "rel": "SUPERSEDES",
+   "dst": "doc:research/THERMOQRE_PROGRAMME_v2.md",
+   "note": "v2 still present but must not be cited; v3 narrowed several claims"
+  },
+  {
+   "src": "doc:research/THERMOQRE_DOMAINS_v1.md",
+   "rel": "DERIVES_FROM",
+   "dst": "doc:research/THERMOQRE_PROGRAMME_v3.md",
+   "note": "adds the conjugate-field criterion, three engines, domain ranking"
+  },
+  {
+   "src": "doc:research/THERMOQRE_PROGRAMME_v3.md",
+   "rel": "DEFINES",
+   "dst": "concept:reciprocity-defect-R",
+   "note": "Result 2, the programme's primary measurement device"
+  },
+  {
+   "src": "doc:research/THERMOQRE_PROGRAMME_v3.md",
+   "rel": "DEFINES",
+   "dst": "concept:strategic-resolvent",
+   "note": "Result 1, the resolvent transfer"
+  },
+  {
+   "src": "doc:memory/literature-nearest-live-work.md",
+   "rel": "CITES",
+   "dst": "paper:arXiv-2405.07224",
+   "note": "Legacci-Mertikopoulos-Pradelski; audited as orthogonal, cite as state of the art"
+  },
+  {
+   "src": "explainer:01-softmax-and-lambda",
+   "rel": "PROMISES_PANEL",
+   "dst": "route:/lab",
+   "note": "payoff bars to probability bars with a lambda slider"
+  },
+  {
+   "src": "explainer:06-detailed-balance-and-currents",
+   "rel": "PROMISES_PANEL",
+   "dst": "route:/lab",
+   "note": "joint-profile lattice with animated current J*"
+  },
+  {
+   "src": "explainer:07-reciprocity",
+   "rel": "PROMISES_PANEL",
+   "dst": "route:/lab",
+   "note": "poke-player selector and the two cross-readings side by side"
+  },
+  {
+   "src": "explainer:09-the-one-price-objection",
+   "rel": "EXPLAINS",
+   "dst": "concept:reciprocity-defect-R",
+   "note": "states the PI's own strongest objection and answers it"
+  },
+  {
+   "src": "explainer:10-the-same-machinery-everywhere",
+   "rel": "EXPLAINS",
+   "dst": "concept:harmonic-fraction-alpha",
+   "note": "one instrument reads congestion, Blotto and RPS without re-derivation"
+  },
+  {
+   "src": "module:strataq",
+   "rel": "CONTAINS",
+   "dst": "module:strataq.toolkit",
+   "note": "the plain-data product facade"
+  },
+  {
+   "src": "module:strataq",
+   "rel": "CONTAINS",
+   "dst": "module:strataq.thermo.hs_estimator",
+   "note": "the data-facing quench estimator"
+  },
+  {
+   "src": "module:strataq.finite.response.reciprocity",
+   "rel": "IMPLEMENTS",
+   "dst": "concept:reciprocity-defect-R",
+   "note": "reciprocity_defect() in the explicit tangent basis"
+  },
+  {
+   "src": "module:strataq.finite.response.susceptibility",
+   "rel": "IMPLEMENTS",
+   "dst": "concept:strategic-resolvent",
+   "note": "chi_equilibrium(); chi_partial() is the opponents-frozen FDT"
+  },
+  {
+   "src": "module:strataq.finite.decompose.hodge",
+   "rel": "IMPLEMENTS",
+   "dst": "concept:harmonic-fraction-alpha",
+   "note": "hodge_decompose() and alpha(), via the separable Kronecker basis"
+  },
+  {
+   "src": "module:strataq.core.dynamics.markov",
+   "rel": "IMPLEMENTS",
+   "dst": "concept:glauber-dynamics",
+   "note": "dense generator; only viable for small joint state spaces"
+  },
+  {
+   "src": "module:strataq.core.dynamics.entropy",
+   "rel": "IMPLEMENTS",
+   "dst": "concept:schnakenberg-epr",
+   "note": "non-negative by construction, not clamped"
+  },
+  {
+   "src": "module:strataq.thermo.protocols",
+   "rel": "IMPLEMENTS",
+   "dst": "concept:hatano-sasa-split",
+   "note": "epr_split(), QuenchProtocol, exact and sampled IFTs"
+  },
+  {
+   "src": "module:strataq.finite.response.tangent",
+   "rel": "IMPLEMENTS",
+   "dst": "concept:tangent-space-projection",
+   "note": "Helmert basis stacked per player"
+  },
+  {
+   "src": "module:strataq.core.solve.implicit",
+   "rel": "DEPENDS_ON",
+   "dst": "module:strataq.finite.response.susceptibility",
+   "note": "the custom VJP reuses the same (I-SB) resolvent"
+  },
+  {
+   "src": "module:strataq.thermo.hs_estimator",
+   "rel": "EXPOSES",
+   "dst": "func:relaxation_gate",
+   "note": "public standalone settling check, the precondition for any plug-in stationary quantity"
+  },
+  {
+   "src": "module:strataq.thermo.hs_estimator",
+   "rel": "EXPOSES",
+   "dst": "func:hs_y_estimate",
+   "note": "plug-in Hatano-Sasa Y with selectable interval and SE methods"
+  },
+  {
+   "src": "module:strataq.core.protocols",
+   "rel": "DEFINES",
+   "dst": "protocol:DomainPlugin",
+   "note": "PayoffOracle, ActionGridBuilder, ConjugateFieldSpec, DatasetLoader, LearnPageSpec"
+  },
+  {
+   "src": "domain:blotto",
+   "rel": "IMPLEMENTS",
+   "dst": "protocol:DomainPlugin",
+   "note": "first domain through the contract; budgets are the conjugate field"
+  },
+  {
+   "src": "domain:congestion",
+   "rel": "IMPLEMENTS",
+   "dst": "protocol:DomainPlugin",
+   "note": "Sioux Falls TNTP; the alpha = 0 calibration anchor"
+  },
+  {
+   "src": "domain:electricity",
+   "rel": "IMPLEMENTS",
+   "dst": "protocol:DomainPlugin",
+   "note": "CAISO OASIS loader; offer-price shift as the field"
+  },
+  {
+   "src": "domain:pricing",
+   "rel": "IMPLEMENTS",
+   "dst": "protocol:DomainPlugin",
+   "note": "Dominick's scanner panel; cross-brand cost pass-through"
+  },
+  {
+   "src": "protocol:DomainPlugin",
+   "rel": "ENFORCED_BY",
+   "dst": "hook:check_boundary.py",
+   "note": "the ENGINE declaration and the domains-never-touch-core rule"
+  },
+  {
+   "src": "route:/lab",
+   "rel": "CALLS",
+   "dst": "endpoint:POST /v1/solve/qre",
+   "note": "equilibrium mix under the lambda slider"
+  },
+  {
+   "src": "route:/lab",
+   "rel": "CALLS",
+   "dst": "endpoint:POST /v1/response",
+   "note": "reciprocity defect and chi equilibrium meters"
+  },
+  {
+   "src": "route:/network",
+   "rel": "CALLS",
+   "dst": "endpoint:POST /v1/domains/sioux_falls/sue",
+   "note": "Fisk SUE with tolls as the conjugate field"
+  },
+  {
+   "src": "route:/blotto",
+   "rel": "CALLS",
+   "dst": "endpoint:POST /v1/domains/blotto/read",
+   "note": "allocation mixes plus alpha, R and EPR"
+  },
+  {
+   "src": "route:/tools",
+   "rel": "CALLS",
+   "dst": "endpoint:POST /v1/toolkit/rationality",
+   "note": "lambda posterior from plain choice counts"
+  },
+  {
+   "src": "route:/markets",
+   "rel": "SURFACES",
+   "dst": "finding:F-0011",
+   "note": "the first empirical reciprocity read, R = 0.0011"
+  },
+  {
+   "src": "route:/phase",
+   "rel": "SURFACES",
+   "dst": "finding:F-0006",
+   "note": "criticality escape and the supercritical wedge, as a static pre-computed surface"
+  },
+  {
+   "src": "route:/findings",
+   "rel": "SURFACES",
+   "dst": "finding:F-0020",
+   "note": "14 cards currently, F-0001 through F-0020"
+  },
+  {
+   "src": "endpoint:POST /v1/toolkit/reciprocity",
+   "rel": "CALLS",
+   "dst": "func:toolkit.reciprocity_read",
+   "note": "verdict from any cross-response matrix, no payoffs needed"
+  },
+  {
+   "src": "module:strataq.toolkit",
+   "rel": "EXPOSES",
+   "dst": "func:toolkit.reciprocity_read",
+   "note": "plain arrays in, frozen dataclass with warnings out"
+  },
+  {
+   "src": "package:strataq-0.1.0",
+   "rel": "PUBLISHES",
+   "dst": "module:strataq",
+   "note": "on PyPI; pip install strataq"
+  },
+  {
+   "src": "workflow:pypi-release",
+   "rel": "PUBLISHES",
+   "dst": "package:strataq-0.1.0",
+   "note": "tag strataq-v* triggers build, solver smoke test, then upload"
+  },
+  {
+   "src": "workflow:ci",
+   "rel": "GATES",
+   "dst": "module:strataq",
+   "note": "tests, ruff, mypy strict, boundary check, secret scan"
+  },
+  {
+   "src": "workflow:gates",
+   "rel": "GATES",
+   "dst": "unit:thermo.hs_estimator.gate_se",
+   "note": "run_gates.py --check over every unit; catches regressions"
+  },
+  {
+   "src": "deploy:oracle-vm",
+   "rel": "SERVES",
+   "dst": "endpoint:POST /v1/solve/qre",
+   "note": "the float64 backend behind the app's /api proxy"
+  },
+  {
+   "src": "deploy:vercel",
+   "rel": "SERVES",
+   "dst": "route:/lab",
+   "note": "static Next.js build, rewrites /api/* to the VM"
+  },
+  {
+   "src": "process:pre-registration",
+   "rel": "REQUIRES",
+   "dst": "process:verify-commit-landed",
+   "note": "the config commit must be confirmed with git log before any run"
+  },
+  {
+   "src": "process:pre-registration",
+   "rel": "ENFORCES",
+   "dst": "process:no-post-hoc-criteria",
+   "note": "amend before results exist and record why, or register a new unit"
+  },
+  {
+   "src": "process:adversarial-review",
+   "rel": "REQUIRES",
+   "dst": "process:objection-disposition",
+   "note": "every objection carries a disposition; signoff is set only by the review"
+  },
+  {
+   "src": "process:continuous-build",
+   "rel": "REQUIRES",
+   "dst": "route:/findings",
+   "note": "a research unit is not done until its result is reachable from the app and papers"
+  },
+  {
+   "src": "hook:check_boundary.py",
+   "rel": "BLOCKS",
+   "dst": "domain:electricity",
+   "note": "a domain may import only its declared engine"
+  },
+  {
+   "src": "process:worktree-workflow",
+   "rel": "DOCUMENTED_IN",
+   "dst": "doc:docs/ONBOARDING.md",
+   "note": "work in sage-wt/engine1, fast-forward merge into main"
+  },
+  {
+   "src": "finding:F-0021",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0020",
+   "note": "the jackknife anomaly the red-team flagged traced to a cause upstream of every SE"
+  },
+  {
+   "src": "finding:F-0021",
+   "rel": "DEFINES",
+   "dst": "concept:tau-hat-degeneracy",
+   "note": "fixed lag N/4 measures past the signal; rho hits zero and tau_hat returns a clip-floor artifact"
+  },
+  {
+   "src": "concept:tau-hat-degeneracy",
+   "rel": "BLOCKS",
+   "dst": "unit:thermo.hs_estimator.gate_se",
+   "note": "delta explodes, jackknife returns exactly zero SE, split understates; bootstrap survives"
+  },
+  {
+   "src": "task:R10",
+   "rel": "FOLLOWS_FROM",
+   "dst": "finding:F-0021",
+   "note": "adaptive lag plus an explicit unmeasurability refusal"
+  },
+  {
+   "src": "task:R10",
+   "rel": "REGISTERS",
+   "dst": "config:tau_lag.yaml",
+   "note": "T1-T9 registered and landed before any implementation exists"
+  },
+  {
+   "src": "config:tau_lag.yaml",
+   "rel": "SUPERSEDES",
+   "dst": "concept:tau-hat-degeneracy",
+   "note": "T1 amended pre-results to three outcomes: MEASURED, BOUNDED, REFUSED"
+  },
+  {
+   "src": "task:R10",
+   "rel": "OUTSTANDING",
+   "dst": "concept:ci-bootstrap-order-dependence",
+   "note": "the second order-dependence: resample indices from a fixed seed"
+  },
+  {
+   "src": "task:R10",
+   "rel": "OUTSTANDING",
+   "dst": "process:default-flip-to-bootstrap",
+   "note": "bundled with re-running R7, R8 and the v2 reading"
+  },
+  {
+   "src": "finding:F-0020",
+   "rel": "CORRECTS",
+   "dst": "finding:F-0017",
+   "note": "the UNSTABLE month count came from one permutation draw and does not reproduce"
+  },
+  {
+   "src": "finding:F-0020",
+   "rel": "RETRACTS",
+   "dst": "finding:F-0019",
+   "note": "the extrapolation to quotable monthly windows is partly withdrawn"
+  },
+  {
+   "src": "operator-action:dominicks-registration",
+   "rel": "NEEDS_OPERATOR",
+   "dst": "user:PI",
+   "note": "Chicago Booth access unblocks cross-chain pricing work"
+  },
+  {
+   "src": "operator-action:ghcr-visibility",
+   "rel": "NEEDS_OPERATOR",
+   "dst": "user:PI",
+   "note": "one-click package visibility toggle"
+  }
+ ],
+ "unknown_relations_skipped": []
+}

@@ -1,0 +1,97 @@
+# Curated conceptual edges for the SAGE context graph.
+# Format: <src>|<relation>|<dst>|<note>          (# starts a comment line)
+#
+# The graph's STRUCTURAL backbone (units, claims, artifacts, configs, findings and their
+# cross-references) is EXTRACTED FROM THE REPO by docs/context_graph.py — never hand-edit
+# that. This file holds only edges no parser can infer: which theory motivates which
+# instrument, what supersedes what, which surface serves which reading.
+#
+# Relations must come from the closed set in context_graph.py RELATIONS, or the build
+# skips the line and reports it. Corrected from six agent reports; the library is
+# `strataq`, never `thermoqre` or `sage` (the research docs use the old name).
+
+# ---- theory -> instrument ----------------------------------------------------
+concept:logit-qre|DEFINES|concept:precision-lambda|sigma proportional to exp(lambda U); lambda is precision, inverse information cost
+concept:strategic-resolvent|DERIVES_FROM|concept:logit-qre|differentiating the fixed point gives chi_eq = (I-SB)^-1 S
+concept:reciprocity-defect-R|DERIVES_FROM|concept:strategic-resolvent|R = ||chi-chi^T||/||chi+chi^T||, zero iff the normalised game is potential
+concept:reciprocity-defect-R|MEASURES|concept:harmonic-fraction-alpha|Spearman rho(R, alpha) = 0.982 at n=2000
+concept:harmonic-fraction-alpha|DEFINES|concept:potentiality-spectrum|Candogan flow decomposition on the NORMALISED game
+concept:no-hopf-in-potential|DERIVES_FROM|concept:strategic-resolvent|SB similar to symmetric implies real spectrum implies no Hopf
+concept:glauber-dynamics|DEFINES|concept:detailed-balance|potential games are reversible with Gibbs stationary distribution
+concept:schnakenberg-epr|MEASURES|concept:irreversibility|exact entropy production, zero iff detailed balance
+concept:hatano-sasa-split|DEFINES|concept:housekeeping-vs-excess|sigma_tot = sigma_hk + sigma_ex; housekeeping vanishes iff detailed balance
+concept:tangent-space-projection|REQUIRES|concept:helmert-basis|choice covariance is rank deficient; skipping this fakes criticality
+
+# ---- research documents -----------------------------------------------------
+doc:research/THERMOQRE_PROGRAMME_v3.md|SUPERSEDES|doc:research/THERMOQRE_PROGRAMME_v2.md|v2 still present but must not be cited; v3 narrowed several claims
+doc:research/THERMOQRE_DOMAINS_v1.md|DERIVES_FROM|doc:research/THERMOQRE_PROGRAMME_v3.md|adds the conjugate-field criterion, three engines, domain ranking
+doc:research/THERMOQRE_PROGRAMME_v3.md|DEFINES|concept:reciprocity-defect-R|Result 2, the programme's primary measurement device
+doc:research/THERMOQRE_PROGRAMME_v3.md|DEFINES|concept:strategic-resolvent|Result 1, the resolvent transfer
+doc:memory/literature-nearest-live-work.md|CITES|paper:arXiv-2405.07224|Legacci-Mertikopoulos-Pradelski; audited as orthogonal, cite as state of the art
+
+# ---- theory explainers -> app ------------------------------------------------
+explainer:01-softmax-and-lambda|PROMISES_PANEL|route:/lab|payoff bars to probability bars with a lambda slider
+explainer:06-detailed-balance-and-currents|PROMISES_PANEL|route:/lab|joint-profile lattice with animated current J*
+explainer:07-reciprocity|PROMISES_PANEL|route:/lab|poke-player selector and the two cross-readings side by side
+explainer:09-the-one-price-objection|EXPLAINS|concept:reciprocity-defect-R|states the PI's own strongest objection and answers it
+explainer:10-the-same-machinery-everywhere|EXPLAINS|concept:harmonic-fraction-alpha|one instrument reads congestion, Blotto and RPS without re-derivation
+
+# ---- library structure (verified against the repo) ---------------------------
+module:strataq|CONTAINS|module:strataq.toolkit|the plain-data product facade
+module:strataq|CONTAINS|module:strataq.thermo.hs_estimator|the data-facing quench estimator
+module:strataq.finite.response.reciprocity|IMPLEMENTS|concept:reciprocity-defect-R|reciprocity_defect() in the explicit tangent basis
+module:strataq.finite.response.susceptibility|IMPLEMENTS|concept:strategic-resolvent|chi_equilibrium(); chi_partial() is the opponents-frozen FDT
+module:strataq.finite.decompose.hodge|IMPLEMENTS|concept:harmonic-fraction-alpha|hodge_decompose() and alpha(), via the separable Kronecker basis
+module:strataq.core.dynamics.markov|IMPLEMENTS|concept:glauber-dynamics|dense generator; only viable for small joint state spaces
+module:strataq.core.dynamics.entropy|IMPLEMENTS|concept:schnakenberg-epr|non-negative by construction, not clamped
+module:strataq.thermo.protocols|IMPLEMENTS|concept:hatano-sasa-split|epr_split(), QuenchProtocol, exact and sampled IFTs
+module:strataq.finite.response.tangent|IMPLEMENTS|concept:tangent-space-projection|Helmert basis stacked per player
+module:strataq.core.solve.implicit|DEPENDS_ON|module:strataq.finite.response.susceptibility|the custom VJP reuses the same (I-SB) resolvent
+module:strataq.thermo.hs_estimator|EXPOSES|func:relaxation_gate|public standalone settling check, the precondition for any plug-in stationary quantity
+module:strataq.thermo.hs_estimator|EXPOSES|func:hs_y_estimate|plug-in Hatano-Sasa Y with selectable interval and SE methods
+module:strataq.core.protocols|DEFINES|protocol:DomainPlugin|PayoffOracle, ActionGridBuilder, ConjugateFieldSpec, DatasetLoader, LearnPageSpec
+domain:blotto|IMPLEMENTS|protocol:DomainPlugin|first domain through the contract; budgets are the conjugate field
+domain:congestion|IMPLEMENTS|protocol:DomainPlugin|Sioux Falls TNTP; the alpha = 0 calibration anchor
+domain:electricity|IMPLEMENTS|protocol:DomainPlugin|CAISO OASIS loader; offer-price shift as the field
+domain:pricing|IMPLEMENTS|protocol:DomainPlugin|Dominick's scanner panel; cross-brand cost pass-through
+protocol:DomainPlugin|ENFORCED_BY|hook:check_boundary.py|the ENGINE declaration and the domains-never-touch-core rule
+
+# ---- product surfaces -------------------------------------------------------
+route:/lab|CALLS|endpoint:POST /v1/solve/qre|equilibrium mix under the lambda slider
+route:/lab|CALLS|endpoint:POST /v1/response|reciprocity defect and chi equilibrium meters
+route:/network|CALLS|endpoint:POST /v1/domains/sioux_falls/sue|Fisk SUE with tolls as the conjugate field
+route:/blotto|CALLS|endpoint:POST /v1/domains/blotto/read|allocation mixes plus alpha, R and EPR
+route:/tools|CALLS|endpoint:POST /v1/toolkit/rationality|lambda posterior from plain choice counts
+route:/markets|SURFACES|finding:F-0011|the first empirical reciprocity read, R = 0.0011
+route:/phase|SURFACES|finding:F-0006|criticality escape and the supercritical wedge, as a static pre-computed surface
+route:/findings|SURFACES|finding:F-0020|14 cards currently, F-0001 through F-0020
+endpoint:POST /v1/toolkit/reciprocity|CALLS|func:toolkit.reciprocity_read|verdict from any cross-response matrix, no payoffs needed
+module:strataq.toolkit|EXPOSES|func:toolkit.reciprocity_read|plain arrays in, frozen dataclass with warnings out
+package:strataq-0.1.0|PUBLISHES|module:strataq|on PyPI; pip install strataq
+workflow:pypi-release|PUBLISHES|package:strataq-0.1.0|tag strataq-v* triggers build, solver smoke test, then upload
+workflow:ci|GATES|module:strataq|tests, ruff, mypy strict, boundary check, secret scan
+workflow:gates|GATES|unit:thermo.hs_estimator.gate_se|run_gates.py --check over every unit; catches regressions
+deploy:oracle-vm|SERVES|endpoint:POST /v1/solve/qre|the float64 backend behind the app's /api proxy
+deploy:vercel|SERVES|route:/lab|static Next.js build, rewrites /api/* to the VM
+
+# ---- process ----------------------------------------------------------------
+process:pre-registration|REQUIRES|process:verify-commit-landed|the config commit must be confirmed with git log before any run
+process:pre-registration|ENFORCES|process:no-post-hoc-criteria|amend before results exist and record why, or register a new unit
+process:adversarial-review|REQUIRES|process:objection-disposition|every objection carries a disposition; signoff is set only by the review
+process:continuous-build|REQUIRES|route:/findings|a research unit is not done until its result is reachable from the app and papers
+hook:check_boundary.py|BLOCKS|domain:electricity|a domain may import only its declared engine
+process:worktree-workflow|DOCUMENTED_IN|doc:docs/ONBOARDING.md|work in sage-wt/engine1, fast-forward merge into main
+
+# ---- the R9 -> R10 chain (the live thread) -----------------------------------
+finding:F-0021|FOLLOWS_FROM|finding:F-0020|the jackknife anomaly the red-team flagged traced to a cause upstream of every SE
+finding:F-0021|DEFINES|concept:tau-hat-degeneracy|fixed lag N/4 measures past the signal; rho hits zero and tau_hat returns a clip-floor artifact
+concept:tau-hat-degeneracy|BLOCKS|unit:thermo.hs_estimator.gate_se|delta explodes, jackknife returns exactly zero SE, split understates; bootstrap survives
+task:R10|FOLLOWS_FROM|finding:F-0021|adaptive lag plus an explicit unmeasurability refusal
+task:R10|REGISTERS|config:tau_lag.yaml|T1-T9 registered and landed before any implementation exists
+config:tau_lag.yaml|SUPERSEDES|concept:tau-hat-degeneracy|T1 amended pre-results to three outcomes: MEASURED, BOUNDED, REFUSED
+task:R10|OUTSTANDING|concept:ci-bootstrap-order-dependence|the second order-dependence: resample indices from a fixed seed
+task:R10|OUTSTANDING|process:default-flip-to-bootstrap|bundled with re-running R7, R8 and the v2 reading
+finding:F-0020|CORRECTS|finding:F-0017|the UNSTABLE month count came from one permutation draw and does not reproduce
+finding:F-0020|RETRACTS|finding:F-0019|the extrapolation to quotable monthly windows is partly withdrawn
+operator-action:dominicks-registration|NEEDS_OPERATOR|user:PI|Chicago Booth access unblocks cross-chain pricing work
+operator-action:ghcr-visibility|NEEDS_OPERATOR|user:PI|one-click package visibility toggle
