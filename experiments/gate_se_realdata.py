@@ -10,9 +10,15 @@ candidate and reports what moves.
 It also answers the objection that G1 is vacuous for the exactly
 order-invariant candidates: their invariance is a theorem, so passing G1 is
 arithmetic rather than evidence. The evidence has to come from real data —
-specifically from F-0017's UNSTABLE months, where the anomaly flag flipped
-under a physically-null day-order shuffle. If those labels stabilise here,
-the fix does something; if they do not, the residual is elsewhere.
+from the rate at which a physically-null day-order shuffle flips a month's
+anomaly verdict.
+
+A v1 of this script measured that with ONE shuffle per month, copying R7's
+design, and found 0 flips under every method including the incumbent. That
+was not a result, it was a coin flip: R7's reported "1 of 7 months UNSTABLE"
+rests on one draw per month too, and a different draw gives 0. So the count
+in F-0017 carried unstated sampling error. This version measures a FLIP RATE
+over 20 shuffles per month, with the same shuffle set shared across methods.
 
 NO CRITERION IS ATTACHED. This is a declared diagnostic: it reports label
 changes, it does not certify monthly windows. Doing that needs its own
@@ -66,49 +72,75 @@ def main() -> int:
             relax_se_method=method,
         )
 
+    # MANY shuffles per month, not one. A v1 of this script used a single
+    # permutation per month (R7's own design) and measured 0 UNSTABLE months
+    # under EVERY method including the incumbent — because with one draw the
+    # label is a coin flip, not a measurement. R7 reported 1 of 7 months
+    # UNSTABLE from one draw each; a different draw gives 0. The count
+    # therefore had unstated sampling error, and the honest statistic is a
+    # FLIP RATE over many physically-null day-order shuffles, sharing the same
+    # shuffle set across methods so the comparison is on identical data.
+    n_shuffles = 20
     rng = np.random.default_rng(int(cfg["seed"]))
-    metrics: dict[str, float] = {"n_days": float(n_days), "n_states": float(n_states)}
-    table: list[tuple[str, str, float, bool, str]] = []
     months = sorted({dd.month for dd in month_of})
-    # one shuffle per month, drawn ONCE and shared across methods so the
-    # comparison is on identical data (R7 drew inside its own loop)
-    shuffles = {
-        mth: rng.permutation(np.array([i for i, dd in enumerate(month_of) if dd.month == mth]))
-        for mth in months
+    sel_of = {
+        mth: np.array([i for i, dd in enumerate(month_of) if dd.month == mth]) for mth in months
     }
+    months = [mth for mth in months if len(sel_of[mth]) >= 20]
+    shuffles = {mth: [rng.permutation(sel_of[mth]) for _ in range(n_shuffles)] for mth in months}
+    metrics: dict[str, float] = {
+        "n_days": float(n_days),
+        "n_states": float(n_states),
+        "n_shuffles_per_month": float(n_shuffles),
+    }
+    table: list[tuple[str, str, float, str, str]] = []
+
+    def subset(idx: np.ndarray) -> list[np.ndarray]:
+        return [w[idx] for w in windows]
+
+    def anomaly(idx: np.ndarray, method: str) -> bool:
+        est = read(subset(idx), method)
+        return any("ANOMALY" in msg for msg in est.warnings)
 
     for method in SE_METHODS:
         full = read(windows, method)
         metrics[f"full_{method}_usable"] = float(full.usable)
         metrics[f"full_{method}_mean_y"] = full.mean_y
         metrics[f"full_{method}_relax_refused"] = float(
-            any("relaxation gate" in w for w in full.warnings)
+            any("relaxation gate" in msg for msg in full.warnings)
         )
-        table.append(("full", method, full.mean_y, full.usable, ""))
+        table.append(("full", method, full.mean_y, str(full.usable), ""))
+        total_flips = 0
+        n_admitted = 0
         for mth in months:
-            sel = np.array([i for i, dd in enumerate(month_of) if dd.month == mth])
-            if len(sel) < 20:
-                continue
-            em = read([w[sel] for w in windows], method)
-            es = read([w[shuffles[mth]] for w in windows], method)
-            anom = any("ANOMALY" in w for w in em.warnings)
-            anom_s = any("ANOMALY" in w for w in es.warnings)
-            # R7's four-way cause labels, unchanged so the comparison is direct
-            if anom:
-                cause = "drift" if not anom_s else "not_drift"
-            else:
-                cause = "UNSTABLE" if anom_s else "clean"
+            em = read(subset(sel_of[mth]), method)
+            anom = any("ANOMALY" in msg for msg in em.warnings)
+            # flip rate: how often a permutation that cannot change any
+            # physical property nonetheless changes the anomaly verdict
+            flips = sum(int(anomaly(p, method) != anom) for p in shuffles[mth])
+            total_flips += flips
+            n_admitted += int(em.usable)
             metrics[f"m{mth}_{method}_anomaly"] = float(anom)
-            metrics[f"m{mth}_{method}_anomaly_shuffled"] = float(anom_s)
-            metrics[f"m{mth}_{method}_unstable"] = float(cause == "UNSTABLE")
+            metrics[f"m{mth}_{method}_flip_rate"] = flips / n_shuffles
+            metrics[f"m{mth}_{method}_usable"] = float(em.usable)
             metrics[f"m{mth}_{method}_ift"] = em.ift_estimate
-            table.append((f"month {mth:02d}", method, em.ift_estimate, em.usable, cause))
-        n_unstable = sum(1 for mth in months if metrics.get(f"m{mth}_{method}_unstable", 0.0) > 0.5)
-        metrics[f"{method}_n_unstable_months"] = float(n_unstable)
+            table.append(
+                (
+                    f"month {mth:02d}",
+                    method,
+                    em.ift_estimate,
+                    str(em.usable),
+                    f"{flips}/{n_shuffles} flips",
+                )
+            )
+        metrics[f"{method}_total_flip_rate"] = total_flips / (n_shuffles * len(months))
+        metrics[f"{method}_n_months_admitted"] = float(n_admitted)
 
-    base_u = metrics["split_n_unstable_months"]
     changes = [
-        f"{m}: {metrics[f'{m}_n_unstable_months']:.0f} UNSTABLE months (split: {base_u:.0f})"
+        f"{m}: flip rate {metrics[f'{m}_total_flip_rate']:.3f}, "
+        f"{metrics[f'{m}_n_months_admitted']:.0f}/{len(months)} months admitted "
+        f"(split: {metrics['split_total_flip_rate']:.3f}, "
+        f"{metrics['split_n_months_admitted']:.0f}/{len(months)})"
         for m in SE_METHODS
         if m != "split"
     ]
@@ -130,19 +162,23 @@ def main() -> int:
         timestamp=datetime.now(UTC).isoformat(timespec="seconds"),
         notes=(
             "R9 downstream obligation on REAL data (R7's CAISO day-pair panel, "
-            f"{n_days} day-pairs): every SE candidate re-reads the monthly scan with "
-            "the day-order shuffle control. Diagnostic only — NO criterion attached, "
-            "and it does not certify monthly windows (R8's C-3 stands). "
+            f"{n_days} day-pairs): every SE candidate re-reads each monthly window and "
+            f"{n_shuffles} physically-null day-order shuffles of it, so the anomaly "
+            "flag's instability is a measured RATE rather than a single draw. This also "
+            "corrects a v1 of this diagnostic (and, retroactively, R7's own design) "
+            "which used one shuffle per month and so reported an UNSTABLE COUNT with "
+            "unstated sampling error. Diagnostic only — NO criterion attached, and it "
+            "does not certify monthly windows (R8's C-3 stands). "
             + "; ".join(changes)
             + f". strataq {strataq.__version__}, generated {datetime.now(UTC).isoformat()}"
         ),
     )
-    (RESULTS / "gate_se_realdata.json").write_text(res.to_json())
+    (RESULTS / "gate_se_realdata.json").write_text(res.model_dump_json(indent=2) + "\n")
 
-    hdr = f"{'window':>10} {'method':>10} {'mean_y/ift':>11} {'usable':>7} {'cause':>10}"
+    hdr = f"{'window':>10} {'method':>10} {'mean_y/ift':>11} {'usable':>7} {'null-shuffle':>14}"
     print(f"{hdr}\n{'-' * len(hdr)}")
     for w, method, val, ok, cause in table:
-        print(f"{w:>10} {method:>10} {val:>11.4f} {ok!s:>7} {cause:>10}")
+        print(f"{w:>10} {method:>10} {val:>11.4f} {ok:>7} {cause:>14}")
     print()
     for c in changes:
         print(c)
