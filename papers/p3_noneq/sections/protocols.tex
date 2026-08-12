@@ -98,3 +98,44 @@ the spectral gap collapses as $\lambda$ concentrates
 (Section~\ref{sec:phase}), the holds a data-side reading requires grow
 precisely where stakes sharpen --- quench dissipation is hardest to
 measure exactly where strategic systems are most interesting.
+
+\paragraph{Two failure modes that looked like one (F-0019, F-0020).}
+Applying the estimator to a month of market data ($n \approx 30$
+trajectories, against a certified floor of $n \ge 200$) fails, and the
+reason turned out to be two distinct defects that a single statistic had
+conflated. Interval \emph{coverage} survives all the way down to $n = 20$
+(19--20 of 20 seeds, at width $\approx 1.9\times$ the bootstrap standard
+error), so the \emph{number} is sound on a month of data; what fails is the
+instrument's own \emph{verdict}. Decomposing that failure required a
+permutation argument. The order of the trajectories is not a physical
+property, so permuting it must leave every verdict unchanged; it did not,
+and a permutation restricted to preserve the composition of the $i{:}{:}4$
+trajectory split used to estimate the relaxation time's standard error made
+the instability largely vanish --- localising it in one implementation
+choice rather than in the physics.
+
+Replacing that split with order-invariant estimators (a leave-one-out
+jackknife computable in $O(nT)$ from the autocorrelation's sufficient
+statistics, an analytic delta-method propagation, and a trajectory
+bootstrap) confirms the diagnosis and refutes the extrapolation drawn from
+it. Flag flips fall to \emph{zero} at every $n$, and on real
+day-ahead price data the flip rate under physically-null day-order
+shuffles falls from $0.214$ to $0.050$, with one month collapsing from
+$17/20$ to $0/20$; the choice of standard error even moves an admit/refuse
+decision on a real month while leaving the estimate identical to six
+decimals. Yet agreement with the exact settling status at $n = 30$ still
+fails for every candidate. The reason is instructive: measured against an
+oracle standard error from independent replicates, the trajectory bootstrap
+is the most \emph{accurate} of the four ($0.18$--$0.29$ relative deviation,
+against $0.44$--$0.49$ for the incumbent), and the relaxation-time estimate
+itself carries an across-seed standard deviation of $35$--$40\%$ at
+$n = 30$. An accurate error bar must \emph{report} that variance, and must
+therefore refuse holds that are genuinely settled. Flag stability was
+implementation-bound and is solved; verdict accuracy at small $n$ is a
+property of the relaxation-time estimator, and the remaining lever is a
+lower-variance $\hat\tau$ rather than a better error bar. The same
+permutation argument then exposed a second, independent order-dependence in
+the interval bootstrap itself --- and there the obstruction is structural:
+a hard Boolean thresholded on a Monte-Carlo interval whose bound sits at
+the threshold cannot be made stable by any choice of seed, only by
+reporting the margin or driving the noise well below it.

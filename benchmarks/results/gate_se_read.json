@@ -1,0 +1,506 @@
+{
+  "benchmark_id": "gate_se_read",
+  "unit": "thermo.hs_estimator.gate_se",
+  "kind": "statistical",
+  "passed": true,
+  "metrics": {
+    "true_settled_primary": 1.0,
+    "true_max_relax_time": 6.592459184641648,
+    "gate_requires_tau_at_least": 26.36983673856659,
+    "n30_oracle_se_med": 0.9667127399091479,
+    "n50_oracle_se_med": 0.7468586956740375,
+    "n100_oracle_se_med": 0.7154811845931858,
+    "n200_oracle_se_med": 0.570517064976612,
+    "n30_split_flag_flips": 7.0,
+    "n30_split_agree_true_settling": 9.0,
+    "n30_split_se_ratio_max": 0.43686677678066355,
+    "n30_split_se_ratio_med": 0.31675190961209077,
+    "n30_jackknife_flag_flips": 0.0,
+    "n30_jackknife_agree_true_settling": 12.0,
+    "n30_jackknife_se_ratio_max": 0.32112595188861404,
+    "n30_jackknife_se_ratio_med": 0.2658243350597424,
+    "n30_delta_flag_flips": 0.0,
+    "n30_delta_agree_true_settling": 3.0,
+    "n30_delta_se_ratio_max": 103391280.00003564,
+    "n30_delta_se_ratio_med": 0.133982836404703,
+    "n30_bootstrap_flag_flips": 0.0,
+    "n30_bootstrap_agree_true_settling": 12.0,
+    "n30_bootstrap_se_ratio_max": 0.1807218230235791,
+    "n30_bootstrap_se_ratio_med": 0.11701736151676756,
+    "n50_split_flag_flips": 6.0,
+    "n50_split_agree_true_settling": 15.0,
+    "n50_split_se_ratio_max": 0.487684666384674,
+    "n50_split_se_ratio_med": 0.29081696176925514,
+    "n50_jackknife_flag_flips": 0.0,
+    "n50_jackknife_agree_true_settling": 16.0,
+    "n50_jackknife_se_ratio_max": 0.43250735123876205,
+    "n50_jackknife_se_ratio_med": 0.35886557243341427,
+    "n50_delta_flag_flips": 0.0,
+    "n50_delta_agree_true_settling": 2.0,
+    "n50_delta_se_ratio_max": 218127618.7706378,
+    "n50_delta_se_ratio_med": 0.2772328678802025,
+    "n50_bootstrap_flag_flips": 0.0,
+    "n50_bootstrap_agree_true_settling": 18.0,
+    "n50_bootstrap_se_ratio_max": 0.19677785755756794,
+    "n50_bootstrap_se_ratio_med": 0.09752513091124887,
+    "n100_split_flag_flips": 0.0,
+    "n100_split_agree_true_settling": 20.0,
+    "n100_split_se_ratio_max": 0.449460147756817,
+    "n100_split_se_ratio_med": 0.3563150727153935,
+    "n100_jackknife_flag_flips": 0.0,
+    "n100_jackknife_agree_true_settling": 15.0,
+    "n100_jackknife_se_ratio_max": 0.5188980188293149,
+    "n100_jackknife_se_ratio_med": 0.30126147986669516,
+    "n100_delta_flag_flips": 0.0,
+    "n100_delta_agree_true_settling": 6.0,
+    "n100_delta_se_ratio_max": 160011698.87859225,
+    "n100_delta_se_ratio_med": 0.3316552937299452,
+    "n100_bootstrap_flag_flips": 0.0,
+    "n100_bootstrap_agree_true_settling": 19.0,
+    "n100_bootstrap_se_ratio_max": 0.28549085195204116,
+    "n100_bootstrap_se_ratio_med": 0.180677700871891,
+    "n200_split_flag_flips": 0.0,
+    "n200_split_agree_true_settling": 20.0,
+    "n200_split_se_ratio_max": 0.4456689822376425,
+    "n200_split_se_ratio_med": 0.20407194203080387,
+    "n200_jackknife_flag_flips": 0.0,
+    "n200_jackknife_agree_true_settling": 19.0,
+    "n200_jackknife_se_ratio_max": 0.6535758710951247,
+    "n200_jackknife_se_ratio_med": 0.29969572945785267,
+    "n200_delta_flag_flips": 0.0,
+    "n200_delta_agree_true_settling": 4.0,
+    "n200_delta_se_ratio_max": 0.7798975391955023,
+    "n200_delta_se_ratio_med": 0.17309223571630483,
+    "n200_bootstrap_flag_flips": 0.0,
+    "n200_bootstrap_agree_true_settling": 20.0,
+    "n200_bootstrap_se_ratio_max": 0.15969433432203473,
+    "n200_bootstrap_se_ratio_med": 0.13474511500098557,
+    "n30_tau0.5_split_refusals": 20.0,
+    "n30_tau0.5_jackknife_refusals": 20.0,
+    "n30_tau0.5_delta_refusals": 20.0,
+    "n30_tau0.5_bootstrap_refusals": 20.0,
+    "n30_tau1_split_refusals": 20.0,
+    "n30_tau1_jackknife_refusals": 20.0,
+    "n30_tau1_delta_refusals": 20.0,
+    "n30_tau1_bootstrap_refusals": 20.0,
+    "n30_tau2_split_refusals": 20.0,
+    "n30_tau2_jackknife_refusals": 20.0,
+    "n30_tau2_delta_refusals": 20.0,
+    "n30_tau2_bootstrap_refusals": 20.0,
+    "n100_tau0.5_split_refusals": 20.0,
+    "n100_tau0.5_jackknife_refusals": 20.0,
+    "n100_tau0.5_delta_refusals": 20.0,
+    "n100_tau0.5_bootstrap_refusals": 20.0,
+    "n100_tau1_split_refusals": 20.0,
+    "n100_tau1_jackknife_refusals": 20.0,
+    "n100_tau1_delta_refusals": 20.0,
+    "n100_tau1_bootstrap_refusals": 20.0,
+    "n100_tau2_split_refusals": 20.0,
+    "n100_tau2_jackknife_refusals": 20.0,
+    "n100_tau2_delta_refusals": 20.0,
+    "n100_tau2_bootstrap_refusals": 20.0,
+    "split_passes_all": 0.0,
+    "split_min_margin": -6.0,
+    "jackknife_passes_all": 0.0,
+    "jackknife_min_margin": -0.48256576808375684,
+    "delta_passes_all": 0.0,
+    "delta_min_margin": -623221766.9161081,
+    "bootstrap_passes_all": 0.0,
+    "bootstrap_min_margin": -0.3,
+    "n_candidates_passing": 0.0,
+    "oracle_relative_se": 0.11322770341445956
+  },
+  "effect_sizes": [
+    {
+      "name": "n30_flag_flip_rate_split",
+      "value": 0.35,
+      "ci_low": 0.17227621363191203,
+      "ci_high": 0.5677660938414961,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=30, split: 7/20 flag flips under the physically-null full trajectory permutation (bar <= 1; R8 baseline with the incumbent split: 6)"
+    },
+    {
+      "name": "n30_agreement_rate_split",
+      "value": 0.45,
+      "ci_low": 0.2510234431738929,
+      "ci_high": 0.6623350415132572,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=30, split: 9/20 agreement with the EXACT spectral-gap settling status (bar 18; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n30_se_over_oracle_split",
+      "value": 0.43686677678066355,
+      "ci_low": 0.323639073366204,
+      "ci_high": 0.5500944801951231,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=30, split: deviation 0.437 (bar <= 0.35; median over windows 0.317). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    },
+    {
+      "name": "n30_flag_flip_rate_jackknife",
+      "value": 0.0,
+      "ci_low": 0.000024246478459242733,
+      "ci_high": 0.11663898290487539,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=30, jackknife: 0/20 flag flips under the physically-null full trajectory permutation (bar <= 1; R8 baseline with the incumbent split: 6)"
+    },
+    {
+      "name": "n30_agreement_rate_jackknife",
+      "value": 0.6,
+      "ci_low": 0.3839203163445963,
+      "ci_high": 0.7893705860719457,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=30, jackknife: 12/20 agreement with the EXACT spectral-gap settling status (bar 18; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n30_se_over_oracle_jackknife",
+      "value": 0.32112595188861404,
+      "ci_low": 0.20789824847415447,
+      "ci_high": 0.43435365530307357,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=30, jackknife: deviation 0.321 (bar <= 0.35; median over windows 0.266). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    },
+    {
+      "name": "n30_flag_flip_rate_delta",
+      "value": 0.0,
+      "ci_low": 0.000024246478459242733,
+      "ci_high": 0.11663898290487539,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=30, delta: 0/20 flag flips under the physically-null full trajectory permutation (bar <= 1; R8 baseline with the incumbent split: 6)"
+    },
+    {
+      "name": "n30_agreement_rate_delta",
+      "value": 0.15,
+      "ci_low": 0.04413134197515587,
+      "ci_high": 0.34857771085845407,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=30, delta: 3/20 agreement with the EXACT spectral-gap settling status (bar 18; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n30_se_over_oracle_delta",
+      "value": 103391280.00003564,
+      "ci_low": 103391279.88680793,
+      "ci_high": 103391280.11326335,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=30, delta: deviation 103391280.000 (bar <= 0.35; median over windows 0.134). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    },
+    {
+      "name": "n30_flag_flip_rate_bootstrap",
+      "value": 0.0,
+      "ci_low": 0.000024246478459242733,
+      "ci_high": 0.11663898290487539,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=30, bootstrap: 0/20 flag flips under the physically-null full trajectory permutation (bar <= 1; R8 baseline with the incumbent split: 6)"
+    },
+    {
+      "name": "n30_agreement_rate_bootstrap",
+      "value": 0.6,
+      "ci_low": 0.3839203163445963,
+      "ci_high": 0.7893705860719457,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=30, bootstrap: 12/20 agreement with the EXACT spectral-gap settling status (bar 18; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n30_se_over_oracle_bootstrap",
+      "value": 0.1807218230235791,
+      "ci_low": 0.06749411960911952,
+      "ci_high": 0.2939495264380386,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=30, bootstrap: deviation 0.181 (bar <= 0.35; median over windows 0.117). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    },
+    {
+      "name": "n50_flag_flip_rate_split",
+      "value": 0.3,
+      "ci_low": 0.1361162265871905,
+      "ci_high": 0.5172282485669722,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=50, split: 6/20 flag flips under the physically-null full trajectory permutation (bar <= 1; R8 baseline with the incumbent split: 5)"
+    },
+    {
+      "name": "n50_agreement_rate_split",
+      "value": 0.75,
+      "ci_low": 0.5358053707591319,
+      "ci_high": 0.8976015143169549,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=50, split: 15/20 agreement with the EXACT spectral-gap settling status (bar 18; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n50_se_over_oracle_split",
+      "value": 0.487684666384674,
+      "ci_low": 0.37445696297021447,
+      "ci_high": 0.6009123697991335,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=50, split: deviation 0.488 (bar <= 0.35; median over windows 0.291). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    },
+    {
+      "name": "n50_flag_flip_rate_jackknife",
+      "value": 0.0,
+      "ci_low": 0.000024246478459242733,
+      "ci_high": 0.11663898290487539,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=50, jackknife: 0/20 flag flips under the physically-null full trajectory permutation (bar <= 1; R8 baseline with the incumbent split: 5)"
+    },
+    {
+      "name": "n50_agreement_rate_jackknife",
+      "value": 0.8,
+      "ci_low": 0.5917742374830746,
+      "ci_high": 0.9284799475212692,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=50, jackknife: 16/20 agreement with the EXACT spectral-gap settling status (bar 18; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n50_se_over_oracle_jackknife",
+      "value": 0.43250735123876205,
+      "ci_low": 0.3192796478243025,
+      "ci_high": 0.5457350546532216,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=50, jackknife: deviation 0.433 (bar <= 0.35; median over windows 0.359). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    },
+    {
+      "name": "n50_flag_flip_rate_delta",
+      "value": 0.0,
+      "ci_low": 0.000024246478459242733,
+      "ci_high": 0.11663898290487539,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=50, delta: 0/20 flag flips under the physically-null full trajectory permutation (bar <= 1; R8 baseline with the incumbent split: 5)"
+    },
+    {
+      "name": "n50_agreement_rate_delta",
+      "value": 0.1,
+      "ci_low": 0.02137248802247479,
+      "ci_high": 0.28385325730425237,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=50, delta: 2/20 agreement with the EXACT spectral-gap settling status (bar 18; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n50_se_over_oracle_delta",
+      "value": 218127618.7706378,
+      "ci_low": 218127618.65741012,
+      "ci_high": 218127618.8838655,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=50, delta: deviation 218127618.771 (bar <= 0.35; median over windows 0.277). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    },
+    {
+      "name": "n50_flag_flip_rate_bootstrap",
+      "value": 0.0,
+      "ci_low": 0.000024246478459242733,
+      "ci_high": 0.11663898290487539,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=50, bootstrap: 0/20 flag flips under the physically-null full trajectory permutation (bar <= 1; R8 baseline with the incumbent split: 5)"
+    },
+    {
+      "name": "n50_agreement_rate_bootstrap",
+      "value": 0.9,
+      "ci_low": 0.7161467426957477,
+      "ci_high": 0.9786275119775252,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=50, bootstrap: 18/20 agreement with the EXACT spectral-gap settling status (bar 18; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n50_se_over_oracle_bootstrap",
+      "value": 0.19677785755756794,
+      "ci_low": 0.08355015414310837,
+      "ci_high": 0.31000556097202747,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=50, bootstrap: deviation 0.197 (bar <= 0.35; median over windows 0.098). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    },
+    {
+      "name": "n100_flag_flip_rate_split",
+      "value": 0.0,
+      "ci_low": 0.000024246478459242733,
+      "ci_high": 0.11663898290487539,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=100, split: 0/20 flag flips under the physically-null full trajectory permutation (bar <= 1; R8 baseline with the incumbent split: 3)"
+    },
+    {
+      "name": "n100_agreement_rate_split",
+      "value": 1.0,
+      "ci_low": 0.8833610170951246,
+      "ci_high": 0.9999757535215408,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=100, split: 20/20 agreement with the EXACT spectral-gap settling status (bar 18; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n100_se_over_oracle_split",
+      "value": 0.449460147756817,
+      "ci_low": 0.33623244434235744,
+      "ci_high": 0.5626878511712765,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=100, split: deviation 0.449 (bar <= 0.35; median over windows 0.356). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    },
+    {
+      "name": "n100_flag_flip_rate_jackknife",
+      "value": 0.0,
+      "ci_low": 0.000024246478459242733,
+      "ci_high": 0.11663898290487539,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=100, jackknife: 0/20 flag flips under the physically-null full trajectory permutation (bar <= 1; R8 baseline with the incumbent split: 3)"
+    },
+    {
+      "name": "n100_agreement_rate_jackknife",
+      "value": 0.75,
+      "ci_low": 0.5358053707591319,
+      "ci_high": 0.8976015143169549,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=100, jackknife: 15/20 agreement with the EXACT spectral-gap settling status (bar 18; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n100_se_over_oracle_jackknife",
+      "value": 0.5188980188293149,
+      "ci_low": 0.4056703154148553,
+      "ci_high": 0.6321257222437744,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=100, jackknife: deviation 0.519 (bar <= 0.35; median over windows 0.301). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    },
+    {
+      "name": "n100_flag_flip_rate_delta",
+      "value": 0.0,
+      "ci_low": 0.000024246478459242733,
+      "ci_high": 0.11663898290487539,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=100, delta: 0/20 flag flips under the physically-null full trajectory permutation (bar <= 1; R8 baseline with the incumbent split: 3)"
+    },
+    {
+      "name": "n100_agreement_rate_delta",
+      "value": 0.3,
+      "ci_low": 0.1361162265871905,
+      "ci_high": 0.5172282485669722,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=100, delta: 6/20 agreement with the EXACT spectral-gap settling status (bar 18; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n100_se_over_oracle_delta",
+      "value": 160011698.87859225,
+      "ci_low": 160011698.76536456,
+      "ci_high": 160011698.99181995,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=100, delta: deviation 160011698.879 (bar <= 0.35; median over windows 0.332). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    },
+    {
+      "name": "n100_flag_flip_rate_bootstrap",
+      "value": 0.0,
+      "ci_low": 0.000024246478459242733,
+      "ci_high": 0.11663898290487539,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=100, bootstrap: 0/20 flag flips under the physically-null full trajectory permutation (bar <= 1; R8 baseline with the incumbent split: 3)"
+    },
+    {
+      "name": "n100_agreement_rate_bootstrap",
+      "value": 0.95,
+      "ci_low": 0.7891813637507349,
+      "ci_high": 0.9945509674185734,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=100, bootstrap: 19/20 agreement with the EXACT spectral-gap settling status (bar 18; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n100_se_over_oracle_bootstrap",
+      "value": 0.28549085195204116,
+      "ci_low": 0.1722631485375816,
+      "ci_high": 0.3987185553665007,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=100, bootstrap: deviation 0.285 (bar <= 0.35; median over windows 0.181). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    },
+    {
+      "name": "n200_flag_flip_rate_split",
+      "value": 0.0,
+      "ci_low": 0.000024246478459242733,
+      "ci_high": 0.11663898290487539,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=200, split: 0/20 flag flips under the physically-null full trajectory permutation (bar <= 1)"
+    },
+    {
+      "name": "n200_agreement_rate_split",
+      "value": 1.0,
+      "ci_low": 0.8833610170951246,
+      "ci_high": 0.9999757535215408,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=200, split: 20/20 agreement with the EXACT spectral-gap settling status (bar 19; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n200_se_over_oracle_split",
+      "value": 0.4456689822376425,
+      "ci_low": 0.332441278823183,
+      "ci_high": 0.558896685652102,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=200, split: deviation 0.446 (bar <= 0.35; median over windows 0.204). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    },
+    {
+      "name": "n200_flag_flip_rate_jackknife",
+      "value": 0.0,
+      "ci_low": 0.000024246478459242733,
+      "ci_high": 0.11663898290487539,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=200, jackknife: 0/20 flag flips under the physically-null full trajectory permutation (bar <= 1)"
+    },
+    {
+      "name": "n200_agreement_rate_jackknife",
+      "value": 0.95,
+      "ci_low": 0.7891813637507349,
+      "ci_high": 0.9945509674185734,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=200, jackknife: 19/20 agreement with the EXACT spectral-gap settling status (bar 19; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n200_se_over_oracle_jackknife",
+      "value": 0.6535758710951247,
+      "ci_low": 0.5403481676806652,
+      "ci_high": 0.7668035745095843,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=200, jackknife: deviation 0.654 (bar <= 0.35; median over windows 0.300). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    },
+    {
+      "name": "n200_flag_flip_rate_delta",
+      "value": 0.0,
+      "ci_low": 0.000024246478459242733,
+      "ci_high": 0.11663898290487539,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=200, delta: 0/20 flag flips under the physically-null full trajectory permutation (bar <= 1)"
+    },
+    {
+      "name": "n200_agreement_rate_delta",
+      "value": 0.2,
+      "ci_low": 0.07152005247873085,
+      "ci_high": 0.4082257625169254,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=200, delta: 4/20 agreement with the EXACT spectral-gap settling status (bar 19; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n200_se_over_oracle_delta",
+      "value": 0.7798975391955023,
+      "ci_low": 0.6666698357810428,
+      "ci_high": 0.8931252426099618,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=200, delta: deviation 0.780 (bar <= 0.35; median over windows 0.173). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    },
+    {
+      "name": "n200_flag_flip_rate_bootstrap",
+      "value": 0.0,
+      "ci_low": 0.000024246478459242733,
+      "ci_high": 0.11663898290487539,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G1 at n=200, bootstrap: 0/20 flag flips under the physically-null full trajectory permutation (bar <= 1)"
+    },
+    {
+      "name": "n200_agreement_rate_bootstrap",
+      "value": 1.0,
+      "ci_low": 0.8833610170951246,
+      "ci_high": 0.9999757535215408,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 seeds. G2/G3 at n=200, bootstrap: 20/20 agreement with the EXACT spectral-gap settling status (bar 19; R8 baseline with the incumbent split: 10/15/16 at n=30/50/100, 19 at n=200)"
+    },
+    {
+      "name": "n200_se_over_oracle_bootstrap",
+      "value": 0.15969433432203473,
+      "ci_low": 0.04646663090757516,
+      "ci_high": 0.27292203773649426,
+      "ci_level": 0.95,
+      "method": "worst-window |median SE / oracle SE - 1|; the interval spans the oracle's own relative SE (1/sqrt(2*(40-1)) = 0.113) since the reference is itself an SD from a finite sample. G5 at n=200, bootstrap: deviation 0.160 (bar <= 0.35; median over windows 0.135). A value ABOVE the bar overstates the uncertainty, one below understates it - both fail"
+    }
+  ],
+  "n": 320,
+  "n_justification": "20 seeds x 4 n-levels x 4 SE candidates, each seed also re-read under the full trajectory permutation (G1) and, at the unsettled holds, under three short taus (G4). 20 seeds gives a Jeffreys interval of roughly +/-0.2 on a proportion, which is why the registered bars are counts against a threshold rather than significance tests; the G5 oracle uses 40 independent draws (relative SE 0.113)",
+  "seed": 20260826,
+  "config_ref": "config/experiments/gate_se.yaml",
+  "library_version": "0.1.0",
+  "timestamp": "2026-08-12T07:24:26+00:00",
+  "notes": "REFUSED: no candidate passes all of G1-G5 (see per-criterion flags). Registered G1-G5 (config/experiments/gate_se.yaml, commits verified landed before the run). Per-candidate criterion flags in metrics. Baseline (R8): agreement 10/15/16 at n=30/50/100, flips 6/5/3. True settling status=True (tau=32.0 vs required 26.37). G5 oracle = SD of tau_hat over 40 independent draws on a disjoint seed stream; the statistic is the WORST window (the gate refuses on its worst window). strataq 0.1.0, generated 2026-08-12T07:24:26.041263+00:00"
+}

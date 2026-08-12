@@ -1,0 +1,42 @@
+agreement_min: 18
+agreement_min_large: 19
+bootstrap_resamples: 200
+family:
+  alpha: 0.25
+flag_flip_max: 1
+g_grid:
+- 30
+- 50
+- 100
+g_grid_large:
+- 200
+n_seeds: 20
+oracle_replicates: 40
+oracle_seed_offset: 900000
+protocol:
+  lambdas:
+  - 0.5
+  - 1.5
+  - 2.5
+  - 3.5
+  - 4.5
+  - 5.5
+  tau: 32.0
+pseudocount: 0.5
+relax_safety: 4.0
+se_accuracy_tol: 0.35
+se_candidates:
+- split
+- jackknife
+- delta
+- bootstrap
+seed: 20260826
+steps_per_unit_time: 25
+unsettled_n_grid:
+- 30
+- 100
+unsettled_refusal_required: 20
+unsettled_taus:
+- 0.5
+- 1.0
+- 2.0

@@ -1,7 +1,7 @@
 # thermo.hs_estimator.gate_se (R9) — a split-independent SE for the
 # relaxation gate. Claim filled from the registered run's adjudication.
 unit: thermo.hs_estimator.gate_se
-claim: "PENDING RUN"
+claim: "REFUSED as registered, and the refusal separates two failure modes R8 had fused (F-0020). (1) G1 order-invariance is SOLVED: jackknife, delta and bootstrap all give 0/20 anomaly-flag flips under the physically-null full trajectory permutation at n=30/50/100, against the incumbent split's 7/6/0 — R8's C-2 prediction confirmed. (2) G5 (SE accuracy against an oracle SE from 40 independent draws, own relative SE 0.113) discriminates as designed and bootstrap wins: 0.18-0.29 deviation vs split 0.44-0.49 and jackknife 0.32-0.52; delta fails catastrophically on ONE window (~1e8) because its dtau/drho gradient explodes at the rho clip floor. (3) G4 refusal power is clean for every candidate (60/60 at n=30 and n=100) — nothing bought agreement by breaking the gate. (4) G2 fails at n=30 for ALL candidates; bootstrap misses on that single cell alone (12/20 vs an 18 bar) with all four other criteria passed. The mechanism is that tau_hat's own across-seed SD is 0.967 at n=30 (35-40% of tau_hat), so an ACCURATE SE must refuse genuinely settled holds — the binding constraint is the variance of the relaxation-time ESTIMATE, not the error bar. This partially RETRACTS F-0019's extrapolation: stability was implementation-bound and is fixed, quotability is not and needs a lower-variance tau_hat. (5) Real data (R7 CAISO panel): flip rate 0.214 -> 0.050, month 06 collapsing 17/20 -> 0/20, and admission MOVES (month 07 refused under split, admitted under all alternatives) with the estimate provably identical. (6) A SECOND order-dependence found outside R9's scope: the CI/IFT bootstrap resamples indices from a fixed seed, so the whole residual is a thresholded-Monte-Carlo-boolean problem (R10). Default left at split per the letter of the registered rule, with the rule's gap — the incumbent fails three criteria while bootstrap fails one — put to the reviewer rather than resolved unilaterally"
 tier: derived
 
 gates:
@@ -16,6 +16,9 @@ gates:
       - packages/strataq/tests/thermo/test_hs_estimator.py
 
   domain:
+    - id: gate_se_realdata
+      spec: "the downstream obligation on REAL data: every candidate re-reads R7's CAISO monthly windows plus 20 physically-null day-order shuffles each, so instability is a measured RATE; also corrects R7's own one-draw design"
+      artifact: benchmarks/results/gate_se_realdata.json
     - id: gate_se_reading
       spec: "registered G1-G5 evaluated for all four SE candidates on identical sampled data; the adopted method (or the refusal) follows from the thresholds, not from inspection after the fact"
       artifact: benchmarks/results/gate_se_read.json
