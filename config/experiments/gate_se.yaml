@@ -101,3 +101,14 @@ unsettled_n_grid: [30, 100]
 # G5 oracle
 oracle_replicates: 40
 se_accuracy_tol: 0.35
+# RESOLVED AT REGISTRATION (before any run; NOT a criterion change — the
+# criterion text simply did not pin these two implementation choices):
+#   (a) WINDOW AGGREGATION. Each hold has its own tau_hat and its own SE, so
+#       G5 yields one ratio per window. The gate's decision is driven by the
+#       WORST window (a single offender refuses), so the G5 statistic is the
+#       MAX deviation over windows, with the median reported alongside.
+#   (b) ORACLE SEED STREAM. The oracle draws use a DISJOINT offset rather
+#       than reusing the campaign seeds, so the reference SE is independent
+#       of the SEs it judges (the same hygiene as R8's held-out confirmation,
+#       at the cost of extra sampling).
+oracle_seed_offset: 900000
