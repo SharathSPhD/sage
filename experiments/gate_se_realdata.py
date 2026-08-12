@@ -36,9 +36,10 @@ from typing import Any
 import numpy as np
 import strataq
 import yaml
+from scipy.stats import beta as sp_beta
 from strataq.domains.electricity.caiso import fetch_dam_lmp
 from strataq.thermo.hs_estimator import SE_METHODS, hs_y_estimate
-from strataq_bench import BenchmarkResult
+from strataq_bench import BenchmarkResult, EffectSize
 
 from experiments.day_quench_reading import day_windows
 
@@ -144,12 +145,64 @@ def main() -> int:
         for m in SE_METHODS
         if m != "split"
     ]
+    # the flip rate IS the effect size here: a proportion over
+    # n_shuffles x n_months physically-null permutations, so it carries a
+    # Jeffreys binomial interval like every other proportion in the programme
+    n_trials = n_shuffles * len(months)
+
+    def jeffreys(k: int, n: int) -> tuple[float, float]:
+        return (
+            float(sp_beta.ppf(0.025, k + 0.5, n - k + 0.5)),
+            float(sp_beta.ppf(0.975, k + 0.5, n - k + 0.5)),
+        )
+
+    effects = []
+    for method in SE_METHODS:
+        rate = metrics[f"{method}_total_flip_rate"]
+        k = round(rate * n_trials)
+        lo, hi = jeffreys(k, n_trials)
+        effects.append(
+            EffectSize(
+                name=f"null_shuffle_flip_rate_{method}",
+                value=rate,
+                ci_low=lo,
+                ci_high=hi,
+                method=(
+                    f"Jeffreys binomial interval over {n_trials} physically-null day-order "
+                    f"permutations ({n_shuffles} per month x {len(months)} months) on R7's "
+                    f"CAISO panel. {method}: {k}/{n_trials} anomaly-flag flips, "
+                    f"{metrics[f'{method}_n_months_admitted']:.0f}/{len(months)} months "
+                    "admitted. The incumbent 'split' is the baseline; a permutation cannot "
+                    "change any physical property, so every flip is machinery"
+                ),
+            )
+        )
+    for mth in months:
+        k = round(metrics[f"m{mth}_split_flip_rate"] * n_shuffles)
+        kb = round(metrics[f"m{mth}_bootstrap_flip_rate"] * n_shuffles)
+        lo, hi = jeffreys(k, n_shuffles)
+        effects.append(
+            EffectSize(
+                name=f"month{mth:02d}_flip_rate_split",
+                value=k / n_shuffles,
+                ci_low=lo,
+                ci_high=hi,
+                method=(
+                    f"Jeffreys binomial interval over {n_shuffles} null shuffles of month "
+                    f"{mth:02d}; incumbent split {k}/{n_shuffles} vs bootstrap "
+                    f"{kb}/{n_shuffles}. A residual that is IDENTICAL across all four SE "
+                    "methods localises the cause outside the SE machinery"
+                ),
+            )
+        )
+
     res = BenchmarkResult(
         benchmark_id="gate_se_realdata",
         unit=UNIT,
         kind="statistical",
         passed=True,
         metrics=metrics,
+        effect_sizes=effects,
         n=n_days,
         n_justification=(
             f"{n_days} CAISO day-pairs, the same panel R7 read; the monthly cells carry "

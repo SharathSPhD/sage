@@ -140,12 +140,101 @@
     "bootstrap_total_flip_rate": 0.05,
     "bootstrap_n_months_admitted": 2.0
   },
-  "effect_sizes": [],
+  "effect_sizes": [
+    {
+      "name": "null_shuffle_flip_rate_split",
+      "value": 0.21428571428571427,
+      "ci_low": 0.15258248134771696,
+      "ci_high": 0.28765945933056014,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 140 physically-null day-order permutations (20 per month x 7 months) on R7's CAISO panel. split: 30/140 anomaly-flag flips, 1/7 months admitted. The incumbent 'split' is the baseline; a permutation cannot change any physical property, so every flip is machinery"
+    },
+    {
+      "name": "null_shuffle_flip_rate_jackknife",
+      "value": 0.05,
+      "ci_low": 0.022639938721646182,
+      "ci_high": 0.09564961687616605,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 140 physically-null day-order permutations (20 per month x 7 months) on R7's CAISO panel. jackknife: 7/140 anomaly-flag flips, 2/7 months admitted. The incumbent 'split' is the baseline; a permutation cannot change any physical property, so every flip is machinery"
+    },
+    {
+      "name": "null_shuffle_flip_rate_delta",
+      "value": 0.05,
+      "ci_low": 0.022639938721646182,
+      "ci_high": 0.09564961687616605,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 140 physically-null day-order permutations (20 per month x 7 months) on R7's CAISO panel. delta: 7/140 anomaly-flag flips, 2/7 months admitted. The incumbent 'split' is the baseline; a permutation cannot change any physical property, so every flip is machinery"
+    },
+    {
+      "name": "null_shuffle_flip_rate_bootstrap",
+      "value": 0.05,
+      "ci_low": 0.022639938721646182,
+      "ci_high": 0.09564961687616605,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 140 physically-null day-order permutations (20 per month x 7 months) on R7's CAISO panel. bootstrap: 7/140 anomaly-flag flips, 2/7 months admitted. The incumbent 'split' is the baseline; a permutation cannot change any physical property, so every flip is machinery"
+    },
+    {
+      "name": "month01_flip_rate_split",
+      "value": 0.15,
+      "ci_low": 0.04413134197515587,
+      "ci_high": 0.34857771085845407,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 null shuffles of month 01; incumbent split 3/20 vs bootstrap 0/20. A residual that is IDENTICAL across all four SE methods localises the cause outside the SE machinery"
+    },
+    {
+      "name": "month02_flip_rate_split",
+      "value": 0.05,
+      "ci_low": 0.005449032581426599,
+      "ci_high": 0.2108186362492652,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 null shuffles of month 02; incumbent split 1/20 vs bootstrap 0/20. A residual that is IDENTICAL across all four SE methods localises the cause outside the SE machinery"
+    },
+    {
+      "name": "month03_flip_rate_split",
+      "value": 0.05,
+      "ci_low": 0.005449032581426599,
+      "ci_high": 0.2108186362492652,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 null shuffles of month 03; incumbent split 1/20 vs bootstrap 0/20. A residual that is IDENTICAL across all four SE methods localises the cause outside the SE machinery"
+    },
+    {
+      "name": "month04_flip_rate_split",
+      "value": 0.05,
+      "ci_low": 0.005449032581426599,
+      "ci_high": 0.2108186362492652,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 null shuffles of month 04; incumbent split 1/20 vs bootstrap 0/20. A residual that is IDENTICAL across all four SE methods localises the cause outside the SE machinery"
+    },
+    {
+      "name": "month05_flip_rate_split",
+      "value": 0.35,
+      "ci_low": 0.17227621363191203,
+      "ci_high": 0.5677660938414961,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 null shuffles of month 05; incumbent split 7/20 vs bootstrap 7/20. A residual that is IDENTICAL across all four SE methods localises the cause outside the SE machinery"
+    },
+    {
+      "name": "month06_flip_rate_split",
+      "value": 0.85,
+      "ci_low": 0.6514222891415459,
+      "ci_high": 0.9558686580248441,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 null shuffles of month 06; incumbent split 17/20 vs bootstrap 0/20. A residual that is IDENTICAL across all four SE methods localises the cause outside the SE machinery"
+    },
+    {
+      "name": "month07_flip_rate_split",
+      "value": 0.0,
+      "ci_low": 0.000024246478459242733,
+      "ci_high": 0.11663898290487539,
+      "ci_level": 0.95,
+      "method": "Jeffreys binomial interval over 20 null shuffles of month 07; incumbent split 0/20 vs bootstrap 0/20. A residual that is IDENTICAL across all four SE methods localises the cause outside the SE machinery"
+    }
+  ],
   "n": 211,
   "n_justification": "211 CAISO day-pairs, the same panel R7 read; the monthly cells carry ~30 day-pairs each, which is exactly the small-n regime R8 refused. No criterion is attached, so no power claim is made",
   "seed": 20260818,
   "config_ref": "config/experiments/day_quench.yaml",
   "library_version": "0.1.0",
-  "timestamp": "2026-08-12T07:09:35+00:00",
-  "notes": "R9 downstream obligation on REAL data (R7's CAISO day-pair panel, 211 day-pairs): every SE candidate re-reads each monthly window and 20 physically-null day-order shuffles of it, so the anomaly flag's instability is a measured RATE rather than a single draw. This also corrects a v1 of this diagnostic (and, retroactively, R7's own design) which used one shuffle per month and so reported an UNSTABLE COUNT with unstated sampling error. Diagnostic only — NO criterion attached, and it does not certify monthly windows (R8's C-3 stands). jackknife: flip rate 0.050, 2/7 months admitted (split: 0.214, 1/7); delta: flip rate 0.050, 2/7 months admitted (split: 0.214, 1/7); bootstrap: flip rate 0.050, 2/7 months admitted (split: 0.214, 1/7). strataq 0.1.0, generated 2026-08-12T07:09:35.103094+00:00"
+  "timestamp": "2026-08-12T07:34:23+00:00",
+  "notes": "R9 downstream obligation on REAL data (R7's CAISO day-pair panel, 211 day-pairs): every SE candidate re-reads each monthly window and 20 physically-null day-order shuffles of it, so the anomaly flag's instability is a measured RATE rather than a single draw. This also corrects a v1 of this diagnostic (and, retroactively, R7's own design) which used one shuffle per month and so reported an UNSTABLE COUNT with unstated sampling error. Diagnostic only — NO criterion attached, and it does not certify monthly windows (R8's C-3 stands). jackknife: flip rate 0.050, 2/7 months admitted (split: 0.214, 1/7); delta: flip rate 0.050, 2/7 months admitted (split: 0.214, 1/7); bootstrap: flip rate 0.050, 2/7 months admitted (split: 0.214, 1/7). strataq 0.1.0, generated 2026-08-12T07:34:23.163731+00:00"
 }
