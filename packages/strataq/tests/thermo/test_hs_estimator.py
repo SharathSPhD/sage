@@ -334,3 +334,40 @@ class TestRelaxationGateSE:
         jack = hs_y_estimate(w, relax_se_method="jackknife", **kw)
         assert base.mean_y == jack.mean_y  # the SE method cannot move <Y>
         assert isinstance(jack.usable, bool)
+
+
+class TestIntervalOrderDependence:
+    """R9 found a SECOND order-dependence, outside everything it fixed.
+
+    `hs_y_estimate`'s CI/IFT bootstrap draws indices from a fixed-seed RNG
+    (`default_rng(0)`), so permuting the trajectories changes which ones land
+    in each resample. The point estimate is unaffected — it is a mean — but
+    the interval moves, and the ANOMALY flag is a hard boolean thresholded on
+    that interval ("does the CI exclude 1?"), so a physically-null permutation
+    can flip it. Measured on real CAISO month-05 data: mean_y = 6.152647 to
+    six decimals under every permutation while the IFT upper bound swung
+    0.970..1.246 and the flag flipped with it (F-0020).
+
+    This CHARACTERISES the open defect rather than asserting the fix: a
+    thresholded Monte-Carlo statistic cannot be stable when the bound sits at
+    the threshold, so reseeding alone is not the answer (that is R10). When
+    R10 lands, this test must fail and be updated deliberately.
+    """
+
+    def test_mean_is_order_invariant_but_the_interval_is_not(self):
+        proto = _proto(32.0)
+        windows = sample_quench_states(
+            GAME, proto, n_trajectories=40, steps_per_unit_time=25, seed=21
+        )
+        kw = {"n_states": 4, "hold_durations": [32.0] * len(windows)}
+        base = hs_y_estimate(windows, **kw)
+        rng = np.random.default_rng(5)
+        widths = []
+        for _ in range(4):
+            perm = rng.permutation(windows[0].shape[0])
+            shuf = hs_y_estimate([w[perm] for w in windows], **kw)
+            # the ESTIMATE is a mean over trajectories: exactly invariant
+            assert abs(shuf.mean_y - base.mean_y) < 1e-12
+            widths.append(shuf.ift_ci_high - shuf.ift_ci_low)
+        spread = (max(widths) - min(widths)) / max(min(widths), 1e-12)
+        assert spread > 1e-6, widths  # the INTERVAL moves — the open defect
