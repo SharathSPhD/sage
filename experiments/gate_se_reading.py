@@ -318,7 +318,7 @@ def main() -> int:
             f"strataq {strataq.__version__}, generated {datetime.now(UTC).isoformat()}"
         ),
     )
-    (RESULTS / "gate_se_read.json").write_text(res.to_json())
+    (RESULTS / "gate_se_read.json").write_text(res.model_dump_json(indent=2) + "\n")
 
     print(verdict)
     print(f"\ntrue_settled={true_settled}  tau={tau}  requires>={safety * true_max_relax:.2f}")

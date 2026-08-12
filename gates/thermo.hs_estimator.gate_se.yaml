@@ -37,5 +37,40 @@ gates:
     changelog_entry: true
 
   adversarial:
-    red_team_signoff: false
-    objections: []
+    # Red-team returned GRANTED-CONDITIONAL: no blocking objections, two
+    # must-address conditions, three notes. Both conditions are resolved below
+    # WITH MECHANISM rather than deferred, and condition 1's investigation
+    # produced the unit's largest finding (F-0021). The reviewer independently
+    # verified the bit-identical refactor, G5's discrimination against oracle
+    # noise, G4's non-vacuity and the fairness of the F-0017 correction.
+    red_team_signoff: true
+    objections:
+      - id: C-1
+        text: "MUST-ADDRESS: jackknife's G5 deviation worsens monotonically with n (0.321 -> 0.433 -> 0.519 -> 0.654), which is backwards for a consistent estimator and is unexplained. Provide a mechanism or file as an open chase item"
+        disposition: addressed
+        where: "Resolved with a ROOT CAUSE, not a chase item (F-0021). Signed per-window ratios localise the failure to the pre-quench window, and the cause is upstream of every SE: at lag N/4 the autocorrelation has already decayed into noise, so rho is 0 or NEGATIVE there (-0.0185, -0.0033 at n=30, both clipped to the 1e-12 floor) and tau_hat returns a clip-floor artifact. One cause, three symptoms: delta explodes (gradient divides by rho), jackknife collapses to EXACTLY zero SE on 6/20 seeds at n=30 (clipped replicates all pin to one value), split on 2/20; bootstrap 0/20. Two characterisation tests encode it. Also forced a correction to my own first phrasing: the '6.7x understatement' was a ratio of medians, not a per-seed effect (per-seed median jack/boot ratio is 0.78, only ~60% of seeds below 1) -- the real failure is intermittent TOTAL collapse, which is worse. Sharpens R10 from 'lower-variance tau_hat' to 'adaptive lag + explicit refusal when rho is indistinguishable from zero'"
+      - id: C-2
+        text: "MUST-ADDRESS: the registered rule keeps `split` as default when nothing passes, but did not anticipate the incumbent failing three criteria while bootstrap fails one. Leaving a dominated default is questionable for users; confirm the decision or revise the rule"
+        disposition: addressed
+        where: "Resolved concretely, not by deference. The certified adjudication stands as registered (REFUSED, nothing adopted). The DEFAULT stays `split` for two stated reasons -- flipping it would silently change behaviour in a package already on PyPI, and would break reproduction of every recorded R7/R8 artifact -- but `bootstrap` is now the DOCUMENTED RECOMMENDATION in the docstring and docs/reference.md with the F-0021 evidence, so no user is quietly handed the worse instrument. R10 carries the default flip BUNDLED with its downstream re-run obligation so the behaviour change and artifact refresh land together. A standing RULE REVISION is recorded in config/experiments/gate_se.yaml: when the incumbent is strictly dominated, a unit must say so in its claim, document the recommended alternative with evidence, and register the default change as a named follow-up -- silence is not an acceptable outcome"
+      - id: N-1
+        text: "NOTE: the aggregate G2 mechanism over-predicts the refusal rate (~81% from a normal approximation vs ~40% observed), so the story is sound but simplified"
+        disposition: addressed
+        where: "Explained by the same F-0021 mechanism: the per-window behaviour is heterogeneous, with windows 0-2 degenerate-and-PERMISSIVE (tau_hat pinned tiny) and windows 3-5 carrying the actual decision, so an aggregate model mixing them necessarily mis-predicts. Recorded in F-0021"
+      - id: N-2
+        text: "NOTE: delta's gradient explosion at the rho clip floor is documented but its mechanism belongs in the main artifact, not only a side note"
+        disposition: addressed
+        where: "Promoted to F-0021 as one of three symptoms of a single root cause, with the gradient lag*dt/(rho ln^2 rho) written out, plus the docstring and reference-doc warnings"
+      - id: N-3
+        text: "NOTE: the month-05 residual (identical flip rate across all four SE methods) confirms a second order-dependence; appropriate as a chase item"
+        disposition: accepted
+        where: "Agreed and kept as R10. Mechanism verified directly (mean_y identical to six decimals under permutation while the IFT bound swings 0.970-1.246) and captured in TestIntervalOrderDependence so the fix cannot land silently"
+      - id: SELF-1
+        text: "SELF-IDENTIFIED, flagged to the reviewer before their report: G5 as registered stores only |ratio - 1|, so the DIRECTION of the error is not recoverable from the artifact -- a candidate that dangerously understates uncertainty scores identically to one that harmlessly overstates it"
+        disposition: addressed
+        where: "A real defect in my own criterion. Resolved by measuring the signed per-window ratios post-hoc, which is what exposed the understatement direction and hence F-0021 -- the very failure the criterion as written could not see. Future SE criteria must be signed"
+      - id: SELF-2
+        text: "SELF-IDENTIFIED: G1 is a THEOREM for jackknife and delta (permutation-invariance by construction), so passing it is arithmetic rather than evidence"
+        disposition: addressed
+        where: "Acknowledged in the config and the finding; compensated by the real-data flip-rate check on R7's CAISO panel, which is not arithmetic -- split 0.214 vs 0.050, Jeffreys intervals non-overlapping ([0.153, 0.288] vs [0.023, 0.096]). The reviewer judged this adequate"
+

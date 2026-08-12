@@ -371,3 +371,64 @@ class TestIntervalOrderDependence:
             widths.append(shuf.ift_ci_high - shuf.ift_ci_low)
         spread = (max(widths) - min(widths)) / max(min(widths), 1e-12)
         assert spread > 1e-6, widths  # the INTERVAL moves — the open defect
+
+
+class TestRelaxationEstimatorDegeneracy:
+    """F-0021: on fast-mixing windows the lag-N/4 autocorrelation has already
+    decayed into noise, so rho sits at (or below) zero and tau_hat stops
+    estimating a relaxation time — it returns a clip-floor artifact.
+
+    ONE root cause, three SE symptoms: `delta` explodes (its gradient divides
+    by rho), `jackknife` collapses (clipped leave-one-out replicates are all
+    pinned at the same floor, so the estimated variance goes to zero, and the
+    deficit GROWS with n), `split` partially understates. `bootstrap` survives
+    because with-replacement resampling perturbs far enough to escape the flat
+    region — which is why it is the documented recommendation.
+
+    These CHARACTERISE the open defect (R10: an adaptive lag, plus an explicit
+    refusal when rho is indistinguishable from zero). When R10 lands they must
+    fail and be updated deliberately.
+    """
+
+    def test_low_lambda_window_rho_is_noise_not_signal(self):
+        """The pre-quench window's lag-N/4 correlation is statistically
+        indistinguishable from zero — including NEGATIVE values, which no
+        decaying exponential can produce."""
+        from strataq.thermo.hs_estimator import _window_stats
+
+        windows = sample_quench_states(
+            GAME, _proto(32.0), n_trajectories=30, steps_per_unit_time=25, seed=32
+        )
+        w = windows[0]
+        lag = max(1, w.shape[1] // 4)
+        matches, counts, pairs = _window_stats(w, 4, lag)
+        pi = counts.sum(axis=0) / counts.sum()
+        base = float((pi**2).sum())
+        rho = (matches.sum() / (w.shape[0] * pairs) - base) / max(1.0 - base, 1e-12)
+        assert rho < 0.02, rho  # no measurable correlation left at this lag
+
+    def test_jackknife_se_collapses_to_exactly_zero_where_bootstrap_never_does(self):
+        """The cleanest reason `bootstrap` is the recommendation, and the
+        precise claim — an earlier draft of this test asserted a per-seed
+        magnitude ratio the data does NOT support (measured median jack/boot
+        ratio is 0.78 at n=30, only ~60% of seeds below 1). The real failure is
+        intermittent TOTAL collapse: on the degenerate window the jackknife's
+        1/n perturbations cannot escape the rho clip floor, so every
+        leave-one-out replicate is identical and the estimated SE is EXACTLY
+        zero — a gate handed SE = 0 believes it knows tau_hat perfectly and
+        drops its noise margin entirely. Measured over 20 seeds: jackknife
+        6/20 at n=30 and 3/20 at n=200, split 2/20 and 1/20, bootstrap 0/20 at
+        both."""
+        kw = {"n_states": 4, "hold_durations": [32.0] * 6}
+        jack_zeros = boot_zeros = 0
+        for s in range(8):
+            windows = sample_quench_states(
+                GAME, _proto(32.0), n_trajectories=30, steps_per_unit_time=25, seed=500 + 7 * s + 30
+            )
+            jack = relaxation_gate(windows, se_method="jackknife", **kw)
+            boot = relaxation_gate(windows, se_method="bootstrap", **kw)
+            assert jack.tau_hats == boot.tau_hats  # same estimate, different bar
+            jack_zeros += int(jack.ses[0] == 0.0)
+            boot_zeros += int(boot.ses[0] == 0.0)
+        assert jack_zeros >= 1, "the jackknife collapse should appear within 8 seeds"
+        assert boot_zeros == 0, "bootstrap must never hand the gate SE = 0"

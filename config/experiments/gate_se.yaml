@@ -112,3 +112,33 @@ se_accuracy_tol: 0.35
 #       of the SEs it judges (the same hygiene as R8's held-out confirmation,
 #       at the cost of extra sampling).
 oracle_seed_offset: 900000
+
+# ============================================================================
+# RULE REVISION (post-results, in response to the red-team's must-address
+# condition 2 — recorded as a REVISION rather than applied retroactively, so
+# R9's own adjudication stands exactly as registered)
+# ============================================================================
+# The decision rule above says the default stays `split` when no candidate
+# passes. It did not anticipate the INCUMBENT failing — split fails G1, G2 and
+# G5 while bootstrap fails only G2, so "keep the incumbent" is not the
+# conservative choice it was written to be; it keeps a dominated instrument.
+#
+# Resolution for THIS unit (deliberately conservative, and it is not a dodge):
+#   - The certified adjudication is unchanged: REFUSED, nothing adopted.
+#   - The DEFAULT stays `split`, because flipping it would silently change
+#     behaviour in a package already published to PyPI and would break
+#     reproduction of every recorded R7/R8 artifact.
+#   - `bootstrap` becomes the DOCUMENTED RECOMMENDATION in the docstring and
+#     reference docs, with the F-0021 degeneracy evidence, so a user is not
+#     quietly handed the worse instrument.
+#   - R10 carries the default flip BUNDLED with its downstream re-run
+#     obligation, so the behaviour change and the artifact refresh land
+#     together and are auditable as one step.
+#
+# Standing revision for FUTURE units: when no candidate passes but the
+# incumbent is strictly dominated on the registered criteria, the unit must
+# (a) say so explicitly in its claim, (b) document the recommended
+# alternative with its evidence, and (c) register the default change as a
+# named follow-up unit with the re-run obligation attached. Silence, or
+# keeping the dominated default without saying it is dominated, is not an
+# acceptable outcome.

@@ -61,7 +61,21 @@ hold was too short and by how much.
 | `split` | **no** | the incumbent 4-way `i::4` trajectory split; the default, so no previously recorded verdict moves |
 | `jackknife` | yes, exactly | leave-one-out over trajectories in closed form; also carries the pi-hat noise |
 | `delta` | yes, exactly | cheapest, but treats pi-hat as fixed — measured to *overstate* the SE, since a trajectory's occupancy moves the match rate and the baseline together |
-| `bootstrap` | in distribution only | trajectory resampling; a fixed seed leaves an O(SE/sqrt(2B)) residual |
+| `bootstrap` | in distribution only | trajectory resampling; a fixed seed leaves an O(SE/sqrt(2B)) residual — measured at 0/20 flips anyway. **RECOMMENDED** |
+
+**Use `bootstrap`. The default is `split` only so previously published reads
+reproduce.** On fast-mixing windows the lag-N/4 autocorrelation has already
+decayed into noise, so ρ sits at or below zero and τ̂ returns a clip-floor
+artifact instead of a relaxation time (F-0021). Every SE that depends on local
+sensitivity to ρ fails there for the same underlying reason: `delta` explodes
+(its gradient divides by ρ), `jackknife` returns an SE of **exactly zero** on
+6 of 20 seeds at n=30 — every leave-one-out replicate pins to the same floor,
+so the gate is told τ̂ is known perfectly and drops its noise margin — and
+`split` does so on 2 of 20. `bootstrap` never collapses (0 of 20) and is also
+the most accurate against an independently measured oracle SE (0.18–0.29
+relative deviation, against `split`'s 0.44–0.49). A consequence worth knowing
+when you read a verdict: because τ̂ degenerates on the fast windows, the gate
+is in practice testing only the slow ones, and it does not currently say so.
 
 Order-invariance matters because the trajectory ORDER is not a physical
 property: permuting it must not change a verdict, and with `split` it can

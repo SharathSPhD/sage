@@ -196,7 +196,24 @@ def _relaxation_time(
     ``bootstrap``
         Trajectory resampling. Invariant only IN DISTRIBUTION — with a fixed
         resampling seed, permuting trajectories changes which ones land in
-        each resample, leaving a residual of order SE/sqrt(2B).
+        each resample, leaving a residual of order SE/sqrt(2B); measured at
+        0/20 flips anyway. **RECOMMENDED** (see below).
+
+    **Recommendation: use ``bootstrap``; the default is ``split`` only for
+    reproducibility.** On fast-mixing windows the lag-N/4 autocorrelation has
+    already decayed into noise, so rho sits at or below zero and tau_hat
+    returns a clip-floor artifact rather than a relaxation time (F-0021).
+    Every SE that depends on local sensitivity to rho fails there, in ways
+    that look method-specific but share one cause: ``delta`` explodes (its
+    gradient divides by rho), ``jackknife`` collapses to EXACTLY zero SE on
+    6/20 seeds at n=30 (all leave-one-out replicates pin to the same floor,
+    so the gate is told tau_hat is known perfectly), ``split`` collapses on
+    2/20. ``bootstrap`` collapses on 0/20 because with-replacement resampling
+    perturbs far enough to escape the flat region, and it is also the most
+    ACCURATE against an independently measured oracle SE (0.18-0.29 relative
+    deviation vs split's 0.44-0.49). ``split`` remains the default so that
+    every previously recorded verdict reproduces; changing it is R10's job,
+    together with re-running the affected artifacts.
     """
     if se_method not in SE_METHODS:
         raise ValueError(f"se_method must be one of {SE_METHODS}, got {se_method!r}")
