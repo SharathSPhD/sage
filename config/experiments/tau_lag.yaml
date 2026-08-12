@@ -1,0 +1,149 @@
+# thermo.hs_estimator.tau_lag (R10) — an adaptive lag for tau_hat, and an
+# explicit refusal when the relaxation time is UNMEASURABLE.
+#
+# R9 (F-0021) found the root cause under three different-looking SE failures.
+# The gate estimates the categorical autocorrelation at a FIXED lag of N/4.
+# With 800 samples at dt=0.04 that is a lag TIME of 8.0 against a true
+# relaxation time of ~6.6, so on the low-lambda windows the correlation has
+# already decayed into noise: measured rho = -0.0185 and -0.0033 at n=30 (both
+# CLIPPED to the 1e-12 floor) and +0.002..+0.009 at n=200. There
+# tau_hat = -lag*dt/ln(rho) is not estimating a relaxation time at all — it
+# returns a clip-floor artifact of 0.29. Consequences already measured:
+#   delta EXPLODES (its gradient lag*dt/(rho ln^2 rho) divides by rho),
+#   jackknife returns SE EXACTLY 0.0 on 6/20 seeds at n=30 and 3/20 at n=200,
+#   split on 2/20 and 1/20, bootstrap on 0/20 at both.
+# And the consequence that outruns the SE question: because tau_hat degenerates
+# on the fast windows (pinned small, hence PERMISSIVE), the relaxation gate is
+# in practice only testing the slow windows, and it does not say so.
+#
+# A gate that cannot measure a window must SAY SO. That is the same principle
+# the whole instrument was rebuilt on in F-0016, applied one level deeper.
+#
+# BASELINE (measured by R9; not re-derived here so the comparison is auditable)
+#   true relaxation times: 1/gap_k per hold, max 6.5925 (exact, from the
+#   generator's spectral gaps — zero sampling noise)
+#   fixed-N/4 tau_hat: ~2.4-2.8 median across windows, i.e. a large
+#   UNDERestimate, which the default relax_safety=4 exists to absorb
+#   rho at lag N/4: windows 0-2 at or below zero, windows 3-5 in 0.07..0.23
+#   exact-zero SE incidence at n=30: jackknife 6/20, split 2/20, bootstrap 0/20
+#   G2 gate-vs-truth agreement at n=30: 12/20 best (bootstrap), bar was 18
+#
+# REGISTERED CRITERIA (this commit must LAND before any run — verify with
+# git log; the standing rule since the thermo.protocols O-3 failure):
+#   T1 (no silent degeneracy) — across the n grid and every window, the
+#       adaptive estimator must NEVER return a clip-floor tau_hat while
+#       reporting the window as measured. Every window is either measured with
+#       rho inside the registered band, or explicitly REFUSED as unmeasurable.
+#       Zero tolerance: one silent clip-floor read fails T1.
+#   T2 (the SE collapse disappears) — exact-zero SE incidence must fall to
+#       0/20 at n=30 for BOTH jackknife and split (baseline 6/20 and 2/20).
+#       This is the mechanical consequence of T1 and is measured separately so
+#       a partial fix cannot hide behind T1's per-window accounting.
+#   T3 (accuracy where measurable) — TWO parts, both required, and the second
+#       is an absolute band registered BEFORE measuring so it cannot be fitted:
+#       (a) RELATIVE: the adaptive tau_hat must be closer to the window's exact
+#           1/gap_k than the fixed-N/4 tau_hat on at least 5 of 6 windows.
+#           A relative bar cannot be met by luck across 6 windows.
+#       (b) ABSOLUTE: on the SLOWEST window the adaptive tau_hat must lie
+#           within a factor of tau_accuracy_factor of 1/gap_k. A factor of 2 is
+#           chosen because a single-exponential fit to a multi-mode chain has
+#           intrinsic bias (F-0015 measured the multi-mode residual at 0.44
+#           dex worst case), so demanding better would be demanding the fit be
+#           something it is not.
+#   T4 (refusal power preserved) — no regression on genuinely unsettled holds:
+#       the gate must still REFUSE on 20/20 seeds at every unsettled tau and
+#       every n, exactly as R9's G4 measured (60/60 for all four SE methods).
+#       An adaptive lag that buys accuracy by weakening the gate is refused.
+#   T5 (the new refusal must FIRE) — on a deliberately degenerate
+#       configuration (a window whose correlation is exhausted at every
+#       candidate lag) the estimator must emit the unmeasurable refusal. A
+#       refusal path that never triggers is decoration, not a safeguard —
+#       the F-0016 lesson about the IFT companion, applied to this gate.
+#   T6 (the selection is validated) — the adaptive lag is a DATA-DEPENDENT
+#       SELECTION, so its apparent improvement can be selection noise. T3 must
+#       hold again on a DISJOINT seed stream (R8's held-out-confirmation
+#       precedent), or the accuracy claim is refused.
+#   T7 (usable on real data) — re-read R7's CAISO panel. If the new refusal
+#       fires on so many windows that the instrument becomes unusable there,
+#       that is a finding to publish, NOT a criterion to relax: report the
+#       refusal rate per hold and let it stand. Registered so the outcome is
+#       reported either way rather than discovered and quietly dropped.
+#
+# DELIVERABLE 2 (same unit — the second order-dependence, F-0020)
+#   hs_y_estimate's CI/IFT bootstrap draws resample indices from
+#   default_rng(0), so permuting trajectories changes each resample's
+#   composition. Verified on real CAISO month-05 data: mean_y = 6.152647
+#   identical to six decimals under every permutation while the IFT interval's
+#   upper bound swings 0.970..1.246 and the ANOMALY flag flips with it (7/20
+#   null shuffles, IDENTICAL under all four SE methods — which is what
+#   localised it outside the SE machinery). Reseeding is NOT the fix: the flag
+#   is a hard boolean thresholded on a Monte-Carlo interval whose bound sits at
+#   the threshold.
+#   T8 — the anomaly verdict must become STABLE under the physically-null
+#       trajectory permutation: flips <= 1/20 on the synthetic family AND the
+#       month-05 real-data flip rate must fall below flip_rate_max. The
+#       admitted routes are reporting the MARGIN (distance from the CI bound to
+#       1) alongside the boolean, introducing an explicit INDETERMINATE state
+#       when that margin is inside Monte-Carlo noise, and/or raising B. Which
+#       route wins is decided by T8 and T9, not by preference.
+#   T9 — INDETERMINATE must not become a way of never being wrong (the
+#       anticipated objection, registered as a criterion). If an indeterminate
+#       state is introduced, it must fire on <= indeterminate_max_fraction of
+#       the synthetic settled family, AND the continuous-ramp case that
+#       F-0016's companion test catches must still be flagged ANOMALY, not
+#       parked as indeterminate. A detector that answers "don't know" on a
+#       genuinely non-stepwise system is worse than the flicker it replaces.
+#   TestIntervalOrderDependence currently CHARACTERISES this defect and MUST
+#   fail when this lands — update it deliberately, never by loosening it.
+#
+# DELIVERABLE 3 (same unit — the default flip, per R9's red-team condition 2
+# and the standing rule revision recorded in gate_se.yaml)
+#   Flip relax_se_method's default from `split` to `bootstrap`: it is the only
+#   candidate that neither explodes nor collapses, and the most accurate
+#   against an independent oracle (0.18-0.29 deviation vs split's 0.44-0.49).
+#   This MUST land together with re-running day_quench (R7),
+#   smalln_certification (R8) and the hs_estimator v2 reading, reporting every
+#   verdict change honestly — including any previously ADMITTED read that
+#   becomes refused. Already known from R9's real-data check: month 07 flips
+#   from refused to ADMITTED under bootstrap. Bump the strataq version and
+#   record the behaviour change in CHANGELOG, since 0.1.0 is on PyPI with
+#   `split` as the default.
+#
+# WHAT THIS UNIT MAY NOT CLAIM
+#   Nothing here certifies monthly market windows. R8's C-3 rejection stands
+#   (a joint verdict over 211 day-pairs does not imply any 30-day subset
+#   settled), and R9 measured small-n gate agreement at 12/20 against an 18
+#   bar. If T1-T9 pass, the monthly question becomes worth re-asking in a
+#   SEPARATE registered unit that re-establishes small-n coverage. Claiming it
+#   here would repeat exactly the shortcut C-3 rejected.
+seed: 20260902
+family: { alpha: 0.25 }
+protocol: { lambdas: [0.5, 1.5, 2.5, 3.5, 4.5, 5.5], tau: 32.0 }
+n_grid: [30, 100, 200]
+n_seeds: 20
+steps_per_unit_time: 25
+pseudocount: 0.5
+relax_safety: 4.0
+se_candidates: [split, jackknife, bootstrap]
+
+# T1: the measurable band for rho. Below rho_min the correlation is
+# indistinguishable from noise (R9 measured rho <= 0 there); above rho_max the
+# lag is so short that tau_hat is dominated by the fastest mode and says
+# nothing about the slow one the gate cares about.
+rho_band: [0.10, 0.70]
+lag_candidates_fraction: [0.02, 0.05, 0.10, 0.15, 0.25, 0.35, 0.50]
+
+# T2
+zero_se_incidence_max: 0
+# T3
+tau_relative_windows_min: 5
+tau_accuracy_factor: 2.0
+# T4
+unsettled_taus: [0.5, 1.0, 2.0]
+unsettled_refusal_required: 20
+# T6
+holdout_seed_offset: 700000
+# T8 / T9
+flag_flip_max: 1
+flip_rate_max: 0.10
+indeterminate_max_fraction: 0.20
