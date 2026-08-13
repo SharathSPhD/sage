@@ -39,6 +39,7 @@ from strataq.finite.games.tensor import DenseTensorGame  # noqa: E402
 from strataq.finite.response.reciprocity import reciprocity_defect  # noqa: E402
 from strataq.finite.response.spectral import critical_lambda, strategic_spectrum  # noqa: E402
 from strataq.finite.response.susceptibility import chi_equilibrium, chi_partial  # noqa: E402
+from strataq.fit import LambdaFit, fit  # noqa: E402
 
 __all__ = [
     "ActionGridBuilder",
@@ -48,6 +49,7 @@ __all__ = [
     "Diagnosis",
     "Engine",
     "Game",
+    "LambdaFit",
     "LearnPageSpec",
     "PayoffOracle",
     "QREPoint",
@@ -58,6 +60,7 @@ __all__ = [
     "chi_partial",
     "critical_lambda",
     "diagnose",
+    "fit",
     "games",
     "hodge_decompose",
     "logit_qre",
