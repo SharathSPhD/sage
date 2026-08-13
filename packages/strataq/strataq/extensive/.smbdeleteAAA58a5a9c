@@ -1,0 +1,126 @@
+"""Backward induction and subgame-perfect equilibrium on perfect-information trees.
+
+One backward pass: at every decision node the mover takes the action with the
+highest continuation value for itself, and that value propagates up. Chance nodes
+average. The result is a pure behaviour strategy that is subgame perfect, plus
+the value of every node — and a record of where the argmax was a tie, because a
+tie is a place where the answer is a convention rather than a result.
+
+Refuses on trees with non-singleton information sets rather than pretending: the
+right tool there is :func:`strataq.extensive.aqre.agent_qre`, whose λ → ∞ limit
+is a sequential equilibrium.
+
+References
+----------
+Zermelo 1913; Kuhn 1953; Selten 1965 (subgame perfection). Tier: exact.
+"""
+
+from __future__ import annotations
+
+import equinox as eqx
+import jax.numpy as jnp
+from jax import Array
+
+from strataq.extensive.behaviour import node_values, policy_from_behaviour
+from strataq.extensive.tree import ExtensiveGame
+
+__all__ = ["BackwardInduction", "backward_induction", "subgame_perfect_behaviour"]
+
+
+class BackwardInduction(eqx.Module):
+    """The subgame-perfect solution of a perfect-information tree."""
+
+    action: Array
+    """``(n_nodes,)``: the action chosen at each decision node; ``-1`` elsewhere."""
+    values: Array
+    """``(n_nodes, n_players)``: the subgame-perfect value of every node."""
+    behaviour: Array
+    """``(n_infosets, max_actions)``: the pure behaviour strategy, one-hot per set."""
+    ties: Array
+    """``(n_nodes,)`` boolean: the argmax was not unique at this node."""
+
+    @property
+    def value(self) -> Array:
+        """The equilibrium payoff vector at the root, ``(n_players,)``."""
+        return self.values[0]
+
+    @property
+    def has_ties(self) -> bool:
+        return bool(jnp.any(self.ties))
+
+
+def backward_induction(game: ExtensiveGame, *, tol: float = 0.0) -> BackwardInduction:
+    """Solve a perfect-information tree by backward induction.
+
+    Ties are broken toward the lowest action index — the convention every
+    implementation needs and few state — and reported in
+    :attr:`BackwardInduction.ties` so a caller can tell a result from a coin flip.
+    """
+    if not game.is_perfect_information:
+        raise ValueError(
+            "backward induction needs perfect information (singleton information sets); "
+            "use agent_qre for this tree"
+        )
+    n_nodes = game.n_nodes
+    values = jnp.where(game.is_terminal[:, None], game.payoffs, 0.0)
+    action = jnp.full((n_nodes,), -1, dtype=jnp.int32)
+    ties = jnp.zeros((n_nodes,), dtype=bool)
+    for nodes in reversed(game.internal_levels()):
+        if int(nodes.shape[0]) == 0:
+            continue
+        kids = game.children[nodes]
+        mask = kids >= 0
+        safe = jnp.where(mask, kids, 0)
+        child_values = values[safe]  # (k, max_actions, n_players)
+        chance_here = game.is_chance[nodes]
+        # Chance nodes average with their probabilities.
+        weights = jnp.where(mask, game.chance[nodes], 0.0)
+        averaged = jnp.sum(weights[:, :, None] * child_values, axis=1)
+        # Decision nodes take the mover's best child.
+        owner = jnp.where(chance_here, 0, game.player[nodes])
+        own = jnp.where(mask, child_values[jnp.arange(int(nodes.shape[0])), :, 0] * 0.0, 0.0)
+        own = jnp.where(
+            mask,
+            jnp.take_along_axis(child_values, owner[:, None, None].astype(jnp.int32), axis=2)[
+                :, :, 0
+            ],
+            -jnp.inf,
+        )
+        best = jnp.argmax(own, axis=1)
+        top = jnp.max(own, axis=1)
+        duplicates = jnp.sum((own >= top[:, None] - tol) & mask, axis=1) > 1
+        chosen = jnp.take_along_axis(child_values, best[:, None, None], axis=1)[:, 0, :]
+        values = values.at[nodes].set(jnp.where(chance_here[:, None], averaged, chosen))
+        action = action.at[nodes].set(jnp.where(chance_here, -1, best).astype(jnp.int32))
+        ties = ties.at[nodes].set(jnp.where(chance_here, False, duplicates))
+    behaviour = subgame_perfect_behaviour(game, action)
+    return BackwardInduction(action=action, values=values, behaviour=behaviour, ties=ties)
+
+
+def subgame_perfect_behaviour(game: ExtensiveGame, action: Array) -> Array:
+    """Turn a per-node action choice into a one-hot behaviour profile."""
+    behaviour = jnp.zeros((game.n_infosets, game.max_actions), dtype=jnp.float64)
+    decision = jnp.flatnonzero(game.is_decision)
+    behaviour = behaviour.at[game.infoset[decision], action[decision]].set(1.0)
+    return behaviour
+
+
+def verify_subgame_perfection(game: ExtensiveGame, solution: BackwardInduction) -> float:
+    """Largest gain from a one-shot deviation at any node — zero for a correct solve.
+
+    The independent check on :func:`backward_induction`: recompute values from the
+    behaviour profile and confirm no mover can improve at any node it controls.
+    """
+    policy = policy_from_behaviour(game, solution.behaviour)
+    values = node_values(game, policy)
+    worst = 0.0
+    for node in range(game.n_nodes):
+        if int(game.player[node]) < 0:
+            continue
+        owner = int(game.player[node])
+        options = [
+            float(values[int(game.children[node, a]), owner])
+            for a in range(int(game.n_actions[node]))
+        ]
+        worst = max(worst, max(options) - float(values[node, owner]))
+    return worst
