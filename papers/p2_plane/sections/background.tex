@@ -1,0 +1,77 @@
+\section{Background and Related Work}
+\label{sec:background}
+
+\subsection{Quantal response and its empirical content}
+Logit QRE~\cite{mckelvey1995} replaces exact best response with
+$\sigma_i(a)\propto\exp\{\lambda_i U_i(a;\sigma_{-i})\}$, a fixed point that interpolates
+between uniform play ($\lambda\to0$) and Nash ($\lambda\to\infty$). It is exactly the
+argmax of expected payoff plus $\lambda^{-1}$ times Shannon
+entropy~\cite{fudenberg2015}, and $\lambda$ admits a rational-inattention reading as the
+inverse shadow price of information~\cite{matejka2015}. Its principal empirical threat is
+Haile, Horta\c{c}su and Kosenok~\cite{haile2008}: unrestricted quantal response rationalises
+any behaviour. The standard defences are the regular-QRE axioms~\cite{goeree2016} and
+external identification of payoffs. A third defence is used here and is structural rather
+than parametric: the reciprocity test of Section~\ref{sec:coordinates} constrains the
+\emph{symmetry} of the response matrix and admits no free parameter to absorb misfit.
+
+\subsection{Statistical mechanics of games}
+In potential games logit dynamics are reversible with a Gibbs stationary
+measure~\cite{blume1993,monderer1996}; Brock and Durlauf's social-interactions
+model~\cite{brock2001} is the mean-field Ising analogue and supplies the multiplicity
+transition. Away from potential games the correspondence is not merely approximate---it
+changes character. The chain sustains current and dissipates, and the machinery of
+stochastic thermodynamics applies: Schnakenberg's cycle decomposition~\cite{schnakenberg1976},
+fluctuation theorems, and the thermodynamic uncertainty relation~\cite{barato2015,seifert2012}.
+Quantal response statistical equilibrium~\cite{scharfenaker2017} is the closest existing
+econophysics programme; it is a constrained-MaxEnt model over aggregate outcomes and, by its
+authors' own account, cannot represent out-of-equilibrium dynamics---which is precisely the
+regime studied here.
+
+\subsection{Game decomposition}
+Candogan et al.~\cite{candogan2011} decompose a finite game orthogonally into potential,
+harmonic and nonstrategic components, giving a basis-independent harmonic fraction $\alpha$.
+Sandholm's externality symmetry~\cite{sandholm2010} and the Jacobian splitting of Balduzzi
+et al.~\cite{balduzzi2018} characterise potential games; the full-versus-effective
+distinction matters, and all decomposition here is taken on the normalised (strategically
+equivalent) game. Legacci, Mertikopoulos and Pradelski~\cite{legacci2024} study convergence
+versus recurrence under exponential weights across the same potential--harmonic axis, in
+continuous-time replicator geometry; the present work is discrete-time, works with response
+matrices and stationary fluxes, and is complementary rather than competing.
+
+\subsection{Fluctuation and response in economic settings}
+Garnier-Brun, Bouchaud and Benzaquen~\cite{garnierbrun2023} establish a
+fluctuation--response identity for the consumer-side Slutsky matrix, which is the
+demand-side counterpart of the exact static identity $\chipart=\lambda C$ used here. What
+that literature has not addressed is the \emph{equilibrium} response---the object obtained
+after strategic feedback---or its relationship to dissipation.
+
+\subsection{Gap analysis}
+Every ingredient exists; no tool computes them together. Gambit~\cite{gambit} is
+authoritative for the QRE correspondence but exposes no derivative of the equilibrium, no
+decomposition, and no dynamics. Entropy-production estimators are mature but operate on
+scalar series and cannot attribute dissipation to an agent. The Candogan decomposition has
+no published implementation of any kind. \textbf{The shared defect is that no existing tool
+can compute a local response object and a global dissipation object for the same game at a
+controlled harmonic fraction}---which is exactly the comparison this paper makes.
+Table~\ref{tab:capability} states the position.
+
+\begin{table}[H]
+\caption{Capability matrix. Rows are existing tools; columns are the operations required to
+compare a local response object with a global dissipation object on one game.}
+\label{tab:capability}
+\small
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Tool} & \textbf{QRE} & \textbf{$d\sigma^*/du$} & \textbf{Decomp.\ $\alpha$} &
+\textbf{Dynamics, $\EPR$} & \textbf{Agent-aware} \\
+\midrule
+Gambit / pygambit~\cite{gambit} & Yes & No & No & No & --- \\
+nashpy & No & No & No & No & --- \\
+OpenSpiel (MMD)~\cite{sokota2023} & Partial & No & No & No & --- \\
+QuantEcon (\texttt{logitdyn}) & No & No & No & Partial & Yes \\
+Scalar irreversibility tools~\cite{otsubo2022} & No & No & No & Yes & \textbf{No} \\
+\midrule
+\strataq~\cite{strataq} & Yes & Yes & Yes & Yes & Yes \\
+\bottomrule
+\end{tabular}
+\end{table}

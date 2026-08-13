@@ -1,0 +1,151 @@
+\section{Introduction}
+\label{sec:intro}
+
+Wherever a population of agents responds to incentives imperfectly, the same mathematical
+object appears: a softmax over payoffs. Logit quantal response equilibrium (QRE) makes that
+object an equilibrium concept---each agent's mixed strategy is an entropy-regularised best
+response to everyone else's~\cite{mckelvey1995,goeree2016}---and the regularisation weight
+$\lambda$ plays the role of an inverse temperature. The correspondence with statistical
+mechanics is not decorative. In an exact potential game~\cite{monderer1996}, logit revision
+dynamics are reversible with stationary distribution $\pi^*\propto e^{\lambda\Phi}$, the
+probability current vanishes identically, and the entropy production is
+zero~\cite{blume1993}. The system \emph{is} a Gibbs equilibrium, not merely like one.
+
+A \emph{strategic non-equilibrium steady state} is what you get when that fails. Generic
+games are not potential; their revision dynamics break detailed balance and settle into a
+stationary state with circulating probability current and strictly positive entropy
+production~\cite{schnakenberg1976,seifert2012}. The question this paper is about is how one
+should \emph{measure} that, given only observed behaviour.
+
+Two measurements are natural, and both are already in use. The first is local. Perturb one
+agent's payoffs and observe how every agent's equilibrium mixture moves; the resulting
+matrix $\chieq=(I-SB)^{-1}S$ is the strategic analogue of a susceptibility, and its
+asymmetry is a direct test of Onsager reciprocity. The second is global. Follow the joint
+profile as it wanders, and measure how much the forward trajectory statistics differ from
+the reverse; that is the Schnakenberg entropy production of the revision
+chain~\cite{schnakenberg1976}. Both vanish exactly when the normalised game is potential.
+Both are estimable from data without knowing payoffs---the first from cross-agent
+pass-through asymmetry, the second from trajectory irreversibility. It is therefore natural,
+and nearly universal in practice, to treat them as two views of one underlying quantity:
+\emph{the} distance from equilibrium.
+
+Prior work has not tested that assumption, because the tools to test it did not coexist. The
+harmonic fraction $\alpha$ of the Candogan flow decomposition~\cite{candogan2011} gives a
+basis-independent measure of how far a game is from potential, but fifteen years after its
+introduction there is no published software implementing it. Entropy-production estimators
+for observed trajectories are mature~\cite{otsubo2022,seifert2026}, but they operate on
+scalar time series and have no representation of agents, actions or profiles. QRE solvers
+are excellent~\cite{turocy2005,gambit} but expose no derivative of the equilibrium. Testing
+whether the two measurements agree requires all three at once, on the same game, at
+controlled $\alpha$.
+
+\paragraph{Scope, stated before the claim.} This paper is not a new equilibrium concept,
+not a new solver, and not a claim that either meter is incorrect. Both are computed here
+exactly as their originating literatures define them; the QRE correspondence itself is
+validated against the reference implementation~\cite{gambit} to $10^{-8}$. The contribution
+is a statement about the \emph{dimension} of the space these meters live in, and an
+instrument for locating a system inside it.
+
+\paragraph{The dictionary.} In what follows, the ``state'' is a joint action profile of a
+finite game; the ``energy'' is the negative expected payoff and the ``potential'' is
+Monderer--Shapley's $\Phi$ where it exists; the ``inverse temperature'' is the logit
+precision $\lambda$; the ``susceptibility'' is the derivative of equilibrium play with
+respect to a payoff field; the ``current'' is the net probability flux between profiles
+under logit revision; and ``distance from equilibrium'' is precisely the thing this paper
+argues is not one number.
+
+\paragraph{Contributions.}
+\begin{itemize}
+\item[\textbf{(C1)}] \textbf{The two-axis result.} Response asymmetry $\R$ and dissipation
+$\EPR$ share a zero and nothing else. Unconditionally they co-move at $\rho_S=0.993$; once
+the harmonic fraction is conditioned on, the co-movement degrades monotonically and
+\emph{decorrelates}---from $\rho_S=+0.72$ at $\alpha=0.05$ to $+0.01$ $[-0.14,+0.16]$ at
+$\alpha=0.95$ at the largest action count tested, intervals disjoint, against that same
+$0.993$ marginal. Decorrelation, not anti-correlation, is what independence requires and
+what is claimed here; the negative residual seen at $m\le5$ is reported with its
+$(m,\lambda)$ scope attached and is not claimed generally. The unconditional agreement is a
+confound: both meters are reading $\alpha$ ($\rho_S=0.990$ and $0.982$ respectively).
+\item[\textbf{(C2)}] \textbf{A refuted repair, pre-registered.} The natural explanation---
+that $\R$ is a norm ratio whose denominator contaminates it---was registered as a hypothesis
+before the test and is false. The numerator alone also anti-correlates with dissipation at
+high $\alpha$ ($\rho_S=-0.368$). The mechanism is identified ($\R$'s within-level variation
+becomes denominator-driven, $\rho_S=0.955$) but the mechanism does not repair the
+decoupling.
+\item[\textbf{(C3)}] \textbf{A spectral frontier, and criticality escape.} A critical
+precision $\lambda_c(\alpha)$ exists only above $\alpha\approx0.55$ and descends
+monotonically thereafter; potential games \emph{escape} criticality at high $\lambda$
+because equilibrium concentration suppresses the choice covariance faster than $\lambda$
+amplifies it.
+\item[\textbf{(C4)}] \textbf{Observability.} The dissipation axis is recoverable from
+observed trajectories alone---a $k$-block KLD estimator tracks the exact meter at rank
+correlation $1.0$, and a debiased finite-time thermodynamic-uncertainty
+bound~\cite{barato2015} certifies a lower bound at median tightness $0.85$---and both axes
+are calibrated at machine precision against systems whose payoffs are known by construction.
+\item[\textbf{(C5)}] \textbf{Software and reproducibility.} \strataq~\cite{strataq}, an
+open JAX library, is the first published implementation of the Candogan decomposition, of
+$\chieq$ for logit QRE, and of agent-aware entropy production. Every figure and number in
+this paper regenerates from committed artifacts and fixed seeds.
+\end{itemize}
+
+To the best of the author's knowledge this is the first statement that the local and global
+irreversibility measures of a strategic system are structurally inequivalent. No claim is
+made that either meter supersedes the other, and no claim is made about the sign of the
+residual correlation: Section~\ref{sec:results} shows that sign to be $\lambda$- and
+$m$-dependent, and Section~\ref{sec:discussion} treats it as an open question rather than a
+result.
+
+\paragraph{Hypotheses.} Registered before the runs reported here, with the test and the
+level fixed in advance (criteria files are committed and their commits verified landed;
+see Appendix~\ref{app:prov}).
+\begin{itemize}
+\item[\textbf{H1}] Within-$\alpha$-level $\rho_S(\EPR,\R)$ declines as $\alpha\to1$.
+\emph{Test:} Spearman within each of ten $\alpha$ levels, $100$ games per level; monotone
+decline over the top three levels. \emph{Primary.}
+\item[\textbf{H2a}] The decline is a ratio artefact: $\|\chi-\chi^{\top}\|_F$ alone retains
+co-movement with $\EPR$ at high $\alpha$ ($\rho_S>0.5$).
+\item[\textbf{H2b}] At high $\alpha$, $\R$'s within-level variation is denominator-driven:
+$\rho_S(\R,1/\|\chi+\chi^{\top}\|_F)>0.8$.
+\item[\textbf{H3}] The collapse is universal in $\lambda\in\{0.8,1.2,2.0\}$ and
+$m\in\{3,4\}$; \textbf{H3b}: its residual sign is $\lambda$-invariant.
+\item[\textbf{H4}] Both coordinates are estimable on real systems without payoff knowledge.
+\item[\textbf{H5}] \emph{Kill-shot, finite size.} The collapse is an artefact of $m=3$ and
+recovers as the action set grows. \emph{Test:} within-level $\rho_S$ over
+$m\in\{3,4,5,6\}$, $200$ games per $(m,\alpha)$ cell, $N=2$, $\lambda=1.2$, percentile
+bootstrap ($2000$ resamples) on every cell. Writing
+$\mathrm{gap}(m)=\rho_S(m,0.05)-\rho_S(m,0.95)$, the claim \emph{dies} iff all three of
+(a) $\rho_S(m,0.95)$ is monotone non-decreasing in $m$ to within $0.05$, (b)
+$\mathrm{gap}(6)/\mathrm{gap}(3)<0.50$, and (c) the terminal intervals at $m=3$ and $m=6$
+are disjoint; it \emph{survives} iff all three of $\mathrm{gap}(m)/\mathrm{gap}(3)\ge0.50$,
+$\rho_S(m,0.95)\le0.35$, and the upper interval endpoint below $0.35$, at every $m$.
+Anything else is \textbf{indeterminate}---the branches are deliberately not exhaustive, so
+the run cannot pass by default. Precondition: $\rho_S(m,0.05)\ge0.55$ at every $m$.
+\emph{Primary.}
+\item[\textbf{H5b}] \emph{Onset.} The $\alpha$ at which the collapse begins (smallest
+swept level with $\rho_S<0.5$) does not drift upward with $m$ by more than $0.10$, one grid
+step.
+\item[\textbf{H6}] \emph{Kill-shot, solver.} The collapse is an artefact of the damped
+fixed-point solver's finite-precision $\sigma^*$. \emph{Test:} recompute the
+$\alpha\in\{0.85,0.95\}$ cells at $m=3$ on the identical seed family with magnetic mirror
+descent (a structurally different algorithm) and with the damped solver at a $100\times$
+tighter tolerance; the collapse is numerical if $|\Delta\rho_S|\ge0.05$ in any of the four
+comparisons. $\EPR$ is built from the generator and never touches the solver, so the solver
+can enter this correlation only through $\R$.
+\end{itemize}
+
+\noindent H5 and H6 were registered in a configuration file committed \emph{before} the
+experiment implementing them existed. H5 was registered \emph{twice}: the criterion stated
+above is the second registration, and an earlier one---adjudicating the raw recovery
+$\rho_S(6,0.95)-\rho_S(3,0.95)$ against bars of $0.40$ and $0.20$---was live when the first
+two runs of this sweep were launched. The substitution, the disagreement between the two on
+the same data, and the verdict we report as a result are set out in
+Section~\ref{sec:robustness} and among the limitations in Section~\ref{sec:discussion}. The
+outcome---\textbf{indeterminate} on H5 with the claim resting on the ceiling condition
+instead, a solver-noise diagnostic rather than a survived kill-shot on H6, and a confound
+found along the way---is carried in the scoreboard (Table~\ref{tab:scoreboard}) with the same
+wording as the hypotheses that failed.
+
+Section~\ref{sec:background} positions the work; Section~\ref{sec:coordinates} defines the
+two coordinates; Section~\ref{sec:setup} gives the game families, seeds and statistics;
+Section~\ref{sec:results} reports the results and the hypothesis scoreboard;
+Section~\ref{sec:discussion} states the mechanism, what $\R$ is not, and the limitations;
+Section~\ref{sec:conclusions} concludes.

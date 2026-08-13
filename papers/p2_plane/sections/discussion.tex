@@ -1,0 +1,142 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Why a local object and a global object come apart}
+$\chieq$ is a derivative evaluated at a single equilibrium; $\EPR$ is a functional of a flux
+field over the entire profile space. Near $\alpha=0$ the potential component modulates both,
+which is why they track: the potential is a scalar field whose gradient governs the local
+response and whose level sets govern the stationary measure. As the potential component
+vanishes, nothing remains to force a local object and a global object into agreement, and
+they stop agreeing. This is not a statement peculiar to games. It predicts that in any
+system where a local susceptibility and a global flux functional are both used as proxies for
+irreversibility, the two will diverge precisely where the underlying potential structure
+does---and it says where to look.
+
+\subsection{What $\R$ is not}
+$\R$ is not a measure of dissipation, and this paper's main practical warning is against
+reading it as one. It is also not a fraction: it is a ratio of Frobenius norms, unbounded
+above, and values greater than $1$ occur (matching pennies reads $1.2$). Its \emph{zero
+test} is $\lambda$-free---$\R=0$ if and only if the normalised game is potential, at every
+$\lambda$---but its \emph{magnitude} scales with $\lambda$, and an earlier version of this
+programme's own claim that $\R$ was ``$\lambda$-free'' was corrected on exactly this point.
+Any reported magnitude must carry the $\lambda$ it was read at.
+
+\subsection{Consequences for practice}
+The plane has four quadrants and they differ in what a decision-maker should do.
+Reciprocal-and-quiet systems admit comparative statics and static rival models.
+Reciprocal-but-circulating systems are being driven from outside, so timing matters and
+structure does not. Asymmetric-but-quiet systems have a structural leader, so pass-through
+asymmetry is the exploitable object and there is no cycle to time. Systems that are both are
+where naive optimisation against a static rival model is worst. If distance from equilibrium
+were a scalar, the two off-diagonal quadrants would be empty; the two real systems measured
+here are not on the same diagonal.
+
+\subsection{Theoretical connections}
+The zero of the local axis is the strategic instance of Onsager reciprocity, and the zero of
+the global axis is detailed balance; that they coincide in potential games is the exact
+content of the Gibbs correspondence. Away from it, the structure resembles the failure of
+the fluctuation--dissipation theorem in a non-equilibrium steady state---with the important
+difference that here the quantity governing the failure, $\alpha$, is itself computable from
+the game, so the breakdown can be parameterised rather than merely observed.
+
+\subsection{Limitations}
+The finite-size limitation has been tested rather than merely acknowledged, and the outcome
+is \textbf{indeterminate}. Sweeping $m\in\{3,4,5,6\}$ under criteria registered in advance
+(Section~\ref{sec:robustness}), two of the three conditions that would have killed the claim
+fired; the third---a demand that the collapse lose more than half its size---did not, and the
+gap ratio deciding it, $0.585$, carries a bootstrap interval that crosses its own $0.50$ bar.
+Under the \emph{earlier} of this unit's two registrations, which adjudicates the raw recovery
+$\Delta\rho_{\mathrm{hi}}=+0.364$ against bars of $0.40$ and $0.20$, neither branch resolves.
+We therefore report indeterminate and rest the claim on the ceiling condition instead. What
+the sweep does establish without qualification is that the collapse itself, its ceiling, and
+the $\alpha$ at which it begins are present at every action count tested.
+
+\textbf{A criterion substitution occurred inside this unit, and it is reported here rather
+than left to be discovered.} The kill-shot was first registered as
+\texttt{plane\_finite\_size.yaml} at 23:02:25 on 2026-08-12; an experiment implementing it
+was written at 23:04:39, executed at 23:04:49, and run again at 23:17:47. At 23:26:36---after
+both runs---a second configuration, \texttt{plane\_robustness.yaml}, was committed for the
+same unit and the same kill-shot with a different deciding statistic, and the change ran in
+the direction of survival. Each file individually satisfies the discipline this programme
+requires (committed before the code implementing it existed; never amended after a result
+existed); the \emph{unit} does not, because substituting a criterion by writing a new file
+leaves no diff to catch. Both registrations, both experiments and both resolved
+configurations are committed, so the property is checkable rather than asserted. Two
+consequences are carried in the text above: the reported verdict is the earlier
+registration's, and the deciding statistic of the later one now carries the interval the
+registration failed to demand of it---an interval that does not certify the branch it was
+read as certifying. The general lesson is that ``the config was committed before the code''
+is not a sufficient guarantee; the binding property is that a unit has \emph{one} live
+criterion for one question, and that any replacement is registered as a replacement.
+
+\textbf{The control arms are unpaired, which is a design defect rather than a caveat.} The
+payoff-scale control D1 and the precision control D2 draw from different seed offsets than
+the main arm and use half the games per cell, so every arm-to-arm comparison in
+Section~\ref{sec:robustness} carries between-sample noise that a paired design---same games,
+same order, only the controlled quantity varying---would cancel. The solver check H6 is
+paired, which is exactly why its bar can be strict. D1 and D2 should be re-run paired, and
+D1 additionally with $\bar\lambda$ fixed by construction rather than bracketed: as run, D1
+raises $\bar\lambda$ with $m$ where the main arm lowers it, and interpolating between the two
+arms to matched $\bar\lambda$ leaves most of the observed $m$-effect standing. D2 is a
+further signal that the gap-ratio criterion is not resolvable at this sample size: at the
+precision $\lambda=1.5$ it returns a gap ratio of $0.529$, a $2.9$-point margin against the
+same $0.50$ bar on $100$ games per cell.
+
+The second limitation is dimension in the other index: \textbf{everything here is at
+$N=2$}. Nothing in this paper speaks to $N$-scaling, and it is the obvious next kill-shot---
+the same design, run over $N$ rather than $m$, with the same three-branch criterion. The
+binding cost is the dense Glauber generator over $\prod_i m_i$ profiles, not a correctness
+limit; $m$ stops at $6$ (36 joint states) for the same reason.
+
+A third limitation is the sign, and the $m$-sweep sharpened it. The reversal is one seed
+family's realisation of an effect whose sign varies with $\lambda$ and, at fixed Frobenius
+payoff scale, with $m$: at $m=6$ the terminal association is statistically indistinguishable
+from zero. The paper's claim is therefore decorrelation, not anti-correlation---which is all
+independence requires---and any use of the reversal must carry the $(m,\lambda)$ it was read
+at. Table~\ref{tab:scoreboard} records H3b as not supported and the reversal half of H5 as
+not general, rather than presenting either as established.
+
+A fourth limitation is generic to the generator and is a warning to anyone extending this
+work: because the family unit-normalises each Hodge component and fixes the Frobenius norm,
+per-entry payoff RMS falls like $1/m$, so a larger action set is also a colder game. \textbf{Any
+future sweep in $m$ on this family must control per-entry payoff RMS, or it will confound
+temperature with dimension.} The registered control (Table~\ref{tab:d1}) is how the confound
+was caught here, and it is also why the $m$-trend cannot be attributed to temperature
+outright: the control brackets $\bar\lambda$ rather than matching it, and at matched
+$\bar\lambda$ a residual $m$-effect of roughly $0.22$ of the observed $0.364$ remains. The
+same caution applies to comparing $\R$ or $\EPR$ magnitudes across action
+counts at fixed Frobenius scale.
+
+Solver dependence is no longer an open limitation, though the check that closed it had less
+power than its margin suggests. H6---a structurally different, last-iterate-convergent method
+and a $100\times$ tighter tolerance, on the identical seed family, criterion
+$|\Delta\rho_S|<0.05$---returned $0.00000$ in all four comparisons. Because the two arms move
+$\R$ by only $\sim\!10^{-12}$ and $\rho_S$ is rank-based, that outcome was forced rather than
+earned; what the check genuinely establishes is the diagnostic that the solver contributes
+$\sim\!10^{-12}$ to $\R$ and leaves its rank ordering bit-identical, which is enough to
+exclude finite-precision path dependence. What remains untested is a bias shared by both
+methods, which no comparison of two converging solvers can exclude; exact homotopy
+continuation would be the next distinct probe.
+
+A fifth limitation is that no system has yet been measured on \emph{both} coordinates. The
+retail panel has $\R$ without $\EPR$; the electricity market has $\EPR$ without $\R$. Until
+one system carries both, the plane is demonstrated on synthetic families and anchored, not
+populated, by real data. This is a real limitation of the present evidence rather than
+evidence of generality.
+
+A sixth limitation concerns the empirical anchors themselves. The retail panel is a single
+chain in one metropolitan area over 1989--1997, and its cross-``firm'' interpretation is a
+modelling assumption, not a data feature; the near-symmetric reading is consistent with a
+single retailer optimising a category, which is what was predicted, but it is not evidence
+about rival firms.
+
+Finally, prior art. The nearest live work~\cite{legacci2024} was assessed as orthogonal, but
+that assessment is inherited from an internal literature audit and has not been independently
+re-run for this paper. It is registered as an open check.
+
+\subsection{Broader relevance}
+The two coordinates require no knowledge of payoffs, which is what makes them usable outside
+game theory: any system that emits a sequence of joint actions and permits a perturbation
+experiment can be located in the plane. Congestion networks, wholesale electricity markets,
+retail pricing panels, and multi-agent learning systems all satisfy that description, and
+the first three appear here.

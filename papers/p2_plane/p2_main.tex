@@ -1,0 +1,164 @@
+%% ---------------------------------------------------------------------------
+%%  The Irreversibility Plane
+%%  Flagship paper for the SAGE / ThermoQRE programme.
+%%
+%%  TARGET VENUE: MDPI *Entropy* (Section: Non-equilibrium Phenomena) or
+%%  *Symmetry* (Section: Physics). To switch to the MDPI class, replace the
+%%  preamble block marked [PORTABLE PREAMBLE] with
+%%      \documentclass[entropy,article,submit,pdftex,moreauthors]{Definitions/mdpi}
+%%  and delete the compatibility macros. Everything below that line is written
+%%  to MDPI house style already: numbered sections with trailing periods,
+%%  figure captions below / table captions above, booktabs with no vertical
+%%  rules, back-matter blocks in the fixed order.
+%%
+%%  Figures regenerate with:  python papers/p2_plane/make_figures.py
+%%  Every number regenerates with: make reproduce
+%% ---------------------------------------------------------------------------
+
+% ===== [PORTABLE PREAMBLE] =================================================
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black}
+\captionsetup[figure]{font=small,labelfont=bf,labelsep=period}
+\captionsetup[table]{font=small,labelfont=bf,labelsep=period}
+\renewcommand{\thesection}{\arabic{section}.}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}.}
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}.}
+% ===========================================================================
+
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\EPR}{\sigma_{\mathrm{EP}}}
+\newcommand{\chieq}{\chi^{\mathrm{eq}}}
+\newcommand{\chipart}{\chi^{\mathrm{part}}}
+\newcommand{\strataq}{\texttt{strataq}}
+
+\title{\bfseries The Irreversibility Plane: Response Asymmetry and Dissipation
+Are Independent Coordinates of Strategic Non-Equilibrium}
+
+\author{Sharath Sathish\thanks{With agent-assisted implementation.
+Correspondence: \texttt{sharath.ai.colab@gmail.com}.}}
+
+\date{Working draft --- \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+Logit revision dynamics on a finite game define a Markov jump process whose stationary
+state is a genuine thermodynamic object: a Gibbs equilibrium exactly when the game is
+potential, and a dissipative non-equilibrium steady state otherwise. Two observables are
+routinely treated as interchangeable readings of ``how far from equilibrium'' such a system
+sits---the Onsager asymmetry $\R$ of the equilibrium response matrix
+$\chieq=(I-SB)^{-1}S$, and the Schnakenberg entropy production $\EPR$ of the revision
+chain. Both vanish if and only if the normalised game is potential, and unconditionally
+they co-move almost perfectly (Spearman $\rho_S=0.993$, $n=1000$). \emph{They are not the
+same coordinate.} Conditioning on the harmonic fraction $\alpha$ of the Candogan flow
+decomposition, their co-movement \emph{collapses to zero}: against that same $0.993$
+marginal, the within-level association falls from $\rho_S=+0.72$ at $\alpha=0.05$ to
+$+0.01$ $[-0.14,+0.16]$ at $\alpha=0.95$ at the largest action count tested ($m=6$),
+intervals disjoint, and the collapse reproduces at every $m\in\{3,4,5,6\}$ at $N=2$.
+Independence requires decorrelation, not anti-correlation, and decorrelation is what is
+established. At $m\le5$ the residual is additionally negative ($\rho_S=-0.35$
+$[-0.47,-0.23]$ at $m=3$, $\lambda=1.2$, against the same $0.993$ marginal), but that sign
+reversal is a scoped fact rather than a general one---it does not survive $m$ at fixed
+Frobenius payoff scale---and is quoted only with its $(m,\lambda)$ attached. The obvious repair---that the
+collapse is an artefact of $\R$ being a norm ratio---was pre-registered and is refuted by
+its own test: the numerator $\|\chi-\chi^{\top}\|_F$ alone reaches $\rho_S=-0.368$, so no
+renormalisation of the response matrix recovers the dissipation ordering. This paper is
+not a claim that either meter is wrong. It is a claim about \emph{dimension}: distance from
+equilibrium is not a scalar for strategic systems, and the $(\R,\EPR)$ plane---not either
+axis---is the space in which an observed system should be classified. Both pre-registered
+kill-shots on that claim have now been run ($5200$ games, $6000$ solves).
+\emph{Finite size: the outcome is \textbf{indeterminate}, and we report why rather than
+around it.} Two registrations of this criterion exist. The earlier one adjudicates the raw
+recovery $\rho_S(6,0.95)-\rho_S(3,0.95)$ against bars of $0.40$ (refutation) and $0.20$
+(survival); the later one, committed after two runs had already been launched under the
+earlier, adjudicates the gap ratio $\mathrm{gap}(6)/\mathrm{gap}(3)$ against $0.50$. On the
+same data the recovery is $+0.364$---resolving neither branch---while the gap ratio is
+$0.585$, above its bar; the first registration therefore returns \textbf{indeterminate}
+where the second returns survival, and the deciding gap ratio's bootstrap interval crosses
+its own bar. We report the earlier verdict, disclose the substitution, and rest the claim
+elsewhere. \emph{What the claim rests on is the ceiling criterion, and it is not close:} the
+high-$\alpha$ association never recovers at any tested action count---the worst upper
+interval endpoint is $+0.156$ against a $0.35$ ceiling, and the $\alpha=0.05$ and
+$\alpha=0.95$ intervals are disjoint at every $m$. That, not a gap ratio, is what
+two-coordinate independence requires. \emph{Solver:} on identical seed families a
+structurally different algorithm and a $100\times$ tighter tolerance perturb $\R$ by
+$\sim\!10^{-12}$ and leave the rank ordering bit-identical, so the collapse is not
+numerical---reported as the solver-noise diagnostic it is, since a rank statistic could not
+have registered a perturbation that small. A registered control on the payoff scale shows
+the apparent finite-size decay is largely, though not wholly, a normalised-precision effect
+of the game generator rather than a dimensional one. We state the remaining
+scope honestly: the collapse is universal across every precision $\lambda$ and action count
+$m$ tested, but the \emph{sign} of the residual is $\lambda$- and $m$-dependent, so the
+second dimension exists everywhere while its tilt is itself a system property; and $N=2$
+throughout, so $N$-scaling is untested and is the next kill-shot. We calibrate both coordinates
+at machine precision on systems with payoffs known by construction (Sioux Falls road
+network, $\R=5.6\times10^{-17}$; Colonel Blotto, $\alpha=0.69$, $\R=0.12$), show the
+dissipation axis is recoverable from observed trajectories alone (rank correlation $1.0$
+against the exact meter; a certified finite-time thermodynamic-uncertainty lower bound at
+median tightness $0.85$), and place two real systems in the plane---a retail scanner panel
+at $\R=0.0011$ $[5\times10^{-5},5\times10^{-3}]$ and a wholesale electricity market at
+$\approx1.07$ nats/day---which fall in \emph{different} quadrants. One quadrant of the four
+is not yet occupied by any measured system, and locating one there is the decisive test we
+name in advance. All software is open (\strataq, Apache-2.0); every quantitative statement
+regenerates from fixed seeds, and Appendix~\ref{app:prov} maps each number to its artifact.
+\end{abstract}
+
+\noindent\textbf{Keywords:} quantal response equilibrium; non-equilibrium steady state;
+entropy production; Onsager reciprocity; potential games; Hodge decomposition; bounded
+rationality
+
+\vspace{1em}
+\input{sections/intro}
+\input{sections/background}
+\input{sections/coordinates}
+\input{sections/setup}
+\input{sections/results}
+\input{sections/discussion}
+\input{sections/conclusions}
+\input{sections/backmatter}
+
+\appendix
+\input{sections/provenance}
+
+\begin{thebibliography}{99}
+\small
+\bibitem{mckelvey1995} McKelvey, R.D.; Palfrey, T.R. Quantal response equilibria for normal form games. \emph{Games Econ. Behav.} \textbf{1995}, \emph{10}, 6--38.
+\bibitem{goeree2016} Goeree, J.K.; Holt, C.A.; Palfrey, T.R. \emph{Quantal Response Equilibrium: A Stochastic Theory of Games}; Princeton University Press: Princeton, NJ, USA, 2016.
+\bibitem{haile2008} Haile, P.A.; Horta\c{c}su, A.; Kosenok, G. On the empirical content of quantal response equilibrium. \emph{Am. Econ. Rev.} \textbf{2008}, \emph{98}, 180--200.
+\bibitem{bland2025} Bland, J.R.; Turocy, T.L. Quantal response equilibrium as a structural model for estimation: The missing manual. \emph{Games Econ. Behav.} \textbf{2025}.
+\bibitem{monderer1996} Monderer, D.; Shapley, L.S. Potential games. \emph{Games Econ. Behav.} \textbf{1996}, \emph{14}, 124--143.
+\bibitem{blume1993} Blume, L.E. The statistical mechanics of strategic interaction. \emph{Games Econ. Behav.} \textbf{1993}, \emph{5}, 387--424.
+\bibitem{candogan2011} Candogan, O.; Menache, I.; Ozdaglar, A.; Parrilo, P.A. Flows and decompositions of games: Harmonic and potential games. \emph{Math. Oper. Res.} \textbf{2011}, \emph{36}, 474--503.
+\bibitem{sandholm2010} Sandholm, W.H. \emph{Population Games and Evolutionary Dynamics}; MIT Press: Cambridge, MA, USA, 2010.
+\bibitem{balduzzi2018} Balduzzi, D.; Racani\`ere, S.; Martens, J.; Foerster, J.; Tuyls, K.; Graepel, T. The mechanics of $n$-player differentiable games. In \emph{Proceedings of ICML}, Stockholm, Sweden, 10--15 July 2018.
+\bibitem{legacci2024} Legacci, D.; Mertikopoulos, P.; Pradelski, B. A geometric decomposition of finite games: Convergence vs.\ recurrence under exponential weights. \emph{arXiv} \textbf{2024}, arXiv:2405.07224.
+\bibitem{schnakenberg1976} Schnakenberg, J. Network theory of microscopic and macroscopic behavior of master equation systems. \emph{Rev. Mod. Phys.} \textbf{1976}, \emph{48}, 571--585.
+\bibitem{seifert2012} Seifert, U. Stochastic thermodynamics, fluctuation theorems and molecular machines. \emph{Rep. Prog. Phys.} \textbf{2012}, \emph{75}, 126001.
+\bibitem{seifert2026} Seifert, U. Universal bounds on entropy production from fluctuating coarse-grained trajectories. \emph{Nat. Rev. Phys.} \textbf{2026}, \emph{8}, 493--507.
+\bibitem{barato2015} Barato, A.C.; Seifert, U. Thermodynamic uncertainty relation for biomolecular processes. \emph{Phys. Rev. Lett.} \textbf{2015}, \emph{114}, 158101.
+\bibitem{otsubo2022} Otsubo, S.; Manikandan, S.K.; Sagawa, T.; Krishnamurthy, S. Estimating time-dependent entropy production from non-equilibrium trajectories. \emph{Commun. Phys.} \textbf{2022}, \emph{5}, 11.
+\bibitem{matejka2015} Mat\v{e}jka, F.; McKay, A. Rational inattention to discrete choices: A new foundation for the multinomial logit model. \emph{Am. Econ. Rev.} \textbf{2015}, \emph{105}, 272--298.
+\bibitem{fudenberg2015} Fudenberg, D.; Iijima, R.; Strzalecki, T. Stochastic choice and revealed perturbed utility. \emph{Econometrica} \textbf{2015}, \emph{83}, 2371--2409.
+\bibitem{brock2001} Brock, W.A.; Durlauf, S.N. Discrete choice with social interactions. \emph{Rev. Econ. Stud.} \textbf{2001}, \emph{68}, 235--260.
+\bibitem{scharfenaker2017} Scharfenaker, E.; Foley, D.K. Quantal response statistical equilibrium in economic interactions: Theory and estimation. \emph{Entropy} \textbf{2017}, \emph{19}, 444.
+\bibitem{garnierbrun2023} Garnier-Brun, J.; Bouchaud, J.-P.; Benzaquen, M. Bounded rationality and animal spirits: A fluctuation-response approach to Slutsky matrices. \emph{J. Phys. Complex.} \textbf{2023}, \emph{4}, 015004.
+\bibitem{turocy2005} Turocy, T.L. A dynamic homotopy interpretation of the logistic quantal response equilibrium correspondence. \emph{Games Econ. Behav.} \textbf{2005}, \emph{51}, 243--263.
+\bibitem{gambit} Savani, R.; Turocy, T.L. Gambit: The package for computation in game theory, Version 16.7.0. Available online: \url{https://gambitproject.readthedocs.io} (accessed on 12 August 2026).
+\bibitem{sokota2023} Sokota, S.; D'Orazio, R.; Kolter, J.Z.; Loizou, N.; Lanctot, M.; Mitliagkas, I.; Brown, N.; Kroer, C. A unified approach to reinforcement learning, quantal response equilibria, and two-player zero-sum games. In \emph{Proceedings of ICLR}, Kigali, Rwanda, 1--5 May 2023.
+\bibitem{fisk1980} Fisk, C. Some developments in equilibrium traffic assignment. \emph{Transp. Res. B} \textbf{1980}, \emph{14}, 243--255.
+\bibitem{calvano2020} Calvano, E.; Calzolari, G.; Denicol\`o, V.; Pastorello, S. Artificial intelligence, algorithmic pricing, and collusion. \emph{Am. Econ. Rev.} \textbf{2020}, \emph{110}, 3267--3297.
+\bibitem{duarte2024} Duarte, M.; Magnolfi, L.; S{\o}lvsten, M.; Sullivan, C. Testing firm conduct. \emph{Quant. Econ.} \textbf{2024}, \emph{15}, 571--606.
+\bibitem{strataq} Sathish, S. \strataq: Measurement instruments for stochastic strategic systems, Version 0.1.0. Available online: \url{https://pypi.org/project/strataq/} (accessed on 12 August 2026).
+\end{thebibliography}
+
+\end{document}
