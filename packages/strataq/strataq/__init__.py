@@ -1,8 +1,9 @@
 """strataq — stochastic strategic interaction in JAX.
 
-The SAGE library. Facade: this module will expose ~15 public functions
-(solve, decompose, response, dynamics, estimate); everything else is a
-subpackage import. The facade fills in as Stage 1 units close their gates.
+The SAGE library. Two surfaces: :mod:`strataq.problems` (state a problem, get an
+answer — pricing, auctions, routing, allocation, electricity) and the instrument
+layer underneath it (``logit_qre``, ``chi_equilibrium``, ``reciprocity_defect``,
+``diagnose``) for when you want the mechanism rather than the answer.
 
 The import name is ``strataq``, never ``sage`` (SageMath owns that name).
 """
@@ -40,20 +41,58 @@ from strataq.finite.response.reciprocity import reciprocity_defect  # noqa: E402
 from strataq.finite.response.spectral import critical_lambda, strategic_spectrum  # noqa: E402
 from strataq.finite.response.susceptibility import chi_equilibrium, chi_partial  # noqa: E402
 from strataq.fit import LambdaFit, fit  # noqa: E402
+from strataq.problems import (  # noqa: E402
+    AllocationProblem,
+    AllocationSolution,
+    AuctionProblem,
+    AuctionSolution,
+    ConvergenceWarning,
+    CustomDemand,
+    DemandModel,
+    ElectricityProblem,
+    ElectricitySolution,
+    LinearDemand,
+    LogitDemand,
+    PricingProblem,
+    PricingSolution,
+    Problem,
+    RoutingProblem,
+    RoutingSolution,
+    Solution,
+    TollEffect,
+)
 
 __all__ = [
     "ActionGridBuilder",
+    "AllocationProblem",
+    "AllocationSolution",
+    "AuctionProblem",
+    "AuctionSolution",
     "ConjugateFieldSpec",
+    "ConvergenceWarning",
+    "CustomDemand",
     "DatasetLoader",
+    "DemandModel",
     "DenseTensorGame",
     "Diagnosis",
+    "ElectricityProblem",
+    "ElectricitySolution",
     "Engine",
     "Game",
     "LambdaFit",
     "LearnPageSpec",
+    "LinearDemand",
+    "LogitDemand",
     "PayoffOracle",
+    "PricingProblem",
+    "PricingSolution",
+    "Problem",
     "QREPoint",
+    "RoutingProblem",
+    "RoutingSolution",
+    "Solution",
     "SpectrumInfo",
+    "TollEffect",
     "__version__",
     "alpha",
     "chi_equilibrium",

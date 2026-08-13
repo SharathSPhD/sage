@@ -2,11 +2,61 @@
 
 > SAGE — a computational framework for stochastic strategic interaction: Nash and quantal-response equilibria, potential and non-potential games, entropy-regularised response, and non-equilibrium strategic dynamics, with empirical estimation across pricing, energy, congestion and allocation domains.
 
-## One call, one verdict
+## Solve a problem
 
 ```sh
 pip install strataq
 ```
+
+```python
+import strataq as sq
+
+prob = sq.PricingProblem(
+    costs=[1.00, 1.05],
+    grid=(1.09, 1.89, 0.10),
+    demand=sq.LogitDemand(price_sensitivity=3.6, quality=[0.0, -0.1]),
+    precision=1.5,
+)
+res = prob.solve()
+print(res.summary())
+```
+
+```text
+                    strataq PricingProblem
+==============================================================
+price                        1.29   firms                    2
+profit                   0.002746   price levels             9
+margin                       0.29   precision              1.5
+own elasticity               -4.6   demand          LogitDemand
+cross elasticity          0.02242   mean rival price      1.49
+==============================================================
+```
+
+`res.price` is the price to set. `res.rival_prices` is the distribution over each
+rival's price, `res.profit_curve` the profit at every level of the grid,
+`res.elasticities` the own and cross elasticities there. Five problem types share
+that shape — **`PricingProblem`, `AuctionProblem`, `RoutingProblem`,
+`AllocationProblem`, `ElectricityProblem`** — each returning a frozen solution
+with domain-named fields, a `.summary()` table, and a `.diagnostics` object you
+can ignore. One worked example per type: **[docs/solving.md](docs/solving.md)**.
+
+Real network data is the same three lines:
+
+```python
+res = sq.RoutingProblem(network="sioux_falls", tolls={28: 5.0}).solve()
+
+res.flows  # link flows on the 76-link Sioux Falls network
+res.total_cost  # total travel time
+res.toll_effect.revenue  # what the toll collected
+res.toll_effect.delta_flows  # where the traffic went instead
+```
+
+Every problem type also has an HTTP endpoint — `POST /v1/solve/pricing`,
+`/v1/solve/auction`, `/v1/solve/routing`, `/v1/solve/allocation`,
+`/v1/solve/electricity` — taking the same arguments and returning the same
+fields as JSON.
+
+## Or ask what kind of system you are looking at
 
 ```python
 import strataq
@@ -25,15 +75,12 @@ Diagnosis: WHIRLPOOL  (quadrant IV)
   (call .explain() for the evidence, .snippet() to reproduce)
 ```
 
-No data file, no solver ceremony, and the answer is a sentence rather than an array.
 `diagnose()` locates a system in the **irreversibility plane** — response asymmetry `R`
 against dissipation `EPR` — and the reading stays recoverable: `.explain()` prints every
 band, null, warning and refusal behind the verdict, `.snippet()` prints code that
 reproduces exactly this reading, and `.plot()` puts the point on the reference cloud
-(needs `pip install "strataq[viz]"`). Where a coordinate is not identified by your data
-the verdict degrades to `undetermined` plus the list of quadrants still live — a bound,
-never a guess. It also takes readings you already have: `strataq.diagnose(chi=..., chi_se=...,
-series=...)`.
+(needs `pip install "strataq[viz]"`). It also takes readings you already have:
+`strataq.diagnose(chi=..., chi_se=..., series=...)`.
 
 **strataq validates against `pygambit`, it does not compete with it.** Gambit is the
 reference implementation for equilibrium computation, and strataq's solvers are tested

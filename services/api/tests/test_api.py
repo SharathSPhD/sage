@@ -1,6 +1,7 @@
 """API surface tests: every endpoint against calibration-known games."""
 
 import jax.numpy as jnp
+import pytest
 from fastapi.testclient import TestClient
 from sage_api.main import app
 
@@ -472,3 +473,176 @@ def test_fit_guards():
         ).status_code
         == 422
     )
+
+
+# ---------------------------------------------------------------------------
+# /v1/solve/* — the problem API. One case per endpoint against a known answer.
+# ---------------------------------------------------------------------------
+
+PRICING_BODY = {
+    "costs": [1.00, 1.05],
+    "grid_range": [1.09, 1.89, 0.10],
+    "demand": {"kind": "logit", "price_sensitivity": 3.6, "quality": [0.0, -0.1]},
+    "precision": 1.5,
+}
+
+
+def test_solve_pricing_returns_a_price_and_a_rival_distribution():
+    body = client.post("/v1/solve/pricing", json=PRICING_BODY).json()
+    assert body["success"] is True
+    assert body["price"] == pytest.approx(1.29)
+    assert len(body["price_grid"]) == 9
+    assert len(body["rival_prices"]) == 1
+    assert sum(body["rival_prices"][0]) == pytest.approx(1.0)
+    assert body["elasticities"][0][0] < 0 < body["elasticities"][0][1]
+    assert "diagnostics" not in body
+
+
+def test_solve_pricing_hides_physics_until_asked():
+    body = client.post("/v1/solve/pricing", json={**PRICING_BODY, "diagnostics": True}).json()
+    assert 0.0 <= body["diagnostics"]["alpha"] <= 1.0
+    assert body["diagnostics"]["reciprocity_defect"] >= 0.0
+
+
+def test_solve_pricing_recovers_the_linear_monopoly_price():
+    body = client.post(
+        "/v1/solve/pricing",
+        json={
+            "costs": [2.0],
+            "grid_range": [2.0, 10.0, 0.5],
+            "demand": {"kind": "linear", "intercept": [10.0], "own_slope": 1.0},
+            "precision": 20.0,
+        },
+    ).json()
+    assert body["price"] == pytest.approx(6.0)
+    assert body["profit"] == pytest.approx(16.0)
+
+
+def test_solve_pricing_rejects_an_ambiguous_grid():
+    response = client.post("/v1/solve/pricing", json={**PRICING_BODY, "grid": [1.0, 2.0]})
+    assert response.status_code == 422
+    assert "exactly one of grid=" in response.json()["detail"]
+
+
+def test_solve_auction_single_bidder_bids_the_reserve():
+    body = client.post(
+        "/v1/solve/auction",
+        json={
+            "values": [10.0],
+            "grid_range": [4.0, 10.0, 0.5],
+            "reserve": 4.0,
+            "precision": 5.0,
+        },
+    ).json()
+    assert body["bid"] == pytest.approx(4.0)
+    assert body["surplus"] == pytest.approx(6.0)
+    assert body["win_probability"] == pytest.approx(1.0)
+
+
+def test_solve_auction_needs_values_or_costs():
+    response = client.post("/v1/solve/auction", json={"grid_range": [1.0, 2.0, 0.5]})
+    assert response.status_code == 422
+
+
+def test_solve_routing_on_a_two_route_network():
+    body = client.post(
+        "/v1/solve/routing",
+        json={
+            "network": [
+                {
+                    "origin": 1,
+                    "destination": 2,
+                    "free_flow": 1.0,
+                    "capacity": 1.0,
+                    "b": 1.0,
+                    "power": 1.0,
+                },
+                {
+                    "origin": 1,
+                    "destination": 3,
+                    "free_flow": 2.0,
+                    "capacity": 1.0,
+                    "b": 0.25,
+                    "power": 1.0,
+                },
+                {
+                    "origin": 2,
+                    "destination": 4,
+                    "free_flow": 0.0,
+                    "capacity": 1.0,
+                    "b": 0.0,
+                    "power": 1.0,
+                },
+                {
+                    "origin": 3,
+                    "destination": 4,
+                    "free_flow": 0.0,
+                    "capacity": 1.0,
+                    "b": 0.0,
+                    "power": 1.0,
+                },
+            ],
+            "demand": [{"origin": 1, "destination": 4, "trips": 3.0}],
+            "precision": 100.0,
+            "k_routes": 2,
+        },
+    ).json()
+    assert body["success"] is True
+    assert body["n_links"] == 4
+    assert body["route_flows"][0] == pytest.approx(5 / 3, abs=5e-3)
+    assert body["toll_effect"] is None
+
+
+def test_solve_routing_edge_list_needs_demand():
+    response = client.post(
+        "/v1/solve/routing",
+        json={
+            "network": [
+                {"origin": 1, "destination": 2, "free_flow": 1.0, "capacity": 1.0},
+            ]
+        },
+    )
+    assert response.status_code == 422
+    assert "demand=" in response.json()["detail"]
+
+
+def test_solve_allocation_returns_an_allocation_that_spends_the_budget():
+    body = client.post(
+        "/v1/solve/allocation",
+        json={"budget": 5, "field_values": [1.0, 1.0, 2.0], "precision": 2.0},
+    ).json()
+    assert body["success"] is True
+    assert sum(body["allocation"]) == 5
+    assert len(body["allocations"]) == len(body["allocation_distribution"])
+    assert sum(body["rival_distribution"]) == pytest.approx(1.0)
+
+
+def test_solve_electricity_prices_the_block():
+    body = client.post(
+        "/v1/solve/electricity",
+        json={
+            "costs": [20.0, 20.0],
+            "offers_range": [20.0, 60.0, 5.0],
+            "capacities": [100.0, 100.0],
+            "demand": 80.0,
+            "precision": 0.05,
+        },
+    ).json()
+    assert body["success"] is True
+    assert 0.4 < body["dispatch_probability"] < 0.6
+    assert sum(p for _, p in body["offer_curve"]) == pytest.approx(1.0)
+    assert 20.0 <= body["clearing_price"] <= 60.0
+
+
+def test_solve_electricity_refuses_demand_above_capacity():
+    response = client.post(
+        "/v1/solve/electricity",
+        json={
+            "costs": [20.0, 22.0],
+            "offers_range": [20.0, 40.0, 5.0],
+            "capacities": [10.0, 100.0],
+            "demand": 50.0,
+        },
+    )
+    assert response.status_code == 422
+    assert "capacity" in response.json()["detail"]

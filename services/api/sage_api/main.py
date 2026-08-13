@@ -10,6 +10,8 @@ gate-closed library calls — no science in the API layer.
 
 from __future__ import annotations
 
+import warnings
+from collections.abc import Callable
 from typing import Annotated, Any, Literal
 
 import jax.numpy as jnp
@@ -31,6 +33,16 @@ from strataq.finite.response.reciprocity import reciprocity_defect
 from strataq.finite.response.spectral import strategic_spectrum
 from strataq.finite.response.susceptibility import chi_equilibrium
 from strataq.fit import fit
+from strataq.problems import (
+    AllocationProblem,
+    AuctionProblem,
+    DemandModel,
+    ElectricityProblem,
+    LinearDemand,
+    LogitDemand,
+    PricingProblem,
+    RoutingProblem,
+)
 from strataq.thermo.estimators import (
     kld_epr,
     stationary_current_weights,
@@ -840,3 +852,285 @@ def fit_lambda(payload: FitPayload) -> dict[str, Any]:
         **_provenance(game, result.lam_hat).model_dump(),
     }
     return out
+
+
+# ---------------------------------------------------------------------------
+# /v1/solve/* — the problem API over HTTP. One endpoint per problem type; the
+# body mirrors the Python constructor and the response is the Solution as JSON
+# (domain-named fields, plus ``diagnostics`` only when asked for). Bad input is
+# a 422 carrying the library's own message; a solve that misses tolerance
+# returns ``success: false`` and says so in ``warnings`` rather than raising.
+#
+# Grids arrive either as explicit levels (``grid=[1.0, 1.1, ...]``) or as a
+# range (``grid_range=[start, stop, step]``) — exactly one, so the JSON is never
+# ambiguous the way a bare three-element list would be.
+# ---------------------------------------------------------------------------
+
+MAX_SOLVE_PROFILES = 20_000
+MAX_SOLVE_LEVELS = 60
+MAX_SOLVE_EDGES = 200
+MAX_SOLVE_OD = 20
+
+GridInput = tuple[float, float, float] | list[float]
+
+
+def _run_solve(build: Callable[[], Any], diagnostics: bool) -> dict[str, Any]:
+    """Solve, collect ordinary Python warnings, and shape the JSON response."""
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        try:
+            solution = build()
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        except OSError as exc:  # dataset fetch
+            raise HTTPException(status_code=503, detail=f"dataset unavailable: {exc}") from exc
+    body: dict[str, Any] = dict(solution.as_dict())
+    body["warnings"] = [str(w.message) for w in caught]
+    if diagnostics:
+        body["diagnostics"] = solution.diagnostics.as_dict()
+    return body
+
+
+def _grid(levels: list[float] | None, span: list[float] | None, name: str) -> GridInput:
+    """Exactly one of an explicit level list or a ``[start, stop, step]`` range."""
+    if (levels is None) == (span is None):
+        raise HTTPException(
+            status_code=422,
+            detail=f"supply exactly one of {name}= (explicit levels) or "
+            f"{name}_range= ([start, stop, step])",
+        )
+    if span is not None:
+        if len(span) != 3:
+            raise HTTPException(status_code=422, detail=f"{name}_range must be [start, stop, step]")
+        start, stop, step = span
+        if step <= 0 or stop < start:
+            raise HTTPException(
+                status_code=422, detail=f"{name}_range needs step > 0 and stop >= start"
+            )
+        if (stop - start) / step + 1 > MAX_SOLVE_LEVELS:
+            raise HTTPException(
+                status_code=413, detail=f"{name} exceeds {MAX_SOLVE_LEVELS} levels (sync API)"
+            )
+        return (start, stop, step)
+    assert levels is not None
+    if len(levels) > MAX_SOLVE_LEVELS:
+        raise HTTPException(
+            status_code=413, detail=f"{name} exceeds {MAX_SOLVE_LEVELS} levels (sync API)"
+        )
+    return list(levels)
+
+
+def _n_levels(spec: GridInput) -> int:
+    if isinstance(spec, tuple):
+        start, stop, step = spec
+        return int((stop - start) / step) + 1
+    return len(spec)
+
+
+class DemandPayload(BaseModel):
+    """A demand system. ``CustomDemand`` is Python-only — it takes a callable."""
+
+    kind: Literal["logit", "linear"] = "logit"
+    price_sensitivity: float | None = None
+    quality: list[float] | None = None
+    market_size: float = 1.0
+    outside_option: bool = True
+    intercept: list[float] | None = None
+    own_slope: float | None = None
+    cross_slope: float = 0.0
+
+    def build(self) -> DemandModel:
+        if self.kind == "logit":
+            if self.price_sensitivity is None or self.quality is None:
+                raise HTTPException(
+                    status_code=422, detail="logit demand needs price_sensitivity= and quality="
+                )
+            return LogitDemand(
+                self.price_sensitivity,
+                self.quality,
+                market_size=self.market_size,
+                outside_option=self.outside_option,
+            )
+        if self.intercept is None or self.own_slope is None:
+            raise HTTPException(
+                status_code=422, detail="linear demand needs intercept= and own_slope="
+            )
+        return LinearDemand(self.intercept, self.own_slope, self.cross_slope)
+
+
+class PricingPayload(BaseModel):
+    costs: list[float] = Field(min_length=1, max_length=3)
+    demand: DemandPayload
+    grid: list[float] | None = None
+    grid_range: list[float] | None = None
+    precision: Annotated[float, Field(gt=0, le=1000)] = 1.0
+    firm: Annotated[int, Field(ge=0)] = 0
+    diagnostics: bool = False
+
+
+@app.post("/v1/solve/pricing")
+def solve_pricing(payload: PricingPayload) -> dict[str, Any]:
+    """Recommended price, expected profit, rival price distribution, elasticities."""
+    grid = _grid(payload.grid, payload.grid_range, "grid")
+    if _n_levels(grid) ** len(payload.costs) > MAX_SOLVE_PROFILES:
+        raise HTTPException(status_code=413, detail="price grid too large for the sync API")
+    demand = payload.demand.build()
+    return _run_solve(
+        lambda: PricingProblem(
+            costs=payload.costs,
+            grid=grid,
+            demand=demand,
+            precision=payload.precision,
+            firm=payload.firm,
+        ).solve(),
+        payload.diagnostics,
+    )
+
+
+class AuctionPayload(BaseModel):
+    values: list[float] | None = None
+    costs: list[float] | None = None
+    grid: list[float] | None = None
+    grid_range: list[float] | None = None
+    n_bidders: Annotated[int, Field(ge=1, le=4)] | None = None
+    reserve: float | None = None
+    precision: Annotated[float, Field(gt=0, le=1000)] = 1.0
+    bidder: Annotated[int, Field(ge=0)] = 0
+    diagnostics: bool = False
+
+
+@app.post("/v1/solve/auction")
+def solve_auction(payload: AuctionPayload) -> dict[str, Any]:
+    """Recommended bid, expected surplus, win probability, rival-bid distribution."""
+    grid = _grid(payload.grid, payload.grid_range, "grid")
+    listed = payload.values if payload.values is not None else payload.costs
+    count = payload.n_bidders or (len(listed) if listed is not None else 1)
+    if _n_levels(grid) ** count > MAX_SOLVE_PROFILES:
+        raise HTTPException(status_code=413, detail="bid grid too large for the sync API")
+    return _run_solve(
+        lambda: AuctionProblem(
+            grid=grid,
+            values=payload.values,
+            costs=payload.costs,
+            n_bidders=payload.n_bidders,
+            reserve=payload.reserve,
+            precision=payload.precision,
+            bidder=payload.bidder,
+        ).solve(),
+        payload.diagnostics,
+    )
+
+
+class EdgePayload(BaseModel):
+    origin: int
+    destination: int
+    free_flow: float
+    capacity: float
+    b: float = 0.15
+    power: float = 4.0
+
+
+class ODPayload(BaseModel):
+    origin: int
+    destination: int
+    trips: float
+
+
+class RoutingPayload(BaseModel):
+    network: Literal["sioux_falls"] | list[EdgePayload] = "sioux_falls"
+    demand: list[ODPayload] | None = None
+    tolls: dict[int, float] | None = None
+    precision: Annotated[float, Field(gt=0, le=100)] = 0.5
+    k_routes: Annotated[int, Field(ge=1, le=6)] = 3
+    max_od: Annotated[int, Field(ge=1, le=MAX_SOLVE_OD)] = 12
+    diagnostics: bool = False
+
+
+@app.post("/v1/solve/routing")
+def solve_routing(payload: RoutingPayload) -> dict[str, Any]:
+    """Link flows, travel times, total cost, and what a toll did to them."""
+    if isinstance(payload.network, list) and len(payload.network) > MAX_SOLVE_EDGES:
+        raise HTTPException(status_code=413, detail=f"max {MAX_SOLVE_EDGES} edges (sync API)")
+    if payload.demand is not None and len(payload.demand) > MAX_SOLVE_OD:
+        raise HTTPException(status_code=413, detail=f"max {MAX_SOLVE_OD} OD pairs (sync API)")
+    network: Any = payload.network
+    if isinstance(network, list):
+        network = [
+            {
+                "from": edge.origin,
+                "to": edge.destination,
+                "free_flow": edge.free_flow,
+                "capacity": edge.capacity,
+                "b": edge.b,
+                "power": edge.power,
+            }
+            for edge in network
+        ]
+    demand = (
+        None
+        if payload.demand is None
+        else {(od.origin, od.destination): od.trips for od in payload.demand}
+    )
+    return _run_solve(
+        lambda: RoutingProblem(
+            network=network,
+            demand=demand,
+            tolls=payload.tolls,
+            precision=payload.precision,
+            k_routes=payload.k_routes,
+            max_od=payload.max_od,
+        ).solve(),
+        payload.diagnostics,
+    )
+
+
+class AllocationPayload(BaseModel):
+    budget: Annotated[int, Field(ge=1, le=12)]
+    field_values: list[float] | None = None
+    n_fields: Annotated[int, Field(ge=2, le=4)] | None = None
+    rival_budget: Annotated[int, Field(ge=1, le=12)] | None = None
+    precision: Annotated[float, Field(gt=0, le=1000)] = 1.0
+    diagnostics: bool = False
+
+
+@app.post("/v1/solve/allocation")
+def solve_allocation(payload: AllocationPayload) -> dict[str, Any]:
+    """Recommended Blotto allocation, win probability, and both sides' mixes."""
+    return _run_solve(
+        lambda: AllocationProblem(
+            budget=payload.budget,
+            field_values=payload.field_values,
+            n_fields=payload.n_fields,
+            rival_budget=payload.rival_budget,
+            precision=payload.precision,
+        ).solve(),
+        payload.diagnostics,
+    )
+
+
+class ElectricityPayload(BaseModel):
+    costs: list[float] = Field(min_length=2, max_length=2)
+    offers: list[float] | None = None
+    offers_range: list[float] | None = None
+    capacities: list[float] | None = None
+    demand: Annotated[float, Field(gt=0)] = 1.0
+    precision: Annotated[float, Field(gt=0, le=1000)] = 1.0
+    generator: Annotated[int, Field(ge=0, le=1)] = 0
+    diagnostics: bool = False
+
+
+@app.post("/v1/solve/electricity")
+def solve_electricity(payload: ElectricityPayload) -> dict[str, Any]:
+    """Offer curve, expected clearing price, expected revenue for one generator."""
+    offers = _grid(payload.offers, payload.offers_range, "offers")
+    return _run_solve(
+        lambda: ElectricityProblem(
+            costs=payload.costs,
+            offers=offers,
+            capacities=payload.capacities,
+            demand=payload.demand,
+            precision=payload.precision,
+            generator=payload.generator,
+        ).solve(),
+        payload.diagnostics,
+    )
