@@ -215,14 +215,111 @@ is a criterion outcome, not a data-quality one. The $m=3$ row is a re-execution 
 reference cells on the identical games, deviation $0.000$, which is the strongest single
 property of the run and is independent of every criterion dispute in it.
 
-\noindent\textbf{What does not survive is the sign.} At $m=6$ the terminal association is
-$+0.012$ $[-0.137,+0.156]$---statistically indistinguishable from zero. The claim this paper
-makes is therefore the weaker and sufficient one: \emph{the coupling collapses to zero at
-high $\alpha$}---at $m=6$, from $+0.716$ to $+0.012$ with disjoint intervals---and the
-collapse itself is present at every action count tested. Independence requires
-decorrelation, not anti-correlation. The sign reversal reported at
-$m=3$ in Table~\ref{tab:collapse} is retained only with its $(m,\lambda_{\text{norm}})$
-scope attached.
+\noindent\textbf{The sign is scoped, and the scope is narrower than we first wrote it.}
+At $m=6$ and fixed Frobenius scale the terminal association in
+Table~\ref{tab:finitesize} is $+0.012$ $[-0.137,+0.156]$, and an earlier version of this
+section called that ``statistically indistinguishable from zero'' and concluded that the
+sign reversal does not survive $m$. \textbf{That conclusion was too strong and is corrected
+here.} A later run repeats the $m$-sweep at $n=400$ with a \emph{paired} control that fixes
+the median normalised precision $\bar\lambda$ by construction rather than letting it drift
+(Table~\ref{tab:c1b}). Two things move the number: doubling $n$ (the $+0.012$ at $n=200$
+and $-0.112$ at $n=400$ are the same games plus $200$ more, and each lies inside the
+other's interval---resolution, not contradiction), and holding $\bar\lambda$ fixed, which
+the main arm does not.
+
+\begin{table}[H]
+\caption{The $m$-sweep repeated \emph{paired} at matched normalised precision, $400$ games
+per cell, $\alpha=0.95$. The main arm's $\bar\lambda$ falls $1.855\to1.268$ across $m$; the
+matched arm holds it at $1.86$--$1.91$ by construction.}
+\label{tab:c1b}
+\small
+\begin{tabular}{lccc}
+\toprule
+$m$ & matched scale & matched $\rho_S$ $[95\%$ CI$]$ & fixed-scale $\rho_S$ $[95\%$ CI$]$ \\
+\midrule
+3 & $2.0000$ & $-0.3325$ $[-0.423,-0.246]$ & $-0.3325$ $[-0.424,-0.235]$ \\
+4 & $2.3535$ & $-0.2966$ $[-0.387,-0.204]$ & $-0.2536$ $[-0.340,-0.161]$ \\
+5 & $2.6308$ & $-0.2554$ $[-0.345,-0.160]$ & $-0.1760$ $[-0.268,-0.081]$ \\
+6 & $3.0171$ & $\mathbf{-0.2061}$ $[-0.300,-0.105]$ & $-0.1119$ $[-0.214,-0.016]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent At matched precision the $m=6$ interval \emph{excludes} zero and the sign
+reversal survives to $m=6$. Of the fixed-scale drift in the terminal association from $m=3$
+to $m=6$---$+0.221$ in total---$+0.126$ survives matching and $+0.095$ is temperature. The
+supported statement is therefore: at fixed Frobenius scale the reversal weakens with $m$;
+at matched $\bar\lambda$ it does not. \emph{None of this changes what the paper claims.}
+The claim is the weaker and sufficient one---\emph{the coupling collapses at high
+$\alpha$}, with the terminal upper interval endpoint under the ceiling at every $m$---and
+independence requires decorrelation, not anti-correlation. The sign reversal is retained
+only with its $(m,\lambda,N)$ scope attached.
+
+\subsection{Kill-shot three: does the plane survive more than two players?}
+\label{sec:nplayers}
+The limitation the previous version of this paper named as its next kill-shot---everything
+at $N=2$---has been run: $16{,}000$ solves over $40$ cells at $\lambda=1.2$, $400$ games
+per cell, with a paired control arm that matches the median normalised precision across $N$
+by construction (worst $|\bar\lambda$ ratio $-1| = 0.031$ against a registered $0.10$
+tolerance). Unlike the finite-size unit, this one has exactly \emph{one} criteria file,
+committed before the experiment implementing it existed---the direct operational lesson of
+the substitution reported above.
+
+\begin{table}[H]
+\caption{$N$-scaling at $m=3$, $\alpha=0.95$ and $\alpha=0.05$, matched-precision arm.
+$400$ games per cell; $\mathrm{gap}=\rho_S(0.05)-\rho_S(0.95)$.}
+\label{tab:nplayers}
+\small
+\begin{tabular}{lcccc}
+\toprule
+$N$ & $\bar\lambda(0.05)$ & $\rho_S(\alpha{=}0.05)$ $[95\%$ CI$]$ & $\rho_S(\alpha{=}0.95)$ $[95\%$ CI$]$ & gap $[95\%$ CI$]$ \\
+\midrule
+2 & $1.960$ & $+0.8469$ $[+0.810,+0.878]$ & $-0.3325$ $[-0.418,-0.232]$ & $+1.179$ $[+1.085,+1.273]$ \\
+3 & $1.976$ & $+0.3776$ $[+0.290,+0.459]$ & $+0.0703$ $[-0.028,+0.163]$ & $+0.307$ \\
+4 & $1.958$ & $+0.1715$ $[+0.072,+0.264]$ & $-0.0089$ $[-0.105,+0.086]$ & $+0.180$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{The refutation branch never came close.} It required
+$\rho_S(\alpha{=}0.95)>0.35$ with its lower interval endpoint also above $0.35$ at some
+$N>2$; the worst upper endpoint measured is $+0.163$. On the ceiling alone the plane looks
+\emph{more} like a plane at $N>2$ than at $N=2$.
+
+\noindent\textbf{But the registered precondition fails, and that is the finding.} The
+criterion required $\rho_S(\alpha{=}0.05)\ge0.55$---a baseline coupling for the collapse to
+be a departure \emph{from}. At matched precision it reads $+0.847$, $+0.378$, $+0.172$
+across $N=2,3,4$, and the full $\alpha$ profile at $N\ge3$ is small at \emph{every} level.
+A size with no baseline coupling has no collapse to measure, so the verdict is
+\textbf{indeterminate}, and we decline to read absence-of-coupling-everywhere as
+confirmation of two coordinates. Two rival explanations were registered in advance and both
+are excluded: it is not temperature, because the matched arm fixes $\bar\lambda$ at
+$1.96$--$1.98$ across $N$ and matching moves $\rho_S(0.05)$ only from $+0.282$ to $+0.378$
+at $N=3$; and it is not meter degeneracy, because at matched precision both meters retain
+comparable magnitudes across $N$ (median $\EPR$ $1.20/1.26/1.21\times10^{-3}$ at
+$\alpha=0.05$; median $\R$ $0.0187/0.0103/0.0054$), with median distance to criticality
+$0.48$--$0.94$ everywhere.
+
+\noindent\textbf{What this does to the paper.} The claim is unchanged at $N>2$ and is not
+certified there. What is narrowed is the \emph{evidence}: the $\alpha$-stratified collapse
+--- the design that makes this paper persuasive, and the source of every number in
+Sections~\ref{sec:collapse}--\ref{sec:robustness} --- is a \textbf{two-player instrument}.
+A plausible structural reason, stated as a hypothesis with its test rather than as a
+result: at $N=2$ there is exactly one non-trivial multi-player Hodge sector, so a single
+harmonic modulator drives both meters; at $N=3$ there are four and at $N=4$ eleven, and the
+two functionals weight them differently. The test is a regression of per-game $\R$ and
+$\EPR$ on the per-sector harmonic norms at $N=3$, which the existing machinery can produce
+in one pass and which has not been run.
+
+\noindent\textbf{The same run strengthens the paper on the other axis.} The
+ratio-artefact objection of Section~3.3 was re-tested on the numerator alone across
+$m\in\{3,4,5,6\}$ at $N=2$ with the ratio computed on the \emph{identical} games:
+$\rho_S(\EPR,\|\chi-\chi^{\top}\|_F)$ at $\alpha=0.95$ is negative with a negative
+upper interval endpoint at every $m$ in both arms (worst $-0.007$), its precondition holds
+at every $m$, and the paired difference between the numerator and the ratio is bounded by
+$0.012$ and shrinks with $m$. Removing the denominator changes the rank ordering against
+$\EPR$ by less than one part in eighty---a paired bound where the original refutation had
+only a point estimate.
 
 \noindent\textbf{H5b: the onset does not drift.} The smallest swept level at which
 $\rho_S<0.5$ is $\alpha=0.85$ at every $m\in\{3,4,5,6\}$---drift $0.00$ against a tolerance
@@ -344,6 +441,14 @@ H5, the sign half & --- & $+0.012$ $[-0.137,+0.156]$, $m{=}6$ & \textbf{Reversal
 H5b onset drift & drift $\le0.10$ in $\alpha$ & $0.00$ at every $m$ & Passed \\
 H6 solver artefact & $|\Delta\rho_S|<0.05$, 4 comparisons & $0.00000$; $\R$ moved $\sim10^{-12}$ & Diagnostic, not a test \\
 D1 payoff-scale control & arms must agree & agree; brackets $\bar\lambda$, does not fix it & Confound found, unpaired \\
+\midrule
+\multicolumn{4}{l}{\emph{Third kill-shot, one criteria file, committed before its experiment existed}}\\
+H7 $N$-scaling & $\rho_S$ CI below $0.35$ at $N{\in}\{3,4\}$ & worst $+0.163$ & Ceiling holds \\
+H7 precondition & $\rho_S(\alpha{=}0.05)\ge0.55$ at each $N$ & $+0.847/+0.378/+0.172$ & \textbf{Fails at $N\ge3$} \\
+H7 as reported & precondition binds & no baseline to collapse from & \textbf{Indeterminate} \\
+H7b onset drift in $N$ & one-sided, drift $\le+0.10$ & $-0.80$ ($0.85\to0.05$) & \textbf{Passes vacuously} \\
+H8 numerator across $m$ & CI below $0.35$ at every $m$, $N{=}2$ & worst $-0.007$; paired $\delta\le0.012$ & \textbf{Holds} \\
+C1 paired $\bar\lambda$ control & arms agree; $|\bar\lambda$ ratio $-1|\le0.10$ & agree; $0.031$ & Binding, satisfied \\
 \bottomrule
 \end{tabular}
 \end{table}

@@ -23,13 +23,44 @@ Any reported magnitude must carry the $\lambda$ it was read at.
 
 \subsection{Consequences for practice}
 The plane has four quadrants and they differ in what a decision-maker should do.
-Reciprocal-and-quiet systems admit comparative statics and static rival models.
-Reciprocal-but-circulating systems are being driven from outside, so timing matters and
-structure does not. Asymmetric-but-quiet systems have a structural leader, so pass-through
-asymmetry is the exploitable object and there is no cycle to time. Systems that are both are
-where naive optimisation against a static rival model is worst. If distance from equilibrium
-were a scalar, the two off-diagonal quadrants would be empty; the two real systems measured
-here are not on the same diagonal.
+Reciprocal-and-quiet systems (quadrant~I) admit comparative statics and static rival models.
+Reciprocal-but-circulating systems (II) are being driven from outside, so timing matters and
+structure does not. Asymmetric-but-quiet systems (III) have a structural leader, so
+pass-through asymmetry is the exploitable object and there is no cycle to time. Systems that
+are both (IV) are where naive optimisation against a static rival model is worst. If distance
+from equilibrium were a scalar, the two off-diagonal quadrants would be empty; the two real
+systems measured here are not on the same diagonal.
+
+\subsection{Why quadrant III is the decisive test, sharpened}
+\label{sec:q3}
+Quadrant~III---measurable response asymmetry with no persistent circulation---is empty in
+our data, and we have named it as the decisive test. There is a stronger statement available,
+and it came out of building the interactive demonstrations rather than out of the sweeps.
+\textbf{For an exact two-player normal-form game, the two coordinates vanish
+together.} $\R=0$ if and only if the normalised game has zero harmonic component, and the
+Glauber chain is Gibbs-reversible with $\EPR=0$ under exactly the same condition; so
+$\R>0\Rightarrow\EPR>0$, and there is no two-player game with asymmetric equilibrium
+response and zero dissipation. \textbf{Quadrant~III is therefore unreachable in a single
+two-player normal-form game}, not merely unobserved in our sample. It is reachable only when
+the two coordinates are read by \emph{two different instruments on two different kinds of
+data}---for example $\R$ from a cross-agent pass-through experiment on a panel and $\EPR$
+from a time series of realised joint actions, at a sampling rate and coarse-graining of
+their own. That is the precise sense in which the plane is not a picture of one object: a
+point in quadrant~III is a statement that the response geometry and the observed dynamics
+disagree, which can only happen when they come from different measurements.
+
+Three readings of such a point are available, and a claimed quadrant~III observation must
+say which it is arguing for. \emph{(a) A genuine failure of the shared zero out of sample:}
+the system is not a fixed finite normal-form game at all---non-stationary payoffs, an
+outside driver, a population rather than $N$ fixed players. \emph{(b) An
+observation-window artefact:} the circulation exists but is invisible at the resolution
+measured, which is exactly what we report for the five-minute electricity series, where
+dwell dominates and a $k=1$ reading sees nothing. \emph{(c) A coarse-graining artefact:}
+the observed variable is a projection under which a genuinely irreversible process reads
+reversible. Only (a) is evidence for the plane; (b) and (c) are evidence about the
+instrument. The consequence for experimental design is concrete: a quadrant~III claim needs
+its dissipation coordinate read at more than one resolution and against a null that matches
+the data's own persistence, or it is not yet a claim about the system.
 
 \subsection{Theoretical connections}
 The zero of the local axis is the strategic instance of Onsager reciprocity, and the zero of
@@ -82,19 +113,41 @@ further signal that the gap-ratio criterion is not resolvable at this sample siz
 precision $\lambda=1.5$ it returns a gap ratio of $0.529$, a $2.9$-point margin against the
 same $0.50$ bar on $100$ games per cell.
 
-The second limitation is dimension in the other index: \textbf{everything here is at
-$N=2$}. Nothing in this paper speaks to $N$-scaling, and it is the obvious next kill-shot---
-the same design, run over $N$ rather than $m$, with the same three-branch criterion. The
-binding cost is the dense Glauber generator over $\prod_i m_i$ profiles, not a correctness
-limit; $m$ stops at $6$ (36 joint states) for the same reason.
+The second limitation is dimension in the other index, and it has moved from ``untested''
+to something sharper. \textbf{The $\alpha$-stratified collapse is a two-player instrument.}
+The $N$-scaling kill-shot (Section~\ref{sec:nplayers}) found the ceiling comfortably intact
+at $N=3$ and $N=4$---worst upper endpoint $+0.163$, the widest margin recorded here---but
+its registered precondition failed: low-$\alpha$ coupling falls
+$+0.847\to+0.378\to+0.172$ across $N=2,3,4$ at matched normalised precision, so above two
+players there is no baseline for the collapse to be a departure from and the verdict is
+indeterminate rather than a pass. The consequence for this paper is stated plainly: every
+number in Sections~\ref{sec:collapse}--\ref{sec:robustness} is a two-player number, and the
+sentence ``the meters co-vary while a potential component modulates both and part company
+when it vanishes'' must carry $N=2$ wherever it appears. What the $N$ sweep does
+\emph{not} do is refute the claim; two independent coordinates are consistent with
+decorrelation at every $N$, and decorrelation is what was measured. It also exposes a defect
+in its own registration, recorded rather than repaired: a precondition that can fail because
+the phenomenon it presupposes does not exist at that size makes the sweep unadjudicable by
+construction, and the onset criterion is one-sided, so an onset drifting \emph{down} passes
+it vacuously. A criterion for the $N$ axis that does not depend on a low-$\alpha$ baseline
+is the successor unit's problem, and writing a second criteria file for the same unit is
+exactly what this paper reports as a failure elsewhere. The binding cost throughout is the
+dense Glauber generator over $\prod_i m_i$ profiles, not a correctness limit: $N$ stops at
+$4$ (81 joint states), $m$ at $6$ (36 joint states), and the $(N,m)$ interior is unread
+because the two axes were swept separately.
 
-A third limitation is the sign, and the $m$-sweep sharpened it. The reversal is one seed
-family's realisation of an effect whose sign varies with $\lambda$ and, at fixed Frobenius
-payoff scale, with $m$: at $m=6$ the terminal association is statistically indistinguishable
-from zero. The paper's claim is therefore decorrelation, not anti-correlation---which is all
-independence requires---and any use of the reversal must carry the $(m,\lambda)$ it was read
-at. Table~\ref{tab:scoreboard} records H3b as not supported and the reversal half of H5 as
-not general, rather than presenting either as established.
+A third limitation is the sign, and two runs have now sharpened it in opposite directions.
+The reversal's sign varies with $\lambda$ (F-0010's $+0.25\to+0.03\to-0.23$), and at
+\emph{fixed} Frobenius payoff scale it weakens with $m$. An earlier version of this paper
+concluded from that second fact that the reversal ``does not survive $m$''; the paired,
+precision-matched re-run (Table~\ref{tab:c1b}) shows it does---$-0.206$ $[-0.300,-0.105]$ at
+$m=6$---and roughly $40\%$ of the apparent $m$-decay was temperature rather than dimension.
+\textbf{We record the correction rather than quietly adopting the newer number}: what
+changed is a statement about the generator's scale convention, not about the physics, and
+the reversal remains a scoped fact requiring $(m,\lambda,N)$ in any use. The paper's claim
+is unaffected because it is decorrelation, not anti-correlation---which is all independence
+requires. Table~\ref{tab:scoreboard} records H3b as not supported and the reversal half of
+H5 as not general, rather than presenting either as established.
 
 A fourth limitation is generic to the generator and is a warning to anyone extending this
 work: because the family unit-normalises each Hodge component and fixes the Frobenius norm,
