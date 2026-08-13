@@ -3,7 +3,7 @@ import path from "node:path";
 import { FindingsGallery, type Charts } from "./FindingsGallery";
 import { ResearchCrumb } from "../components/ResearchCrumb";
 
-export const metadata = { title: "Findings — SAGE" };
+export const metadata = { title: "Findings" };
 
 function loadCharts(): Charts {
   const candidates = [

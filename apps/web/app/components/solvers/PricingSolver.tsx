@@ -15,6 +15,7 @@ import {
   useSweep,
   type PricingSolution,
 } from "../../../lib/problems";
+import { PriceLadder } from "../charts/PriceLadder";
 import { Answer, Bars, Controls, Curve, Field, Figure, ModelLine, Sweep, money, money0, num, sig } from "./ui";
 
 interface Inputs {
@@ -119,11 +120,13 @@ export function PricingSolver() {
       >
         {data && (
           <>
-            <Figure label="Expected profit" value={money0(data.profit)} note="per store-week at this price" />
-            <Figure label="Margin" value={money(data.margin)} note="price minus your unit cost" tone="neutral" />
+            <Figure label="Expected profit" value={money0(data.profit)} tween={data.profit} format={money0} note="per store-week at this price" />
+            <Figure label="Margin" value={money(data.margin)} tween={data.margin} format={money} note="price minus your unit cost" tone="neutral" />
             <Figure
               label="Rival's expected price"
               value={money(data.expected_rival_prices[0])}
+              tween={data.expected_rival_prices[0]}
+              format={money}
               note="mean of their price distribution"
               tone="neutral"
             />
@@ -155,39 +158,30 @@ export function PricingSolver() {
               yLabel="expected profit"
             />
           )}
-          {data && (
-            <table className="alt-table">
-              <thead>
-                <tr>
-                  <th scope="col">Price</th>
-                  <th scope="col">Profit</th>
-                  <th scope="col">Gives up</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.price_grid
-                  .map((p, i) => ({ p, profit: data.profit_curve[i] }))
-                  .sort((a, b) => b.profit - a.profit)
-                  .slice(0, 4)
-                  .map((r) => (
-                    <tr key={r.p} data-us={Math.abs(r.p - data.price) < 1e-9}>
-                      <th scope="row">{money(r.p)}</th>
-                      <td>{money0(r.profit)}</td>
-                      <td className="alt-cost">
-                        {Math.abs(r.profit - data.profit) < 1e-9 ? "—" : `−${money0(data.profit - r.profit)}`}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          )}
         </section>
 
+        <section className="card">
+          <h3>The price ladder</h3>
+          {data && (
+            <PriceLadder
+              levels={data.price_grid}
+              profit={data.profit_curve}
+              rival={data.rival_prices[0]}
+              chosen={markIndex}
+              formatLevel={(p) => money(p)}
+              formatProfit={money0}
+            />
+          )}
+        </section>
+      </div>
+
+      <div className="answer-cols">
         <section className="card">
           <h3>Rival&apos;s price</h3>
           {data && (
             <Bars
               rows={data.rival_prices[0].map((p, i) => ({ label: money(data.price_grid[i]), p }))}
+              tone="rival"
             />
           )}
           {data && (

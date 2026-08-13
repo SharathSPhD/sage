@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Ordered by what a visitor came to do: solve one, pick a problem type, test a
-// rule over repeated rounds, read the theory. The research programme lives one
-// click deeper, under /research.
+// Ordered by what a visitor came to do: solve one, browse the problem
+// types, bring their own numbers, call the API directly, read the theory.
+// The research programme lives one click deeper, under /research.
 const LINKS = [
   { href: "/solve", label: "Solve" },
   { href: "/situations", label: "Problems" },
-  { href: "/play", label: "Backtest" },
+  { href: "/data", label: "Your data" },
+  { href: "/api", label: "API" },
   { href: "/learn", label: "Learn" },
   { href: "/research", label: "Research" },
 ];
@@ -19,7 +20,7 @@ export function NavLinks() {
   return (
     <div className="links">
       {LINKS.map((l) => (
-        <Link key={l.href} href={l.href} data-active={path.startsWith(l.href)}>
+        <Link key={l.href} href={l.href} data-active={path === l.href || path.startsWith(`${l.href}/`)}>
           {l.label}
         </Link>
       ))}

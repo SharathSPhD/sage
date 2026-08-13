@@ -209,20 +209,37 @@ export function Arena() {
             />
           ))}
           {/* WCAG 1.4.1 — the dash pattern above and this label make each line
-              identifiable without relying on its colour. */}
+              identifiable without relying on its colour. Where two lines finish
+              close together the labels are pushed apart and a leader line keeps
+              each one attached to its own line, rather than stacking them into
+              an unreadable clump. */}
           {last &&
-            paths.map((p) => (
-              <text
-                key={`${p.id}-tag`}
-                x={xOf(history.length) + 5}
-                y={p.endY + 3}
-                fontSize="9"
-                fontFamily="var(--mono)"
-                fill={p.colour}
-              >
-                {p.short}
-              </text>
-            ))}
+            (() => {
+              const MIN_GAP = 12;
+              const placed = [...paths]
+                .map((p) => ({ p, y: p.endY }))
+                .sort((a, b) => a.y - b.y);
+              for (let i = 1; i < placed.length; i++) {
+                if (placed[i].y - placed[i - 1].y < MIN_GAP) placed[i].y = placed[i - 1].y + MIN_GAP;
+              }
+              const x = xOf(history.length);
+              return placed.map(({ p, y }) => (
+                <g key={`${p.id}-tag`}>
+                  {Math.abs(y - p.endY) > 1.5 && (
+                    <path
+                      d={`M${x + 2},${p.endY} L${x + 8},${y - 3}`}
+                      stroke={p.colour}
+                      strokeWidth="0.8"
+                      fill="none"
+                      opacity="0.7"
+                    />
+                  )}
+                  <text x={x + 10} y={y + 3} fontSize="9" fontFamily="var(--mono)" fill={p.colour}>
+                    {p.short}
+                  </text>
+                </g>
+              ));
+            })()}
           <text x={W / 2} y={H - 8} textAnchor="middle" fontSize="10" fill="var(--text-faint)">
             rounds played
           </text>

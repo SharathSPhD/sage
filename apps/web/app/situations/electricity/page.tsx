@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ElectricitySolver } from "../../components/solvers/ElectricitySolver";
 
 export const metadata: Metadata = {
-  title: "Electricity offers — SAGE",
+  title: "Electricity offers",
   description: "Offer a block into a uniform-price market: offer price, clearing price, revenue and dispatch.",
 };
 

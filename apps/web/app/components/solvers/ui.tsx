@@ -1,12 +1,19 @@
 "use client";
 
-/* The parts every solver page is built from: a numeric field you can type into
- * or drag, the answer block, distribution bars, a curve over the decision
- * grid, and the one-line model note that sits under the result the way a stats
- * package prints its model line.
+/* The parts every solver page is built from: a numeric field you can type
+ * into or drag, the answer block, distribution bars, a curve over the
+ * decision grid, and the one-line model note that sits under the result the
+ * way a stats package prints its model line.
+ *
+ * The charts here are thin wrappers over app/components/charts, so every
+ * solver gets the same tweening, the same hover layer and the same table
+ * twin without restating any of it.
  */
 
 import { useId, useState } from "react";
+import { CurveChart } from "../charts/CurveChart";
+import { DistributionBars } from "../charts/DistributionBars";
+import { TweenNumber } from "../charts/Tween";
 
 export const money = (v: number, digits = 2) =>
   `$${v.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits })}`;
@@ -118,56 +125,47 @@ export function Answer({
   );
 }
 
+/**
+ * One reading. Pass `value` for text; pass `tween` with `format` for a number
+ * that should glide to its new value rather than flicking to it.
+ */
 export function Figure({
   label,
   value,
   note,
   tone,
+  tween,
+  format,
 }: {
   label: string;
   value: string;
   note?: string;
-  tone?: "neutral" | "warn";
+  tone?: "neutral" | "warn" | "accent";
+  tween?: number;
+  format?: (v: number) => string;
 }) {
   return (
     <div>
       <div className="panel-label">{label}</div>
       <div className="reading" data-tone={tone}>
-        {value}
+        {tween !== undefined && format ? <TweenNumber value={tween} format={format} /> : value}
       </div>
       {note && <p className="figure-note">{note}</p>}
     </div>
   );
 }
 
-/** Distribution over labelled levels. */
+/** Distribution over labelled levels; the bars tween between solutions. */
 export function Bars({
   rows,
   limit = 10,
+  tone,
 }: {
   rows: { label: string; p: number }[];
   limit?: number;
+  tone?: "own" | "rival";
 }) {
-  const max = Math.max(...rows.map((r) => r.p), 1e-9);
-  const shown = rows.length > limit ? [...rows].sort((a, b) => b.p - a.p).slice(0, limit) : rows;
-  return (
-    <>
-      <ul className="rival-bars">
-        {shown.map((r) => (
-          <li key={r.label}>
-            <span className="rb-label">{r.label}</span>
-            <span className="rb-track">
-              <span className="rb-fill" style={{ width: `${Math.max(0.6, (100 * r.p) / max)}%` }} />
-            </span>
-            <span className="rb-val">{pct(r.p, r.p < 0.1 ? 1 : 0)}</span>
-          </li>
-        ))}
-      </ul>
-      {rows.length > limit && (
-        <p className="figure-note">{rows.length - limit} smaller levels not shown.</p>
-      )}
-    </>
-  );
+  return <DistributionBars rows={rows} limit={limit} tone={tone ?? "own"} />;
 }
 
 /** A curve over the decision grid, with the recommended level marked. */
@@ -179,6 +177,7 @@ export function Curve({
   formatY,
   xLabel,
   yLabel,
+  compare,
 }: {
   x: number[];
   y: number[];
@@ -187,66 +186,19 @@ export function Curve({
   formatY: (v: number) => string;
   xLabel: string;
   yLabel: string;
+  compare?: { values: number[]; label: string; color?: string };
 }) {
-  const W = 560;
-  const H = 190;
-  const PAD = { l: 62, r: 14, t: 12, b: 34 };
-  if (x.length < 2 || y.length < 2) return null;
-  const yMin = Math.min(...y, 0);
-  const yMax = Math.max(...y);
-  const px = (i: number) => PAD.l + ((W - PAD.l - PAD.r) * i) / (x.length - 1);
-  const py = (v: number) =>
-    H - PAD.b - ((H - PAD.t - PAD.b) * (v - yMin)) / Math.max(yMax - yMin, 1e-12);
-  const path = y.map((v, i) => `${i === 0 ? "M" : "L"}${px(i).toFixed(1)},${py(v).toFixed(1)}`).join(" ");
-
   return (
-    <svg
-      viewBox={`0 0 ${W} ${H}`}
-      className="curve-chart"
-      role="img"
-      aria-label={`${yLabel} against ${xLabel}. Highest at ${formatX(x[markIndex])}, ${formatY(y[markIndex])}. The table beside this chart carries the same numbers.`}
-    >
-      <line x1={PAD.l} y1={py(yMin)} x2={W - PAD.r} y2={py(yMin)} stroke="var(--border-bright)" />
-      <line x1={PAD.l} y1={PAD.t} x2={PAD.l} y2={H - PAD.b} stroke="var(--border-bright)" />
-      <text x={PAD.l - 8} y={py(yMax) + 4} textAnchor="end" fontSize="10" fill="var(--text-faint)" fontFamily="var(--mono)">
-        {formatY(yMax)}
-      </text>
-      <text x={PAD.l - 8} y={py(yMin) + 4} textAnchor="end" fontSize="10" fill="var(--text-faint)" fontFamily="var(--mono)">
-        {formatY(yMin)}
-      </text>
-      <path d={path} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinejoin="round" />
-      {markIndex >= 0 && markIndex < x.length && (
-        <>
-          <line
-            x1={px(markIndex)}
-            y1={PAD.t}
-            x2={px(markIndex)}
-            y2={H - PAD.b}
-            stroke="var(--amber)"
-            strokeDasharray="4 3"
-          />
-          <circle cx={px(markIndex)} cy={py(y[markIndex])} r="4.5" fill="var(--amber)" />
-          <text
-            x={Math.min(px(markIndex) + 7, W - PAD.r - 60)}
-            y={PAD.t + 11}
-            fontSize="10.5"
-            fill="var(--amber)"
-            fontFamily="var(--mono)"
-          >
-            {formatX(x[markIndex])}
-          </text>
-        </>
-      )}
-      <text x={PAD.l} y={H - 8} fontSize="10" fill="var(--text-faint)" fontFamily="var(--mono)">
-        {formatX(x[0])}
-      </text>
-      <text x={W - PAD.r} y={H - 8} textAnchor="end" fontSize="10" fill="var(--text-faint)" fontFamily="var(--mono)">
-        {formatX(x[x.length - 1])}
-      </text>
-      <text x={(W + PAD.l) / 2} y={H - 8} textAnchor="middle" fontSize="10" fill="var(--text-faint)">
-        {xLabel}
-      </text>
-    </svg>
+    <CurveChart
+      x={x}
+      y={y}
+      markIndex={markIndex}
+      formatX={formatX}
+      formatY={formatY}
+      xLabel={xLabel}
+      yLabel={yLabel}
+      compare={compare}
+    />
   );
 }
 

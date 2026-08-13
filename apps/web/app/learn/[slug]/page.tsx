@@ -13,7 +13,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const e = listExplainers().find((x) => x.slug === slug);
-  return { title: e ? `${e.title} — SAGE` : "Learn — SAGE" };
+  return { title: e ? `${e.title}` : "Learn" };
 }
 
 export default async function ExplainerPage({ params }: { params: Promise<{ slug: string }> }) {

@@ -9,6 +9,7 @@
 
 import { useMemo, useState } from "react";
 import { sweepPoints, useSolve, useSweep, type AllocationSolution } from "../../../lib/problems";
+import { AllocationGrid } from "../charts/AllocationGrid";
 import { Answer, Bars, Controls, Field, Figure, ModelLine, Sweep, num, pct } from "./ui";
 
 interface Inputs {
@@ -80,8 +81,8 @@ export function AllocationSolver() {
       >
         {data && (
           <>
-            <Figure label="Win probability" value={pct(data.win_probability)} note="of taking more than half the total value" />
-            <Figure label="Expected value" value={num(data.expected_value, 2)} note="value captured on average" tone="neutral" />
+            <Figure label="Win probability" value={pct(data.win_probability)} tween={data.win_probability} format={(v) => pct(v)} note="of taking more than half the total value" />
+            <Figure label="Expected value" value={num(data.expected_value, 2)} tween={data.expected_value} format={(v) => num(v, 2)} note="value captured on average" tone="neutral" />
             <Figure
               label="Splits worth using"
               value={String(data.allocation_distribution.filter((p) => p > 0.02).length)}
@@ -100,11 +101,36 @@ export function AllocationSolver() {
         </ModelLine>
       )}
 
-      {data && spread > 0.6 && (
-        <p className="figure-note">
-          No single split carries most of the weight: the distribution below is the answer, not the top row.
+      {data && (
+        <p className="lead-note">
+          {spread > 0.6
+            ? "No single split carries most of the weight. Any plan you commit to every quarter is one the rival can cover for free; the grid below is the answer, not its darkest cell."
+            : "One split does most of the work here, because the budgets are far enough apart that the stronger side can cover and the weaker side has to gamble."}
         </p>
       )}
+
+      <div className="answer-cols">
+        <section className="card">
+          {data && (
+            <AllocationGrid
+              allocations={data.allocations}
+              weights={data.allocation_distribution}
+              budget={data.budget}
+              title="Where your budget goes"
+            />
+          )}
+        </section>
+        <section className="card">
+          {data && (
+            <AllocationGrid
+              allocations={data.rival_allocations}
+              weights={data.rival_distribution}
+              budget={data.rival_budget}
+              title="Where theirs goes"
+            />
+          )}
+        </section>
+      </div>
 
       <div className="answer-cols">
         <section className="card">
@@ -116,7 +142,11 @@ export function AllocationSolver() {
         <section className="card">
           <h3>Rival&apos;s splits, by weight</h3>
           {data && (
-            <Bars rows={data.rival_distribution.map((p, i) => ({ label: split(data.rival_allocations[i]), p }))} limit={8} />
+            <Bars
+              rows={data.rival_distribution.map((p, i) => ({ label: split(data.rival_allocations[i]), p }))}
+              limit={8}
+              tone="rival"
+            />
           )}
         </section>
       </div>

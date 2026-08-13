@@ -3,7 +3,7 @@ import Link from "next/link";
 import { MatrixSolver } from "../../components/solvers/MatrixSolver";
 
 export const metadata: Metadata = {
-  title: "Payoff table — SAGE",
+  title: "Coordination and standards",
   description: "A three-by-three payoff table of your own, solved for both sides' move distributions.",
 };
 
@@ -13,7 +13,7 @@ export default function StandardsPage() {
       <p className="crumb">
         <Link href="/situations">All problems</Link>
       </p>
-      <h1 className="surface-title">Payoff table</h1>
+      <h1 className="surface-title">Coordination and standards</h1>
       <p className="surface-lede">
         Two suppliers each pick a format — a connector, a file spec, a schema. Agreement grows the market, the side
         that switches pays for it. The payoffs are built from the five numbers below and solved as a table.

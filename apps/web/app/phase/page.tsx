@@ -3,7 +3,7 @@ import path from "node:path";
 import { PhaseExplorer, type Surface } from "./PhaseExplorer";
 import { ResearchCrumb } from "../components/ResearchCrumb";
 
-export const metadata = { title: "Phase map — SAGE" };
+export const metadata = { title: "Phase map" };
 
 // The surface is a committed, gate-checked artifact regenerated from fixed
 // seeds (unit science.phase_map). The app reads it at build time — the

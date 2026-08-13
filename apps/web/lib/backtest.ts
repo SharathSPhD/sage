@@ -57,7 +57,7 @@ export const POLICIES: PolicySpec[] = [
     short: "QRE",
     name: "Solver",
     rule: "Best reply to the rival's whole move distribution, re-solved every round.",
-    colour: "var(--accent)",
+    colour: "var(--series-1)",
   },
   {
     id: "bestResponseLast",
@@ -65,7 +65,7 @@ export const POLICIES: PolicySpec[] = [
     short: "LAST",
     name: "Best reply to last",
     rule: "Assume they repeat last round, then play the best reply to exactly that.",
-    colour: "var(--q-driven-text)",
+    colour: "var(--series-2)",
   },
   {
     id: "costPlus",
@@ -73,7 +73,7 @@ export const POLICIES: PolicySpec[] = [
     short: "COST",
     name: "Cost-plus",
     rule: "Own cost plus a fixed markup, snapped to the nearest level. Ignores the rival.",
-    colour: "var(--q-stalled-text)",
+    colour: "var(--series-3)",
   },
   {
     id: "match",
@@ -81,7 +81,7 @@ export const POLICIES: PolicySpec[] = [
     short: "MATCH",
     name: "Match the rival",
     rule: "Play whatever they played last round.",
-    colour: "var(--q-whirlpool-text)",
+    colour: "var(--series-4)",
   },
   {
     id: "nash",
@@ -89,7 +89,7 @@ export const POLICIES: PolicySpec[] = [
     short: "NASH",
     name: "Always-Nash",
     rule: "Best reply to a rival assumed to optimise exactly, every round.",
-    colour: "var(--q-none-text)",
+    colour: "var(--series-5)",
   },
 ];
 
