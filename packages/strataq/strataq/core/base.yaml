@@ -53,3 +53,38 @@ estimate:
   flat_entropy_threshold: 1.0e-3  # model-entropy range (nats) below which dispersion is unidentified
   agreement_flag_gap: 0.25     # relative spread across estimators that flags misspecification
   bootstrap_resamples: 50
+
+repeated:
+  # Infinitely repeated games. `delta_max` brackets the bisection for the
+  # critical discount factor; the cycle knobs bound the Edgeworth path search.
+  delta_max: 0.999
+  bisect_iters: 60
+  cycle_max_steps: 400
+  cycle_tol: 1.0e-6
+
+evolutionary:
+  # Replicator integration and the Moran chain. `mutation` keeps the finite
+  # population chain ergodic so a stationary distribution exists at all.
+  step: 0.01
+  steps: 20000
+  rest_tol: 1.0e-9
+  mutation: 1.0e-3
+
+extensive:
+  # Game trees. `max_nodes` guards the dense backward/forward passes. The AQRE
+  # map is not a contraction at high precision, so a run that misses tolerance
+  # retries with `damping_backoff` times the damping, up to `max_restarts`
+  # times, and then falls back to continuation in lambda over
+  # `continuation_points` steps.
+  max_nodes: 20000
+  max_pure_strategies: 20000
+  damping_backoff: 0.25
+  max_restarts: 4
+  continuation_points: 48
+
+situation:
+  # The sensitivity ladder solve_situation() sweeps, as multiples of the
+  # precision the caller stated.
+  ladder_points: 9
+  ladder_low: 0.25
+  ladder_high: 4.0
