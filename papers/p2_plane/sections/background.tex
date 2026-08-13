@@ -33,10 +33,59 @@ harmonic and nonstrategic components, giving a basis-independent harmonic fracti
 Sandholm's externality symmetry~\cite{sandholm2010} and the Jacobian splitting of Balduzzi
 et al.~\cite{balduzzi2018} characterise potential games; the full-versus-effective
 distinction matters, and all decomposition here is taken on the normalised (strategically
-equivalent) game. Legacci, Mertikopoulos and Pradelski~\cite{legacci2024} study convergence
+equivalent) game. The Balduzzi splitting deserves a sentence of its own, because it is the
+closest structural analogue to $\R$ in the games literature: decomposing the game Jacobian
+into a symmetric (potential) and an antisymmetric (Hamiltonian) part is the same algebraic
+move as $\chi=\tfrac12(\chi+\chi^{\top})+\tfrac12(\chi-\chi^{\top})$. Its conservation law is
+Hamiltonian and deterministic; it carries no entropy production, no stationary flux and no
+thermodynamics of any kind, and it never asks whether that split and a dissipation measure
+are the same information. It has the local half of the pair studied here and not the global
+half. Legacci, Mertikopoulos and Pradelski~\cite{legacci2024} study convergence
 versus recurrence under exponential weights across the same potential--harmonic axis, in
 continuous-time replicator geometry; the present work is discrete-time, works with response
 matrices and stationary fluxes, and is complementary rather than competing.
+
+\paragraph{A terminological collision, flagged because it reads like a contradiction.}
+Legacci et al.\ identify the harmonic games with the \emph{incompressible} ones---zero
+Shahshahani divergence of a \emph{deterministic} payoff vector field, which is a conservation
+statement---while the harmonic games here are the ones with the \emph{largest} Schnakenberg
+entropy production on the stochastic Glauber chain. A reader who sets ``harmonic
+$\Rightarrow$ incompressible $\Rightarrow$ conservative'' beside ``harmonic $\Rightarrow$
+maximally dissipative'' will conclude that the two literatures contradict each other. They do
+not: one statement is about the phase-space volume of a deterministic flow, the other about
+the time-asymmetry of a stochastic chain, and a divergence-free vector field implies nothing
+about the reversibility of a Markov generator.
+
+\subsection{Response and dissipation: what is already established}
+\label{sec:bg:priorart}
+That a response function and an entropy production are not the same information is
+established physics, and it is established for precisely the class of process studied here.
+Baiesi, Maes and Wynants~\cite{baiesi2009} decompose the non-equilibrium response of a Markov
+jump process into a time-antisymmetric term, which is entropic and carries the dissipation,
+and a time-symmetric \emph{frenetic} term built from the dynamical activity; the corollary is
+that response cannot be written as a functional of entropy production alone. The revision
+chain used here is a continuous-time Markov jump process, so that result applies to it
+directly. \textbf{The structural half of what the $(\R,\EPR)$ plane displays is therefore
+theirs and not ours}, and the same message recurs through the generalised
+fluctuation--response strand~\cite{seifert2012}, which makes it settled physics rather than
+one paper's position.
+
+The converse result delimits the statement and is equally established. For Langevin dynamics,
+Harada and Sasa~\cite{haradasasa2005} prove an exact equality: the frequency-integrated
+violation of the fluctuation--response relation \emph{equals} the rate of energy dissipation.
+In that class the local and the global reading are one number, so inequivalence is
+class-dependent, and a claim of it must say why Harada--Sasa does not apply. Here it does not,
+for two structural reasons rather than technical ones. First, $\R$ is the reciprocity defect
+of the \emph{static} equilibrium susceptibility $\chieq=(I-SB)^{-1}S$ on the tangent
+space---a property of a derivative evaluated at a fixed point---and not a time-integrated
+response--correlation difference. Second, $\EPR$ is Schnakenberg's cycle functional on a
+discrete profile space carrying no velocity variable, so the integral on the left-hand side of
+the Harada--Sasa equality has nothing to be built from.
+
+What this literature does not do is instantiate the pair on strategic interaction, supply a
+coordinate along which the breakdown can be traced, or measure how much of the association
+between the two survives once that coordinate is conditioned on. Those three things are what
+this paper adds, and they are empirical claims rather than structural ones.
 
 \subsection{Fluctuation and response in economic settings}
 Garnier-Brun, Bouchaud and Benzaquen~\cite{garnierbrun2023} establish a
