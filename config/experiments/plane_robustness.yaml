@@ -1,0 +1,309 @@
+# Unit science.plane (R11) — TWO KILL-SHOTS on the flagship two-coordinate claim.
+#
+# THE CLAIM UNDER TEST. Response asymmetry R = ||chi - chi^T||_F / ||chi + chi^T||_F
+# (a LOCAL derivative at the QRE point, from chi_eq = (I - SB)^-1 S on the tangent
+# space) and the Schnakenberg entropy production rate EPR of the Glauber chain (a
+# GLOBAL stationary-flux functional of the generator) share a zero but are otherwise
+# INDEPENDENT coordinates — a plane, not a line.
+#
+# THE ENTIRE EVIDENTIAL BASE for the "otherwise independent" half is the
+# within-alpha-level collapse recorded in `benchmarks/results/chain_comovement.json`
+# (F-0004): unconditionally rho_S(EPR, R) = 0.993, but conditioning on the harmonic
+# fraction alpha the within-level Spearman falls 0.882 (alpha=0.05) -> 0.610 (0.75)
+# -> 0.323 (0.85) -> -0.355 (0.95); and the pre-registered numerator-only repair was
+# REFUTED (F-0007, `decoupling_mechanism.json`). EVERY ONE OF THOSE READINGS IS AT
+# N=2, m=3 (m=4 appears once, unregistered, in F-0010).
+#
+# THE TWO MOST PLAUSIBLE WAYS THAT CLAIM IS WRONG, and this unit tests both:
+#   K2  FINITE SIZE. A 3x3 two-player game has a 4-dimensional tangent space (so the
+#       antisymmetric part of chi_T has exactly 6 free components) and 9 joint states
+#       on the chain. The collapse could be small-system noise that RECOVERS as m
+#       grows. If it does, the two axes are one axis and the flagship claim dies.
+#   K3  SOLVER. R is read off chi_eq at the damped-fixed-point solution. If the
+#       collapse is an artefact of that solver's finite-precision sigma*, it is
+#       numerical, not physical. Note EPR does NOT depend on the solver at all
+#       (thermo_read builds the generator from the payoff tensor directly), so the
+#       solver can only enter this correlation through R — which is exactly why this
+#       control is cheap and exactly why it is decisive.
+#
+# ============================================================================
+# REGISTERED CRITERIA — THIS COMMIT LANDS BEFORE `experiments/plane_robustness.py`
+# EXISTS. Verify with `git log --oneline -1` (repo standing rule since the
+# thermo.protocols O-3 failure; ONBOARDING section 4 step 1).
+# ============================================================================
+#
+# ---------------------------------------------------------------------------
+# PARAMETER CHOICES, JUSTIFIED BEFORE THE RUN
+# ---------------------------------------------------------------------------
+# lam = 1.2, NOT 1.5. The tasking for this unit quoted the reference reading as
+# "lambda=1.5"; that is a misstatement of the artifact. `chain_comovement.json` was
+# produced by `experiments/dynamics_calibration.py` reading `lam` from
+# `config/experiments/dynamics_calibration.yaml`, which is 1.2. Since K3 is defined
+# as a comparison AGAINST THE REFERENCE RUN, and since the m=3 row of K2 is only a
+# replication if the games are the same games, lam must be 1.2 here. The tasked
+# value is not ignored: D2 below repeats the two extreme alpha levels at lam = 1.5
+# as a registered diagnostic. Recorded here, before any run, so the deviation cannot
+# be read as post-hoc convenience.
+#
+# SEED FAMILY. `seed_stream.root` + `seed_stream.offset` and the fold_in scheme
+# below reproduce the reference games EXACTLY: chain_comovement used
+# key = PRNGKey(20260808 + 11), then fold_in(level_idx) with level_idx indexing the
+# CANONICAL TEN-LEVEL LIST `canonical_levels` (not this unit's five), then
+# fold_in(game_idx), then split(k, 4) -> two potential sources and two harmonic
+# sources of shape (m, m). At m = 3 and game_idx < 100 this unit therefore solves
+# the IDENTICAL games as F-0004. That makes the m=3 row a strict replication and
+# gives K3 an external anchor (the published numbers 0.323 and -0.355) rather than
+# only an internal one.
+#
+# ---------------------------------------------------------------------------
+# NOTATION (fixed here, before any run)
+# ---------------------------------------------------------------------------
+#   rho_S(m, alpha)  within-level Spearman rank correlation of EPR against R over
+#                    the games_per_cell games of cell (m, alpha)
+#   alpha_lo = 0.05, alpha_hi = 0.95;  m_min = 3, m_max = 6
+#   rho_hi(m) = rho_S(m, alpha_hi);  rho_lo(m) = rho_S(m, alpha_lo)
+#   gap(m)   = rho_lo(m) - rho_hi(m)          [the collapse; +1.237 in F-0004]
+#   gap_ratio(m) = gap(m) / gap(m_min)
+#
+# ---------------------------------------------------------------------------
+# K2-T1 (PRIMARY — THE KILL-SHOT). Is the collapse a finite-size artefact?
+# ---------------------------------------------------------------------------
+#   The claim FAILS (is finite-size) iff ALL THREE hold:
+#     (a) rho_hi is MONOTONE NON-DECREASING in m across all four values, allowing a
+#         per-step dip of at most `mono_tol` = 0.05:
+#             rho_hi(m_{k+1}) >= rho_hi(m_k) - 0.05 for every consecutive pair.
+#         0.05 is half the Spearman null SD at n = 200 (0.071) rounded up: a single
+#         noise wiggle must not be able to RESCUE the claim from a real trend.
+#     (b) gap_ratio(m_max) < `gap_shrink_fail` = 0.50 — the collapse has lost more
+#         than half its size from m=3 to m=6. This is the threshold named in the
+#         tasking, adopted verbatim.
+#     (c) CI SUPPORT: ci_low(rho_hi(m_max)) > ci_high(rho_hi(m_min)). A recovery that
+#         lives inside the sampling noise of two rho estimates is not a refutation.
+#   The claim SURVIVES iff ALL THREE hold:
+#     (d) gap_ratio(m) >= `gap_shrink_fail` = 0.50 at EVERY m in {4, 5, 6} — the
+#         collapse never loses half its size at any tested size, not just at the end;
+#     (e) rho_hi(m) <= `survive_ceiling` = 0.35 at EVERY m — high-alpha coupling never
+#         recovers to coupled behaviour. 0.35 is not a new number: it is the collapse
+#         threshold already registered for `science.frontier` (F-0010), reused so the
+#         two units are commensurable;
+#     (f) CI SUPPORT: ci_high(rho_hi(m)) < `survive_ceiling` at EVERY m. A point
+#         estimate under the ceiling with a CI crossing it does not certify survival.
+#   ANYTHING ELSE IS INDETERMINATE (see K2-T4). There is no default-to-confirmation:
+#   the two branches are deliberately not exhaustive.
+#
+#   PRECONDITION, registered as part of T1 and not as a get-out: rho_lo(m) >=
+#   `baseline_rho_min` = 0.55 at every m. If low-alpha coupling is absent at some
+#   size there is no collapse to measure there and that m is INDETERMINATE, not
+#   survival. 0.55 is the same floor used for the low-alpha fact in F-0007.
+#
+# ---------------------------------------------------------------------------
+# K2-T2 (ONSET). Where the collapse begins must not drift upward with m.
+# ---------------------------------------------------------------------------
+#   onset(m) = the SMALLEST alpha in `levels` at which rho_S(m, alpha) < `onset_rho`
+#   = 0.5. If no level qualifies, onset(m) := `onset_none_sentinel` = 1.05 (i.e. off
+#   the top of the grid), which is a failure, not a missing value.
+#   CRITERION: onset(m) - onset(m_min) <= `onset_drift_tol` = 0.10 for every m.
+#   0.10 is exactly one step of the grid at its fine end (0.75 -> 0.85 -> 0.95): one
+#   grid step of upward drift is tolerated as discretisation, two is a trend. From
+#   the reference, onset(3) is expected at 0.85 (rho = 0.323 there, 0.610 at 0.75).
+#   K2-T2 is reported PASS / FAIL independently of K2-T1; it cannot by itself
+#   overturn T1, but a T1 SURVIVES with a T2 FAIL is reported as SURVIVES-NARROWED.
+#
+# ---------------------------------------------------------------------------
+# K3-T1 (SOLVER). Is the collapse an artefact of the damped fixed-point solver?
+# ---------------------------------------------------------------------------
+#   At m = 3, on the IDENTICAL seed family (same games, same order, no re-draw), the
+#   alpha in {0.85, 0.95} cells are recomputed with:
+#     arm `mirror`      — `strataq.core.solve.mirror.logit_qre_mirror` (magnetic
+#                         mirror descent, last-iterate; a structurally different
+#                         algorithm, not a re-tune of the same one), tol as reference;
+#     arm `tight`       — the damped solver at `solver.tol_tight` = 1.0e-14, a 100x
+#                         tighter tolerance than the reference `solver.tol_ref`
+#                         = 1.0e-12.
+#   CRITERION: |rho_S(arm) - rho_S(reference)| < `delta_rho_max` = 0.05 for BOTH arms
+#   at BOTH alpha levels (4 comparisons). If any exceeds 0.05 the collapse is
+#   numerical, not physical, and the flagship claim dies on K3 regardless of K2.
+#   0.05 is half the n=100 Spearman null SD (0.100): a solver disagreement that large
+#   would be a real change in the ordering, not resampling noise — and unlike K2 this
+#   is a PAIRED comparison on identical games, where sampling noise cancels, so the
+#   bar can be strict.
+#   REPORTED ALONGSIDE (diagnostic, not criterion): max over games of the sup-norm
+#   |sigma_arm - sigma_ref|, the per-arm non-convergence count, and the Spearman of R
+#   itself between arms (rho(R_arm, R_ref)); and the EXTERNAL anchor, the reference
+#   arm's own agreement with the published F-0004 numbers (0.32316 at 0.85,
+#   -0.35468 at 0.95), which must agree to `replication_tol` = 0.02 on the first
+#   `reference_n` = 100 games or the seed reconstruction is wrong and every K3 number
+#   is uninterpretable (this fires as K2-T4(v)).
+#
+# ---------------------------------------------------------------------------
+# K2-T3 (INTERVALS). Bootstrap CIs on EVERY reported rho_S.
+# ---------------------------------------------------------------------------
+#   Percentile bootstrap, `bootstrap.n_resamples` = 2000 resamples, resampling GAMES
+#   WITHIN THE CELL with replacement (the pairing of (EPR, R) within a game is never
+#   broken), `bootstrap.ci_level` = 0.95, on an explicitly threaded seed stream
+#   (root + `bootstrap.seed_offset`, fold_in per cell then per resample). 2000
+#   resamples put the Monte-Carlo error at ~2% of the CI width, negligible against
+#   the 0.071 sampling SD the criteria actually contend with. Every rho in the
+#   artifact carries its CI; the CIs are BINDING in both directions via T1(c) and
+#   T1(f).
+#
+# ---------------------------------------------------------------------------
+# K2-T4 (INDETERMINATE). Registered so this run cannot be read as confirmation by
+# default. The verdict is INDETERMINATE, and must be reported with that word, if:
+# ---------------------------------------------------------------------------
+#   (i)   rho_hi(m) is NON-MONOTONE (violates T1a) while gap_ratio(m_max) < 0.75 —
+#         real size-dependence without a clean trend: neither kills nor confirms;
+#   (ii)  the four CIs on rho_hi(m) ALL mutually overlap AND T1(f) fails — the design
+#         cannot discriminate at this n;
+#   (iii) the T1 precondition rho_lo(m) >= 0.55 fails at any m;
+#   (iv)  a diagnostic guard fires: at any cell the fraction of near-critical games
+#         exceeds `diagnostics.max_near_critical_frac` = 0.10, or any solve fails to
+#         converge, or `make_family` rejects any draw;
+#   (v)   the replication anchor fails: |rho_S(m=3, alpha, first 100 games) - the
+#         published F-0004 value| > 0.02 at alpha in {0.85, 0.95}.
+#   INDETERMINATE is a THIRD outcome, not a soft pass. If it fires, the finding says
+#   INDETERMINATE and the claim's status is UNCHANGED, not strengthened.
+#
+# ---------------------------------------------------------------------------
+# D1 (registered CONFOUND CONTROL — named before the run, not after)
+# ---------------------------------------------------------------------------
+#   `make_family` unit-normalises each Hodge component and multiplies by `scale`, so
+#   a FIXED scale holds the FROBENIUS norm constant and per-entry payoff RMS
+#   therefore falls like 1/m. Effective precision lambda_normalised = lam *
+#   payoff_range falls with m, and F-0002/F-0010 both show the meters are
+#   lambda-sensitive. A naive m-sweep at fixed scale therefore confounds "bigger
+#   action space" with "colder game" — and a colder game has smaller EPR and smaller
+#   R, which could manufacture EITHER verdict. D1 repeats the two extreme alpha
+#   levels at every m under the a-priori rule
+#       scale(m) = sweep.scale * m / m_min
+#   which holds per-entry payoff RMS approximately constant instead. The main arm
+#   keeps the fixed scale (house precedent: `frontier.py` compared 3x3 and 4x4 at
+#   scale 2.0, and F-0004 is at 2.0).
+#   D1 IS BINDING: if the fixed-scale and constant-RMS arms disagree on the K2-T1
+#   verdict, the unit is INDETERMINATE and the disagreement is reported. Stated in
+#   advance so the disagreement cannot be quietly dropped.
+#
+# ---------------------------------------------------------------------------
+# D2 (registered LAMBDA control, diagnostic only)
+# ---------------------------------------------------------------------------
+#   The two extreme alpha levels at m in {3, 6}, lam = `lam_control` = 1.5 (the value
+#   named in the tasking), fixed scale. Reported as gap(m) at lam = 1.5 next to
+#   gap(m) at lam = 1.2. NOT a pass/fail criterion — one lambda pair at two sizes
+#   cannot adjudicate anything — but registered so the tasked value is on the record
+#   with a number rather than an omission.
+#
+# ---------------------------------------------------------------------------
+# WHAT THIS UNIT CANNOT SETTLE (stated before the run so no one reads the result as
+# bigger than it is)
+# ---------------------------------------------------------------------------
+#   N stays at 2 throughout: this says NOTHING about N-scaling, which is a separate
+#   unit. m stops at 6 (36 joint states; the Glauber generator is dense and the guard
+#   in `strataq.core.dynamics.markov` is a residual check, not a size cap, so the
+#   binding limit is compute and memory, not correctness). The main arm is one
+#   lambda. Only Gaussian-source Hodge families are sampled; nothing here speaks to
+#   structured or empirical games. K3 tests two solvers, not the whole space of
+#   solvers, and cannot exclude a bias SHARED by damped iteration and mirror descent
+#   (both converge to the same fixed point; what is excluded is finite-precision
+#   path-dependence, which is the stated K3 hypothesis).
+
+defaults:
+  - _self_
+
+seed: 20260812
+lam: 1.2
+lam_control: 1.5          # D2 only — see the lam note above
+
+seed_stream:
+  # Reproduces the F-0004 games exactly at m=3 (see SEED FAMILY above).
+  root: 20260808
+  offset: 11
+  canonical_levels: [0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95]
+
+sweep:
+  levels: [0.05, 0.45, 0.75, 0.85, 0.95]   # the five tasked levels; each is an index
+                                           # into canonical_levels, so the seed family
+                                           # is the reference one
+  m_values: [3, 4, 5, 6]                   # N=2 players; m=6 => 36 joint states
+  games_per_cell: 200
+  scale: 2.0
+  n_players: 2
+
+solver:
+  tol_ref: 1.0e-12          # reference: exactly what dynamics_calibration used
+  tol_tight: 1.0e-14        # K3 arm `tight` — 100x tighter
+  max_iter: 100000
+
+criteria:
+  m_values: [3, 4, 5, 6]
+  alpha_lo: 0.05
+  alpha_hi: 0.95
+  # K2-T1
+  mono_tol: 0.05
+  gap_shrink_fail: 0.50
+  survive_ceiling: 0.35
+  baseline_rho_min: 0.55
+  # K2-T2
+  onset_rho: 0.5
+  onset_drift_tol: 0.10
+  onset_none_sentinel: 1.05
+  # K2-T4(i)
+  indeterminate_gap_ratio: 0.75
+  # K3-T1
+  delta_rho_max: 0.05
+  # replication anchor (K2-T4(v))
+  replication_tol: 0.02
+  reference_n: 100
+  reference_rho:            # published F-0004 values, transcribed from
+    "0.85": 0.32315631563156316
+    "0.95": -0.3546834683468347
+
+solver_control:             # K3
+  enabled: true
+  levels: [0.85, 0.95]
+  m: 3
+  arms: [mirror, tight]
+
+bootstrap:
+  n_resamples: 2000
+  ci_level: 0.95
+  seed_offset: 770000
+
+diagnostics:
+  max_near_critical_frac: 0.10
+
+scale_control:              # D1
+  enabled: true
+  levels: [0.05, 0.95]
+  games_per_cell: 100
+  rule: "scale(m) = sweep.scale * m / min(m_values)  # constant per-entry payoff RMS"
+  seed_offset: 310000
+
+lambda_control:             # D2
+  enabled: true
+  levels: [0.05, 0.95]
+  m_values: [3, 6]
+  games_per_cell: 100
+  seed_offset: 510000
+
+n_justification: >
+  200 games per (m, alpha) cell in the main arm: 4 m-values x 5 levels x 200 = 4000
+  games, plus 800 in the D1 scale control (100/cell x 4 m x 2 levels), 400 in the D2
+  lambda control and 400 solver re-solves in K3 — 5600 games solved in total. The
+  Spearman null SD at n=200 is 1/sqrt(n-1) = 0.071, so the survival ceiling 0.35 sits
+  ~4.9 null-SD from zero, and the primary quantity gap(m) — a difference of two
+  independent rho estimates, SD ~ 0.100 — is resolved against a reference gap of
+  ~1.24 at better than 12 SD, so the 50% shrink threshold (a 0.62 change in gap) is
+  ~6 SD away from the null of no change. The criterion is therefore genuinely
+  resolvable at this n rather than a coin flip dressed as a threshold. n = 200 is
+  chosen as 2x the F-0004 design with the first 100 games of each m=3 cell IDENTICAL
+  to that design, so the replication anchor is exact while the primary statistics get
+  a sqrt(2) tighter interval. The K3 arms use exactly reference_n = 100 games because
+  their criterion is a PAIRED difference against the published reference numbers,
+  which were computed on precisely those 100 games; adding games there would break
+  the pairing that makes a 0.05 bar meaningful. The D1/D2 controls use 100/cell
+  (null SD 0.100): they are diagnostics reported with CIs, and D1's binding use is a
+  VERDICT comparison, which is robust to the wider interval in a way a point-estimate
+  comparison would not be. Compute is the binding constraint on going further:
+  measured steady-state cost is 0.044 s/game at m=3 rising to 0.275 s/game at m=6, so
+  the full design is ~15 minutes; doubling n again would buy a sqrt(2) on intervals
+  that are already an order of magnitude inside the registered thresholds.

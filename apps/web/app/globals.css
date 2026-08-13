@@ -14,11 +14,34 @@
   --text-faint: #5c6b7c;
   --accent: #35e0b2;
   --accent-dim: #1d8a6e;
+  /* the primary-button fill: --accent-dim under the dark button ink is 4.4:1,
+     a hair under AA, so the solid fill is lifted just far enough to clear it */
+  --accent-mid: #21a07f;
   --accent-glow: rgba(53, 224, 178, 0.14);
   --amber: #e8b04b;
   --amber-glow: rgba(232, 176, 75, 0.12);
   --red: #e0596e;
   --blue: #5aa9e6;
+
+  /* The four quadrants of the irreversibility plane. These exact values are the
+     shared palette — strataq.viz and the paper figures use the same hexes, so a
+     reading on screen and a reading in print are the same colour. They are the
+     FILL colours: safe as large shapes and marks, but on the dark ground they do
+     not all clear 4.5:1 as text (--q-driven is 3.6:1 on --panel, --q-whirlpool
+     3.8:1). Every quadrant therefore also has a -text variant, same hue, lifted
+     until it passes AA against a quadrant-shaded panel. Text uses -text; fills,
+     borders and marks use the base. */
+  --q-landscape: #2a9d8f;
+  --q-driven: #4c72b0;
+  --q-stalled: #dd8452;
+  --q-whirlpool: #c44e52;
+  --q-none: #8e8e8e;
+  --q-landscape-text: #3fbfae;
+  --q-driven-text: #7fa8dc;
+  --q-stalled-text: #efa278;
+  --q-whirlpool-text: #e4787c;
+  --q-none-text: #b4beca;
+
   --mono: "SF Mono", "JetBrains Mono", ui-monospace, "Cascadia Code", Menlo, monospace;
   --serif: "Charter", "Iowan Old Style", Georgia, "Times New Roman", serif;
   --sans: -apple-system, "Segoe UI", "Inter", Roboto, "Helvetica Neue", sans-serif;
@@ -61,6 +84,28 @@ h1, h2, h3 { font-weight: 650; letter-spacing: -0.015em; line-height: 1.25; }
 code, .mono { font-family: var(--mono); font-size: 0.92em; }
 
 ::selection { background: rgba(53, 224, 178, 0.25); }
+
+/* WCAG 2.4.7 — a visible focus indicator on every keyboard-reachable thing.
+   Two-tone so it stays visible on both the dark ground and on light fills. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Off-screen but still in the accessibility tree and still focusable-by-proxy. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
 
 /* ---------- chrome ---------- */
 
@@ -176,7 +221,7 @@ button, select, input[type="text"] {
 }
 button { cursor: pointer; transition: border-color 120ms, background 120ms; }
 button:hover { border-color: var(--accent-dim); }
-button[data-primary="true"] { background: var(--accent-dim); border-color: var(--accent-dim); color: #04110c; font-weight: 600; }
+button[data-primary="true"] { background: var(--accent-mid); border-color: var(--accent-mid); color: #04110c; font-weight: 600; }
 button[data-primary="true"]:hover { background: var(--accent); }
 
 select { appearance: none; padding-right: 2rem; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%238b9aab'/></svg>"); background-repeat: no-repeat; background-position: right 0.7rem center; }
@@ -356,3 +401,333 @@ table { border-collapse: collapse; }
 
 .panel-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; align-items: start; }
 @media (max-width: 760px) { .panel-cols { grid-template-columns: 1fr !important; } }
+
+/* ---------- diagnose (the practitioner front door) ---------- */
+
+/* Everything here is scoped under .diagnose: `.badge`, `.actions` and `.hint`
+   already mean other things elsewhere in this file, and the front door should
+   not redefine them for the rest of the site. */
+
+.diagnose { padding-top: 2.2rem; max-width: 58rem; }
+
+.diagnose header { margin-bottom: 2rem; }
+.diagnose .kicker {
+  font-family: var(--mono);
+  color: var(--accent);
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.diagnose h1 { font-size: clamp(1.9rem, 4vw, 2.7rem); margin: 0.5rem 0 0.9rem; }
+.diagnose .lede { font-size: 1.06rem; color: var(--text-dim); max-width: 44rem; margin: 0; }
+
+.diagnose > section { margin-bottom: 1.4rem; }
+.diagnose h2 {
+  font-size: 1.12rem;
+  margin: 0 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.diagnose h2 .step {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+  border: 1px solid var(--accent-dim);
+  background: var(--accent-glow);
+  border-radius: 50%;
+  width: 1.7rem;
+  height: 1.7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.diagnose h3 { font-size: 0.95rem; margin: 1.2rem 0 0.4rem; color: var(--text); }
+
+/* ---- 1 · drop ---- */
+
+/* A <button>, not a <div> — so it is in the tab order and fires on Enter and
+   Space for free (WCAG 2.1.1). Drag-and-drop is the shortcut, never the only way in. */
+.diagnose .dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  min-height: 8rem;
+  padding: 1.8rem 1rem;
+  text-align: center;
+  /* 1.4.11 — this dashed edge is the only thing that identifies the control, so it
+     has to clear 3:1 against its own fill. --border-bright manages 1.6:1 and is not
+     enough; --text-faint is 3.39:1 on --panel-2. */
+  border: 1.5px dashed var(--text-faint);
+  border-radius: 10px;
+  background: var(--panel-2);
+  color: var(--text-dim);
+  transition: border-color 120ms, background 120ms;
+}
+.diagnose .dropzone strong { color: var(--text); font-size: 1rem; font-weight: 650; }
+.diagnose .dropzone span { font-size: 0.85rem; }
+.diagnose .dropzone:hover,
+.diagnose .dropzone[data-dragging="true"] {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+
+.diagnose .examples {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.7rem;
+  margin: 0.7rem 0 1.2rem;
+}
+.diagnose .examples button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+  min-height: 44px; /* 2.5.5 target size */
+  padding: 0.7rem 0.85rem;
+  text-align: left;
+  background: var(--bg-raised);
+  line-height: 1.4;
+}
+.diagnose .examples button > span:first-child { font-weight: 600; color: var(--text); }
+.diagnose .examples .ex-detail { font-size: 0.78rem; color: var(--text-dim); }
+.diagnose .examples .badge { font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase; }
+/* Real data and generated data never look alike, and the word is always there —
+   the colour is the second signal, never the only one. */
+.diagnose .examples .badge[data-provenance="real"] {
+  color: var(--accent);
+  border-color: var(--accent-dim);
+  background: var(--accent-glow);
+}
+.diagnose .examples .badge[data-provenance="synthetic"] {
+  color: var(--text-dim);
+  border-style: dashed;
+}
+
+.diagnose label.panel-label { display: block; margin: 1rem 0 0.35rem; }
+
+/* Same 1.4.11 reasoning as the dropzone: an input's border is what says "input". */
+.diagnose textarea,
+.diagnose .mapping select {
+  border-color: var(--text-faint);
+}
+
+.diagnose textarea {
+  width: 100%;
+  background: var(--bg-raised);
+  color: var(--text);
+  border: 1px solid var(--text-faint);
+  border-radius: 6px;
+  padding: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+.diagnose textarea::placeholder { color: var(--text-faint); }
+
+.diagnose details {
+  margin-top: 1.2rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.8rem;
+}
+.diagnose details summary {
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  padding: 0.25rem 0;
+}
+.diagnose details summary:hover { color: var(--text); }
+
+.diagnose .hint {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  margin: 0.6rem 0 0;
+  max-width: 46rem;
+}
+.diagnose .hint strong { color: var(--text); }
+/* 1.4.1 — a link inside a sentence is only 1.7:1 against the prose around it, so
+   colour alone cannot be what marks it. Underline it here rather than on hover. */
+.diagnose p a { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---- 2 · what this data can identify ---- */
+
+/* The category is carried by the word in .tag, not by the colour: colour is the
+   second signal, never the only one (WCAG 1.4.1). */
+.diagnose .report { list-style: none; margin: 0 0 1.2rem; padding: 0; }
+.diagnose .report li {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  padding: 0.45rem 0 0.45rem 0.9rem;
+  border-left: 2px solid var(--border-bright);
+  margin-bottom: 0.3rem;
+}
+.diagnose .report li.bound { border-left-color: var(--amber); color: var(--amber); }
+.diagnose .report li.limit { border-left-color: var(--blue); color: var(--blue); }
+.diagnose .report .tag {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-right: 0.55rem;
+  opacity: 0.85;
+}
+
+/* The editable column mapping. PRODUCT_v1 §3.1 state 2 asks for inference the visitor
+   can override, because inference on somebody else's CSV is a guess however good it is. */
+.diagnose .mapping { margin: 0 0 1.1rem; }
+.diagnose .mapping label.panel-label { margin-top: 0; }
+.diagnose .mapping select { min-height: 44px; max-width: 100%; }
+
+.diagnose button[data-primary="true"] { min-height: 44px; padding: 0.5rem 1.1rem; }
+.diagnose button[disabled] { opacity: 0.55; cursor: not-allowed; }
+
+.diagnose .error {
+  /* --red on its own 9% tint is 4.43:1 — just under AA. Lifted to 5.47:1. */
+  color: #ea7183;
+  font-size: 0.85rem;
+  margin: 0.8rem 0 0;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #6e2c38;
+  background: rgba(224, 89, 110, 0.09);
+  border-radius: 7px;
+  max-width: 46rem;
+}
+
+/* ---- 3 · the plane ---- */
+
+.diagnose .plane {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.diagnose .verdict {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-top: 1.1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--border-bright);
+  border-left-width: 4px;
+  border-radius: 8px;
+  background: var(--panel-2);
+}
+.diagnose .verdict:focus { outline: none; }
+.diagnose .verdict:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.diagnose .verdict > div { min-width: 0; }
+.diagnose .verdict strong { font-size: 1.15rem; display: block; }
+.diagnose .verdict p { margin: 0.3rem 0 0; font-size: 0.88rem; color: var(--text-dim); }
+
+/* The roman numeral is the verdict in text form — it must survive greyscale. */
+.diagnose .verdict-roman {
+  font-size: 1.15rem;
+  font-weight: 700;
+  min-width: 2.6rem;
+  min-height: 2.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border-width: 2px;
+  background: var(--bg-raised);
+  padding: 0;
+  flex: none;
+}
+
+.diagnose .coords {
+  font-size: 0.84rem !important;
+  color: var(--text) !important;
+  font-variant-numeric: tabular-nums;
+  margin-top: 0.55rem !important;
+  line-height: 1.7;
+}
+.diagnose .live { color: var(--text-dim); font-size: 0.85rem; }
+
+.diagnose .warnings .w { font-family: var(--sans); margin: 0; }
+
+.diagnose .reference-key ul { margin: 0.5rem 0 0; padding-left: 1.1rem; }
+.diagnose .reference-key li { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 0.4rem; }
+.diagnose .reference-key strong { color: var(--text); }
+
+/* ---- 4 · consequences ---- */
+
+.diagnose .consequences { margin: 0; padding-left: 1.3rem; }
+.diagnose .consequences li {
+  font-size: 0.92rem;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+  padding-left: 0.25rem;
+}
+.diagnose .consequences li::marker { color: var(--accent-dim); font-family: var(--mono); }
+
+.diagnose .check {
+  margin: 1.2rem 0 0;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.86rem;
+  color: var(--text-dim);
+  border-left: 3px solid var(--accent-dim);
+  background: var(--panel-2);
+  border-radius: 0 7px 7px 0;
+}
+.diagnose .check strong { color: var(--accent); }
+
+/* ---- 5 · take it with you ---- */
+
+.diagnose .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.diagnose .actions button { min-height: 44px; }
+
+.diagnose .snippet {
+  margin: 0.9rem 0 0;
+  padding: 0.9rem 1rem;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.diagnose .drawer {
+  margin-top: 1.2rem;
+  padding: 0.4rem 1.1rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-2);
+}
+.diagnose .drawer ul { margin: 0; padding-left: 1.1rem; }
+.diagnose .drawer li,
+.diagnose .drawer p { font-size: 0.84rem; color: var(--text-dim); margin: 0.35rem 0; }
+.diagnose .drawer code { color: var(--accent); }
+
+@media (max-width: 620px) {
+  .diagnose .verdict { flex-direction: column; }
+  .diagnose .actions button { width: 100%; }
+}
+
+/* ---------- superseded-route banner ---------- */
+
+.superseded {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 1.6rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid #7a5c22;
+  background: var(--amber-glow);
+  border-radius: 8px;
+  font-size: 0.88rem;
+  color: var(--amber);
+}
+.superseded a { color: var(--amber); text-decoration: underline; text-underline-offset: 3px; }

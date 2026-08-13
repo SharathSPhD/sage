@@ -1,0 +1,191 @@
+# Unit science.plane (R11) — the FINITE-SIZE KILL-SHOT on the two-axis claim.
+#
+# THE CLAIM UNDER TEST (the programme's flagship): response asymmetry R and
+# dissipation EPR share a zero (R = 0 <=> potential <=> EPR = 0) but are
+# otherwise INDEPENDENT coordinates — a plane, not a line. The whole evidential
+# base for the "otherwise independent" half is F-0004/F-0007/F-0010: the
+# within-alpha-level Spearman rho(EPR, R) collapses from +0.88 at alpha=0.05 to
+# -0.355 at alpha=0.95, and the pre-registered numerator-only repair was
+# REFUTED (F-0007), so no renormalisation of chi recovers the dissipation
+# ordering at high alpha.
+#
+# THE MOST LIKELY WAY THAT CLAIM IS WRONG: every one of those readings is at
+# N=2 players, m=3 actions. A 3x3 two-player game has a 2+2 = 4-dimensional
+# tangent space and 9 joint states. The decoupling could be a FINITE-SIZE
+# ARTEFACT of that cramped geometry — chi_tangent is 4x4, so "the antisymmetric
+# part" has exactly 6 free components and EPR lives on a 9-state chain. If the
+# coupling RECOVERS as m grows, the two axes are one axis plus small-system
+# noise, and the flagship claim dies. F-0010 already saw a single 4x4 point
+# (-0.26 at alpha=0.95, lam=1.2, 40 games) which is suggestive but is one size,
+# one alpha pair, and was never registered as a size test.
+#
+# This unit sweeps m in {3, 4, 5, 6} at fixed N=2 and fixed lam, with the SAME
+# 100-games-per-level design as F-0004 so m=3 is a direct replication of the
+# original reading on a fresh seed stream.
+#
+# ============================================================================
+# REGISTERED CRITERIA — this commit MUST LAND BEFORE ANY EXPERIMENT CODE EXISTS
+# (verify with `git log --oneline -1`; standing rule since the thermo.protocols
+# O-3 failure, and the same discipline as config/experiments/gate_se.yaml).
+# ============================================================================
+#
+# NOTATION (all fixed here, before any run):
+#   alpha_lo = min(sweep.levels) = 0.05   alpha_hi = max(sweep.levels) = 0.95
+#   rho_hi(m) = within-level Spearman rho(EPR, R) at alpha_hi for action count m
+#   rho_lo(m) = the same statistic at alpha_lo
+#   collapse(m) = rho_hi(m) - rho_lo(m)   [negative = the F-0004 phenomenon]
+#   m_min = 3, m_max = 6 (the ends of criteria.m_values)
+#
+# T1 (PRIMARY — is the collapse a finite-size artefact?)
+#   The claim is REFUTED (the two-axis picture is a small-m artefact) iff BOTH:
+#     (a) rho_hi is monotone NON-DECREASING in m across all four m values,
+#         allowing a per-step dip of at most mono_tol (a criterion that a
+#         single 0.02 noise wiggle must not be able to rescue the claim from):
+#         rho_hi(m_{k+1}) >= rho_hi(m_k) - mono_tol for every consecutive pair;
+#     AND
+#     (b) rho_hi(m_max) - rho_hi(m_min) > recovery_delta_refute (= 0.40) —
+#         i.e. the high-alpha coupling genuinely RECOVERS toward its low-alpha
+#         value as the action space grows;
+#     AND the T3 CI condition for refutation below.
+#   The claim SURVIVES iff BOTH:
+#     (c) rho_hi(m) <= survive_ceiling (= 0.35) at EVERY m — the collapse is
+#         present at every size, never recovering to coupled behaviour. 0.35 is
+#         not a new number: it is F-0010's registered collapse threshold
+#         (half the ~0.90 baseline minus one Spearman null-SD), reused so this
+#         unit is commensurable with the crossover sweep;
+#     AND
+#     (d) rho_hi(m_max) - rho_hi(m_min) <= recovery_delta_survive (= 0.20) —
+#         no material upward drift with size;
+#     AND the T3 CI condition for survival below.
+#   Anything else is INDETERMINATE per T4. There is no default-to-confirmation.
+#
+# T2 (the collapse must still BE a collapse, at every m)
+#   At every m: collapse(m) <= collapse_drop_max (= -0.40), i.e. rho at high
+#   alpha is at least 0.40 BELOW rho at low alpha. Reference: F-0004 measured
+#   collapse = -0.355 - 0.88 = -1.235 at m=3, so -0.40 is a lenient bar that a
+#   genuine phenomenon clears with room and a vanished one cannot.
+#   PRECONDITION (registered as part of T2, not a get-out): rho_lo(m) >=
+#   baseline_rho_min (= 0.55) at every m. If the low-alpha coupling is not
+#   there at some size, there is no collapse to measure at that size and the
+#   verdict at that m is INDETERMINATE, not survival. 0.55 is the same floor
+#   used for the low-alpha fact in decoupling_mechanism.py (F-0007).
+#
+# T3 (the verdict must survive the interval, not just the point estimate)
+#   For every m, a percentile bootstrap CI on rho_hi(m): bootstrap.n_resamples
+#   (= 2000) resamples, resampling GAMES WITHIN THE LEVEL with replacement,
+#   ci_level = 0.95, on the explicitly threaded seed stream (seed +
+#   bootstrap.seed_offset). Then:
+#     - REFUTATION (T1a+b) additionally REQUIRES non-overlap at the ends:
+#       ci_low(rho_hi(m_max)) > ci_high(rho_hi(m_min)). A recovery that lives
+#       inside the sampling noise of two rho estimates is not a refutation.
+#     - SURVIVAL (T1c+d) additionally REQUIRES ci_high(rho_hi(m)) <
+#       survive_ceiling at EVERY m. A point estimate under the ceiling with a
+#       CI crossing it does not certify survival.
+#   If the point estimates say one thing and the CIs do not support it, the
+#   verdict is INDETERMINATE. The CI is the binding read in both directions.
+#
+# T4 (what is INDETERMINATE — registered so this run cannot be read as
+#     confirmation by default)
+#   The verdict is INDETERMINATE, and must be reported with that word, if ANY
+#   of the following holds:
+#     (i)   rho_hi(m) is NON-MONOTONE in m (violates T1a) while
+#           |rho_hi(m_max) - rho_hi(m_min)| > recovery_delta_survive — real
+#           size-dependence without a clean trend: neither refutes nor confirms;
+#     (ii)  the four CIs on rho_hi(m) ALL mutually overlap AND the T1 survival
+#           ceiling condition (T1c with its T3 CI form) fails — the design
+#           cannot discriminate at this n;
+#     (iii) the T2 precondition rho_lo(m) >= baseline_rho_min fails at any m;
+#     (iv)  a diagnostic guard fires: at any (m, alpha) cell the fraction of
+#           near-critical games exceeds diagnostics.max_near_critical_frac
+#           (= 0.10) or any solve fails to converge — chi magnitudes are not
+#           trustworthy there and no rho computed from them is either.
+#   INDETERMINATE is a THIRD outcome, not a soft pass. If it fires, the finding
+#   says INDETERMINATE and the claim's status is unchanged, not strengthened.
+#
+# DIAGNOSTICS, registered in advance (recorded whatever the verdict, and
+# NEVER used to filter games post hoc):
+#   - per cell: fraction near-critical, median distance_to_criticality, median
+#     payoff_range, median lambda_normalised, count of non-converged solves.
+#   - Near-critical games are RETAINED in the Spearman. Spearman is rank-based
+#     and therefore robust to the magnitude blow-up, and dropping games after
+#     seeing them is exactly the post-hoc filtering this file exists to
+#     prevent. The RATE is reported and guards the verdict via T4(iv).
+#
+# D1 (registered SCALE CONTROL — a confound named before the run, not after)
+#   make_family unit-normalises its components and multiplies by `scale`, so a
+#   FIXED scale holds the Frobenius norm constant and the per-entry payoff RMS
+#   therefore falls like 1/m. Effective precision (lambda_normalised = lam *
+#   payoff_range) consequently DROPS as m grows, and F-0002/F-0010 both show
+#   the meters are lambda-sensitive. So a naive m-sweep at fixed scale confounds
+#   "bigger action space" with "colder game". D1 repeats the two EXTREME alpha
+#   levels only (alpha_lo and alpha_hi), at every m, with the a-priori rule
+#      scale(m) = scale * m / m_min
+#   which holds per-entry payoff RMS approximately constant instead. The main
+#   sweep keeps the fixed scale (house precedent: frontier.py compared 3x3 and
+#   4x4 at scale 2.0). D1 is a DIAGNOSTIC, not a pass/fail criterion: if the
+#   fixed-scale and constant-RMS arms disagree in verdict, the finding reports
+#   the disagreement and the unit is INDETERMINATE per T4(i)'s spirit — stated
+#   here in advance so the disagreement cannot be quietly dropped.
+#
+# WHAT THIS UNIT CANNOT SETTLE (stated before the run so no one reads the
+# result as bigger than it is): N stays at 2. m stops at 6 (36 joint states for
+# a dense Glauber generator). lam is fixed at 1.2. A finite-size test over m at
+# N=2 says nothing about the N-scaling, which is a separate registered unit.
+defaults:
+  - _self_
+
+seed: 20260812
+lam: 1.2
+
+sweep:
+  levels: [0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95]
+  games_per_level: 100     # identical to dynamics_calibration, so the m=3 row
+                           # is a direct replication of F-0004 on a fresh
+                           # seed stream rather than a new design
+  m_values: [3, 4, 5, 6]   # N=2 players; m=6 => 36 joint states, dense
+                           # Glauber generator, ~0.26 s/game measured
+  scale: 2.0
+
+criteria:
+  m_values: [3, 4, 5, 6]
+  alpha_lo: 0.05
+  alpha_hi: 0.95
+  # T1
+  mono_tol: 0.05
+  recovery_delta_refute: 0.40
+  recovery_delta_survive: 0.20
+  survive_ceiling: 0.35
+  # T2
+  collapse_drop_max: -0.40
+  baseline_rho_min: 0.55
+
+bootstrap:
+  n_resamples: 2000
+  ci_level: 0.95
+  seed_offset: 770000
+
+diagnostics:
+  max_near_critical_frac: 0.10
+
+scale_control:                 # D1
+  enabled: true
+  levels: [0.05, 0.95]
+  rule: "scale(m) = sweep.scale * m / min(m_values)  # constant per-entry payoff RMS"
+  seed_offset: 310000
+
+n_justification: >
+  100 games per (m, alpha) cell, 4 m-values x 10 levels = 4000 games in the
+  main sweep plus 800 in the D1 scale control. The Spearman null SD at n=100 is
+  1/sqrt(n-1) = 0.100, so the survival ceiling 0.35 sits 3.5 null-SD from zero
+  and the registered recovery delta 0.40 is ~2.8 SD of a DIFFERENCE of two
+  independent rho estimates (sqrt(2) x 0.100 = 0.142) — the primary criterion
+  is therefore resolvable at this n rather than being a coin flip dressed as a
+  threshold. n = 100 is not a free choice: it matches F-0004's design exactly,
+  which is what makes the m=3 row a replication and the m-sweep a paired
+  comparison against a known number rather than an isolated reading. The T3
+  bootstrap (2000 resamples) gives a percentile CI whose Monte-Carlo error is
+  ~1/sqrt(2000) = 2% of the CI width, negligible against the 0.14 sampling SD
+  that criterion actually contends with. Compute is the binding constraint on
+  going further: per-game cost is 0.04 s (m=3) to 0.26 s (m=6), so the full
+  design is ~11 min and doubling n would not change which criteria are
+  resolvable, only their margins.

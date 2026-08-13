@@ -1,0 +1,27 @@
+{
+  "fig1": [
+    "schematic (no artifact)"
+  ],
+  "fig2": [
+    "decoupling_mechanism",
+    "estimator_alpha_sweep",
+    "pricing_passthrough_R",
+    "electricity_irreversibility_dam",
+    "blotto_readings",
+    "sioux_falls_calibration"
+  ],
+  "fig3": [
+    "chain_comovement",
+    "decoupling_mechanism"
+  ],
+  "fig4": [
+    "phase_map_surface",
+    "frontier_lambda_c"
+  ],
+  "fig5": [
+    "estimator_alpha_sweep"
+  ],
+  "fig6": [
+    "plane_robustness"
+  ]
+}

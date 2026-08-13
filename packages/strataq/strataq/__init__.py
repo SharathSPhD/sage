@@ -20,7 +20,8 @@ from jax import config as _jax_config
 
 _jax_config.update("jax_enable_x64", True)  # type: ignore[no-untyped-call]
 
-from strataq.core.protocols import (  # noqa: E402  (x64 config must precede any jax use)
+from strataq import games  # noqa: E402  (x64 config must precede any jax use)
+from strataq.core.protocols import (  # noqa: E402
     ActionGridBuilder,
     ConjugateFieldSpec,
     DatasetLoader,
@@ -30,6 +31,7 @@ from strataq.core.protocols import (  # noqa: E402  (x64 config must precede any
 )
 from strataq.core.solve.fixedpoint import logit_qre  # noqa: E402
 from strataq.core.types import Game, QREPoint, SpectrumInfo  # noqa: E402
+from strataq.diagnose import Diagnosis, diagnose  # noqa: E402
 from strataq.finite.decompose.generate import make_family  # noqa: E402
 from strataq.finite.decompose.hodge import alpha, hodge_decompose  # noqa: E402
 from strataq.finite.games.normalise import normalise  # noqa: E402
@@ -43,6 +45,7 @@ __all__ = [
     "ConjugateFieldSpec",
     "DatasetLoader",
     "DenseTensorGame",
+    "Diagnosis",
     "Engine",
     "Game",
     "LearnPageSpec",
@@ -54,6 +57,8 @@ __all__ = [
     "chi_equilibrium",
     "chi_partial",
     "critical_lambda",
+    "diagnose",
+    "games",
     "hodge_decompose",
     "logit_qre",
     "make_family",

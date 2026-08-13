@@ -2,6 +2,47 @@
 
 > SAGE — a computational framework for stochastic strategic interaction: Nash and quantal-response equilibria, potential and non-potential games, entropy-regularised response, and non-equilibrium strategic dynamics, with empirical estimation across pricing, energy, congestion and allocation domains.
 
+## One call, one verdict
+
+```sh
+pip install strataq
+```
+
+```python
+import strataq
+
+game = strataq.games.rock_paper_scissors()  # or your own payoff arrays
+print(strataq.diagnose(game, lam=1.5))
+```
+
+```text
+Diagnosis: WHIRLPOOL  (quadrant IV)
+  response asymmetry   R = 0.866
+  dissipation        EPR = 2.239
+  harmonic fraction    a = 1
+  read at lambda = 1.5 - tier: certified - 0 refusal(s), 1 warning(s)
+  -> Both structure and timing matter. This is the regime where optimising against a static model ...
+  (call .explain() for the evidence, .snippet() to reproduce)
+```
+
+No data file, no solver ceremony, and the answer is a sentence rather than an array.
+`diagnose()` locates a system in the **irreversibility plane** — response asymmetry `R`
+against dissipation `EPR` — and the reading stays recoverable: `.explain()` prints every
+band, null, warning and refusal behind the verdict, `.snippet()` prints code that
+reproduces exactly this reading, and `.plot()` puts the point on the reference cloud
+(needs `pip install "strataq[viz]"`). Where a coordinate is not identified by your data
+the verdict degrades to `undetermined` plus the list of quadrants still live — a bound,
+never a guess. It also takes readings you already have: `strataq.diagnose(chi=..., chi_se=...,
+series=...)`.
+
+**strataq validates against `pygambit`, it does not compete with it.** Gambit is the
+reference implementation for equilibrium computation, and strataq's solvers are tested
+against it as an oracle. What strataq adds is the layer Gambit does not have: the
+response, decomposition and dissipation instruments, and a verdict on top of them.
+
+**Wheels are pure Python on top of JAX** — no C or Fortran extension is built or shipped,
+so `pip install strataq` needs no compiler and works on every platform JAX supports.
+
 | Level | Name | Where |
 |---|---|---|
 | Umbrella project / monorepo | **SAGE** | this repo |

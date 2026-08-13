@@ -1,0 +1,63 @@
+\section{Provenance of Every Number}
+\label{app:prov}
+
+Each row names the committed artifact a figure or claim is drawn from. Artifacts carry their
+metrics, effect sizes with confidence intervals, $n$ with a justification, seed, and a
+reference to the configuration whose commit was verified landed \emph{before} the run.
+
+\begin{table}[H]
+\caption{Claim-to-artifact map.}
+\label{tab:prov}
+\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Claim / figure} & \textbf{Artifact} & \textbf{Seed} \\
+\midrule
+Unconditional $\rho_S=0.9927$; within-level table; Fig.~\ref{fig:collapse}a & \texttt{chain\_comovement} & 20260808 \\
+Kill-shots H5/H5b/H6, D1 control; Tables~\ref{tab:finitesize},~\ref{tab:d1}; Fig.~\ref{fig:robustness} & \texttt{plane\_robustness} & 20260812 \\
+$\rho_S(\R,\alpha)=0.9819$ & \texttt{reciprocity\_alpha\_sweep} & 20260808 \\
+H2a refutation, H2b mechanism; Fig.~\ref{fig:collapse}b & \texttt{decoupling\_mechanism} & 20260808 \\
+Exact / KLD / TUR sweep; Figs.~\ref{fig:plane},~\ref{fig:observability} & \texttt{estimator\_alpha\_sweep} & --- \\
+$\rho(SB)$ surface; Fig.~\ref{fig:frontier}a & \texttt{phase\_map\_surface} & --- \\
+$\lambda_c(\alpha)$; Fig.~\ref{fig:frontier}b & \texttt{frontier\_lambda\_c} & 20260811 \\
+Sioux Falls calibration & \texttt{sioux\_falls\_calibration} & 20260808 \\
+Blotto readings & \texttt{blotto\_readings} & 20260808 \\
+Retail $\R=0.0011$ & \texttt{pricing\_passthrough\_R} & 20260811 \\
+Electricity $\approx1.07$ nats/day & \texttt{electricity\_irreversibility\_dam} & 20260811 \\
+Potential-game zeros $\R\le9\times10^{-17}$ & \texttt{reciprocity\_potential} & 20260808 \\
+$\chieq$ vs finite differences, $1.3\times10^{-8}$ & \texttt{chi\_fd\_agreement} & 20260808 \\
+Reference-solver agreement, $10^{-8}$ & \texttt{gambit\_agreement} & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Kill-shot registration, and the substitution inside it.} The criteria for
+H5, H5b, H6 and the D1 payoff-scale control were written into \texttt{plane\_robustness}'s
+configuration and committed \emph{before} the experiment file implementing them existed;
+neither that file nor its predecessor was amended after a result existed, and the branch that
+fires when the design cannot discriminate (\emph{indeterminate}) was registered alongside the
+pass and fail branches so the run could not be read as confirmation by default. \emph{It is
+not, however, true that this unit had a single criterion throughout.} H5 was first registered
+in \texttt{plane\_finite\_size.yaml} (committed 23:02:25 on 2026-08-12), an experiment
+implementing it was executed at 23:04:49 and again at 23:17:47, and
+\texttt{plane\_robustness.yaml} was committed at 23:26:36 with a different deciding statistic
+for the same kill-shot. The superseded configuration, its experiment and its resolved
+configuration are committed alongside the artifacts below, so the ordering of registration
+and execution is checkable from the repository rather than asserted here; the verdict this
+paper reports for H5 is the earlier registration's. The $m=3$ cells of that sweep reconstruct the
+\texttt{chain\_comovement} seed stream exactly, so the first $100$ games of each are the
+same games: the measured deviation from the published values at $\alpha\in\{0.85,0.95\}$ is
+$0.000$.
+
+\noindent\textbf{Corrections carried in the record.} Five claims made earlier in this
+programme were withdrawn and the withdrawals are part of the evidence: a reading of the
+finite-size sweep as a narrow \emph{survival}, corrected to \emph{indeterminate} once the
+earlier registration of the same criterion was accounted for; a statement that the registered
+payoff-scale control removes the $m$-trend entirely, corrected to \emph{largely, not wholly};
+an early statement
+that $\R$ is $\lambda$-free (only the zero test is); an intermediate ``certified null''
+verdict on a five-minute electricity series that was retracted when the null class was shown
+not to bracket the data; and a transcription of the stratified sweep's precision as
+$\lambda=1.5$, which the resolved configuration of \texttt{chain\_comovement} shows to be
+$\lambda=1.2$ (Table~\ref{tab:collapse} carries the corrected value, and the robustness
+sweep was run at $1.2$ for that reason). All three are reflected in the text above.
