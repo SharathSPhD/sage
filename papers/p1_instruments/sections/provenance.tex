@@ -1,5 +1,5 @@
 Every quantitative statement in this paper maps to a machine-readable artifact
-in \texttt{benchmarks/results/} (JSON, schema
+in \texttt{benchmarks/\allowbreak results/} (JSON, schema
 \texttt{strataq\_bench.BenchmarkResult}: metrics, effect sizes with intervals,
 $n$, $n$-justification, seed, configuration reference, library version,
 timestamp). All regenerate with \texttt{make reproduce} (seed 20260808 unless
@@ -7,8 +7,9 @@ stated). The gate records in \texttt{gates/*.yaml} carry, for each unit, the
 claim, the section-by-section pass state, and the adversarial reviewer's
 objections with their dispositions.
 
-\begin{center}\small
-\begin{tabular}{ll}
+\begin{center}\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{6.9cm}>{\raggedright\arraybackslash}p{8.3cm}@{}}
 \toprule
 Statement in text & Artifact \\
 \midrule

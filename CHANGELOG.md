@@ -19,6 +19,32 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: Se
 
 ### Added
 
+- **The two adversarial reviews ADR-0014 and ADR-0015 recorded as owed were run (2026-08-13), and
+  `gates/science.plane.yaml` and `gates/science.plane.nplayers.yaml` are now GREEN — 28 units, all
+  green.** Unit **science.plane** (R11): **GRANTED-CONDITIONAL**. Its one runnable condition, C-1,
+  was registered in `config/experiments/plane_robustness.yaml` *before* being computed and then
+  run — an interval on the **binding** registration's deciding statistic, which red-team O-2 had
+  demanded for the *replacement's* statistic only. Result: `delta_rho_hi` = +0.3639
+  [+0.168, +0.545], **P(> 0.40 refutation bar) = 0.356**, P(<= 0.20 survival bar) = 0.050, a margin
+  of 0.37 bootstrap SD. K2-T1's INDETERMINATE is therefore a **non-resolution**, not a near-miss:
+  the finite-size criterion cannot discriminate in either direction at n = 200. Unit
+  **science.plane.nplayers** (R12): **GRANTED** at its first review, with four new objections
+  dispositioned (the "widest margin" framing on a ceiling measured where the precondition failed;
+  the mis-attribution of F-0024's correction; what the seven exact replication anchors are evidence
+  of; and the estimated-not-exact lambda_bar match). Both gates carry a `reviewer_note` disclosing
+  that the reviews were artefact-only but that reviewer and disposition-applier were the same agent.
+- **F-0025 — the K4 prior-art re-audit, finally run** (R11 objection O-7, open since 2026-08-13
+  morning). Two-part outcome. The nearest live game-theory work (Legacci-Mertikopoulos-Pradelski,
+  arXiv:2405.07224) is orthogonal, confirmed by a first-hand full-text check rather than inherited
+  — as are Candogan et al. (arXiv:1005.2405) and Balduzzi et al. (arXiv:1802.05642), the last of
+  which has the symmetric/antisymmetric Jacobian split but no thermodynamics. **But the structural
+  assertion is not novel**: Baiesi-Maes-Wynants (PRL 103, 010602, 2009) established for Markov jump
+  processes that response is not a functional of entropy production alone, and Harada-Sasa
+  (PRL 95, 130602, 2005) established the exact opposite equality for Langevin systems. The
+  contribution is the instantiation on strategic games, the Hodge coordinate and the measurement;
+  `memory/claims.md` R4 gains a binding priority sentence and the claim may never be written as a
+  structural discovery.
+
 - Unit **science.plane.nplayers** (R12) — the N-scaling kill-shot on the two-coordinate claim (F-0023, with F-0024 correcting F-0022). The claim does not die; the *instrument* is narrowed: **low-alpha co-movement of EPR and R is a two-player fact** (rho_S at alpha=0.05 falls +0.847 -> +0.378 -> +0.172 across N=2,3,4 at matched effective precision), so kill-shot A is INDETERMINATE — its registered precondition rho_lo >= 0.55 FAILS at N>=3 and a size with no baseline coupling has no collapse to measure. Kill-shot B (numerator across m in {3..6}) HOLDS in both arms with a negative upper interval endpoint everywhere, and the paired design bounds numerator-vs-ratio disagreement at 0.012. Seven replication anchors reproduce F-0004 and F-0007 to exactly 0.000000. `gates/science.plane.nplayers.yaml` is on the board and is **RED**: no adversarial review of this unit has taken place (ADR-0015).
 - Unit **science.plane** (R11) — the finite-size and solver kill-shots on the two-coordinate claim (F-0022). K2-T1 is **INDETERMINATE**, not a survival: this unit has two registrations of the same criterion, the earlier binds, and on the data it resolves neither branch; the replacement's deciding statistic carries a bootstrap interval crossing its own bar. K3 is reported as the solver-noise **diagnostic** it is (arms perturb R by ~1e-12, twelve orders below the rank spacing). What the claim rests on is the ceiling: rho_S(EPR,R) at alpha=0.95 has ci_high <= 0.35 at every m, worst +0.156, intervals disjoint. `gates/science.plane.yaml` is on the board and is **RED**: the red team returned WITHHELD and the corrected unit was never re-reviewed (ADR-0014, ADR-0015).
 - **`/demos` — four explorables, each running its own mathematics live in the page.** `/demos/you-vs-the-model` fits the visitor's own lambda by grid-search maximum likelihood from their rock-paper-scissors choices, places it against the calibration bench and the Goeree-Holt subjects, then predicts their next move and scores itself. `/demos/whirlpool` animates net probability current on the nine joint profiles of a 3x3 game with Schnakenberg entropy production live, and reads exactly zero at the potential end. `/demos/ten-little-treasures` puts the reader's guess against Nash and against Goeree & Holt's (AER 2001) published choice frequencies, then slides a logit fit toward the data and states plainly how far short it stops. `/demos/the-plane` is the (R, sigma_EP) plane with Sioux Falls, Dominick's, CAISO, RPS and Blotto as landmarks, each touchable for the `benchmarks/results/` file its number was read from, and quadrant III marked empty. New `apps/web/lib/demos/{gametheory,landmarks}.ts`; the client R implementation reproduces `reciprocity_harmonic.json` (`R_rps_3 = 0.6928203230275507`, `R_rps_5 = 0.434657051228945`) to float64.

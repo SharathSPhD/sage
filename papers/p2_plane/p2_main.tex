@@ -17,8 +17,11 @@
 
 % ===== [PORTABLE PREAMBLE] =================================================
 \documentclass[10pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage[margin=2.4cm]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
+\usepackage{array}
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage[table]{xcolor}
@@ -78,7 +81,14 @@ its own test: the numerator $\|\chi-\chi^{\top}\|_F$ alone reaches $\rho_S=-0.36
 renormalisation of the response matrix recovers the dissipation ordering. This paper is
 not a claim that either meter is wrong. It is a claim about \emph{dimension}: distance from
 equilibrium is not a scalar for strategic systems, and the $(\R,\EPR)$ plane---not either
-axis---is the space in which an observed system should be classified. Both pre-registered
+axis---is the space in which an observed system should be classified.
+\emph{The structural possibility of such a split is not new and is not claimed here:} for
+Markov jump processes the response is known to carry a time-symmetric frenetic term that
+entropy production does not see~\cite{baiesi2009}, and in the Langevin class the two are tied
+by an exact equality~\cite{haradasasa2005}, so inequivalence is class-dependent. What is new
+is the instantiation of both meters on finite strategic-form games, the Hodge coordinate
+$\alpha$ as the variable that parameterises the breakdown, and the measurement of it---both
+coordinates estimable from observation without knowledge of payoffs. Both pre-registered
 kill-shots on that claim have now been run ($5200$ games, $6000$ solves).
 \emph{Finite size: the outcome is \textbf{indeterminate}, and we report why rather than
 around it.} Two registrations of this criterion exist. The earlier one adjudicates the raw
@@ -156,6 +166,8 @@ rationality
 \bibitem{legacci2024} Legacci, D.; Mertikopoulos, P.; Pradelski, B. A geometric decomposition of finite games: Convergence vs.\ recurrence under exponential weights. \emph{arXiv} \textbf{2024}, arXiv:2405.07224.
 \bibitem{schnakenberg1976} Schnakenberg, J. Network theory of microscopic and macroscopic behavior of master equation systems. \emph{Rev. Mod. Phys.} \textbf{1976}, \emph{48}, 571--585.
 \bibitem{seifert2012} Seifert, U. Stochastic thermodynamics, fluctuation theorems and molecular machines. \emph{Rep. Prog. Phys.} \textbf{2012}, \emph{75}, 126001.
+\bibitem{baiesi2009} Baiesi, M.; Maes, C.; Wynants, B. Fluctuations and response of nonequilibrium states. \emph{Phys. Rev. Lett.} \textbf{2009}, \emph{103}, 010602.
+\bibitem{haradasasa2005} Harada, T.; Sasa, S.-i. Equality connecting energy dissipation with a violation of the fluctuation-response relation. \emph{Phys. Rev. Lett.} \textbf{2005}, \emph{95}, 130602.
 \bibitem{seifert2026} Seifert, U. Universal bounds on entropy production from fluctuating coarse-grained trajectories. \emph{Nat. Rev. Phys.} \textbf{2026}, \emph{8}, 493--507.
 \bibitem{barato2015} Barato, A.C.; Seifert, U. Thermodynamic uncertainty relation for biomolecular processes. \emph{Phys. Rev. Lett.} \textbf{2015}, \emph{114}, 158101.
 \bibitem{otsubo2022} Otsubo, S.; Manikandan, S.K.; Sagawa, T.; Krishnamurthy, S. Estimating time-dependent entropy production from non-equilibrium trajectories. \emph{Commun. Phys.} \textbf{2022}, \emph{5}, 11.

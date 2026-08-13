@@ -1,7 +1,10 @@
 \documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage[margin=1.1in]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[numbers]{natbib}
+\usepackage{array}
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
@@ -49,8 +52,13 @@ with $\lambda$ and --- at fixed payoff scale --- with $m$, and it is quoted
 only with its $(m,\lambda,N)$ attached. A mechanism experiment shows the
 collapse is structural: the equilibrium susceptibility is a local derivative,
 the entropy production a global flux functional, and no renormalisation of the
-former recovers the latter's ordering. A repair hypothesis we proposed is
-refuted by its own preregistered test. \textbf{Everything in this arc is
+former recovers the latter's ordering. \emph{That such an inequivalence is
+possible is not new and is not claimed here}: it is established for Markov jump
+processes \citep{baiesi2009} and is exactly false in the Langevin class
+\citep{haradasasa2005}. What is new is the instantiation on strategic games,
+the Hodge coordinate $\alpha$ along which the breakdown is parameterised, and
+the measurement of where along it the two meters part. A repair hypothesis we
+proposed is refuted by its own preregistered test. \textbf{Everything in this arc is
 $N=2$}: at three and four players the meters do not couple at low $\alpha$
 either, so the stratified design has no baseline to collapse from and the
 result does not transfer.
@@ -93,6 +101,8 @@ tier and its falsifier.
 \bibitem[Xu and Wang(2011)]{xu2011} B.~Xu, Z.~Wang. Evolutionary dynamical patterns of `coyness and philandering': evidence from experimental economics. arXiv:1107.6043, 2011.
 \bibitem[Legacci et al.(2024)]{legacci2024} D.~Legacci, P.~Mertikopoulos, B.~Pradelski. A geometric decomposition of finite games: convergence vs.\ recurrence under exponential weights. arXiv:2405.07224, 2024.
 \bibitem[Hommes and Ochea(2012)]{hommes2012} C.~Hommes, M.~Ochea. Multiple equilibria and limit cycles in evolutionary games with logit dynamics. \emph{Games Econ.\ Behav.}, 74:434--441, 2012.
+\bibitem[Baiesi et al.(2009)]{baiesi2009} M.~Baiesi, C.~Maes, B.~Wynants. Fluctuations and response of nonequilibrium states. \emph{Phys.\ Rev.\ Lett.}, 103:010602, 2009.
+\bibitem[Harada and Sasa(2005)]{haradasasa2005} T.~Harada, S.-i. Sasa. Equality connecting energy dissipation with a violation of the fluctuation-response relation. \emph{Phys.\ Rev.\ Lett.}, 95:130602, 2005.
 \bibitem[Hatano and Sasa(2001)]{hatanosasa2001} T.~Hatano, S.~Sasa. Steady-state thermodynamics of Langevin systems. \emph{Phys.\ Rev.\ Lett.}, 86:3463, 2001.
 \bibitem[Esposito and Van den Broeck(2010)]{espositovdb2010} M.~Esposito, C.~Van den Broeck. Three faces of the second law. \emph{Phys.\ Rev.\ E}, 82:011143, 2010.
 \bibitem[Sathish(2026)]{p1} S.~Sathish. strataq: measurement instruments for stochastic strategic systems. Working draft, 2026. In the same repository.

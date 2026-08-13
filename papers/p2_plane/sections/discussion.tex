@@ -7,12 +7,17 @@ field over the entire profile space. Near $\alpha=0$ the potential component mod
 which is why they track: the potential is a scalar field whose gradient governs the local
 response and whose level sets govern the stationary measure. As the potential component
 vanishes, nothing remains to force a local object and a global object into agreement, and
-they stop agreeing. This is not a statement peculiar to games. It predicts that in any
-system where a local susceptibility and a global flux functional are both used as proxies for
-irreversibility, the two will diverge precisely where the underlying potential structure
-does---and it says where to look.
+they stop agreeing. This is not a statement peculiar to games, and at the structural level it
+is not a new one: for Markov jump processes generally, the response carries a time-symmetric
+frenetic contribution that entropy production does not see~\cite{baiesi2009}, and in the
+Langevin class the two are instead tied together by an exact
+equality~\cite{haradasasa2005}. What the strategic setting adds is a handle. It predicts
+that in any system where a local susceptibility and a global flux functional are both used as
+proxies for irreversibility, the two will diverge precisely where the underlying potential
+structure does---and, because $\alpha$ is computable from the game, it says \emph{where} to
+look rather than only \emph{that} one should.
 
-\subsection{What $\R$ is not}
+\subsection{What \texorpdfstring{$\R$}{R} is not}
 $\R$ is not a measure of dissipation, and this paper's main practical warning is against
 reading it as one. It is also not a fraction: it is a ratio of Frobenius norms, unbounded
 above, and values greater than $1$ occur (matching pennies reads $1.2$). Its \emph{zero
@@ -76,10 +81,16 @@ the data's own persistence, or it is not yet a claim about the system.
 \subsection{Theoretical connections}
 The zero of the local axis is the strategic instance of Onsager reciprocity, and the zero of
 the global axis is detailed balance; that they coincide in potential games is the exact
-content of the Gibbs correspondence. Away from it, the structure resembles the failure of
-the fluctuation--dissipation theorem in a non-equilibrium steady state---with the important
-difference that here the quantity governing the failure, $\alpha$, is itself computable from
-the game, so the breakdown can be parameterised rather than merely observed.
+content of the Gibbs correspondence. Away from it, the structure is the familiar failure of
+the fluctuation--dissipation theorem in a non-equilibrium steady state, and the form that
+failure takes for a Markov jump process is known exactly: response splits into an entropic
+and a frenetic part~\cite{baiesi2009}, which is why no amount of dissipation information
+determines it. The contrast with the Langevin case is instructive rather than incidental---
+there the integrated violation \emph{is} the dissipation~\cite{haradasasa2005}, so a
+practitioner's intuition that ``FDT violation measures dissipation'' is correct in one class
+and wrong in ours. The difference this paper adds is that the quantity governing the
+failure, $\alpha$, is itself computable from the game, so the breakdown can be parameterised
+and measured rather than merely observed.
 
 \subsection{Limitations}
 The finite-size limitation has been tested rather than merely acknowledged, and the outcome
@@ -194,9 +205,27 @@ modelling assumption, not a data feature; the near-symmetric reading is consiste
 single retailer optimising a category, which is what was predicted, but it is not evidence
 about rival firms.
 
-Finally, prior art. The nearest live work~\cite{legacci2024} was assessed as orthogonal, but
-that assessment is inherited from an internal literature audit and has not been independently
-re-run for this paper. It is registered as an open check.
+Finally, prior art---and this one changed the claim rather than qualifying it. The audit
+registered as an open check in the previous version has since been run first-hand, on the
+papers' own full texts rather than on an inherited verdict, and it returned two things. The
+negative half held: the nearest live game-theory work~\cite{legacci2024} contains none of the
+thermodynamic vocabulary and is confirmed orthogonal, subject to the terminological collision
+recorded in Section~\ref{sec:background}; the closest structural analogue to $\R$ anywhere in
+the games literature, the symmetric/antisymmetric Jacobian split of Balduzzi et
+al.~\cite{balduzzi2018}, has no thermodynamics in it; and no pairing of a response-asymmetry
+meter with a dissipation meter appears in the population-games
+literature~\cite{sandholm2010}. \textbf{The positive half is the one that binds.} The
+structural assertion---that a local response object and a global dissipation object are not
+the same information---is \emph{not} novel: it is Baiesi, Maes and
+Wynants~\cite{baiesi2009} for Markov jump processes, the same class as the generator used
+here, and it is \emph{false} in the Langevin class by Harada and Sasa~\cite{haradasasa2005}.
+The claim of this paper has been narrowed accordingly wherever it appears (abstract,
+Section~\ref{sec:intro}, Section~\ref{sec:bg:priorart}, Section~\ref{sec:conclusions}): what
+is ours is the instantiation on strategic games, the Hodge coordinate that parameterises the
+breakdown, and the measurement of how much association survives conditioning---not the
+structure. The audit remains a negative result in proportion to its search: eight query
+families and four full-text checks are recorded in the repository's findings log so that a
+later reader can extend the search rather than repeat it.
 
 \subsection{Broader relevance}
 The two coordinates require no knowledge of payoffs, which is what makes them usable outside
