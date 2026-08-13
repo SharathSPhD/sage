@@ -1,50 +1,42 @@
 import Link from "next/link";
-import { SolveStudio } from "./solve/SolveStudio";
-import { ENGINE_SITUATIONS, SITUATIONS } from "../lib/situations";
-
-const GALLERY = [
-  ...SITUATIONS.map((s) => ({ id: s.id, name: s.name, decision: s.decision, href: s.href, illustrative: s.illustrative })),
-  ...ENGINE_SITUATIONS.map((s) => ({ id: s.id, name: s.name, decision: s.decision, href: s.href, illustrative: s.illustrative })),
-];
+import { Workbench } from "./components/solvers/Workbench";
+import { PROBLEMS } from "../lib/catalogue";
 
 export default function Home() {
   return (
     <div className="wrap">
       <section className="hero">
-        <h1>Decide, when the other side is deciding too.</h1>
+        <h1>Solve the problem where the other side is optimising too.</h1>
         <p className="lede">
-          Give it the numbers you already have — your cost, their likely cost, what you can charge. Get the move to
-          make, what they are likely to do, what it is worth, and what would change the answer. It all moves as you
-          type.
+          Enter costs, a grid and a demand model; get the price, bid, offer or split to set, what it earns, and how it
+          moves when an input does. Answers come from the same solver the Python library calls.
         </p>
       </section>
 
-      <SolveStudio />
+      <Workbench />
 
       <section className="home-gallery" aria-labelledby="gallery-heading">
-        <h2 id="gallery-heading">Other situations, same machinery</h2>
+        <h2 id="gallery-heading">Problem types</h2>
         <div className="gallery">
-          {GALLERY.map((s) => (
-            <Link key={s.id} href={s.href} className="card gallery-item">
-              <h3>{s.name}</h3>
-              <p className="gallery-decision">{s.decision}</p>
-              <span className="badge" data-tone={s.illustrative ? undefined : "ok"}>
-                {s.illustrative ? "illustrative numbers" : "measured numbers"}
-              </span>
+          {PROBLEMS.map((p) => (
+            <Link key={p.id} href={p.href} className="card gallery-item">
+              <h3>{p.name}</h3>
+              <p className="gallery-decision">{p.question}</p>
+              <p className="gallery-setting">Returns {p.returns}</p>
+              <span className="badge">{p.endpoint}</span>
             </Link>
           ))}
         </div>
       </section>
 
       <section className="card home-play">
-        <h2>Does any of this beat what you already do?</h2>
+        <h2>Test a rule over repeated rounds</h2>
         <p>
-          Run a hundred rounds against cost-plus, matching the competitor, reacting to their last move, and assuming
-          they are perfect. Same rival, same luck, one line each. Some of the time a simpler rule wins — you will see
-          which, and when.
+          A single solve answers one round. The backtest runs a hundred against a simulated rival and compares the
+          solver&apos;s move with cost-plus, matching, best-reply-to-last and always-Nash on the same draws.
         </p>
         <Link href="/play">
-          <button data-primary="true">Run it against the usual rules</button>
+          <button data-primary="true">Open the backtest</button>
         </Link>
       </section>
     </div>

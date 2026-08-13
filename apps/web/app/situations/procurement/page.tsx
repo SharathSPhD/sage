@@ -1,41 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SolveStudio } from "../../solve/SolveStudio";
-import { getSituation } from "../../../lib/situations";
-
-const S = getSituation("procurement");
+import { AuctionSolver } from "../../components/solvers/AuctionSolver";
 
 export const metadata: Metadata = {
-  title: "Sealed bid for a contract — SAGE",
-  description: S.decision,
+  title: "Auction and tender — SAGE",
+  description: "Sealed-bid tender or sale: the bid to submit, expected surplus and win probability.",
 };
 
-export default function ProcurementSituation() {
+export default function AuctionPage() {
   return (
     <div className="wrap situation-page">
       <p className="crumb">
-        <Link href="/situations">All situations</Link>
+        <Link href="/situations">All problems</Link>
       </p>
-      <h1 className="surface-title">{S.name}</h1>
-      <p className="surface-lede">{S.setting}</p>
-      <SolveStudio fixedSituation="procurement" />
-      <section className="try-this" aria-labelledby="try-heading">
-        <h2 id="try-heading">Three things worth trying</h2>
-        <div className="try-grid">
-          {S.tryThis.map((t) => (
-            <article key={t.title} className="card">
-              <h3>{t.title}</h3>
-              <p>{t.body}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+      <h1 className="surface-title">Auction and tender</h1>
+      <p className="surface-lede">
+        One sealed round against one credible rival. In a tender the lowest eligible bid wins and the reserve is the
+        buyer&apos;s ceiling; in a sale the highest wins and the reserve is a floor.
+      </p>
+      <AuctionSolver />
       <section className="card next-step">
-        <h2>Then what</h2>
+        <h2>In Python</h2>
         <p>
-          One tender is one draw. If you bid against the same rival repeatedly,{" "}
-          <Link href="/play">watch fifty rounds</Link> — the bidding rule that wins a single tender is often not the one
-          that wins the year.
+          <code>sq.AuctionProblem(costs=[85000, 88000], grid=(88000, 116000, 4000), reserve=112000, precision=5e-4).solve()</code>{" "}
+          returns the same solution. Pass <code>values=</code> instead of <code>costs=</code> for a sale.
         </p>
       </section>
     </div>

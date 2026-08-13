@@ -963,22 +963,7 @@ table { border-collapse: collapse; }
 .controls-actions button { min-height: 44px; }
 .control-link { font-size: 0.9rem; }
 
-/* ---- provenance and honesty ---- */
-
-.source-note {
-  font-size: 0.83rem;
-  color: var(--text-dim);
-  line-height: 1.6;
-  max-width: 52rem;
-  margin: 0.4rem 0 0;
-  padding: 0.7rem 0.95rem;
-  border-left: 3px solid var(--border-bright);
-  background: var(--panel-2);
-  border-radius: 0 7px 7px 0;
-}
-.source-note[data-illustrative="true"] { border-left-color: var(--amber); }
-.source-note[data-illustrative="false"] { border-left-color: var(--accent-dim); }
-.source-note strong { color: var(--text); }
+/* ---- notes under a result ---- */
 
 .escape-hatch { font-size: 0.88rem; color: var(--text-dim); margin: 0.2rem 0 0; }
 .escape-hatch a { text-decoration: underline; text-underline-offset: 3px; }
@@ -1205,3 +1190,64 @@ a.gallery-item:hover { border-color: var(--accent-dim); transform: translateY(-2
 .research-crumb { font-size: 0.82rem; margin-bottom: 1rem; }
 .research-crumb a { text-decoration: underline; text-underline-offset: 3px; }
 .research-crumb-note { color: var(--text-dim); }
+
+
+/* ---- solver surface ---- */
+
+input[type="number"] {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.88rem;
+  color: var(--text);
+  background: var(--bg-raised);
+  border: 1px solid var(--border-bright);
+  border-radius: 7px;
+  padding: 0.35rem 0.5rem;
+}
+
+.knob-row { display: flex; align-items: center; gap: 0.7rem; }
+.knob-row .knob-number { width: 7.2rem; min-height: 34px; flex: none; }
+.knob-row input[type="range"] { flex: 1; min-width: 4rem; }
+.knob-label label { font-size: 0.85rem; color: var(--text); }
+
+/* A quiet working indicator, not a status claim: it says "solving" while a
+   request is in flight and nothing at all when the answer is current. */
+.solve-state {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  min-width: 4.5rem;
+  text-align: right;
+}
+.solve-state[data-busy="false"] { visibility: hidden; }
+
+/* The model line, in the idiom of a stats package printing what it fitted. */
+.model-line {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1.65;
+  color: var(--text-dim);
+  background: var(--panel-2);
+  border-left: 3px solid var(--border-bright);
+  border-radius: 0 7px 7px 0;
+  padding: 0.6rem 0.9rem;
+  margin: 0.2rem 0 0;
+  max-width: 60rem;
+}
+.model-line a { text-decoration: underline; text-underline-offset: 3px; }
+
+.curve-chart { width: 100%; height: auto; margin: 0.2rem 0 0.8rem; }
+
+.sweep-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.sweep-head h3 { margin: 0 0 0.6rem; }
+.sweep-pick select { min-height: 40px; font-size: 0.85rem; }
+
+.alt-table tbody tr[data-changed="true"] th,
+.alt-table tbody tr[data-changed="true"] td { color: var(--amber); }
+.alt-table tbody tr[data-changed="true"] th { border-left: 3px solid var(--amber); padding-left: 0.5rem; }
+
+.answer[aria-busy="true"] .answer-figures { opacity: 0.75; transition: opacity 120ms; }
+
+.gallery-item .badge { font-family: var(--mono); text-transform: none; letter-spacing: 0; }

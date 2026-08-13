@@ -1,34 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SolveStudio } from "../../solve/SolveStudio";
-import { getSituation } from "../../../lib/situations";
-
-const S = getSituation("standards");
+import { MatrixSolver } from "../../components/solvers/MatrixSolver";
 
 export const metadata: Metadata = {
-  title: "Which standard to back — SAGE",
-  description: S.decision,
+  title: "Payoff table — SAGE",
+  description: "A three-by-three payoff table of your own, solved for both sides' move distributions.",
 };
 
-export default function StandardsSituation() {
+export default function StandardsPage() {
   return (
     <div className="wrap situation-page">
       <p className="crumb">
-        <Link href="/situations">All situations</Link>
+        <Link href="/situations">All problems</Link>
       </p>
-      <h1 className="surface-title">{S.name}</h1>
-      <p className="surface-lede">{S.setting}</p>
-      <SolveStudio fixedSituation="standards" />
-      <section className="try-this" aria-labelledby="try-heading">
-        <h2 id="try-heading">Three things worth trying</h2>
-        <div className="try-grid">
-          {S.tryThis.map((t) => (
-            <article key={t.title} className="card">
-              <h3>{t.title}</h3>
-              <p>{t.body}</p>
-            </article>
-          ))}
-        </div>
+      <h1 className="surface-title">Payoff table</h1>
+      <p className="surface-lede">
+        Two suppliers each pick a format — a connector, a file spec, a schema. Agreement grows the market, the side
+        that switches pays for it. The payoffs are built from the five numbers below and solved as a table.
+      </p>
+      <MatrixSolver />
+      <section className="card next-step">
+        <h2>An arbitrary table</h2>
+        <p>
+          For any payoff tensor rather than this parameterisation, <Link href="/lab">the bench</Link> takes one
+          directly, and the Python library takes n-player tensors of any shape.
+        </p>
       </section>
     </div>
   );

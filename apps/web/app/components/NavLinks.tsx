@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Ordered by what a visitor came to do: solve one, browse the rest, race it,
-// learn the idea. Everything about the research programme lives one click
-// deeper, under /research.
+// Ordered by what a visitor came to do: solve one, pick a problem type, test a
+// rule over repeated rounds, read the theory. The research programme lives one
+// click deeper, under /research.
 const LINKS = [
   { href: "/solve", label: "Solve" },
-  { href: "/situations", label: "Situations" },
-  { href: "/play", label: "Play" },
+  { href: "/situations", label: "Problems" },
+  { href: "/play", label: "Backtest" },
   { href: "/learn", label: "Learn" },
   { href: "/research", label: "Research" },
 ];

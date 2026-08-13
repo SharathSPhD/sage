@@ -1,25 +1,22 @@
 "use client";
 
-/*
- * Five ways of deciding, the same rival, the same luck, fifty rounds.
+/* Five decision rules, one simulated rival, one seed, up to 120 rounds.
  *
- * Each policy plays its own copy of the situation against its own copy of the
- * rival, driven from one seeded random stream, so any gap between two lines is
- * the rule and not the draw. The environment can be changed mid-run; the
- * change lands on every policy at the same round and is marked on the chart.
- *
- * This is not rigged. When the rival is nearly deterministic, reacting to
- * their last move wins, and the page says so.
+ * Each rule plays its own copy of the situation against its own copy of the
+ * rival, driven from one seeded stream. The environment can be changed
+ * mid-run; the change lands on every rule at the same round and is marked on
+ * the chart.
  */
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { POLICIES, playRound, rng, type ArenaConfig, type PolicyId, type RoundState } from "../../lib/solve";
+import { POLICIES, playRound, rng, type ArenaConfig, type PolicyId, type RoundState } from "../../lib/backtest";
 import { SITUATIONS, getSituation } from "../../lib/situations";
 
 const W = 720;
 const H = 300;
 const PAD = { l: 58, r: 12, t: 14, b: 30 };
+const ROUNDS = 120;
 
 interface Marker {
   round: number;
@@ -30,9 +27,8 @@ export function Arena() {
   const [situationId, setSituationId] = useState("procurement");
   const situation = useMemo(() => getSituation(situationId), [situationId]);
 
-  // Keyed by situation for the same reason as the solve surface: one bag of
-  // numbers reset by an effect feeds the wrong situation's values into a
-  // payoff builder for one render.
+  // Keyed by situation: one bag of numbers reset by an effect would feed the
+  // wrong situation's values into a payoff builder for one render.
   const [byId, setById] = useState<Record<string, Record<string, number>>>({});
   const values = byId[situationId] ?? situation.defaults;
   const setValues = (v: Record<string, number>) => setById((b) => ({ ...b, [situationId]: v }));
@@ -61,10 +57,8 @@ export function Arena() {
     reset();
   }, [situationId, reset]);
 
-  // A run has a fixed length; stop cleanly rather than spinning an interval
-  // that does nothing.
   useEffect(() => {
-    if (history.length >= 120) setRunning(false);
+    if (history.length >= ROUNDS) setRunning(false);
   }, [history.length]);
 
   const step = useCallback(() => {
@@ -78,7 +72,7 @@ export function Arena() {
     if (!running) return;
     const id = setInterval(() => {
       setHistory((h) => {
-        if (h.length >= 120) return h;
+        if (h.length >= ROUNDS) return h;
         const prev = h.length ? h[h.length - 1] : null;
         return [...h, playRound(built, cfg, cfg.rivalSharpness, prev, drawRef.current)];
       });
@@ -89,25 +83,6 @@ export function Arena() {
   const shock = (label: string, apply: () => void) => {
     apply();
     setMarkers((m) => [...m, { round: history.length, label }]);
-  };
-
-  /*
-   * One button that loses on purpose.
-   *
-   * A rival who is both very sharp and treats you as unreadable ends up
-   * playing a near-fixed move. Reacting to their last move nails that fixed
-   * move exactly; hedging against a distribution that has collapsed pays for
-   * insurance nobody needs. This holds across every seed tried (five, in
-   * scripts run by hand) — it is a property of the regime, not the draw.
-   */
-  const showALoss = () => {
-    setSituationId("procurement");
-    setCfg({ rivalSharpness: 90, rivalHedge: 0.9, rivalNoise: 0, costPlusMarkup: 0.25 });
-    setRunning(false);
-    setHistory([]);
-    setMarkers([]);
-    drawRef.current = rng(seed);
-    setRunning(true);
   };
 
   const last = history.length ? history[history.length - 1] : null;
@@ -122,7 +97,6 @@ export function Arena() {
 
   const leader = standings[0];
   const us = standings.find((s) => s.id === "sage");
-  const usRank = standings.findIndex((s) => s.id === "sage") + 1;
 
   // Chart geometry.
   const yMax = last ? Math.max(...POLICIES.map((p) => last.cumulative[p.id]), 1) : 1;
@@ -136,7 +110,9 @@ export function Arena() {
     dash: p.dash,
     short: p.short,
     endY: last ? yOf(last.cumulative[p.id]) : 0,
-    d: history.map((s, i) => `${i === 0 ? "M" : "L"}${xOf(i + 1).toFixed(1)},${yOf(s.cumulative[p.id]).toFixed(1)}`).join(" "),
+    d: history
+      .map((s, i) => `${i === 0 ? "M" : "L"}${xOf(i + 1).toFixed(1)},${yOf(s.cumulative[p.id]).toFixed(1)}`)
+      .join(" "),
   }));
 
   const ties = (() => {
@@ -150,37 +126,35 @@ export function Arena() {
   })();
 
   const verdict = (() => {
-    if (!last || last.round < 8) return null;
-    if (!us || !leader) return null;
+    if (!last || last.round < 8 || !us || !leader) return null;
     if (leader.id === "sage") {
       const second = standings[1];
-      return `After ${last.round} rounds this solver is ahead of ${second.name.toLowerCase()} by ${built.formatValue(us.total - second.total)}.`;
+      return `After ${last.round} rounds the solver leads ${second.name.toLowerCase()} by ${built.formatValue(us.total - second.total)}.`;
     }
-    const gap = leader.total - us.total;
-    return `After ${last.round} rounds, ${leader.name.toLowerCase()} is ahead of this solver by ${built.formatValue(gap)}. That is a real result, not a bug — read the note below it.`;
+    return `After ${last.round} rounds ${leader.name.toLowerCase()} leads the solver by ${built.formatValue(leader.total - us.total)}.`;
   })();
 
-  const why = (() => {
+  const note = (() => {
     if (!leader || leader.id === "sage") return null;
     if (leader.id === "bestResponseLast") {
-      return "Reacting to their last move wins when the rival has stopped varying — it lands on their one move exactly, while hedging against a distribution that has collapsed is insurance nobody needs. Push their randomness up and watch this reverse.";
+      return "Best reply to last wins when the rival has stopped varying: it lands on their one move exactly, and hedging against a collapsed distribution buys insurance that is not needed. Raise the rival's randomness to see it reverse.";
     }
     if (leader.id === "costPlus") {
-      return "Cost-plus is winning because on these numbers your position barely depends on the rival. That is the most useful thing this page can tell you: the strategic part of this decision is small, and your week is better spent on the cost side.";
+      return "Cost-plus leads when your payoff barely depends on the rival. On these numbers the strategic term is small, and the cost side is where the money is.";
     }
     if (leader.id === "nash") {
-      return "Assuming they are perfect wins when they nearly are. Turn their discipline down and the gap closes, then reverses — the assumption is a forecast, and it is right here.";
+      return "Always-Nash leads when the rival is close to exact. Lower their precision and the gap closes, then reverses.";
     }
     if (leader.id === "match") {
-      return "Copying them wins when their move is the one worth making and you have no better read. It is a rule that cannot lead and cannot be badly wrong; whether that is enough depends on how much of the value is in leading.";
+      return "Matching leads when their move is the one worth making. It cannot lead the market and cannot be badly wrong.";
     }
-    return "Change the environment and see whether it survives the change. A rule that wins in one regime and collapses in the next is not the rule you want.";
+    return null;
   })();
 
   return (
     <div className="studio">
-      <div className="situation-picker" role="group" aria-label="Choose a situation">
-        {SITUATIONS.filter((s) => s.id !== "standards").map((s) => (
+      <div className="situation-picker" role="group" aria-label="Setting">
+        {SITUATIONS.map((s) => (
           <button
             key={s.id}
             type="button"
@@ -195,11 +169,18 @@ export function Arena() {
 
       <section className="card" aria-labelledby="arena-chart-heading">
         <div className="answer-head">
-          <h2 id="arena-chart-heading">Money on the table, round by round</h2>
-          <span className="badge">{history.length} of 120 rounds</span>
+          <h2 id="arena-chart-heading">Cumulative value, round by round</h2>
+          <span className="badge">
+            {history.length} of {ROUNDS} rounds
+          </span>
         </div>
 
-        <svg viewBox={`0 0 ${W} ${H}`} className="arena-chart" role="img" aria-label={`Cumulative value by decision rule over ${history.length} rounds. ${leader ? `${leader.name} leads.` : "Nothing has been run yet."} The standings table below carries the same numbers.`}>
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          className="arena-chart"
+          role="img"
+          aria-label={`Cumulative value by decision rule over ${history.length} rounds. ${leader ? `${leader.name} leads.` : "Nothing has been run yet."} The standings table below carries the same numbers.`}
+        >
           <line x1={PAD.l} y1={yOf(0)} x2={W - PAD.r} y2={yOf(0)} stroke="var(--border-bright)" strokeWidth="1" />
           <line x1={PAD.l} y1={PAD.t} x2={PAD.l} y2={H - PAD.b} stroke="var(--border-bright)" strokeWidth="1" />
           <text x={PAD.l - 8} y={yOf(yMax) + 4} textAnchor="end" fontSize="10" fill="var(--text-faint)" fontFamily="var(--mono)">
@@ -249,7 +230,7 @@ export function Arena() {
 
         <div className="arena-actions">
           <button type="button" data-primary="true" onClick={() => setRunning((r) => !r)}>
-            {running ? "Pause" : history.length ? "Keep going" : "Run 120 rounds"}
+            {running ? "Pause" : history.length ? "Keep going" : `Run ${ROUNDS} rounds`}
           </button>
           <button type="button" onClick={step} disabled={running}>
             One round
@@ -283,41 +264,45 @@ export function Arena() {
           >
             Your costs jump
           </button>
-          <button type="button" onClick={() => shock("rival sharpens", () => setCfg((c) => ({ ...c, rivalSharpness: Math.min(120, c.rivalSharpness * 3), rivalNoise: Math.max(0, c.rivalNoise - 0.08) })))}>
+          <button
+            type="button"
+            onClick={() =>
+              shock("rival sharpens", () =>
+                setCfg((c) => ({
+                  ...c,
+                  rivalSharpness: Math.min(120, c.rivalSharpness * 3),
+                  rivalNoise: Math.max(0, c.rivalNoise - 0.08),
+                })),
+              )
+            }
+          >
             Rival gets disciplined
           </button>
-          <button type="button" onClick={() => shock("rival erratic", () => setCfg((c) => ({ ...c, rivalNoise: Math.min(0.9, c.rivalNoise + 0.3), rivalHedge: Math.min(1, c.rivalHedge + 0.3) })))}>
+          <button
+            type="button"
+            onClick={() =>
+              shock("rival erratic", () =>
+                setCfg((c) => ({
+                  ...c,
+                  rivalNoise: Math.min(0.9, c.rivalNoise + 0.3),
+                  rivalHedge: Math.min(1, c.rivalHedge + 0.3),
+                })),
+              )
+            }
+          >
             Rival goes erratic
           </button>
-        </div>
-
-        <div className="arena-shocks">
-          <span className="panel-label">Or start somewhere honest</span>
-          <button type="button" onClick={showALoss}>
-            Show me a setting where this solver loses
-          </button>
-          <span className="lead-note" style={{ margin: 0 }}>
-            About one setting in seven on these controls has a simpler rule ahead after a hundred rounds.
-          </span>
         </div>
       </section>
 
       {verdict && (
         <section className="card verdict-card">
           <p className="answer-verb">{verdict}</p>
-          {why && <p className="lead-note">{why}</p>}
+          {note && <p className="lead-note">{note}</p>}
           {ties.length > 0 && (
             <p className="lead-note">
               {ties.map((g) => `${g.join(" and ")} are level`).join("; ")} — they are choosing the same move on these
-              settings, so their lines sit on top of each other. That is a result too: it says the rule you use does
-              not matter here.
-            </p>
-          )}
-          {leader?.id === "sage" && usRank === 1 && (
-            <p className="lead-note">
-              Worth saying plainly: this is not a claim to beat a well-tuned optimiser. It is a claim to beat the four
-              rules that are actually used, under a rival who is neither random nor perfect. Change the environment
-              above and check whether that survives.
+              settings, so their lines sit on top of each other.
             </p>
           )}
         </section>
@@ -354,7 +339,7 @@ export function Arena() {
         </section>
 
         <section className="card" aria-labelledby="rules-heading">
-          <h3 id="rules-heading">What each rule does</h3>
+          <h3 id="rules-heading">The rules</h3>
           <dl className="rules">
             {POLICIES.map((p) => (
               <div key={p.id}>
@@ -371,22 +356,23 @@ export function Arena() {
 
       <section className="card controls" aria-labelledby="env-heading">
         <h3 id="env-heading">The rival, and the world they are in</h3>
-        <p className="lead-note">Change these at any point. The run keeps going from where it is.</p>
+        <p className="lead-note">Change these at any point. The run continues from where it is.</p>
         <div className="knob-grid">
           <label className="knob">
             <span className="knob-label">
-              How closely the rival chases their best move
+              Rival precision
               <output aria-hidden="true">{cfg.rivalSharpness.toFixed(1)}</output>
             </span>
             <input
               type="range"
-              aria-label="How closely the rival chases their best move"
+              aria-label="Rival precision"
               min={0.6}
               max={120}
               step={0.2}
               value={cfg.rivalSharpness}
               onChange={(e) => setCfg({ ...cfg, rivalSharpness: Number(e.target.value) })}
             />
+            <span className="knob-help">In units of the rival&apos;s own payoff spread.</span>
           </label>
           <label className="knob">
             <span className="knob-label">
@@ -405,12 +391,12 @@ export function Arena() {
           </label>
           <label className="knob">
             <span className="knob-label">
-              Share of rounds the rival simply does something random
+              Share of rounds the rival plays at random
               <output aria-hidden="true">{(100 * cfg.rivalNoise).toFixed(0)}%</output>
             </span>
             <input
               type="range"
-              aria-label="Share of rounds the rival simply does something random"
+              aria-label="Share of rounds the rival plays at random"
               min={0}
               max={0.9}
               step={0.05}
@@ -432,7 +418,6 @@ export function Arena() {
               value={cfg.costPlusMarkup}
               onChange={(e) => setCfg({ ...cfg, costPlusMarkup: Number(e.target.value) })}
             />
-            <span className="knob-help">What the cost-plus rule adds to your own unit cost.</span>
           </label>
           {situation.knobs.slice(0, 2).map((k) => (
             <label key={k.key} className="knob">
@@ -454,13 +439,13 @@ export function Arena() {
         </div>
       </section>
 
-      <p className="source-note" data-illustrative={situation.illustrative}>
-        <strong>{situation.illustrative ? "Illustrative numbers." : "Measured numbers."}</strong> {situation.sourceNote} The
-        rival is a simulated player, not a record of anyone&apos;s behaviour, and the run is reproducible from its seed.
+      <p className="model-line">
+        {situation.model} The rival is a simulated player, not a record of anyone&apos;s behaviour, and a run is
+        reproducible from its seed.
       </p>
 
       <p className="escape-hatch">
-        Want the single-round answer with its reasoning instead? <Link href="/solve">Go back to solving one round</Link>.
+        For the single-round answer from the solver, <Link href="/solve">go to solve</Link>.
       </p>
     </div>
   );

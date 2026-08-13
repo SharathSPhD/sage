@@ -5,9 +5,9 @@ import { HealthDot } from "./components/HealthDot";
 import { NavLinks } from "./components/NavLinks";
 
 export const metadata: Metadata = {
-  title: "SAGE — decide when the other side is deciding too",
+  title: "SAGE — solve pricing, auction, electricity and routing problems",
   description:
-    "Put in the numbers you already have and get the move to make, what the other side is likely to do, what it is worth, and what would change the answer.",
+    "Enter your costs, grid and demand model; get the price, bid, offer or split to set, what it earns, and how it moves when an input does.",
 };
 
 function BrandMark() {
@@ -43,15 +43,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main">{children}</main>
         <footer className="site-footer">
           <span>
-            Numbers marked illustrative are a plausible stand-in and say so on the page. Everything else regenerates
-            from fixed seeds in <a href="https://github.com/SharathSPhD/sage">the open repository</a>.
+            strataq — quantal response equilibria for pricing, auctions, electricity offers, traffic assignment and
+            allocation.
           </span>
           <span>
-            <Link href="/research">how it works</Link>
-            {" · "}
             <a href="https://sharathsphd.github.io/sage/">docs</a>
             {" · "}
             <a href="/api/v1/health">API</a>
+            {" · "}
+            <Link href="/research">research</Link>
           </span>
         </footer>
       </body>

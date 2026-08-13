@@ -1,40 +1,34 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SolveStudio } from "../../solve/SolveStudio";
-import { getSituation } from "../../../lib/situations";
-
-const S = getSituation("pricing");
+import { PricingSolver } from "../../components/solvers/PricingSolver";
 
 export const metadata: Metadata = {
-  title: "Weekly shelf price — SAGE",
-  description: S.decision,
+  title: "Pricing — SAGE",
+  description: "Set a price against a rival setting one too: price, profit, margin and elasticities.",
 };
 
-export default function PricingSituation() {
+export default function PricingPage() {
   return (
     <div className="wrap situation-page">
       <p className="crumb">
-        <Link href="/situations">All situations</Link>
+        <Link href="/situations">All problems</Link>
       </p>
-      <h1 className="surface-title">{S.name}</h1>
-      <p className="surface-lede">{S.setting}</p>
-      <SolveStudio fixedSituation="pricing" />
-      <section className="try-this" aria-labelledby="try-heading">
-        <h2 id="try-heading">Three things worth trying</h2>
-        <div className="try-grid">
-          {S.tryThis.map((t) => (
-            <article key={t.title} className="card">
-              <h3>{t.title}</h3>
-              <p>{t.body}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+      <h1 className="surface-title">Pricing</h1>
+      <p className="surface-lede">
+        Two firms set a price on the same grid in the same period, each seeing the other&apos;s last move and not this
+        one. Returns the price to set, the profit at it, and how both change with your inputs.
+      </p>
+      <PricingSolver />
       <section className="card next-step">
-        <h2>Then what</h2>
+        <h2>In Python</h2>
         <p>
-          A single week&apos;s answer is not the whole job. <Link href="/play">Run it for fifty weeks</Link> against
-          cost-plus, matching, and reacting to their last move, and see which one is actually ahead by the end.
+          <code>
+            sq.PricingProblem(costs=[1.00, 1.05], grid=(1.09, 1.89, 0.10), demand=sq.LogitDemand(3.6, [5.94, 5.94],
+            market_size=400), precision=1.5).solve()
+          </code>{" "}
+          returns the solution this page is rendering at its defaults — the quality terms are the outside option price
+          times the price coefficient. See <a href="https://sharathsphd.github.io/sage/">the docs</a> for{" "}
+          <code>LinearDemand</code> and <code>CustomDemand</code>.
         </p>
       </section>
     </div>
