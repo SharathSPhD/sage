@@ -21,6 +21,19 @@ jobs:
       - uses: astral-sh/setup-uv@v5
       - name: Build sdist and wheel
         run: uv build --package strataq --out-dir dist
+      - name: Assert the wheel is universal (no compiler on any platform)
+        # COMPETITIVE_POSITION.md slot 1: pygambit has never shipped a Linux or
+        # macOS wheel, so every Mac, Linux box and Colab notebook compiles C++ to
+        # use the incumbent. strataq is pure Python/JAX, so ONE py3-none-any wheel
+        # serves every platform -- and this step fails the release if that ever
+        # stops being true (a stray build hook or C extension would retag it).
+        run: |
+          ls dist/
+          test -f dist/*-py3-none-any.whl || {
+            echo "::error::built wheel is not py3-none-any; the install-anywhere claim is broken"
+            ls dist/; exit 1
+          }
+          test "$(ls dist/*.whl | wc -l)" -eq 1
       - name: Smoke-test the wheel
         # MUST exercise a SOLVER path, not just the pure-numpy one: the
         # 0.1.0 release found that an installed wheel could not run any
@@ -29,13 +42,26 @@ jobs:
         run: |
           uv venv /tmp/smoke && VIRTUAL_ENV=/tmp/smoke uv pip install dist/*.whl
           /tmp/smoke/bin/python - <<'PY'
+          import jax
           import strataq, strataq.toolkit as tk
+          from strataq.estimate.lam import sample_choices
           r = tk.reciprocity_read([[1.0, 0.2], [0.2, 0.9]])
           assert r.r < 1e-12, r
           g = tk.game_thermo([[[0.0, -1.0, 1.0], [1.0, 0.0, -1.0], [-1.0, 1.0, 0.0]],
                               [[0.0, 1.0, -1.0], [-1.0, 0.0, 1.0], [1.0, -1.0, 0.0]]])
           assert g.alpha > 0.9 and g.epr > 1e-3, g   # solver + config + dynamics
-          print("wheel ok:", strataq.__version__, g.verdict)
+          # the two product entry points, from the INSTALLED wheel: both pull in the
+          # packaged config, the solver and the estimator stack, so a packaging defect
+          # that the toolkit check survives cannot survive these.
+          d = strataq.diagnose(strataq.games.rock_paper_scissors(), lam=1.5)
+          assert d.quadrant == "whirlpool", d
+          game = strataq.DenseTensorGame([[[3.0, 0.0], [1.0, 2.0]], [[2.0, 1.0], [0.5, 3.0]]])
+          counts = sample_choices(game, 1.5, 4000, jax.random.key(0))
+          f = strataq.fit(game, counts, ci="profile", n_grid=40)
+          assert f.identified and abs(f.lam_hat - 1.5) / 1.5 < 0.3, f
+          assert f.lr_uniform is not None and f.lr_uniform.p < 1e-6, f.lr_uniform
+          assert "lambda_hat" in str(f.summary())
+          print("wheel ok:", strataq.__version__, g.verdict, "| lambda_hat", f.lam_hat)
           PY
       - name: Publish to PyPI
         env:
