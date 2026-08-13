@@ -4,6 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const LINKS = [
+  // /diagnose is the front door: it is what a practitioner arriving with data
+  // needs first, so it leads. /tools still works and now points here.
+  { href: "/diagnose", label: "Diagnose" },
   { href: "/learn", label: "Learn" },
   { href: "/lab", label: "Lab" },
   { href: "/phase", label: "Phase map" },
