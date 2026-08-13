@@ -1,0 +1,53 @@
+\paragraph{The exact dynamics layer is dense and small.} The Glauber generator
+is built over $\prod_i m_i$ joint profiles as a dense matrix. That is a cost
+limit, not a correctness limit, but it is a hard one: the exact entropy
+production, currents and stationary distribution are intended for small games,
+and the deployed API refuses dense-dynamics requests above a few hundred joint
+states. Larger systems must go through the trajectory estimators, where the
+reportable statement is the certified lower bound rather than the point
+estimate.
+
+\paragraph{The product surface is tested but not gated.} The instrument layer
+--- solvers, response, decomposition, dynamics, estimators --- is gated unit by
+unit. The surface built on top of it during the most recent development phase
+(\texttt{problems}, \texttt{solve\_situation}, \texttt{fit},
+\texttt{diagnose}, \texttt{viz}, \texttt{repeated}, \texttt{evolutionary},
+\texttt{extensive}) has tests but no gate, no acceptance artifact and no claims
+ledger entry. That is recorded as an architecture decision with a named gate and
+a date for each item, rather than left to be inferred from a green badge. Until
+those close, the honest statement is: \emph{the instrument layer is gated; the
+product surface on top of it is tested but not gated.}
+
+\paragraph{The extensive-form oracle checks are skippable.} The four
+\texttt{pygambit} cross-validations of the agent QRE are marked
+\texttt{skipif(not HAVE\_GAMBIT)}. Since \texttt{pygambit} is an optional
+dependency, an environment without it runs the extensive-form suite with its
+only external check silently absent. The fix is to make the oracle comparison a
+committed benchmark artifact --- as the strategic-form comparison already is ---
+so it appears in the record rather than in a test that may not have run.
+
+\paragraph{The public surface is broader than \texttt{\_\_all\_\_}, and
+\texttt{golden/} is empty.} Several modules export more than their documented
+interface, so users can reach objects whose stability is not promised. There are
+no cross-version golden files, so numerical drift between releases would be
+caught by the calibration artifacts (which are regenerated) rather than by a
+frozen reference (which is not).
+
+\paragraph{Scope of the readings, not of the code.} Two limits are worth stating
+plainly because users will otherwise infer more than the artifacts support.
+First, $\R$'s magnitude is $\lambda$-dependent, so cross-$\lambda$ comparison of
+levels is not licensed; only the zero test is $\lambda$-free. Second, the
+scientific results this library was built to obtain --- reported separately
+\citep{p2} --- carry their own scope, in particular that the $\alpha$-stratified
+co-movement design behind them is a \emph{two-player} instrument, and the
+library's documentation carries that restriction wherever it quotes those
+numbers.
+
+\paragraph{Things we deliberately did not build.} A Bayesian-games engine with
+type spaces is deferred by a recorded decision rather than half-implemented.
+There is no performance leaderboard, because the comparison that matters is
+agreement with the oracle. And there is no claim that $\lambda$ estimated from
+field data measures rationality: it absorbs unmodelled heterogeneity and
+misspecified payoffs \citep{hhk2008}, which is why the estimation surface reports
+four estimators, their disagreement, and a refusal where the likelihood is
+flat.
