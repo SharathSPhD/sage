@@ -307,3 +307,64 @@ n_justification: >
   measured steady-state cost is 0.044 s/game at m=3 rising to 0.275 s/game at m=6, so
   the full design is ~15 minutes; doubling n again would buy a sqrt(2) on intervals
   that are already an order of magnitude inside the registered thresholds.
+
+# ===========================================================================
+# POST-REVIEW CONDITION C-1 — REGISTERED 2026-08-13, BEFORE BEING COMPUTED.
+# ===========================================================================
+# Raised by the 2026-08-13 re-review of this unit as objection O-8, and
+# registered here before the statistic exists, exactly as O-2's gap_ratio
+# interval should have been.
+#
+# THE DEFECT. Red-team O-2 established that the REPLACEMENT registration's
+# deciding statistic (gap_ratio) reached adjudication as a bare point estimate,
+# and it was bootstrapped in response. The same defect was left standing for the
+# registration that actually BINDS. The superseded file's K2-T1 is decided on
+#   delta_rho_hi = rho_hi(m_max) - rho_hi(m_min)
+# against refute > 0.40 and survive <= 0.20, and this run measured
+# delta_rho_hi = +0.3639 — 0.036 BELOW its refutation bar, with no interval.
+# Both of the superseded registration's other refutation conditions are MET on
+# this data: rho_hi is monotone non-decreasing within mono_tol (-0.352, -0.272,
+# -0.244, +0.012) and the end intervals are disjoint (ci_low(m=6) = -0.137 >
+# ci_high(m=3) = -0.226). The 0.036 is therefore the whole of what separates
+# INDETERMINATE from REFUTED under the binding registration, and it is reported
+# without any measure of its own sampling error.
+#
+# WHAT C-1 COMPUTES. A percentile bootstrap on delta_rho_hi, resampling GAMES
+# WITHIN THE CELL with replacement (the identical scheme the registered rho_S
+# intervals use, and the one _bootstrap_gap_ratio uses), each replicate
+# resampling both the m_min and m_max cells at alpha_hi so their shared sampling
+# variation is preserved. Reported: ci_low, ci_high, sd, P(delta > 0.40)
+# (the refutation bar) and P(delta <= 0.20) (the survival bar).
+#
+# WHAT IT MEANS, WRITTEN DOWN BEFORE IT IS COMPUTED. C-1 is a DISCLOSURE
+# STATISTIC, not a criterion, and it CANNOT change the K2-T1 verdict:
+#   * the superseded registration decides refutation on the POINT ESTIMATE
+#     clearing 0.40 (with the CI condition as an ADDITIONAL requirement, never
+#     as a substitute), and +0.3639 does not clear it, so the refutation branch
+#     does not fire whatever the interval says;
+#   * survival requires delta <= 0.20, which +0.3639 also fails;
+#   * the verdict is therefore INDETERMINATE both before and after C-1, and no
+#     value of this statistic may be used to re-score it. Recomputing a verdict
+#     from a post-hoc interval is precisely the move O-1 exists to prevent.
+# The rule for reporting is fixed here, in advance:
+#   (a) if P(delta > 0.40) >= 0.05, the finding and the gate MUST state that the
+#       binding registration's refutation branch is UNRESOLVED-AND-NEAR, that
+#       the 0.036 margin is inside sampling error, and that K2-T1's
+#       INDETERMINATE is a non-resolution rather than a comfortable miss;
+#   (b) if P(delta > 0.40) < 0.05, they MUST state that the refutation branch is
+#       excluded at the 5% level and that INDETERMINATE rests on the survival
+#       bar (0.20) being failed by a wide margin;
+#   (c) either way the interval is reported in full, labelled POST-HOC, and no
+#       threshold in either registration is changed to accommodate it.
+post_review_conditions:
+  c1_superseded_delta_rho_hi_interval:
+    registered: "2026-08-13"
+    raised_as: "O-8 (re-review of science.plane)"
+    statistic: "delta_rho_hi = rho_hi(m_max) - rho_hi(m_min) at alpha_hi, the superseded (BINDING) registration's K2-T1 primary"
+    n_resamples: 4000
+    ci_level: 0.95
+    resample: "games within cell, with replacement; m_min and m_max cells resampled in the same replicate"
+    refute_bar: 0.40          # read from plane_finite_size.yaml, not re-registered here
+    survive_bar: 0.20         # read from plane_finite_size.yaml, not re-registered here
+    binding: false            # DISCLOSURE ONLY - cannot re-score K2-T1
+    report_rule: "P(delta > refute_bar) >= 0.05 => report the refutation branch as UNRESOLVED-AND-NEAR; otherwise report it as excluded at the 5% level. The verdict stays INDETERMINATE in both cases."
