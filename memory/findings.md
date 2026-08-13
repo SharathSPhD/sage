@@ -293,6 +293,7 @@ Neither correction makes any month quotable: R8's C-3 rejection stands, and F-00
 ### What IS robust, and what the paper's claim now rests on
 
 - **The ceiling criterion, and it is not close.** High-α coupling **never recovers at any tested m**: ρ_hi(m) ≤ 0.35 at every m, and the *upper* interval endpoint is under the ceiling at every m — worst **ci_high = +0.156 against a 0.35 ceiling**. The α = 0.05 and α = 0.95 intervals are **disjoint at every m**. That is what the two-coordinate claim actually needs: independence requires decorrelation, not anti-correlation, and decorrelation is established at every size tested.
+- **The ceiling is immune to the substitution, which is the reason it can carry the claim.** `survive_ceiling = 0.35` is *identical* in both registrations (`plane_finite_size.yaml` and `plane_robustness.yaml`), and both impose it in the same CI form (upper endpoint under the ceiling at every m). It is also not a number invented for this unit: it is F-0010's registered collapse threshold, reused so the two units are commensurable. Whichever registration binds, the ceiling reads the same way and passes with room — unlike the primary statistic, which is the only thing the substitution moved.
 
 | m | ρ_S(α=0.05) [95% CI] | ρ_S(α=0.45) | ρ_S(α=0.75) | ρ_S(α=0.85) | ρ_S(α=0.95) [95% CI] | gap | gap ratio |
 |---|---|---|---|---|---|---|---|
