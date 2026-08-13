@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 // The research programme lives one click deeper, under /research.
 const LINKS = [
   { href: "/solve", label: "Solve" },
+  { href: "/demos", label: "Demos" },
   { href: "/situations", label: "Problems" },
   { href: "/data", label: "Your data" },
   { href: "/api", label: "API" },
