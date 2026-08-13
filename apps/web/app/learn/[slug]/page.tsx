@@ -4,6 +4,7 @@ import "katex/dist/katex.min.css";
 import { listExplainers } from "../../../lib/theory";
 import { renderMarkdown } from "../../../lib/markdown";
 import { ExplorablePanel } from "../../components/panels/registry";
+import { TAKEAWAYS } from "../takeaways";
 
 export function generateStaticParams() {
   return listExplainers().map((e) => ({ slug: e.slug }));
@@ -12,7 +13,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const e = listExplainers().find((x) => x.slug === slug);
-  return { title: e ? `${e.title} — SAGE Labs` : "Learn — SAGE Labs" };
+  return { title: e ? `${e.title} — SAGE` : "Learn — SAGE" };
 }
 
 export default async function ExplainerPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -24,18 +25,27 @@ export default async function ExplainerPage({ params }: { params: Promise<{ slug
   const prev = idx > 0 ? explainers[idx - 1] : null;
   const next = idx < explainers.length - 1 ? explainers[idx + 1] : null;
   const html = renderMarkdown(e.markdown);
+  const takeaway = TAKEAWAYS[slug];
 
   return (
     <div className="wrap-narrow" style={{ paddingTop: "2.2rem" }}>
       <div className="panel-label">
-        <Link href="/learn" style={{ color: "var(--text-faint)" }}>
-          Learn
-        </Link>{" "}
-        · {String(idx + 1).padStart(2, "0")} / {String(explainers.length).padStart(2, "0")}
+        <Link href="/learn">Learn</Link> · {String(idx + 1).padStart(2, "0")} /{" "}
+        {String(explainers.length).padStart(2, "0")}
       </div>
-      {/* html is rendered at build time from repo-authored markdown (docs/theory) — same trust domain as the code; no user-supplied content flows here */}
+      {/* html is rendered at build time from repo-authored markdown (content/theory) — same trust domain as the code; no user-supplied content flows here */}
       <article className="prose" dangerouslySetInnerHTML={{ __html: html }} />
+
+      {takeaway && (
+        <section className="so-what" aria-labelledby="so-what-heading">
+          <h2 id="so-what-heading">So what would you do differently?</h2>
+          <p>{takeaway.soWhat}</p>
+          <Link href={takeaway.href}>{takeaway.hrefLabel} →</Link>
+        </section>
+      )}
+
       <ExplorablePanel slug={slug} />
+
       <nav className="pager">
         {prev ? (
           <Link href={`/learn/${prev.slug}`}>
@@ -55,10 +65,10 @@ export default async function ExplainerPage({ params }: { params: Promise<{ slug
             </div>
           </Link>
         ) : (
-          <Link href="/lab" style={{ textAlign: "right" }}>
+          <Link href="/solve" style={{ textAlign: "right" }}>
             <div className="card">
               <div className="dir">now →</div>
-              Open the Lab and watch the meters
+              Solve one of your own
             </div>
           </Link>
         )}

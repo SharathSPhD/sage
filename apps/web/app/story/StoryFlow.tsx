@@ -106,7 +106,7 @@ export function StoryFlow() {
           A real road network (Sioux Falls, with its actual demand table) reads{" "}
           <strong>exactly zero</strong> — traffic is a landscape, to machine precision, and you
           can toll any link to feel the symmetry:{" "}
-          <Link href="/network">the network lab</Link>. A real power market (CAISO, July 2026)
+          <Link href="/situations/routing">the routing scenario</Link>. A real power market (CAISO, July 2026)
           reads as a <strong>measurably driven cycle</strong> — the day-ahead price loop
           dissipates about 1.1 nats per day, concentrated exactly in the scarcity weeks, a
           finding that survived four null models and one retraction:{" "}

@@ -8,5 +8,14 @@ const nextConfig = {
   async rewrites() {
     return [{ source: "/api/:path*", destination: `${API_ORIGIN}/:path*` }];
   },
+  // /network and /blotto were the two engine demos before they were rewritten
+  // as situations a practitioner can state. The pages are gone; the URLs are
+  // not, because they have been linked to.
+  async redirects() {
+    return [
+      { source: "/network", destination: "/situations/routing", permanent: false },
+      { source: "/blotto", destination: "/situations/allocation", permanent: false },
+    ];
+  },
 };
 export default nextConfig;

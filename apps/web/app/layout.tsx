@@ -5,21 +5,16 @@ import { HealthDot } from "./components/HealthDot";
 import { NavLinks } from "./components/NavLinks";
 
 export const metadata: Metadata = {
-  title: "SAGE Labs — instruments for strategic systems",
+  title: "SAGE — decide when the other side is deciding too",
   description:
-    "Measurement instruments for stochastic strategic systems: susceptibility, reciprocity, dissipation, phase. Every reading calibrated on games where the answer is known.",
+    "Put in the numbers you already have and get the move to make, what the other side is likely to do, what it is worth, and what would change the answer.",
 };
 
 function BrandMark() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
       <circle cx="12" cy="12" r="10" stroke="var(--accent)" strokeWidth="1.5" />
-      <path
-        d="M12 3 L12 12 L18.4 16.4"
-        stroke="var(--accent)"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
+      <path d="M12 3 L12 12 L18.4 16.4" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" />
       <circle cx="12" cy="12" r="1.8" fill="var(--accent)" />
     </svg>
   );
@@ -29,33 +24,32 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
+        <a href="#main" className="skip-link">
+          Skip to the answer
+        </a>
         <nav className="site-nav">
           <Link href="/" className="brand">
             <BrandMark />
-            SAGE Labs
+            SAGE
           </Link>
           <NavLinks />
           <div style={{ marginLeft: "auto", display: "flex", gap: "1.2rem", alignItems: "center" }}>
             <HealthDot />
-            <a
-              href="https://github.com/SharathSPhD/sage"
-              style={{ color: "var(--text-dim)", fontSize: "0.88rem" }}
-            >
+            <a href="https://github.com/SharathSPhD/sage" style={{ color: "var(--text-dim)", fontSize: "0.88rem" }}>
               GitHub
             </a>
           </div>
         </nav>
-        <main>{children}</main>
+        <main id="main">{children}</main>
         <footer className="site-footer">
           <span>
-            Every number regenerates from fixed seeds in the{" "}
-            <a href="https://github.com/SharathSPhD/sage">open repository</a>; adversarial reviews
-            that closed each instrument are part of the public record.
+            Numbers marked illustrative are a plausible stand-in and say so on the page. Everything else regenerates
+            from fixed seeds in <a href="https://github.com/SharathSPhD/sage">the open repository</a>.
           </span>
           <span>
-            <a href="https://sharathsphd.github.io/sage/">docs</a>
+            <Link href="/research">how it works</Link>
             {" · "}
-            <a href="https://sharathsphd.github.io/sage/progress/">gate dashboard</a>
+            <a href="https://sharathsphd.github.io/sage/">docs</a>
             {" · "}
             <a href="/api/v1/health">API</a>
           </span>

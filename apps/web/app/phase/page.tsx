@@ -1,8 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { PhaseExplorer, type Surface } from "./PhaseExplorer";
+import { ResearchCrumb } from "../components/ResearchCrumb";
 
-export const metadata = { title: "Phase map — SAGE Labs" };
+export const metadata = { title: "Phase map — SAGE" };
 
 // The surface is a committed, gate-checked artifact regenerated from fixed
 // seeds (unit science.phase_map). The app reads it at build time — the
@@ -24,6 +25,7 @@ export default function PhasePage() {
   const surface = loadSurface();
   return (
     <div className="wrap" style={{ paddingTop: "2.2rem" }}>
+      <ResearchCrumb />
       <h1 style={{ marginBottom: "0.3rem" }}>The α × λ phase map</h1>
       <p style={{ color: "var(--text-dim)", maxWidth: "46rem", marginTop: 0 }}>
         {surface.alphas.length * surface.lambdas.length} cells, each the median over 100 randomly

@@ -1,8 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { MarketReading, type Series } from "./MarketReading";
+import { ResearchCrumb } from "../components/ResearchCrumb";
 
-export const metadata = { title: "Market reading — SAGE Labs" };
+export const metadata = { title: "Market reading — SAGE" };
 
 // Committed, gate-checked artifact (unit domains.electricity) — the app
 // draws the data behind F-0008/F-0009; it does not refetch or recompute.
@@ -21,6 +22,7 @@ export default function MarketsPage() {
   const series = loadSeries();
   return (
     <div className="wrap" style={{ paddingTop: "2.2rem" }}>
+      <ResearchCrumb />
       <h1 style={{ marginBottom: "0.3rem" }}>First real-data reading: a power market</h1>
       <p style={{ color: "var(--text-dim)", maxWidth: "48rem", marginTop: 0 }}>
         {series.hours.length} hours of real day-ahead prices (CAISO SP15 hub, July 2026) put

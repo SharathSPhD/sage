@@ -22,6 +22,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ResearchCrumb } from "../components/ResearchCrumb";
 
 // ---------------------------------------------------------------------------------------
 // Calibrated bands + the reference cloud. Same values as strataq.viz.REFERENCE_CLOUD.
@@ -730,6 +731,7 @@ export default function DiagnosePage() {
 
   return (
     <div className="wrap diagnose">
+      <ResearchCrumb />
       <header>
         <p className="kicker">diagnose</p>
         <h1>What kind of system is this?</h1>
@@ -1119,7 +1121,7 @@ export default function DiagnosePage() {
               </ul>
               <p className="hint">
                 Want to watch the instrument read zero where zero is provably right?{" "}
-                <Link href="/network">Sioux Falls</Link> · <Link href="/blotto">Colonel Blotto</Link>
+                <Link href="/situations/routing">Sioux Falls</Link> · <Link href="/situations/allocation">Colonel Blotto</Link>
               </p>
             </div>
           </section>

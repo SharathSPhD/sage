@@ -3,18 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+// Ordered by what a visitor came to do: solve one, browse the rest, race it,
+// learn the idea. Everything about the research programme lives one click
+// deeper, under /research.
 const LINKS = [
-  // /diagnose is the front door: it is what a practitioner arriving with data
-  // needs first, so it leads. /tools still works and now points here.
-  { href: "/diagnose", label: "Diagnose" },
+  { href: "/solve", label: "Solve" },
+  { href: "/situations", label: "Situations" },
+  { href: "/play", label: "Play" },
   { href: "/learn", label: "Learn" },
-  { href: "/lab", label: "Lab" },
-  { href: "/phase", label: "Phase map" },
-  { href: "/network", label: "Network" },
-  { href: "/markets", label: "Markets" },
-  { href: "/findings", label: "Findings" },
-  { href: "/tools", label: "Your data" },
-  { href: "/blotto", label: "Blotto" },
+  { href: "/research", label: "Research" },
 ];
 
 export function NavLinks() {
