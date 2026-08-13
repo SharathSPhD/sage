@@ -38,6 +38,7 @@ from collections.abc import Sequence
 from dataclasses import asdict, dataclass, field
 from typing import Any, Literal
 
+import jax.numpy as jnp
 import numpy as np
 
 from strataq import __version__
@@ -280,6 +281,35 @@ class Diagnosis:
 # --------------------------------------------------------------------------------------
 
 
+def _criticality(mats: list[Any], lam: float) -> dict[str, Any] | None:
+    """Spectral state of the strategic resolvent at the logit fixed point.
+
+    Returns ``None`` if the spectrum cannot be formed (the caller then proceeds without
+    the guard rather than failing). ``near_critical`` is the library's own flag, so this
+    guard tracks the solver's notion of criticality rather than inventing a second one.
+
+    References
+    ----------
+    ``distance_to_criticality = 1 - rho(SB)``; PROGRAMME v3 §8.5 requires refusing to
+    report chi near the singularity rather than returning a large number. Tier: exact.
+    """
+    try:
+        from strataq.core.solve.fixedpoint import logit_qre
+        from strataq.finite.games.tensor import DenseTensorGame
+        from strataq.finite.response.spectral import strategic_spectrum
+
+        game = DenseTensorGame(payoffs=[jnp.asarray(m) for m in mats])
+        info = strategic_spectrum(game, logit_qre(game, lam))
+        return {
+            "rho": float(info.rho),
+            "distance": float(info.distance_to_criticality),
+            "near_critical": bool(info.near_critical),
+            "bifurcation_type": int(info.bifurcation_type),
+        }
+    except Exception:  # pragma: no cover - guard must never itself break a reading
+        return None
+
+
 def _classify(r: Coordinate, e: Coordinate) -> tuple[Quadrant, tuple[Quadrant, ...], list[str]]:
     """Map two coordinates to a quadrant, degrading to a live set rather than guessing."""
     notes: list[str] = []
@@ -471,17 +501,46 @@ def diagnose(
             raise ValueError("payoffs= requires lam= (the logit precision).")
         mats = _payoff_arrays(payoffs)
         read = game_thermo(list(mats), lam=float(lam))
-        r_coord = Coordinate(
-            name="response asymmetry  R",
-            value=float(read.r),
-            lo=None,
-            hi=None,
-            kind="point",
-            method=(
-                "exact: reciprocity defect of the equilibrium response chi_equilibrium at "
-                "the logit fixed point, on the Helmert tangent space"
-            ),
-        )
+
+        # R is read through (I - SB)^-1. Near rho(SB) = 1 that operator is singular and the
+        # number it returns is not a measurement of anything -- it is rounding. Refuse to
+        # report it as a point, and say which quadrants remain live. Found on aarch64 /
+        # jax 0.11, where coordination(2, 3, bonus=2.0) at lambda=1.5 sits exactly on the
+        # pitchfork (rho = 1 + 4e-16) and a POTENTIAL game read as a whirlpool.
+        crit = _criticality(mats, float(lam))
+        if crit is not None and crit["near_critical"]:
+            r_coord = Coordinate(
+                name="response asymmetry  R",
+                value=None,
+                lo=None,
+                hi=None,
+                kind="absent",
+                method=(
+                    "REFUSED at criticality: rho(SB) = "
+                    f"{crit['rho']:.12f}, distance to criticality "
+                    f"{crit['distance']:.2e}. The resolvent (I - SB)^-1 is singular here, "
+                    "so any R computed through it is rounding, not a reading."
+                ),
+            )
+            refusals.append(
+                "R not identified: this game sits at (or beyond) the criticality of the "
+                f"strategic resolvent, rho(SB) = {crit['rho']:.12f}. R is undefined there. "
+                "Move lambda away from the critical value and re-read; "
+                "`strataq.critical_lambda(game)` locates it. The refused value would have "
+                f"been {float(read.r):.6g}, which is platform-dependent noise."
+            )
+        else:
+            r_coord = Coordinate(
+                name="response asymmetry  R",
+                value=float(read.r),
+                lo=None,
+                hi=None,
+                kind="point",
+                method=(
+                    "exact: reciprocity defect of the equilibrium response chi_equilibrium at "
+                    "the logit fixed point, on the Helmert tangent space"
+                ),
+            )
         e_coord = Coordinate(
             name="dissipation  EPR (nats/step)",
             value=float(read.epr),
@@ -500,6 +559,12 @@ def diagnose(
             "n_joint_states": n_states,
             "game_thermo_verdict": read.verdict,
         }
+        if crit is not None:
+            prov |= {
+                "rho_SB": crit["rho"],
+                "distance_to_criticality": crit["distance"],
+                "bifurcation_type": crit["bifurcation_type"],
+            }
         # game_thermo now carries its own honesty text (lambda scaling, dense-generator
         # cost); forward it rather than restating it.
         warnings += list(read.warnings)

@@ -27,13 +27,33 @@ def _reversible_series(n: int = 400) -> np.ndarray:
 class TestExactRoute:
     def test_coordination_reads_landscape(self):
         """An exact potential game: R below the band edge, EPR numerically zero."""
-        d = diagnose(strataq.games.coordination(2, 3, bonus=2.0), lam=1.5)
+        # bonus=2.0 at lam=1.5 sits exactly on the pitchfork (rho(SB) = 1 + 4e-16);
+        # see test_criticality_is_refused. bonus=1.0 gives rho = 0.5.
+        d = diagnose(strataq.games.coordination(2, 3, bonus=1.0), lam=1.5)
         assert d.quadrant == "landscape"
         assert d.live_quadrants == ("landscape",)
         assert d.response.value < R_BANDS[0]
         assert d.dissipation.value == pytest.approx(0.0, abs=1e-9)
         assert d.alpha == pytest.approx(0.0, abs=1e-9)
         assert not d.refusals
+
+    def test_criticality_is_refused(self):
+        """At rho(SB) = 1 the resolvent is singular, so R is refused, not reported.
+
+        Regression for a real cross-platform defect: on aarch64 / jax 0.11 this exact
+        game read R = 0.0659 and diagnosed a POTENTIAL game as 'stalled whirlpool',
+        while on x86-64 / jax 0.10 the same call read R = 0.0. Both numbers are rounding
+        through a singular operator. The verdict must degrade, not pick a side.
+        """
+        d = diagnose(strataq.games.coordination(2, 3, bonus=2.0), lam=1.5)
+        assert d.quadrant == "undetermined"
+        assert d.response.kind == "absent"
+        assert d.response.value is None
+        assert set(d.live_quadrants) == {"landscape", "stalled whirlpool"}
+        assert any("criticality" in r for r in d.refusals)
+        assert d.provenance["rho_SB"] == pytest.approx(1.0, abs=1e-9)
+        # the dissipation axis is unaffected -- it never touches the resolvent
+        assert d.dissipation.value == pytest.approx(0.0, abs=1e-9)
 
     def test_rock_paper_scissors_reads_whirlpool(self):
         d = diagnose(strataq.games.rock_paper_scissors(), lam=1.5)
