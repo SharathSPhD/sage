@@ -77,10 +77,22 @@ class CodeSection(Section):
             result.failures.append(f"unit paths missing: {missing}")
             return
         test_paths = [p for p in paths if "/tests/" in p or "test_" in Path(p).name]
+        # tests_pass and coverage_min used to execute the SAME tests twice, in two
+        # separate uv subprocesses, for every unit. One execution now serves both:
+        # when a coverage floor is declared the run happens under coverage and its
+        # exit code is what tests_pass reads. Identical checks, half the executions.
+        wants_cov = bool(self.spec.get("coverage_min") and test_paths)
+        test_rc, test_out = 0, ""
+        if test_paths and (self.spec.get("tests_pass") or wants_cov):
+            cmd = (
+                ["uv", "run", "coverage", "run", "-m", "pytest", "-q", *test_paths]
+                if wants_cov
+                else ["uv", "run", "pytest", "-q", *test_paths]
+            )
+            test_rc, test_out = _run(cmd)
         if self.spec.get("tests_pass") and test_paths:
-            rc, out = _run(["uv", "run", "pytest", "-q", *test_paths])
-            if rc != 0:
-                result.failures.append(f"tests_pass: pytest failed\n{out[-2000:]}")
+            if test_rc != 0:
+                result.failures.append(f"tests_pass: pytest failed\n{test_out[-2000:]}")
         source_paths = [p for p in paths if p not in test_paths]
         py_paths = [p for p in paths if p.endswith(".py")]
         py_sources = [p for p in source_paths if p.endswith(".py")]
@@ -98,7 +110,7 @@ class CodeSection(Section):
             # packages, or the gate would regress whenever *sibling* modules
             # are added (this happened: core/dynamics diluted core/).
             unit_files = py_sources
-            rc, out = _run(["uv", "run", "coverage", "run", "-m", "pytest", "-q", *test_paths])
+            rc, out = test_rc, test_out
             if rc != 0:
                 result.failures.append(f"coverage_min: test run failed\n{out[-800:]}")
             else:

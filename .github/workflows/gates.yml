@@ -1,9 +1,18 @@
 name: Gates
-
 on:
   push:
     branches: [main]
   pull_request:
+  schedule:
+    # Full sweep nightly. The targeted job below is what runs per push; this is the
+    # backstop that catches drift a path map cannot see.
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+    inputs:
+      full:
+        description: "Run every unit regardless of what changed"
+        type: boolean
+        default: true
 
 jobs:
   gates:
@@ -11,10 +20,53 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: astral-sh/setup-uv@v5
         with:
           python-version: "3.12"
           enable-cache: true
       - run: uv sync --all-packages
-      - name: Run gates (fail on regression of previously green units)
+
+      - name: Which units can this change affect
+        id: scope
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE_SHA: ${{ github.event.before }}
+          FULL: ${{ github.event.inputs.full }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" = "schedule" ] || [ "$FULL" = "true" ]; then
+            echo "mode=full" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$EVENT" = "pull_request" ]; then
+            git fetch origin "$BASE_REF" --depth=1
+            git diff --name-only --diff-filter=ACMR "origin/$BASE_REF"...HEAD > changed.txt
+          elif [ -n "${BEFORE_SHA:-}" ] && git cat-file -e "$BEFORE_SHA" 2>/dev/null; then
+            git diff --name-only --diff-filter=ACMR "$BEFORE_SHA"..HEAD > changed.txt
+          else
+            echo "mode=full" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "--- changed ---"; cat changed.txt
+          uv run python gates/affected_units.py $(tr '\n' ' ' < changed.txt) | sort -u > units.txt
+          echo "--- affected units ---"; cat units.txt
+          if [ -s units.txt ]; then
+            echo "mode=targeted" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=none" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Full sweep
+        if: steps.scope.outputs.mode == 'full'
         run: uv run python gates/run_gates.py --check
+
+      - name: Affected units only
+        if: steps.scope.outputs.mode == 'targeted'
+        run: uv run python gates/run_gates.py $(tr '\n' ' ' < units.txt)
+
+      - name: No gated unit touched
+        if: steps.scope.outputs.mode == 'none'
+        run: echo "No gate unit references any changed file; nightly sweep covers drift."
