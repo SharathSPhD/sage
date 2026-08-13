@@ -646,3 +646,231 @@ def test_solve_electricity_refuses_demand_above_capacity():
     )
     assert response.status_code == 422
     assert "capacity" in response.json()["detail"]
+
+
+# --- beyond the normal form -------------------------------------------------
+
+PRISONERS_DILEMMA = [[[3, 0], [5, 1]], [[3, 5], [0, 1]]]
+STAG_HUNT = [[3.0, 0.0], [2.0, 2.0]]
+RISK_SITUATION = [[[2, 2], [5, 0]], [[0, 1], [0, 1]]]
+
+
+def test_solve_repeated_returns_the_folk_theorem_critical_delta():
+    body = client.post(
+        "/v1/solve/repeated", json={"payoffs": PRISONERS_DILEMMA, "discount": 0.6}
+    ).json()
+    assert body["critical_discount"] == pytest.approx(0.5)
+    assert body["sustainable"] is True
+    assert body["target"] == [0, 0]
+    assert body["target_payoffs"] == [3.0, 3.0]
+    assert body["punishment_payoffs"] == [1.0, 1.0]
+
+
+def test_solve_repeated_impatient_players_cannot_sustain_cooperation():
+    body = client.post(
+        "/v1/solve/repeated", json={"payoffs": PRISONERS_DILEMMA, "discount": 0.3}
+    ).json()
+    assert body["sustainable"] is False
+    assert [0, 0] not in body["sustainable_profiles"]
+
+
+def test_solve_repeated_precision_adds_a_cooperation_probability():
+    body = client.post(
+        "/v1/solve/repeated",
+        json={"payoffs": PRISONERS_DILEMMA, "discount": 0.85, "precision": 20.0},
+    ).json()
+    assert body["cooperation_probability"] > 0.9
+
+
+def test_solve_repeated_rejects_a_discount_of_one():
+    response = client.post(
+        "/v1/solve/repeated", json={"payoffs": PRISONERS_DILEMMA, "discount": 1.0}
+    )
+    assert response.status_code == 422
+
+
+def test_edgeworth_cycles_with_capacity_and_settles_without():
+    cycling = client.post(
+        "/v1/dynamics/edgeworth",
+        json={
+            "costs": [1.0, 1.0],
+            "ladder_range": [1.0, 3.0, 0.2],
+            "precision": 60.0,
+            "n_steps": 200,
+        },
+    ).json()
+    assert cycling["is_fixed_point"] is True  # no capacity limit: textbook Bertrand
+    assert cycling["mean_price"] < 1.6
+    assert len(cycling["price_path"]) == 201
+
+
+def test_edgeworth_cycles_once_capacity_binds():
+    body = client.post(
+        "/v1/dynamics/edgeworth",
+        json={
+            "costs": [1.0, 1.0],
+            "ladder_range": [1.0, 3.0, 0.2],
+            "capacities": [5.0, 5.0],
+            "precision": 60.0,
+            "n_steps": 200,
+        },
+    ).json()
+    assert body["is_fixed_point"] is False
+    assert body["period"] > 1
+    assert body["amplitude"] > 0.0
+    assert body["trough"] < body["mean_price"] < body["peak"]
+
+
+def test_edgeworth_rejects_a_capacity_mismatch():
+    response = client.post(
+        "/v1/dynamics/edgeworth",
+        json={"costs": [1.0, 1.0], "ladder_range": [1.0, 2.0, 0.5], "capacities": [5.0]},
+    )
+    assert response.status_code == 422
+
+
+def test_edgeworth_rejects_an_ambiguous_ladder():
+    response = client.post(
+        "/v1/dynamics/edgeworth",
+        json={"costs": [1.0, 1.0], "ladder": [1.0, 2.0], "ladder_range": [1.0, 2.0, 0.5]},
+    )
+    assert response.status_code == 422
+
+
+def test_solve_evolutionary_reports_rest_points_and_fixation():
+    body = client.post(
+        "/v1/solve/evolutionary",
+        json={"payoff": STAG_HUNT, "intensity": 1.0, "population": 40},
+    ).json()
+    assert len(body["rest_points"]) == 3
+    assert set(body["kinds"]) == {"stable", "unstable"}
+    assert 0.0 < body["fixation_a"] < 1.0
+    assert len(body["moran_stationary"]) == 41
+
+
+def test_solve_evolutionary_agrees_with_the_finite_reading_at_beta_equals_lambda():
+    body = client.post(
+        "/v1/solve/evolutionary",
+        json={"payoff": STAG_HUNT, "intensity": 1.5, "population": 30},
+    ).json()
+    assert body["qre_gap"] < 1e-8
+    assert body["fermi_gap"] < 1e-12
+    assert body["logit_rest_point"] == pytest.approx(body["qre_symmetric"], abs=1e-8)
+
+
+def test_solve_evolutionary_rejects_a_population_for_a_three_type_game():
+    response = client.post(
+        "/v1/solve/evolutionary",
+        json={"payoff": [[0, -1, 1], [1, 0, -1], [-1, 1, 0]], "population": 20},
+    )
+    assert response.status_code == 422
+
+
+def test_solve_extensive_by_catalogue_name():
+    body = client.post(
+        "/v1/solve/extensive", json={"tree": "entry_deterrence", "precision": 3.0}
+    ).json()
+    assert body["perfect_information"] is True
+    assert body["subgame_perfect_actions"] == ["in", "accommodate"]
+    assert body["n_nodes"] == 5
+    assert len(body["behaviour"]) == 2
+
+
+def test_solve_extensive_centipede_does_not_stop_immediately():
+    body = client.post(
+        "/v1/solve/extensive",
+        json={"tree": "centipede", "precision": 1.0, "options": {"n_moves": 6}},
+    ).json()
+    assert body["subgame_perfect_actions"][0] == "take"
+    assert body["behaviour"][0][1] > 0.5
+    assert body["divergence"] > 0.5
+
+
+def test_solve_extensive_accepts_a_raw_tree():
+    tree = {
+        "players": ["A", "B"],
+        "root": {
+            "player": "A",
+            "infoset": "h",
+            "actions": ["l", "r"],
+            "children": [{"payoffs": [1.0, 0.0]}, {"payoffs": [0.0, 1.0]}],
+        },
+    }
+    body = client.post("/v1/solve/extensive", json={"tree": tree, "precision": 5.0}).json()
+    assert body["n_nodes"] == 3
+    assert body["recommended"] == ["l"]
+
+
+def test_solve_extensive_rejects_a_malformed_tree():
+    response = client.post(
+        "/v1/solve/extensive", json={"tree": {"players": ["A"], "root": {"player": "A"}}}
+    )
+    assert response.status_code == 422
+
+
+def test_extensive_catalogue_lists_the_classics():
+    body = client.get("/v1/extensive/catalogue").json()
+    names = {entry["name"] for entry in body["trees"]}
+    assert names == {
+        "bargaining",
+        "centipede",
+        "entry_deterrence",
+        "kuhn_poker",
+        "seltens_horse",
+    }
+
+
+def test_solve_situation_assembles_the_whole_recommendation():
+    body = client.post(
+        "/v1/solve/situation",
+        json={
+            "payoffs": RISK_SITUATION,
+            "actions": ["hold", "gamble"],
+            "rival_actions": [["soft", "hard"]],
+            "players": ["you", "them"],
+            "precision": 4.0,
+        },
+    ).json()
+    assert body["action_label"] == "hold"
+    assert len(body["alternatives"]) == 2
+    assert body["alternatives"][0]["regret"] == 0.0
+    assert body["rivals"][0]["most_likely"] == "hard"
+    assert sum(body["rivals"][0]["distribution"]) == pytest.approx(1.0)
+    assert "robustness" in body["sensitivity"]
+    assert "diagnostics" not in body
+
+
+def test_solve_situation_reports_where_the_answer_switches():
+    body = client.post(
+        "/v1/solve/situation",
+        json={"payoffs": RISK_SITUATION, "precision": 8.0, "ladder": [0.02, 0.2, 2.0, 20.0]},
+    ).json()
+    assert body["sensitivity"]["stable"] is False
+    assert body["sensitivity"]["switch_precision"] == 0.02
+    assert body["sensitivity"]["robustness"] < 1.0
+
+
+def test_solve_situation_hides_the_physics_until_asked():
+    body = client.post(
+        "/v1/solve/situation",
+        json={"payoffs": RISK_SITUATION, "precision": 2.0, "diagnostics": True},
+    ).json()
+    assert 0.0 <= body["diagnostics"]["alpha"] <= 1.0
+
+
+def test_solve_situation_rejects_an_out_of_range_player():
+    response = client.post("/v1/solve/situation", json={"payoffs": RISK_SITUATION, "you": 4})
+    assert response.status_code == 422
+
+
+def test_every_new_endpoint_is_in_the_schema():
+    paths = client.get("/openapi.json").json()["paths"]
+    for route in (
+        "/v1/solve/repeated",
+        "/v1/solve/evolutionary",
+        "/v1/solve/extensive",
+        "/v1/solve/situation",
+        "/v1/dynamics/edgeworth",
+        "/v1/extensive/catalogue",
+    ):
+        assert route in paths
