@@ -16,6 +16,7 @@ Usage:
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -42,8 +43,9 @@ class SectionResult:
         return not self.failures
 
 
-def _run(cmd: list[str]) -> tuple[int, str]:
-    proc = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO, check=False)
+def _run(cmd: list[str], env: dict[str, str] | None = None) -> tuple[int, str]:
+    merged = {**os.environ, **env} if env else None
+    proc = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO, check=False, env=merged)
     return proc.returncode, (proc.stdout + proc.stderr)
 
 
@@ -55,6 +57,17 @@ class Section:
     def __init__(self, spec: dict[str, Any], unit: str) -> None:
         self.spec = spec
         self.unit = unit
+
+    def _cov_env(self) -> dict[str, str]:
+        """A coverage data file private to this unit.
+
+        The default ``.coverage`` at the repo root is a single shared path, so a
+        concurrent pytest or a second gate run in the same worktree overwrites it
+        mid-flight and the unit is scored against another unit's data. That produced
+        a REGRESSION on ``solve.advanced`` that did not reproduce -- the unit re-ran
+        alone at 100% and green.
+        """
+        return {"COVERAGE_FILE": str(REPO / f".coverage.{self.unit}")}
 
     def run(self) -> SectionResult:
         result = SectionResult(self.name)
@@ -89,7 +102,7 @@ class CodeSection(Section):
                 if wants_cov
                 else ["uv", "run", "pytest", "-q", *test_paths]
             )
-            test_rc, test_out = _run(cmd)
+            test_rc, test_out = _run(cmd, self._cov_env())
         if self.spec.get("tests_pass") and test_paths:
             if test_rc != 0:
                 result.failures.append(f"tests_pass: pytest failed\n{test_out[-2000:]}")
@@ -122,7 +135,8 @@ class CodeSection(Section):
                         "report",
                         f"--include={','.join(unit_files)}",
                         f"--fail-under={floor}",
-                    ]
+                    ],
+                    self._cov_env(),
                 )
                 if rc != 0:
                     result.failures.append(f"coverage_min {floor:.0f}%: not met\n{out[-800:]}")
