@@ -21,7 +21,12 @@ from jax import config as _jax_config
 
 _jax_config.update("jax_enable_x64", True)  # type: ignore[no-untyped-call]
 
-from strataq import games  # noqa: E402  (x64 config must precede any jax use)
+from strataq import (  # noqa: E402  (x64 config must precede any jax use)
+    evolutionary,
+    extensive,
+    games,
+    repeated,
+)
 from strataq.core.protocols import (  # noqa: E402
     ActionGridBuilder,
     ConjugateFieldSpec,
@@ -44,6 +49,7 @@ from strataq.fit import LambdaFit, fit  # noqa: E402
 from strataq.problems import (  # noqa: E402
     AllocationProblem,
     AllocationSolution,
+    Alternative,
     AuctionProblem,
     AuctionSolution,
     ConvergenceWarning,
@@ -51,21 +57,33 @@ from strataq.problems import (  # noqa: E402
     DemandModel,
     ElectricityProblem,
     ElectricitySolution,
+    EvolutionaryProblem,
+    EvolutionarySolution,
+    ExtensiveProblem,
+    ExtensiveSolution,
     LinearDemand,
     LogitDemand,
     PricingProblem,
     PricingSolution,
     Problem,
+    RepeatedProblem,
+    RepeatedSolution,
+    RivalView,
     RoutingProblem,
     RoutingSolution,
+    Sensitivity,
+    Situation,
+    SituationSolution,
     Solution,
     TollEffect,
+    solve_situation,
 )
 
 __all__ = [
     "ActionGridBuilder",
     "AllocationProblem",
     "AllocationSolution",
+    "Alternative",
     "AuctionProblem",
     "AuctionSolution",
     "ConjugateFieldSpec",
@@ -78,6 +96,10 @@ __all__ = [
     "ElectricityProblem",
     "ElectricitySolution",
     "Engine",
+    "EvolutionaryProblem",
+    "EvolutionarySolution",
+    "ExtensiveProblem",
+    "ExtensiveSolution",
     "Game",
     "LambdaFit",
     "LearnPageSpec",
@@ -88,8 +110,14 @@ __all__ = [
     "PricingSolution",
     "Problem",
     "QREPoint",
+    "RepeatedProblem",
+    "RepeatedSolution",
+    "RivalView",
     "RoutingProblem",
     "RoutingSolution",
+    "Sensitivity",
+    "Situation",
+    "SituationSolution",
     "Solution",
     "SpectrumInfo",
     "TollEffect",
@@ -99,6 +127,8 @@ __all__ = [
     "chi_partial",
     "critical_lambda",
     "diagnose",
+    "evolutionary",
+    "extensive",
     "fit",
     "games",
     "hodge_decompose",
@@ -106,5 +136,7 @@ __all__ = [
     "make_family",
     "normalise",
     "reciprocity_defect",
+    "repeated",
+    "solve_situation",
     "strategic_spectrum",
 ]
