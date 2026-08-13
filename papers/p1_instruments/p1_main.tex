@@ -1,3 +1,13 @@
+%% ---------------------------------------------------------------------------
+%%  strataq --- the software paper (P-B of papers/PAPER_PROGRAMME_v2.md).
+%%
+%%  TARGET VENUE: JOSS, or SoftwareX / Journal of Statistical Software.
+%%  A software paper's job is: what does it compute, is it right, can I install
+%%  it, can I cite it. The calibration table (Section 5) is the argument; the
+%%  rest of the paper exists to make that table legible.
+%%
+%%  Every number regenerates with: make reproduce
+%% ---------------------------------------------------------------------------
 \documentclass[11pt]{article}
 \usepackage[margin=1.1in]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
@@ -11,74 +21,98 @@
 \newcommand{\chieq}{\chi^{\mathrm{eq}}}
 \newcommand{\chipart}{\chi^{\mathrm{part}}}
 \newcommand{\EPR}{\sigma_{\mathrm{EP}}}
-\newtheorem{result}{Result}
-\newtheorem{finding}{Finding}
+\newcommand{\strataq}{\texttt{strataq}}
 
-\title{\textbf{strataq: measurement instruments for stochastic strategic systems}\\
-\large Susceptibility, reciprocity, and entropy production for quantal-response equilibria,\\
-calibrated on games with known answers}
-\author{Sharath Sathish\thanks{With agent-assisted implementation. Code, gate records, and every
-number's regeneration path: \url{https://github.com/SharathSPhD/sage}.}}
-\date{August 2026 --- working draft v0.2 (grown at every closed gate)}
+\title{\textbf{\strataq: quantal response equilibria, their derivatives,
+their geometry and their dissipation, in one JAX library}}
+\author{Sharath Sathish\thanks{With agent-assisted implementation.
+Source, gate records and every number's regeneration path:
+\url{https://github.com/SharathSPhD/sage}. Correspondence:
+\texttt{sharath.ai.colab@gmail.com}.}}
+\date{August 2026 --- software paper, draft v0.3}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-We present \texttt{strataq}, an open JAX library that treats logit quantal-response
-equilibrium (QRE) analysis as \emph{instrumentation}: a susceptibility meter, a
-reciprocity meter, an entropy-production meter, and a phase locator, each an
-executable function with a stated confidence tier and a regenerable calibration
-artifact. The exact backbone is known (QRE = entropy-regularised response; Gibbs
-stationarity in potential games); the library's contribution is (i) the
-\emph{reciprocity transfer}: the observable equilibrium response
-$\chieq=(I-SB)^{-1}S$ is symmetric \emph{iff} the normalised game has zero
-harmonic component, so strategic feedback neither creates nor destroys
-reciprocity---making the reciprocity defect $\R$ a payoff-free, $\lambda$-free
-\emph{test} of potentiality; (ii) a separable Kronecker implementation of the
-Candogan decomposition giving the harmonic fraction $\alpha$ in near-linear time;
-(iii) exact-tier dynamics meters (currents, entropy production) on the joint-profile
-Glauber chain; and (iv) calibration of every meter at both ends of the $\alpha$
-axis with payoffs known by construction: Rosenthal congestion on real Sioux Falls
-network data ($\R=5.7\times10^{-17}$, Fisk KKT $7\times10^{-15}$) and Colonel
-Blotto ($\alpha=0.69$, $\R=0.12$). Pointing the calibrated instruments at seeded
-game families produced three findings we did not predict: $\R$ magnitudes scale
-with $\lambda$ (only the zero test is $\lambda$-free); potential games
-\emph{escape} criticality at high $\lambda$ through equilibrium concentration,
-opening a supercritical wedge only for $\alpha\gtrsim0.5$; and the response and
-dissipation layers decouple structurally in the near-harmonic regime---the
-correlation between response asymmetry and entropy production reverses sign at
-$\alpha=0.95$, and no renormalisation of the response matrix repairs it. Every
-quantitative statement in this paper regenerates from fixed seeds
-(\texttt{make reproduce}); Appendix~A maps each number to its artifact.
+\noindent
+\strataq{} is an open-source JAX library for logit quantal response equilibrium
+(QRE) analysis and for three things routinely needed \emph{after} an equilibrium
+that no existing package provides: the exact derivative of the equilibrium with
+respect to payoffs (the strategic resolvent $\chieq=(I-SB)^{-1}S$, which no
+solver exposes); the Candogan--Menache--Ozdaglar--Parrilo potential/harmonic
+decomposition, of which no implementation exists on any package index fifteen
+years after publication; and the non-equilibrium thermodynamics of the revision
+dynamics --- currents and entropy production of the joint-profile Glauber chain
+--- which existing irreversibility estimators cannot compute because they take a
+scalar series and have no concept of an agent. A fourth gap is closed by a
+packaged estimation workflow with named intervals, documented as missing by the
+reference solver's own maintainers. On top sits a problem-oriented API (pricing,
+auction, routing, allocation, electricity, repeated, evolutionary and
+extensive-form problems), a one-call \texttt{diagnose()} whose refusals are
+returned as bounds, and publication figures on a shared palette.
+The paper's argument is its calibration table: fourteen readings on systems whose
+correct answer is fixed by an analytic identity or an external oracle, each
+mapped to a committed artifact that regenerates from a recorded seed. The
+reciprocity defect reads $\le 8.9\times10^{-17}$ on exact potential games and
+$5.6\times10^{-17}$ on a real road network; the equilibrium derivative matches
+central finite differences to $1.3\times10^{-8}$ and an independent
+implicit-differentiation path to $5.6\times10^{-17}$; fixed-$\lambda$ profiles
+match \texttt{pygambit}'s homotopy to $1.2\times10^{-9}$, and the agent-QRE
+solver matches \texttt{pygambit}'s extensive-form solver on four classic trees
+inside the library's $10^{-8}$ oracle tolerance. We describe the evidence
+discipline the project runs on, including the release-integrity failure (F-0018)
+in which 23 in-repo gates were green while every solver call in the shipped wheel
+raised \texttt{FileNotFoundError}, and the tests that exist because of it.
+Limitations are stated in the same voice: the exact dynamics layer is dense and
+small-game only, the product surface above the gated instrument layer is tested
+but not yet gated, the extensive-form oracle checks are skippable, and the public
+API is broader than \texttt{\_\_all\_\_} documents.
 \end{abstract}
 
-\section{Introduction}
-\input{sections/intro}
-\section{The instruments and their tiers}
-\input{sections/instruments}
-\section{Calibration: games with known answers}
-\input{sections/calibration}
+\noindent\textbf{Keywords:} quantal response equilibrium; logit; comparative
+statics; potential games; Hodge decomposition; entropy production; JAX;
+research software
 
-\input{sections/estimation}
-\section{Findings from pointing the instruments}
-\input{sections/findings}
-\section{Software and reproducibility}
-\input{sections/software}
-\section{Related work and honest positioning}
-\input{sections/related}
+\section{Statement of need}
+\input{sections/need}
+\section{Design}
+\input{sections/design}
+\section{What the library computes}
+\input{sections/functionality}
+\section{Calibration: the argument}
+\input{sections/calibration}
+\section{Validation against reference implementations}
+\input{sections/validation}
+\section{Reproducibility, and one instructive failure}
+\input{sections/reproducibility}
+\section{Limitations and known gaps}
+\input{sections/limitations}
+
+\section*{Availability}
+\strataq{} is Apache-2.0 and on PyPI (\texttt{pip install strataq}); the
+repository (\url{https://github.com/SharathSPhD/sage}) carries the library, the
+experiments, the gate records, the claim ledger and the findings log.
+Dominick's-derived artifacts are CC-BY-NC-4.0 and ride with the data, never
+with the package.
 
 \appendix
 \section{Every number's provenance}
 \input{sections/provenance}
 
 \bibliographystyle{plainnat}
-\begin{thebibliography}{20}
+\begin{thebibliography}{30}
 \bibitem[McKelvey and Palfrey(1995)]{mckelvey1995} McKelvey, R.D., Palfrey, T.R.:
 Quantal response equilibria for normal form games. \emph{Games and Economic
 Behavior} 10(1), 6--38 (1995).
+\bibitem[McKelvey and Palfrey(1998)]{mckelvey1998} McKelvey, R.D., Palfrey, T.R.:
+Quantal response equilibria for extensive form games. \emph{Experimental
+Economics} 1, 9--41 (1998).
 \bibitem[Goeree et al.(2016)]{ghp2016} Goeree, J.K., Holt, C.A., Palfrey, T.R.:
 \emph{Quantal Response Equilibrium: A Stochastic Theory of Games}. Princeton (2016).
+\bibitem[Bland and Turocy(2025)]{bland2025} Bland, J.R., Turocy, T.L.: Quantal
+response equilibrium as a structural model for estimation: the missing manual.
+\emph{Games and Economic Behavior} (2025).
 \bibitem[Haile et al.(2008)]{hhk2008} Haile, P.A., Horta\c{c}su, A., Kosenok, G.:
 On the empirical content of quantal response equilibrium. \emph{American Economic
 Review} 98(1), 180--200 (2008).
@@ -103,21 +137,50 @@ possessing pure-strategy Nash equilibria. \emph{Int.\ J.\ Game Theory} 2, 65--67
 \bibitem[Turocy(2005)]{turocy2005} Turocy, T.L.: A dynamic homotopy interpretation
 of the logistic quantal response equilibrium correspondence. \emph{Games and
 Economic Behavior} 51(2), 243--263 (2005).
+\bibitem[Savani and Turocy(2026)]{gambit} Savani, R., Turocy, T.L.: Gambit: the
+package for computation in game theory, version 16.7.0.
+\url{https://gambitproject.readthedocs.io} (accessed 12 August 2026).
+\bibitem[Knight(2018)]{nashpy} Knight, V., Campbell, J.: Nashpy: a Python library
+for the computation of Nash equilibria. \emph{Journal of Open Source Software}
+3(30), 904 (2018).
+\bibitem[Lanctot et al.(2019)]{openspiel} Lanctot, M., et al.: OpenSpiel: a
+framework for reinforcement learning in games. arXiv:1908.09453 (2019).
 \bibitem[Sokota et al.(2023)]{sokota2023} Sokota, S., et al.: A unified approach
 to reinforcement learning, quantal response equilibria, and two-player zero-sum
 games. \emph{ICLR} (2023).
 \bibitem[Mat\v{e}jka and McKay(2015)]{matejka2015} Mat\v{e}jka, F., McKay, A.:
 Rational inattention to discrete choices. \emph{American Economic Review} 105(1),
 272--298 (2015).
-\bibitem[Hommes and Ochea(2012)]{hommes2012} Hommes, C.H., Ochea, M.I.: Multiple
-equilibria and limit cycles in evolutionary games with logit dynamics.
-\emph{Games and Economic Behavior} 74(1), 434--441 (2012).
-\bibitem[Xu and Wang(2011)]{xu2011} Xu, B., Wang, Z.: Measurement and application
-of entropy production rate in human subject social interaction systems.
-arXiv:1107.6043 (2011).
+\bibitem[Fudenberg et al.(2015)]{fudenberg2015} Fudenberg, D., Iijima, R.,
+Strzalecki, T.: Stochastic choice and revealed perturbed utility.
+\emph{Econometrica} 83(6), 2371--2409 (2015).
+\bibitem[Schnakenberg(1976)]{schnakenberg1976} Schnakenberg, J.: Network theory of
+microscopic and macroscopic behavior of master equation systems. \emph{Reviews of
+Modern Physics} 48, 571--585 (1976).
+\bibitem[Rold\'an and Parrondo(2010)]{roldan2010} Rold\'an, \'E., Parrondo,
+J.M.R.: Estimating dissipation from single stationary trajectories. \emph{Physical
+Review Letters} 105, 150607 (2010).
+\bibitem[Barato and Seifert(2015)]{barato2015} Barato, A.C., Seifert, U.:
+Thermodynamic uncertainty relation for biomolecular processes. \emph{Physical
+Review Letters} 114, 158101 (2015).
+\bibitem[Horowitz and Gingrich(2017)]{horowitz2017} Horowitz, J.M., Gingrich,
+T.R.: Proof of the finite-time thermodynamic uncertainty relation for
+steady-state currents. \emph{Physical Review E} 96, 020103 (2017).
+\bibitem[Hatano and Sasa(2001)]{hatanosasa2001} Hatano, T., Sasa, S.: Steady-state
+thermodynamics of Langevin systems. \emph{Physical Review Letters} 86, 3463 (2001).
+\bibitem[Seifert(2026)]{seifert2026} Seifert, U.: Universal bounds on entropy
+production from fluctuating coarse-grained trajectories. \emph{Nature Reviews
+Physics} 8, 493--507 (2026).
+\bibitem[Kuhn(1953)]{kuhn1953} Kuhn, H.W.: Extensive games and the problem of
+information. In: \emph{Contributions to the Theory of Games II}, Princeton (1953).
+\bibitem[Maskin and Tirole(1988)]{maskin1988} Maskin, E., Tirole, J.: A theory of
+dynamic oligopoly II: price competition, kinked demand curves, and Edgeworth
+cycles. \emph{Econometrica} 56(3), 571--599 (1988).
 \bibitem[Stabler et al.()]{tntp} Stabler, B., Bar-Gera, H., Sall, E.:
 Transportation networks for research. \url{github.com/bstabler/TransportationNetworks}.
-\bibitem[Sathish(2026b)]{p3} S.~Sathish. The non-equilibrium thermodynamics of quantal response. Working draft, 2026. In the same repository.
+\bibitem[Sathish(2026)]{p2} Sathish, S.: The irreversibility plane: response
+asymmetry and dissipation are independent coordinates of strategic
+non-equilibrium. Working draft, 2026. In the same repository.
 \end{thebibliography}
 
 \end{document}

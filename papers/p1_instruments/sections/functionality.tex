@@ -1,0 +1,88 @@
+A map of the public surface as it stands. Notation: players $i$ with finite
+action sets, mixed profiles $\sigma_i$, precision $\lambda_i$;
+$C_i=\operatorname{diag}(\sigma_i)-\sigma_i\sigma_i^\top$;
+$S=\operatorname{blockdiag}(\lambda_iC_i)$;
+$B_{ij}(a,b)=\partial U_i(a)/\partial\sigma_j(b)$.
+
+\paragraph{Solve.} \texttt{logit\_qre} is a JIT-compiled damped
+Krasnoselskii--Mann iteration on the logit fixed point. \texttt{mirror} adds
+magnetic mirror descent \citep{sokota2023} --- a structurally different,
+last-iterate-convergent method --- so that solver dependence can be \emph{tested}
+rather than assumed away. \texttt{homotopy} is a pseudo-arclength branch tracer
+with fold detection by $\lambda$-direction reversal and $\rho(SB)$ recorded along
+the branch, so a turning point of the correspondence is a labelled event rather
+than a silent jump. \texttt{implicit} differentiates through the fixed point with
+a custom VJP on the transposed tangent system, sharing the $(I-SB)$
+factorisation.
+
+\paragraph{Respond and decompose.} \texttt{chi\_partial} is the opponents-frozen
+identity $\chipart=\lambda_iC_i$; \texttt{chi\_equilibrium} is
+$\chieq=(I-SB)^{-1}S$; \texttt{reciprocity\_defect} is
+$\R=\lVert\chieq-\chieq{}^\top\rVert_F/\lVert\chieq+\chieq{}^\top\rVert_F$, zero
+if and only if the normalised game is potential. Two properties are documented at
+the call site because both have been misread in print, including by us: $\R$ is a
+ratio of norms rather than a fraction, so it is unbounded above (matching pennies
+reads $1.20$), and only its \emph{zero} is $\lambda$-free --- the magnitude
+scales with $\lambda$, so any level carries the $\lambda$ it was read at.
+\texttt{strategic\_spectrum} and \texttt{critical\_lambda} locate criticality
+from the same operator, warning rather than returning a huge $\chieq$ near it.
+\texttt{hodge\_decompose} and \texttt{alpha} give the geometry, and
+\texttt{make\_family} constructs games at an exact target $\alpha$, which turns
+an $\alpha$-sweep into a controlled experiment.
+
+\paragraph{Dynamics and thermodynamics.} \texttt{core.dynamics} builds the
+Glauber generator on the joint profile space with its stationary distribution,
+currents $J^*$, exact $\EPR$ and a uniformised trajectory sampler.
+\texttt{thermo.estimators} holds the data-side estimators;
+\texttt{thermo.nulls} the surrogate classes, including a reversibilized-Markov
+null matching an observed chain's persistence, which is the sharp test for
+pair-level detailed balance; \texttt{thermo.protocols} the Hatano--Sasa
+\citep{hatanosasa2001} housekeeping/excess split and stepwise $\lambda$-quench
+protocols with their fluctuation theorems; and \texttt{thermo.hs\_estimator} the
+plug-in quench estimator with a standalone \texttt{relaxation\_gate} that refuses
+windows which have not settled.
+
+\paragraph{Estimate.} \texttt{estimate.lam} runs four structurally different
+$\lambda$ estimators --- frequency MLE with a profile-likelihood interval,
+autodiff MLE through an unrolled solve, $\chi$ moment-matching, dispersion
+inversion --- with an agreement protocol treating their disagreement as a
+misspecification diagnostic. \texttt{estimate.bayes} adds a grid posterior with a
+self-diagnosing resolution guard, mixture Bayes factors and an
+expected-free-energy experiment-selection loop. \texttt{fit()} packages the
+workflow of Section~1 for tidy experimental data.
+
+\paragraph{Repeated, evolutionary, extensive.} \texttt{repeated} writes
+strategies as Moore machines, so grim trigger and tit-for-tat are data rather
+than code paths; it answers the folk theorem's two questions (sustainable at
+$\delta$? critical $\delta$?) in closed form for grim trigger and generically by
+one-shot deviation, adds a logit analogue in which sustainability is a
+probability, and measures Edgeworth cycles \citep{maskin1988} from alternating
+logit best response on a price ladder. \texttt{evolutionary} has replicator
+dynamics in continuous and discrete time, rest points by support enumeration
+classified by tangent-space eigenvalues, the logit dynamic whose rest points are
+the logit QRE, and the finite-population Moran side; the two meet at one scalar,
+because the selection intensity $\beta$ of the Fermi rule \emph{is} the logit
+precision $\lambda$, and \texttt{compare\_intensity} reports both readings with
+the gap between them. \texttt{extensive} stores trees as flat preorder arrays
+with a nested-dict constructor that doubles as the JSON format, and implements
+the two tree passes, the reduced normal form, Kuhn's theorem \citep{kuhn1953},
+backward induction, a catalogue of classics, and the agent QRE
+\citep{mckelvey1998} --- logit at every information set --- on the same damped
+fixed point as the strategic-form solver, cross-validated against
+\texttt{pygambit} (Section~6).
+
+\paragraph{Problems, verdicts, figures.} \texttt{strataq.problems} exposes eight
+problem types --- pricing, auction, routing, allocation, electricity, repeated,
+evolutionary, extensive --- on one contract: construct, solve, summarise.
+Problems validate on construction with actionable errors; solutions are frozen
+dataclasses whose \texttt{.diagnostics} carry the response, decomposition and
+dissipation readings, computed only if asked for. \texttt{solve\_situation()}
+assembles a whole recommendation once, including a sensitivity block that
+re-solves across a ladder of precisions and reports what fraction of it agrees
+and where the answer first changes --- a recommendation holding from $\lambda/4$
+to $4\lambda$ is a different object from one holding only at the $\lambda$ you
+picked, and the API says which one you have. \texttt{diagnose()} is the one-call
+entry point: a verdict, with \texttt{explain()} for every warning, band, null and
+seed, \texttt{snippet()} for a runnable reproduction of exactly that reading, and
+\texttt{plot()} for the point in the $(\R,\EPR)$ plane. \texttt{strataq.viz}
+carries one palette shared by library, application and papers.

@@ -431,3 +431,82 @@ N stops at 4 and m stops at 6, and the two axes were swept **separately** (A at 
 
 - Chase status: **chasing** — (a) the sector-loading regression named above, which is the mechanism test for why low-α co-movement is two-player-only; (b) a criterion for the N axis that does not depend on a low-α baseline, since this run shows that baseline does not exist at N ≥ 3 and A-T1's precondition therefore makes the N sweep unadjudicable by construction; (c) A-T2's one-sidedness, which lets onset drift *downward* into a vacuous pass. Items (b) and (c) are defects of **this** registration, recorded here and deliberately **not** repaired by writing a second criteria file for this unit.
 - Resolution / follow-up: artifacts `benchmarks/results/plane_nplayers.json` + `plane_nplayers.resolved.yaml`. p1_instruments gains "N = 2" on the instrument-scope table's α-regime row; p3_noneq's decoupling section gains the N-scaling result and the F-0022 correction; `memory/claims.md` C1 gains the N-scope qualifier.
+
+## F-0018 — 23 gates green while every solver call in the shipped wheel was broken (retroactive entry)
+
+- Date of the event: 2026-08-12. **Date this entry was written: 2026-08-13.**
+- **Why this entry is retroactive, stated first.** F-0018 was cited by number in
+  `memory/claims.md` (P1), `memory/PROTOCOL.md`, `docs/ONBOARDING.md` §5, `docs/ops-hosting.md`,
+  `gates/affected_units.py` and `papers/PAPER_PROGRAMME_v2.md` §4 — but **no F-0018 entry ever
+  existed in this file**. The finding is reconstructed here from those primary sources and from
+  the `[strataq 0.1.0] — 2026-08-12` block of `CHANGELOG.md`; nothing below is new measurement,
+  and anything not attested by one of those sources is not asserted. A finding cited six times
+  and logged zero times is itself an instance of the failure it describes.
+- Instrument / experiment: the pre-upload release smoke test for `strataq` 0.1.0 (unit
+  `product.toolkit`, claim P1).
+- Expected / observed: expected the wheel to behave as the repo does. Observed, from an
+  **installed wheel**: the packaged `strataq/core/base.yaml` fallback that `base_config()`
+  documents **was never shipped**, so *every solver-touching entry point* raised
+  `FileNotFoundError` — `game_thermo` and `estimate_rationality` were dead for anyone outside
+  the repository, and only the pure-numpy paths worked. Separately, `__version__` was a
+  hand-edited literal that had drifted from `pyproject.toml`.
+- **The part that matters**: all **23 gates were green** at the time, and every one of them was
+  correct. Nothing gated the packaging boundary, so the entire test suite was true in-repo and
+  false for outsiders. P1's registered falsifier — "a facade path that skips a guard the research
+  path enforces" — was realised at a boundary nobody had thought to gate.
+- Chase status: resolved. Both defects fixed before publication; `pip install strataq` 0.1.0 from
+  the public index reproduces F-0011's ℛ = 0.0011 in a clean virtualenv. Four release-integrity
+  tests were added (config file exists in the wheel; byte-identical to the repo config;
+  standalone schema load; `__version__` matches `pyproject.toml`), and the CI wheel smoke test —
+  which had checked only the numpy-only entry point, the exact blind spot the bug lived behind —
+  now exercises a solver path.
+- Resolution / follow-up: standing rule, **no release without an out-of-tree smoke of every
+  public entry point**. The generalisation is the one ADR-0015 acts on: *a check that passes tells
+  you only that the check passed* — before trusting a suite, ask what it would have to see to
+  fail, and whether it could see it. `papers/p1_instruments` carries this as its reproducibility
+  credential rather than hiding it.
+
+## F-0024 — F-0022's "indistinguishable from zero at m = 6" does not survive a real λ̄ control; the sign reversal reaches m = 6 (registration of the R12 correction)
+
+- Date: 2026-08-13. **Entry status: this is the numbered registration of a correction whose
+  measurement and full text live in F-0023's section "A correction to F-0022".** It exists as its
+  own entry because `memory/PROTOCOL.md` §2 and `docs/PRD.md` both cite "F-0022 was corrected by
+  F-0024" by number, and because a correction to an earlier finding must be findable at the
+  number the rest of the repository uses for it. No number here is new to this entry.
+- Instrument / experiment: `experiments/plane_nplayers.py` control arm **C1b** (unit
+  `science.plane.nplayers`, R12) — paired to the main arm on identical games and **λ̄-matched by
+  construction** (max |ratio − 1| = 0.0314 against a registered 0.10 tolerance), 400 games per
+  cell. Artifact `benchmarks/results/plane_nplayers.json`.
+- **What F-0022 said**: *"The sign reversal is an m = 3–5 fact, not a general one: at m = 6 with
+  fixed Frobenius scale ρ_S = +0.012 with CI [−0.137, +0.156], statistically indistinguishable
+  from zero."*
+- **What the paired, λ̄-matched control measures** — ρ_S(EPR, ℛ) at α = 0.95:
+
+  | m | C1b scale | C1b λ̄ | C1b ρ_S [95% CI] | main arm (fixed scale) ρ_S [95% CI] |
+  |---|---|---|---|---|
+  | 3 | 2.0000 | 1.855 | −0.3325 [−0.423, −0.246] | −0.3325 [−0.424, −0.235] |
+  | 4 | 2.3535 | 1.909 | **−0.2966** [−0.387, −0.204] | −0.2536 [−0.340, −0.161] |
+  | 5 | 2.6308 | 1.860 | **−0.2554** [−0.345, −0.160] | −0.1760 [−0.268, −0.081] |
+  | 6 | 3.0171 | 1.913 | **−0.2061** [−0.300, −0.105] | −0.1119 [−0.214, −0.016] |
+
+  **At matched effective precision the m = 6 interval EXCLUDES zero and the sign reversal
+  survives to m = 6.** Two things moved the number: doubling n (R11's +0.012 at n = 200 and this
+  run's −0.113 at n = 400 are the same games plus 200 more, and each lies inside the other's
+  interval — resolution, not contradiction), and controlling λ̄ (the fixed-scale arm drives λ̄
+  from 1.855 down to 1.268 across m; C1b holds it at 1.86–1.91). Of the fixed-scale drift in
+  ρ_hi from m = 3 to m = 6, **+0.221 total, +0.126 survives matching and +0.095 is temperature.**
+- **What this does and does not change.** F-0022's *narrowing* was too strong on this one point
+  and is corrected: "the sign reversal does not survive m at fixed Frobenius scale" must not be
+  quoted without "at fixed Frobenius scale", and at matched λ̄ it does survive. What is
+  **unchanged** is the paper's claim, which rests on decorrelation at the ceiling, not on the
+  sign: independence requires decorrelation, and F-0010 already established that the α = 0.95
+  sign is λ-dependent, so no sign statement generalises in λ from either run. The reversal
+  continues to be quotable only with **(m, λ, N)** attached — N because F-0023 established that
+  the low-α co-movement the whole stratified design rests on is a two-player fact.
+- **F-0022's follow-up obligation (i)** — "re-run D1 and D2 paired to the main arm at matched λ̄
+  by construction" — is **DISCHARGED** by this control (m axis: C1b; N axis: C1a).
+- Chase status: resolved for the m axis. The remaining scope is unchanged and restated: one λ,
+  Gaussian-source Hodge families only, N = 2 for this control, and the (N, m) interior unread.
+- Resolution / follow-up: `papers/p2_plane` §Results and §Discussion carry the corrected
+  statement and drop "indistinguishable from zero" as an unqualified claim; the gate
+  `gates/science.plane.yaml` records it under objection O-6.

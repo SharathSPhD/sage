@@ -1,0 +1,57 @@
+\paragraph{Two engines, and a rule about what may cross between them.}
+\strataq{} is a uv-workspace monorepo in JAX. Engine~1 is the finite strategic
+form (dense payoff tensors, normalisation, the Hodge decomposition, the response
+instruments, the solvers, the exact dynamics); Engine~2 is population games
+(routing networks, Fisk stochastic user equilibrium \citep{fisk1980},
+population-level susceptibility). A third engine for Bayesian games with type
+spaces is \emph{deliberately not started}, by a recorded decision, because the
+finite-strategic-form machinery does not apply to it as written.
+
+Domains --- congestion, Blotto, pricing, electricity --- are plugins declaring
+exactly five objects (payoff oracle, action-grid builder, conjugate-field
+specification, dataset loader, learn page) and making \emph{zero} core changes,
+enforced by a commit hook and in CI: a domain may import its own declared engine
+and nothing else, and a commit touching both a domain and the core must cite a
+recorded architecture decision by id. The invariant is that \emph{a domain that
+needs core changes is not a domain, it is an engine}.
+
+\paragraph{Refusal is a return value.} The conjugate-field declaration names the
+observable payoff perturbation the response instruments differentiate with
+respect to --- link tolls, budgets, wholesale cost. A domain that cannot name one
+declares \texttt{NONE}, and the response instruments then \emph{refuse to run}
+rather than returning a number with no operational meaning. The pattern recurs:
+\texttt{fit()} reports a flat likelihood as the interval it truly is (the whole
+search window) and withholds the point estimate; \texttt{diagnose()} reports an
+unidentifiable coordinate as a bound, or as a named pair of quadrants it cannot
+separate, never as \texttt{None}.
+
+\paragraph{Float64 and the tangent space are correctness requirements, not
+preferences.} JAX x64 is enabled at import: $(I-SB)$ is near-singular exactly
+where the interesting behaviour is, and float32 is not acceptable there. All
+linear algebra involving $(I-SB)$ runs on
+$T=\bigoplus_i\{v:\mathbf{1}^\top v=0\}$ through an explicit Helmert basis,
+because $C_i=\operatorname{diag}(\sigma_i)-\sigma_i\sigma_i^\top$ is
+rank-deficient by construction and skipping the projection manufactures a
+spurious zero eigenvalue --- a false criticality reading. Decomposition always
+acts on the \emph{normalised} game, since full externality symmetry is
+sufficient but not necessary for potentiality of the raw game
+\citep{legacci2024}.
+
+\paragraph{No literal constants in library code.} Tolerances, seeds, grids and
+$\lambda$ ranges come from a typed configuration schema, on a named ladder:
+$10^{-12}$ for exact identities, $10^{-10}$ for decomposition and solver
+convergence, $10^{-8}$ for oracle cross-checks against an external
+implementation, $10^{-6}$ for finite differences. Every stochastic call site
+takes an explicit PRNG key folded from a root recorded in the resolved
+configuration; there is no global RNG. Every reading reports both $\lambda$ and
+the normalised precision $\bar\lambda=\lambda\cdot(\text{payoff range})$, because
+payoffs are rescaled internally and the scale folds into $\lambda$ --- a confound
+that has caught one of this project's own experiments and is now reported by
+construction.
+
+\paragraph{Two surfaces, one machinery.} The upper surface is
+\texttt{strataq.problems} (state a problem, get a solution object); the lower is
+the instrument layer (\texttt{logit\_qre}, \texttt{chi\_equilibrium},
+\texttt{reciprocity\_defect}, \texttt{alpha}, \texttt{diagnose}). The upper calls
+the lower and never reimplements it, and the facade's numbers are gated against
+the research artifacts they claim to reproduce.

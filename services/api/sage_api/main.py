@@ -27,6 +27,8 @@ from strataq.core.solve.fixedpoint import logit_qre
 from strataq.core.solve.homotopy import logit_branch
 from strataq.diagnose import diagnose
 from strataq.estimate.lam import lambda_dispersion, lambda_mle
+from strataq.extensive.catalogue import CATALOGUE, build
+from strataq.extensive.tree import ExtensiveGame
 from strataq.finite.decompose.hodge import hodge_decompose
 from strataq.finite.games.tensor import DenseTensorGame
 from strataq.finite.response.reciprocity import reciprocity_defect
@@ -38,11 +40,16 @@ from strataq.problems import (
     AuctionProblem,
     DemandModel,
     ElectricityProblem,
+    EvolutionaryProblem,
+    ExtensiveProblem,
     LinearDemand,
     LogitDemand,
     PricingProblem,
+    RepeatedProblem,
     RoutingProblem,
+    Situation,
 )
+from strataq.repeated.cycles import edgeworth_cycle, linear_market_demand
 from strataq.thermo.estimators import (
     kld_epr,
     stationary_current_weights,
@@ -1131,6 +1138,212 @@ def solve_electricity(payload: ElectricityPayload) -> dict[str, Any]:
             demand=payload.demand,
             precision=payload.precision,
             generator=payload.generator,
+        ).solve(),
+        payload.diagnostics,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Beyond the normal form: repeated, evolutionary and extensive-form problems,
+# plus the assembled recommendation. Same shape as the /v1/solve/* family above.
+# ---------------------------------------------------------------------------
+
+MAX_REPEATED_PROFILES = 4096
+MAX_EVOLUTIONARY_TYPES = 6
+MAX_EVOLUTIONARY_POPULATION = 2000
+MAX_CYCLE_STEPS = 2000
+MAX_TREE_NODES = 4000
+
+
+def _dense_from(payoffs: list[Any], *, limit: int, what: str) -> DenseTensorGame:
+    """A dense game from nested lists, size-guarded for the sync API."""
+    try:
+        game = DenseTensorGame(tuple(jnp.asarray(u, dtype=jnp.float64) for u in payoffs))
+    except (ValueError, TypeError) as exc:
+        raise HTTPException(status_code=422, detail=f"invalid game: {exc}") from exc
+    if not all(bool(jnp.all(jnp.isfinite(u))) for u in game.payoffs):
+        raise HTTPException(status_code=422, detail="payoffs must be finite (no NaN/Inf)")
+    size = 1
+    for m in game.num_actions:
+        size *= m
+    if size > limit:
+        raise HTTPException(
+            status_code=413, detail=f"{what}: {size} joint profiles exceeds the sync limit {limit}"
+        )
+    return game
+
+
+class RepeatedPayload(BaseModel):
+    """A stage game plus a discount factor: is the arrangement self-enforcing?"""
+
+    payoffs: list[Any] = Field(description="One nested-list payoff tensor per player.")
+    discount: Annotated[float, Field(ge=0, lt=1)]
+    target: list[int] | None = Field(
+        default=None, description="The pure profile to sustain; defaults to the efficient one."
+    )
+    punishment: Literal["minmax", "nash"] | list[float] = "minmax"
+    precision: Annotated[float, Field(ge=0, le=1000)] | None = None
+
+
+@app.post("/v1/solve/repeated")
+def solve_repeated(payload: RepeatedPayload) -> dict[str, Any]:
+    """Critical discount factor and the grim-trigger sustainable payoff set."""
+    game = _dense_from(payload.payoffs, limit=MAX_REPEATED_PROFILES, what="repeated stage game")
+    return _run_solve(
+        lambda: RepeatedProblem(
+            payoffs=game,
+            discount=payload.discount,
+            target=payload.target,
+            punishment=payload.punishment,
+            precision=payload.precision,
+        ).solve(),
+        False,
+    )
+
+
+class EdgeworthPayload(BaseModel):
+    """Alternating logit best response on a homogeneous-good price ladder."""
+
+    costs: list[float] = Field(min_length=2, max_length=3)
+    ladder: list[float] | None = None
+    ladder_range: list[float] | None = None
+    intercept: Annotated[float, Field(gt=0)] = 10.0
+    slope: Annotated[float, Field(gt=0)] = 1.0
+    capacities: list[float] | None = Field(
+        default=None,
+        description="Per-firm capacity. Unlimited (the default) is textbook Bertrand and "
+        "does not cycle; capacity below market demand is what produces the Edgeworth cycle.",
+    )
+    precision: Annotated[float, Field(gt=0, le=1000)] = 20.0
+    n_steps: Annotated[int, Field(ge=2, le=MAX_CYCLE_STEPS)] = 400
+
+
+@app.post("/v1/dynamics/edgeworth")
+def dynamics_edgeworth(payload: EdgeworthPayload) -> dict[str, Any]:
+    """Period, amplitude and the price path of the Edgeworth cycle on a ladder."""
+    grid = _grid(payload.ladder, payload.ladder_range, "ladder")
+    levels = (
+        list(grid)
+        if isinstance(grid, list)
+        else [grid[0] + i * grid[2] for i in range(_n_levels(grid))]
+    )
+    if len(levels) ** len(payload.costs) > MAX_REPEATED_PROFILES:
+        raise HTTPException(status_code=413, detail="price ladder too large for the sync API")
+    if payload.capacities is not None and len(payload.capacities) != len(payload.costs):
+        raise HTTPException(status_code=422, detail="capacities must match costs")
+    try:
+        cycle = edgeworth_cycle(
+            payload.costs,
+            levels,
+            linear_market_demand(payload.intercept, payload.slope),
+            payload.precision,
+            capacities=payload.capacities,
+            n_steps=payload.n_steps,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    return {
+        "period": int(cycle.period),
+        "period_rounds": cycle.period_rounds,
+        "amplitude": float(cycle.amplitude),
+        "peak": float(cycle.peak),
+        "trough": float(cycle.trough),
+        "mean_price": float(cycle.mean_price),
+        "is_fixed_point": bool(cycle.is_fixed_point),
+        "ladder": [float(p) for p in cycle.ladder],
+        "price_path": [[float(p) for p in row] for row in cycle.price_path],
+        "precision": float(cycle.lam),
+    }
+
+
+class EvolutionaryPayload(BaseModel):
+    """A symmetric payoff matrix read as a population game."""
+
+    payoff: list[list[float]] = Field(min_length=2, max_length=MAX_EVOLUTIONARY_TYPES)
+    intensity: Annotated[float, Field(ge=0, le=1000)] = 1.0
+    population: Annotated[int, Field(ge=2, le=MAX_EVOLUTIONARY_POPULATION)] | None = None
+    mutation: Annotated[float, Field(gt=0, lt=1)] | None = None
+
+
+@app.post("/v1/solve/evolutionary")
+def solve_evolutionary(payload: EvolutionaryPayload) -> dict[str, Any]:
+    """Replicator rest points with stability, Moran fixation, and the beta = lambda gap."""
+    return _run_solve(
+        lambda: EvolutionaryProblem(
+            payoff=payload.payoff,
+            intensity=payload.intensity,
+            population=payload.population,
+            mutation=payload.mutation,
+        ).solve(),
+        False,
+    )
+
+
+class ExtensivePayload(BaseModel):
+    """A game tree, by catalogue name or as the nested-dict form."""
+
+    tree: str | dict[str, Any] = "entry_deterrence"
+    precision: Annotated[float, Field(ge=0, le=1000)] = 1.0
+    options: dict[str, Any] | None = None
+
+
+@app.post("/v1/solve/extensive")
+def solve_extensive(payload: ExtensivePayload) -> dict[str, Any]:
+    """Agent QRE behaviour at every information set, plus backward induction."""
+    if isinstance(payload.tree, dict):
+        try:
+            tree: Any = ExtensiveGame.from_dict(payload.tree)
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        if tree.n_nodes > MAX_TREE_NODES:
+            raise HTTPException(status_code=413, detail=f"max {MAX_TREE_NODES} nodes (sync API)")
+    else:
+        tree = payload.tree
+    return _run_solve(
+        lambda: ExtensiveProblem(
+            tree=tree, precision=payload.precision, options=payload.options
+        ).solve(),
+        False,
+    )
+
+
+@app.get("/v1/extensive/catalogue")
+def extensive_catalogue() -> dict[str, Any]:
+    """The classic trees this service can solve by name."""
+    return {
+        "trees": [
+            {"name": name, "title": build(name).title, "nodes": build(name).n_nodes}
+            for name in sorted(CATALOGUE)
+        ]
+    }
+
+
+class SituationPayload(BaseModel):
+    """A payoff table, whose player you are, and how sharp you think everyone is."""
+
+    payoffs: list[Any] = Field(description="One nested-list payoff tensor per party.")
+    you: Annotated[int, Field(ge=0)] = 0
+    precision: Annotated[float, Field(gt=0, le=1000)] = 1.0
+    actions: list[str] | None = None
+    rival_actions: list[list[str]] | None = None
+    players: list[str] | None = None
+    ladder: list[float] | None = Field(default=None, max_length=32)
+    diagnostics: bool = False
+
+
+@app.post("/v1/solve/situation")
+def solve_situation_endpoint(payload: SituationPayload) -> dict[str, Any]:
+    """The assembled recommendation: action, rivals, alternatives, sensitivity."""
+    game = _dense_from(payload.payoffs, limit=MAX_SOLVE_PROFILES, what="situation")
+    return _run_solve(
+        lambda: Situation(
+            payoffs=game,
+            you=payload.you,
+            precision=payload.precision,
+            actions=payload.actions,
+            rival_actions=payload.rival_actions,
+            players=payload.players,
+            ladder=payload.ladder,
         ).solve(),
         payload.diagnostics,
     )

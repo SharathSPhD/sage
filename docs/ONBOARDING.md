@@ -231,6 +231,24 @@ signoff** — 12 `exact`, 14 `derived`. 20 findings (F-0001–F-0021, one id unu
 carries an appended correction). 13 ADRs, ADR-0001…ADR-0013. 45 artifacts. Chase status
 across findings: 6 chasing, 5 parked, 3 resolved, 1 superseded.
 
+> **SUPERSEDED 2026-08-13 — read this before quoting the paragraph above.** The counts are
+> stale and, more importantly, the sentence **"all GREEN, all with red-team signoff" is no
+> longer true and must not be repeated**. Current state: **28 units, 26 green and 2 red.**
+> The two red ones are `science.plane` (R11, F-0022) and `science.plane.nplayers` (R12,
+> F-0023/F-0024): both landed on `main` un-gated by operator direction, both now have gate
+> files, and both are red on `red_team_signoff` — R11's review returned WITHHELD and the
+> corrected unit was never re-reviewed (plus one genuinely open objection, the un-run
+> prior-art re-audit); R12 has had no adversarial review at all. See **ADR-0014** and
+> **ADR-0015**, the latter of which also names every piece of *product* code on `main` that
+> has tests but no gate (`problems/`, `solve_situation`, `fit`, `diagnose`, `viz`,
+> `repeated/`, `evolutionary/`, `extensive/`, the new API routes and the `/demos` pages),
+> with a dated plan to close each. Findings now run **F-0001–F-0024 with no unused id**:
+> F-0018 (the release-integrity failure) and F-0024 (the correction to F-0022) were cited by
+> number across the repository for a day before either had an entry, and both were written
+> retroactively on 2026-08-13 with that fact on their face. ADRs run ADR-0001…ADR-0015.
+> `run_gates.py --check` fails only on *regression*, so it still passes with two red units —
+> which is exactly why they have to be on the board rather than missing from it.
+
 `gates/schema.yaml` is a **template** that carries an example `unit:` value — it is not a
 27th unit, and it is the reason a naive `glob("gates/*.yaml")` sees 27 files for 26 units.
 

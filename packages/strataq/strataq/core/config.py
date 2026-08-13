@@ -86,6 +86,54 @@ class EstimateConfig(BaseModel):
     bootstrap_resamples: int = Field(gt=1)
 
 
+class RepeatedConfig(BaseModel):
+    """Infinitely repeated games: discount bracket and Edgeworth cycle search."""
+
+    model_config = ConfigDict(frozen=True)
+
+    delta_max: float = Field(gt=0, lt=1, description="Upper bracket for critical-delta bisection.")
+    bisect_iters: int = Field(gt=0, description="Bisection steps for the critical discount factor.")
+    cycle_max_steps: int = Field(gt=1, description="Revision steps in an Edgeworth path.")
+    cycle_tol: float = Field(gt=0, description="Distribution match tolerance for cycle detection.")
+
+
+class EvolutionaryConfig(BaseModel):
+    """Replicator integration and the finite-population Moran chain."""
+
+    model_config = ConfigDict(frozen=True)
+
+    step: float = Field(gt=0, description="Replicator integration step.")
+    steps: int = Field(gt=0, description="Replicator integration horizon.")
+    rest_tol: float = Field(gt=0, description="|xdot| below which a point is a rest point.")
+    mutation: float = Field(
+        gt=0, lt=1, description="Moran mutation rate keeping the chain ergodic."
+    )
+
+
+class ExtensiveConfig(BaseModel):
+    """Game-tree size guards."""
+
+    model_config = ConfigDict(frozen=True)
+
+    max_nodes: int = Field(gt=0, description="Largest tree the dense passes will build.")
+    max_pure_strategies: int = Field(gt=0, description="Reduced normal form size guard.")
+    damping_backoff: float = Field(
+        gt=0, lt=1, description="Damping multiplier on an AQRE run that missed tolerance."
+    )
+    max_restarts: int = Field(gt=0, description="How many times to back the damping off.")
+    continuation_points: int = Field(gt=1, description="Lambda steps in the continuation fallback.")
+
+
+class SituationConfig(BaseModel):
+    """The precision ladder solve_situation() sweeps for sensitivity."""
+
+    model_config = ConfigDict(frozen=True)
+
+    ladder_points: int = Field(gt=2, description="Number of precisions on the ladder.")
+    ladder_low: float = Field(gt=0, description="Lowest multiple of the stated precision.")
+    ladder_high: float = Field(gt=0, description="Highest multiple of the stated precision.")
+
+
 class BaseConfig(BaseModel):
     """The validated form of ``config/base.yaml``."""
 
@@ -98,6 +146,10 @@ class BaseConfig(BaseModel):
     criticality: CriticalityConfig
     solver: SolverDefaults
     estimate: EstimateConfig
+    repeated: RepeatedConfig
+    evolutionary: EvolutionaryConfig
+    extensive: ExtensiveConfig
+    situation: SituationConfig
 
     @classmethod
     def from_mapping(cls, cfg: dict[str, Any]) -> BaseConfig:

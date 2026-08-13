@@ -1,0 +1,71 @@
+Quantal response equilibrium \citep{mckelvey1995} is the standard structural
+model of noisy strategic choice, and computing one is solved: \texttt{pygambit}
+\citep{gambit} ships the only production logit-QRE homotopy in any language.
+\strataq{} does not compete on that. It exists because four things researchers
+need \emph{after} an equilibrium have no implementation anywhere, and are
+therefore hand-rolled, differently, in every paper that needs them.
+
+\paragraph{1. Nobody implements the Candogan decomposition.} Fifteen years after
+\citet{candogan2011} gave the orthogonal decomposition of a finite game into
+potential, harmonic and non-strategic flows, there is \textbf{no package on any
+index that implements it}; the public artifacts are one-off notebooks, and the
+recent theory papers that use it as their baseline coordinate system release no
+code. The harmonic fraction $\alpha$ is the natural independent variable for
+``how far is this game from a potential game'', and it has been unavailable in
+practice. \strataq{} computes it with a separable Kronecker transform,
+near-linear in the payoff tensor size and verified against the projection
+identities at machine precision.
+
+\paragraph{2. No solver exposes the equilibrium derivative.} What a practitioner
+wants is $d\sigma^*/dh$: how the equilibrium moves when a payoff moves. Every QRE
+package returns the equilibrium and stops, so comparative statics are done by
+finite-differencing a re-solved equilibrium --- slow, noisy, and \emph{silently
+wrong across a turning point}, where the re-solve can land on a different branch.
+The derivative is available in closed form as the strategic resolvent
+$\chieq=(I-SB)^{-1}S$ on the tangent space, and \strataq{} returns it directly.
+The same operator is the uniqueness certificate ($\rho(SB)<1$), the bifurcation
+detector, and the kernel of the custom JAX VJP: one factorisation serves
+comparative statics, criticality warnings and gradients through the solve.
+
+\paragraph{3. Irreversibility estimators cannot see agents.} The live packages
+for time-series irreversibility take a scalar series and return a verdict; they
+have no concept of an agent, an action or a profile, so they cannot answer the
+only version of the question a game theorist or a regulator can act on --- which
+player's response asymmetry produces the entropy production --- and the canonical
+review of coarse-grained bounds \citep{seifert2026} ships no code at all.
+\strataq{} constructs the joint-profile Glauber generator implied by logit
+revision and computes its stationary distribution, currents and exact
+Schnakenberg entropy production \citep{schnakenberg1976}, with trajectory
+estimators ($k$-block KLD \citep{roldan2010}, debiased finite-time
+thermodynamic-uncertainty bound \citep{barato2015,horowitz2017}) validated
+against that exact meter.
+
+\paragraph{4. The estimation workflow has a manual instead of an API.} The
+maintainer of the reference solver co-authored \citet{bland2025}, ``the missing
+manual'' for QRE estimation. A manual exists because the workflow is not in the
+software: \texttt{pygambit.qre.logit\_estimate} returns the estimate, the
+profile and the log-likelihood --- no standard error, no interval, no
+likelihood-ratio test --- and its \emph{input} is a profile of aggregated counts,
+so subject, round and treatment are destroyed before the likelihood is written.
+Every published interval on $\lambda$ is hand-rolled, differently in each lab,
+which makes them incomparable across papers. \strataq{}'s \texttt{fit()} takes
+tidy data and keeps the panel: with a \texttt{subject} column the bootstrap
+resamples \emph{subjects}, so within-subject correlation widens the interval
+instead of being averaged away, and without one it says so. It prints
+$\hat\lambda$, an interval with its method named, $n$, the log-likelihood, and
+likelihood-ratio tests against both nested boundaries, Nash
+($\lambda\to\infty$) and uniform ($\lambda=0$).
+
+\paragraph{Positioning, stated once.} \emph{\texttt{pygambit} computes
+equilibria; \strataq{} tells you what kind of system you are looking at.} We do
+not compete on correctness of the QRE correspondence --- \texttt{pygambit} is our
+oracle, which converts the incumbent from a competitor into a certificate.
+\texttt{nashpy} \citep{nashpy} is two-player with no QRE; OpenSpiel
+\citep{openspiel} has magnetic mirror descent \citep{sokota2023} --- one
+entropy-regularised solution at one fixed regularisation, two-player zero-sum
+sequential --- and no QRE entry in its algorithm table; QuantEcon ships the
+Glauber chain and never closes the loop to a logit fixed point. One practical
+fact decides adoption: every \texttt{pygambit} release to date ships Windows
+wheels and an sdist only, so Linux, macOS and every Colab notebook compile a
+C++17 codebase to use the reference solver. \strataq{} is pure Python on JAX and
+installs everywhere with no compiler.

@@ -99,3 +99,81 @@ Format per entry: Context · Options · Decision · Consequences · Date. Includ
 - **Open objections carried, not closed**: O-3 (re-run D1/D2 paired to the main arm; they draw from independent keys, so the confound-control arm compares a 100-game sample against a 200-game sample), O-6 (D1 drives lambda_normalised +40% where the main arm drives it -32%, so the arms bracket the confound rather than controlling it), and the un-run K4 prior-art re-audit. N>2 is untested entirely.
 - **Consequences**: the gate suite no longer covers everything on main, so `run_gates.py --check` passing is now a weaker statement than it was. Required follow-up, in order: re-review the corrected unit, write `gates/science.plane.yaml`, register `science.plane.paired_controls` for O-3/O-6, and only then quote R11 outside this repository.
 - **Date**: 2026-08-13
+
+## ADR-0015 — Everything on `main` without a gate, named, with a dated plan to close it
+
+- **Context**: ADR-0014 recorded ONE un-gated merge (`science.plane`, R11) as an exception. It
+  did not stay an exception. Since it was written, `science.plane.nplayers` (R12, F-0023/F-0024)
+  and a large amount of product code landed on `main` with tests but with **no gate file, no
+  `gates/status.json` entry, and in most cases no CHANGELOG line**. The gate suite therefore
+  stayed green — 26 units, all GREEN — while covering a steadily smaller fraction of what ships.
+  That is exactly the failure shape of **F-0018** (23 gates green while every solver call in the
+  shipped wheel raised `FileNotFoundError`, because nothing gated the packaging boundary), and it
+  is the reason `run_gates.py --check` passing is now a weak statement.
+  Being explicit about this is acceptable; being silent about it is not, so this ADR names the
+  whole of it.
+
+- **Decision**: (a) write real gate files NOW for the two research units, with their honest —
+  **red** — status rather than a green one bought by omission; (b) name every other piece of
+  un-gated code on `main` in the register below, with the tier it will be gated at and a date;
+  (c) make the register a standing obligation: **any merge to `main` of library, service or app
+  code either lands with a gate or adds a line to this ADR on the same day.**
+
+### Register A — research units on `main`, now gated, both RED
+
+| Unit | Gate file (new) | Why it is RED | Finding |
+|---|---|---|---|
+| `science.plane` (R11) | `gates/science.plane.yaml` | `red_team_signoff: false` — the review returned **WITHHELD** on 2026-08-13 (O-1 criterion substitution, O-2 no interval on the deciding statistic, O-6 unpaired controls); corrections landed (`f0268f3`, `b1b833d`, `dbdd6ec`) but **the unit was never re-reviewed**. Plus one genuinely open objection, O-7: the K4 prior-art re-audit was never run | F-0022 |
+| `science.plane.nplayers` (R12) | `gates/science.plane.nplayers.yaml` | `red_team_signoff: false` — **no adversarial review of this unit has taken place at all**. Three self-raised registration defects are recorded as `accepted` with justification rather than repaired by writing a second criteria file, which is the R11 failure mode | F-0023, F-0024 |
+
+Both gates carry the epistemic disclosures on their face: K2-T1 is **INDETERMINATE**, not a
+survival; K3 is a diagnostic with no power, not a kill-shot passed with margin; kill-shot A is
+**INDETERMINATE** because its registered precondition failed at N ≥ 3; and A-T2's pass is
+**vacuous**. Neither unit's numbers may be quoted outside this repository until the reviews
+happen (the rule ADR-0014 already stated, now covering two units).
+
+### Register B — product code on `main` with tests but no gate
+
+Every row has tests and none has a gate, an acceptance artifact, or a claims-ledger entry.
+None of them makes a research claim, which is why a **product tier** (code + documentation +
+one acceptance artifact reproducing a committed number end to end, as `product.toolkit` does)
+is the right closure, not a domain/statistical gate.
+
+| On `main` | Where | Tests | Gate to write | By |
+|---|---|---|---|---|
+| `problems/` API — `Problem → solve() → Solution`, 9 problem types + `Diagnostics` | `packages/strataq/strataq/problems/` | `tests/test_problems.py` | `product.problems` | 2026-08-15 |
+| `solve_situation()` / `Situation` / `SituationSolution` | `packages/strataq/strataq/problems/situation.py` | `tests/test_situation.py` | folded into `product.problems` | 2026-08-15 |
+| `fit()` — the Bland–Turocy estimation workflow, panel-preserving, LR tests, `by=` heterogeneity | `packages/strataq/strataq/fit.py` | `tests/test_fit.py` | `product.fit` (must include agreement with `pygambit.qre.logit_estimate` on identical data) | 2026-08-15 |
+| `diagnose()` — one verdict, refusals as bounds | `packages/strataq/strataq/diagnose.py` | `tests/test_diagnose.py` | `product.diagnose` | 2026-08-16 |
+| `viz` — the shared palette and publication figures | `packages/strataq/strataq/viz.py` | `tests/test_viz.py` | folded into `product.diagnose` | 2026-08-16 |
+| `repeated/` — automata, folk theorem, Edgeworth cycles | `packages/strataq/strataq/repeated/` | `tests/repeated/` | `theory.repeated` | 2026-08-17 |
+| `evolutionary/` — replicator, Moran, β ≡ λ | `packages/strataq/strataq/evolutionary/` | `tests/evolutionary/` | `theory.evolutionary` | 2026-08-17 |
+| `extensive/` — trees, Kuhn's theorem, AQRE, backward induction | `packages/strataq/strataq/extensive/` | `tests/extensive/` (incl. four pygambit cross-checks at the `oracle` tolerance 1e-8, **skipped when pygambit is absent** — so CI may be passing a suite whose oracle checks never ran) | `theory.extensive` | 2026-08-17 |
+| New API routes for the four new problem types | `services/api/` (commit `b289cc9`) | API tests | extend `api.core` | 2026-08-18 |
+| `/demos` — four explorables incl. `/demos/the-plane` | `apps/web/` (commit `da64d40`) | app tests | extend `web.scaffold` | 2026-08-18 |
+
+`services/` and `apps/web` are named here for completeness; they are owned by other agents and
+this ADR does not schedule work inside them beyond the gate extension.
+
+### Register C — ledger debt found while writing this ADR
+
+- **`memory/findings.md` was missing F-0018 and F-0024 entirely**, while `memory/claims.md`,
+  `memory/PROTOCOL.md`, `docs/ONBOARDING.md` and `docs/PRD.md` all cite them by number. Both are
+  appended in this pass as retroactive entries that cite the primary sources they are
+  reconstructed from, and both say on their face that they were written after the fact.
+- **The CHANGELOG's `[Unreleased]` section documents `/demos` and nothing else from Register B.**
+  Entries for the two research units are added in this pass; the Register B entries are owed with
+  their gates.
+
+### Consequences
+
+- `gates/status.json` now carries **two RED units by design**. `run_gates.py --check` fails only
+  on *regression*, so a new red unit does not fail CI — which is correct here (nothing regressed)
+  and is also precisely why a red unit must be visible on the board rather than absent from it.
+- The headline "26 units, all GREEN" in `docs/ONBOARDING.md` §4 is superseded: it is now 28 units,
+  26 green and 2 red, and the green count no longer describes the shipped surface.
+- Until Register B is closed, the honest statement about the library is: **the instrument layer is
+  gated; the product surface on top of it is tested but not gated.** Any external communication
+  that implies otherwise is wrong.
+
+- **Date**: 2026-08-13

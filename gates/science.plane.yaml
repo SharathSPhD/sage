@@ -1,0 +1,98 @@
+unit: science.plane
+claim: "R11, on two-player Gaussian-source Hodge families at lambda = 1.2, m in {3,4,5,6}, 200 games per main cell: the within-alpha-level rank association between Schnakenberg EPR and the response asymmetry R does NOT recover at high alpha at any tested action count. rho_S(EPR, R) at alpha=0.95 has its upper 95% bootstrap endpoint BELOW the 0.35 ceiling at every m (worst ci_high +0.156), the alpha=0.05 and alpha=0.95 intervals are disjoint at every m, and the precondition rho_S(alpha=0.05) >= 0.55 holds at every m. Decorrelation at the ceiling is what the two-coordinate claim rests on, and it is all it rests on. The registered finite-size kill-shot K2-T1 is INDETERMINATE, not survived (see the disclosure below). K3 (solver) is a DIAGNOSTIC, not a passed kill-shot. N = 2 throughout; nothing here speaks to N-scaling (that is unit science.plane.nplayers)."
+tier: derived
+
+# EPISTEMIC DISCLOSURE 1 (red-team O-1) - CRITERION SUBSTITUTION.
+# This unit has TWO registrations of the SAME K2 kill-shot.
+#   config/experiments/plane_finite_size.yaml  committed a6533e7, 2026-08-12 23:02:25
+#     refute iff rho_hi(6) - rho_hi(3) > 0.40 ; survive iff <= 0.20
+#   config/experiments/plane_robustness.yaml   committed b89d5df, 2026-08-12 23:26:36
+#     refute iff gap_ratio(6) < 0.50 ; survive iff gap_ratio(m) >= 0.50 at every m
+# experiments/plane_finite_size.py was written at 23:04:39 and RUN at 23:04:49 and
+# again at 23:17:47 - i.e. the first registration was live when data first existed,
+# and the replacement was committed AFTER those runs. The earlier binds. On this
+# run's data delta rho_hi = +0.3639, which resolves NEITHER branch: the verdict is
+# INDETERMINATE. Both registrations define INDETERMINATE as a third outcome.
+#
+# EPISTEMIC DISCLOSURE 2 (red-team O-2) - the deciding statistic had no interval.
+# gap_ratio(6) = 0.5853 with a POST-HOC bootstrap CI [+0.434, +0.749] (4000
+# resamples) and P(gap_ratio < 0.50) = 0.129: the interval crosses the bar, so by
+# the replacement registration's own stated principle the surviving branch is not
+# certified either. Two independent routes to INDETERMINATE.
+#
+# EPISTEMIC DISCLOSURE 3 - K3 had no power. The two solver arms perturb R by
+# ~1.3e-12, twelve orders of magnitude below the spacing of adjacent R values in a
+# 100-game sample, and rho_S is rank-based, so |delta rho_S| = 0 was arithmetically
+# forced before the run. Reported as the solver-noise diagnostic it is.
+#
+# The ceiling criterion (survive_ceiling = 0.35, in CI form) is IDENTICAL in both
+# registrations and is inherited from F-0010's registered collapse threshold, so it
+# is immune to the substitution. That is why the claim rests on it.
+#
+# GATE STATUS: this gate is RED and is expected to be red. It is written so that
+# what is on main is on the board with its honest status, per ADR-0015. See the
+# adversarial section: the red team returned WITHHELD on 2026-08-13 and the
+# corrected unit has never been re-reviewed. Findings: F-0022 (corrected), F-0023.
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.0        # sweep unit: no new library code; experiment-only
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - experiments/plane_robustness.py
+      - experiments/plane_finite_size.py          # the SUPERSEDED registration's experiment, committed so the substitution is checkable
+      - config/experiments/plane_robustness.yaml
+      - config/experiments/plane_finite_size.yaml
+
+  domain:
+    - id: plane_ceiling
+      spec: "THE LOAD-BEARING CRITERION. rho_S(EPR,R) at alpha=0.95 has ci_high <= 0.35 at every m in {3,4,5,6} (worst +0.156); alpha=0.05 and alpha=0.95 intervals disjoint at every m; precondition rho_S(alpha=0.05) >= 0.55 at every m. Threshold identical in both registrations and inherited from F-0010"
+      artifact: benchmarks/results/plane_robustness.json
+    - id: plane_finite_size_indeterminate
+      spec: "K2-T1 recorded as INDETERMINATE under the BINDING (earlier) registration: delta rho_hi = +0.3639 resolves neither the 0.40 refutation bar nor the 0.20 survival bar; the replacement's gap_ratio(6) = 0.5853 carries a post-hoc CI [+0.434,+0.749] crossing its own 0.50 bar. The artifact must continue to record INDETERMINATE and must not be re-scored as a survival"
+      artifact: benchmarks/results/plane_robustness.json
+    - id: plane_onset_and_anchor
+      spec: "K2-T2 onset drift 0.00 against a 0.10 tolerance (collapse onset alpha=0.85 at every m); and the m=3 rows re-execute F-0004's published cells with deviation exactly 0.000000 at alpha in {0.85, 0.95}"
+      artifact: benchmarks/results/plane_robustness.json
+    - id: plane_solver_diagnostic
+      spec: "K3 reported as a diagnostic: max |delta R| = 1.3e-12 and max sup-norm |delta sigma| = 2.7e-12 between solver arms; |delta rho_S| = 0 is recorded as arithmetically forced, NOT as a kill-shot survived with margin"
+      artifact: benchmarks/results/plane_robustness.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/instruments/dissipation.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: false   # WITHHELD 2026-08-13 (O-1 criterion substitution, O-2 no interval on the deciding statistic, O-6 unpaired control arms). Corrections landed at f0268f3 / b1b833d / dbdd6ec, but THE UNIT WAS NEVER RE-REVIEWED. Nothing here may be quoted outside this repository until it is (ADR-0014, ADR-0015).
+    objections:
+      - id: O-1
+        text: "The pre-registration was substituted: a second criteria file for the same unit and the same kill-shot was committed after two runs had been launched under the first, and the change ran in the direction of survival"
+        disposition: addressed
+        where: "F-0022 (rewritten headline: INDETERMINATE, not SURVIVES); the superseded config, experiment and resolved config are committed so the substitution is checkable; the sentence 'nothing was amended after any result existed' is deleted; disclosed on the face of this gate and in papers/p2_plane §Results and §Discussion"
+      - id: O-2
+        text: "The statistic the refutation branch is decided on (gap_ratio) reached adjudication as a bare point estimate, with no interval"
+        disposition: addressed
+        where: "Bootstrapped post-hoc and labelled as post-hoc in the artifact's effect_sizes and notes: gap_ratio(6) = 0.5853 [+0.434, +0.749], P(<0.50) = 0.129, margin 1.08 bootstrap SD; no registered threshold was changed to accommodate it"
+      - id: O-3
+        text: "The D1 and D2 control arms are UNPAIRED to the main arm (different seed offsets, 100 games per cell against the main arm's 200), so every arm-to-arm comparison carries between-sample noise a paired design would cancel"
+        disposition: addressed
+        where: "DISCHARGED by unit science.plane.nplayers (R12, F-0023): C1b re-runs the m axis paired and lambda_bar-matched (max |ratio-1| = 0.0314) and C1a does the same on the N axis. The paired result CORRECTS this unit on one point - see O-6"
+      - id: O-6
+        text: "D1 does not hold lambda_normalised constant: it drives lambda_bar UP 40% across m where the main arm drives it DOWN 32%, so the two arms bracket the confound rather than controlling it"
+        disposition: addressed
+        where: "The over-read 'at matched effective precision the m-trend vanishes entirely' is withdrawn in F-0022; the paired C1b control in F-0023/F-0024 then measured the split directly - of the +0.221 fixed-scale drift in rho_hi from m=3 to m=6, +0.126 survives matching and +0.095 is temperature - and shows that at matched lambda_bar the m=6 interval EXCLUDES zero (-0.2061 [-0.300, -0.105]), so this unit's 'indistinguishable from zero at m=6' is superseded"
+      - id: O-7
+        text: "The independent prior-art re-audit (K4) registered for this unit was never run: the assessment that the nearest live work (arXiv:2405.07224) is orthogonal is inherited from an internal literature sweep and has not been re-done for the claim in its current form"
+        disposition: open
+        where: "Recorded as open in ADR-0014, in ADR-0015's closure plan, and in papers/p2_plane §Discussion (final limitation). This objection is one of the two reasons this gate is RED"

@@ -14,9 +14,13 @@ $(\R,\EPR)$ plane is the space in which an observed system should be classified.
 
 The claim is bounded deliberately. The collapse is universal across every precision and
 action count tested; the \emph{sign} of the residual is not---it varies with $\lambda$, and
-at fixed Frobenius payoff scale it varies with $m$, reaching $+0.012$ $[-0.137,+0.156]$ at
-$m=6$---so the reversal is reported with its scope rather than as a result. Two of six
-registered hypotheses were not supported, and both are reported as such.
+at fixed Frobenius payoff scale it weakens with $m$, though a paired control that matches
+normalised precision by construction restores it at $m=6$ ($-0.206$ $[-0.300,-0.105]$)---so
+the reversal is reported with its $(m,\lambda,N)$ scope rather than as a result. Two of six
+registered hypotheses were not supported, and both are reported as such. \textbf{The
+evidence, though not the claim, is two-player}: at three and four players the meters do not
+couple at low $\alpha$ either, so the $\alpha$-stratified design that produced these numbers
+has no baseline there and returns indeterminate rather than a pass.
 
 Three things follow. First, the two most plausible ways this result is wrong---finite size
 and solver dependence---were registered as kill-shots and have now been run. The solver one
@@ -32,12 +36,20 @@ that criterion but on \emph{decorrelation at the ceiling}: the high-$\alpha$ ass
 never recovers at any tested action count, worst upper interval endpoint $+0.156$ against a
 $0.35$ ceiling, terminal intervals disjoint from the low-$\alpha$ ones at every $m$. The
 sweep additionally showed that the apparent size dependence is largely, though not wholly, a
-normalised-precision effect of the game generator rather than a dimensional one. The next
-kill-shot is $N>2$, which is untested. Second,
-one quadrant of the plane contains no measured system; a real system with asymmetric response
-and no persistent circulation would be the strongest available confirmation, because it is
-exactly the configuration a scalar theory forbids, and retail fuel markets with asymmetric
-cost pass-through but no observed cycling are the obvious candidate. Third, the reading
+normalised-precision effect of the game generator rather than a dimensional one. The $N>2$
+kill-shot has since been run and returned indeterminate on its own precondition, which
+narrows the instrument to two players and leaves the ceiling holding at $N=3$ and $N=4$;
+the next distinct probe is a criterion for the $N$ axis that does not presuppose a
+low-$\alpha$ baseline. Second,
+quadrant~III of the plane contains no measured system, and
+Section~\ref{sec:q3} sharpens why that matters: for an exact two-player normal-form game
+the two coordinates share a zero, so quadrant~III is not merely unoccupied but
+\emph{unreachable within one such game}, and a system found there must have had its two
+coordinates read by different instruments on different data. That is exactly the
+configuration a scalar theory forbids, which is why it is the decisive test; retail fuel
+markets with asymmetric cost pass-through but no observed cycling are the obvious
+candidate, and any such reading must carry its dissipation coordinate at more than one
+resolution. Third, the reading
 should be a single function call on observed data, with its refusals reported as bounds
 rather than silences; that is the form in which a measurement leaves the laboratory that made
 it.

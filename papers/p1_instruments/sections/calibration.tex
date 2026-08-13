@@ -1,67 +1,88 @@
-A meter is only as credible as the systems on which its reading is known.
-The $\alpha$ axis offers exactly two families with payoffs \emph{free by
-construction} --- no demand estimation contaminating the reading --- and we
-anchored both ends before pointing the instruments anywhere else.
-
-\subsection{The $\alpha=0$ anchor: congestion on real network data}
-Rosenthal congestion games \citep{rosenthal1973} are exact potential games; in
-the population form, logit route choice \emph{is} Fisk's stochastic user
-equilibrium \citep{fisk1980}, whose convex potential (Beckmann integral plus
-scaled entropy) is known analytically. We implement the population engine
-(payoff field $F(x)$, potentiality tested by symmetry of $DF$ --- Sandholm's
-externality symmetry \citep{sandholm2010}, cited, not claimed) and solve SUE by
-damped Newton on the convex program in per-OD tangent coordinates; the damped
-logit-assignment map itself is \emph{not} a contraction on steep-BPR networks
-(it two-cycles on the Braess diamond), a practical fact we document rather than
-hide.
-
-Calibration readings (Table~\ref{tab:calib}): on the Braess diamond, the
-autodiff gradient of the Beckmann integral equals the route-cost vector to
-$10^{-12}$ (an identity, and our sharpest end-to-end code check); on
-\emph{real Sioux Falls data} (76 links, top-8 OD pairs, $k{=}3$ route sets from
-the TNTP repository \citep{tntp}), the Fisk KKT conditions hold to
-$7\times10^{-15}$, $DF$ is symmetric to machine zero, and the toll-response
-reciprocity defect reads $\R=5.7\times10^{-17}$. Link tolls enter route costs
-exactly linearly --- the cleanest conjugate field in the programme --- and the
-toll susceptibility matches finite differences to $2.8\times10^{-9}$, with the
-sign verified against actual re-solves. We state the scope once: route sets are
-$k$-shortest restrictions and the OD set is a subset, so computed link flows
-are \emph{not} comparable to the repository's best-known equilibrium flows (a
-diagnostic gap of 0.73 is reported as a diagnostic, never a certificate); the
-instrument identities are exact within the route set regardless.
-
-\subsection{The $\alpha>0$ anchor: Colonel Blotto}
-Two-player Blotto over lattice-simplex allocation grids, budgets set by the
-experimenter (an exactly observable payoff perturbation). Readings: symmetric
-budget-3, three equal fields --- $\alpha=0.694$, $\R=0.118$ at $\lambda=1.5$;
-asymmetric field values --- $\EPR=0.098$ with visible circulation. A degenerate
-instance (equal values, budget 2) has \emph{constant} payoffs --- every profile
-ties --- and every meter reads exactly zero ($\EPR=5.4\times10^{-32}$): a
-correct null found while writing the positive test, kept as a regression. One
-calibration surprise worth naming: Blotto is \emph{mixed}, not pure harmonic
-($\alpha\approx0.7$, not 1) --- zero-sum does not imply harmonic-pure; RPS
-($\alpha=1$ exactly) remains the pure extreme.
+A meter is only as credible as the systems on which its reading is known in
+advance. Table~\ref{tab:calib} is this paper's argument, and everything else is
+scaffolding for reading it: fourteen readings on systems whose correct answer is fixed
+either by an analytic identity or by an external oracle, each with the
+requirement it had to meet, the number measured, and the committed artifact it
+regenerates into. Every row runs from a fixed seed under \texttt{make
+reproduce}; every artifact is a JSON record carrying metrics, effect sizes with
+intervals, $n$, an $n$-justification, the seed, the configuration reference and
+the library version.
 
 \begin{table}[t]
 \centering\small
-\begin{tabular}{llll}
+\begin{tabular}{p{5.9cm}p{2.1cm}p{3.0cm}p{3.1cm}}
 \toprule
 Reading & Requirement & Measured & Artifact \\
 \midrule
-$\nabla\psi=\lambda\sigma$, $\nabla^2\psi=\lambda^2C$ & $10^{-12}$ & holds & test suite \\
-Gibbs $\pi\propto e^{\lambda\Phi}$ (congestion, $N{=}2,3$) & $10^{-10}$ & $2.5\times10^{-16}$ & \texttt{gibbs\_agreement} \\
-$\EPR$, $|J^*|$ on potential games & $<10^{-12}$ & holds & \texttt{equilibrium\_reads\_zero} \\
-$\R$ on 5 exact potential games & $<10^{-10}$ & $\le 9\times10^{-17}$ & \texttt{reciprocity\_potential} \\
-$\R$ on RPS-3/RPS-5/matching pennies & $>0.1$ & $0.69/0.43/1.20$ & \texttt{reciprocity\_harmonic} \\
-$\chieq$ vs finite differences (50 games) & $10^{-6}$ & $1.3\times10^{-8}$ & \texttt{chi\_fd\_agreement} \\
-Real spectrum of $SB$, potential games, $\lambda\le10$ & rel.\ imag $<10^{-8}$ & $0$ & \texttt{spectrum\_reality} \\
-Gambit agreement, 32 games $\times$ 2 $\lambda$ & $10^{-8}$ & $1.2\times10^{-9}$ & \texttt{gambit\_agreement} \\
-Sioux Falls: $\R$ / $DF$ defect / KKT & $10^{-10}/10^{-12}/10^{-8}$ & $5.7\times10^{-17}/0/7\times10^{-15}$ & \texttt{sioux\_falls\_calibration} \\
-Blotto: $\alpha$, $\R$, degenerate null & see text & $0.69,\,0.12,\,5\times10^{-32}$ & \texttt{blotto\_readings} \\
+$\nabla\psi=\lambda\sigma$, $\nabla^2\psi=\lambda^2C$ (log-partition is the CGF) & $10^{-12}$ & holds & test suite \\
+Gibbs $\pi\propto e^{\lambda\Phi}$ on congestion, $N{=}2,3$ & $10^{-10}$ & $4.7\times10^{-16}$ & \texttt{gibbs\_agreement} \\
+$\EPR$ and $|J^*|$ on exact potential games & $<10^{-12}$ & $4.2\times10^{-30}$, $9.7\times10^{-17}$ & \texttt{equilibrium\_reads\_zero} \\
+$\R$ on 5 exact potential games & $<10^{-10}$ & $\le 8.9\times10^{-17}$ & \texttt{reciprocity\_potential} \\
+$\R$ on RPS-3 / RPS-5 / matching pennies & $>0.1$ & $0.693$ / $0.435$ / $1.200$ & \texttt{reciprocity\_harmonic} \\
+$\chieq$ vs central finite differences, 50 games & $10^{-6}$ & $1.3\times10^{-8}$ & \texttt{chi\_fd\_agreement} \\
+Implicit-diff VJP vs the resolvent, 20 games & $10^{-8}$ & $5.6\times10^{-17}$ & \texttt{implicit\_chi\_agreement} \\
+Mirror descent vs damped solver, same fixed point & $10^{-9}$ & $6.9\times10^{-13}$ & \texttt{solver\_cross\_agreement} \\
+Real spectrum of $SB$ on potential games, $\lambda\le10$ & rel.\ imag $<10^{-8}$ & $0$ (harmonic: $\ge0.29$) & \texttt{spectrum\_reality} \\
+\texttt{pygambit} fixed-$\lambda$ agreement, 32 games $\times$ 2 $\lambda$ & $10^{-8}$ & $1.2\times10^{-9}$ & \texttt{gambit\_agreement} \\
+Branch tracer through fixed-$\lambda$ points & $10^{-7}$ & $8.6\times10^{-13}$ & \texttt{branch\_agreement} \\
+Engine 2: $\nabla$Beckmann $=$ route costs (autodiff); toll $\chi$ vs FD & $10^{-12}$; $10^{-6}$ & $0$; $2.8\times10^{-9}$ & \texttt{population\_identities} \\
+Sioux Falls (real TNTP data): $\R$ / $DF$ defect / Fisk KKT & $10^{-10}$ / $10^{-12}$ / $10^{-8}$ & $5.6\times10^{-17}$ / $0$ / $7.1\times10^{-15}$ & \texttt{sioux\_falls\_calibration} \\
+Blotto: $\alpha$, $\R$, degenerate constant-payoff null & see text & $0.694$, $0.118$, $5.4\times10^{-32}$ & \texttt{blotto\_readings} \\
 \bottomrule
 \end{tabular}
 \caption{Calibration summary. Every row regenerates from seed 20260808 via
 \texttt{make reproduce}; artifacts are JSON records under
-\texttt{benchmarks/results/} (Appendix~A).}
+\texttt{benchmarks/results/} (Appendix~A). ``Requirement'' is the tolerance
+declared in the configuration schema before the check ran, not a threshold
+chosen afterwards to fit the number.}
 \label{tab:calib}
 \end{table}
+
+\paragraph{The $\alpha=0$ anchor: congestion on real network data.} Rosenthal
+congestion games \citep{rosenthal1973} are exact potential games, and in the
+population form logit route choice \emph{is} Fisk's stochastic user equilibrium
+\citep{fisk1980}, whose convex potential --- the Beckmann integral plus scaled
+entropy --- is known analytically. On the Braess diamond the autodiff gradient
+of the Beckmann integral equals the route-cost vector exactly, which is the
+project's sharpest end-to-end code check because it composes the payoff oracle,
+the network, the potential and the differentiation in one identity. On real
+Sioux Falls data (76 links, top-8 OD pairs, $k{=}3$ route sets from the TNTP
+repository \citep{tntp}) the Fisk KKT conditions hold to $7.1\times10^{-15}$,
+$DF$ is symmetric to exact zero, the toll-response reciprocity defect reads
+$\R=5.6\times10^{-17}$, and the toll susceptibility matches finite differences to
+$2.8\times10^{-9}$ with the sign verified against actual re-solves. The scope is
+stated once and not softened: route sets are $k$-shortest restrictions and the OD
+set is a subset, so computed link flows are \emph{not} comparable to the
+repository's best-known equilibrium flows (a diagnostic gap of $0.735$ is
+reported as a diagnostic, never a certificate); the instrument identities are
+exact within the route set regardless. One practical fact is documented rather
+than hidden: the damped logit-assignment map is \emph{not} a contraction on
+steep-BPR networks --- it two-cycles on the Braess diamond --- which is why the
+SUE path is damped Newton on the convex program.
+
+\paragraph{The $\alpha>0$ anchor: Colonel Blotto.} Two-player Blotto over
+lattice-simplex allocation grids, with budgets as an exactly observable
+conjugate field. The symmetric budget-3, three-field instance reads
+$\alpha=0.694$ and $\R=0.118$ at $\lambda=1.5$; an asymmetric instance reads
+$\EPR=0.098$ with visible circulation; a degenerate instance (equal field values,
+budget 2, every profile ties) has constant payoffs and every meter reads exactly
+zero ($\EPR=5.4\times10^{-32}$) --- a correct null found while writing the
+positive test and kept as a regression. One calibration surprise corrected a
+documented assumption: Blotto is \emph{mixed}, not pure harmonic
+($\alpha\approx0.7$, not 1). Zero-sum does not imply harmonic-pure; RPS
+($\alpha=1$ exactly) remains the pure extreme, so the right-hand anchor of the
+bracket sits at $\approx0.7$ for a realistic strategic system.
+
+\paragraph{The dissipation axis is observable, and the bound is the reportable
+number.} Against the exact Schnakenberg meter across a ten-level $\alpha$ sweep,
+the $k$-block KLD estimator \citep{roldan2010} attains Spearman rank correlation
+$1.0$ with per-level relative error of order $1\%$, and the debiased finite-time
+thermodynamic-uncertainty bound \citep{barato2015,horowitz2017} lies below the
+exact value at every level with median tightness $0.850$
+(\texttt{estimator\_alpha\_sweep}). Two implementation facts are recorded
+because they were learned the hard way and change the number: the estimator must
+be debiased for $E[\bar J^2]$ and for Jensen on $1/\mathrm{Var}$, and windows
+must be fixed-\emph{horizon} --- fixed-jump-count windows overshoot by about
+$1.5\times$. On the named ground-truth games the estimator reads
+$3\times10^{-5}$ where the exact answer is zero, and $2.228$ against an exact
+$2.239$ on RPS-3 (\texttt{estimator\_ground\_truth}).

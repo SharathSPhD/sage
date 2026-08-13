@@ -19,6 +19,9 @@ export default function Home() {
             <Link href="/solve" className="btn" data-primary="true">
               Solve a problem
             </Link>
+            <Link href="/demos" className="btn">
+              See the demos
+            </Link>
             <Link href="/data" className="btn">
               Bring your own data
             </Link>
@@ -46,6 +49,21 @@ export default function Home() {
           </div>
         </div>
         <LiveDemo />
+      </section>
+
+      <section className="card home-demos" aria-labelledby="demos-heading">
+        <div>
+          <h2 id="demos-heading">Four demos that do not exist anywhere else</h2>
+          <p>
+            Have your own rationality fitted by maximum likelihood while you play rock&ndash;paper&ndash;scissors; watch
+            probability circulate on the nine joint states of a game and the entropy-production counter read exactly zero
+            when it should; guess what real experimental subjects did; and put a game on the plane next to Sioux Falls,
+            Dominick&apos;s and CAISO. Every one runs its mathematics live in the page.
+          </p>
+        </div>
+        <Link href="/demos" className="btn" data-primary="true">
+          Open the demos
+        </Link>
       </section>
 
       <section className="home-gallery" aria-labelledby="gallery-heading">

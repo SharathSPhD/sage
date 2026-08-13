@@ -24,12 +24,24 @@ from strataq.problems.base import (
 )
 from strataq.problems.demand import CustomDemand, DemandModel, LinearDemand, LogitDemand
 from strataq.problems.electricity import ElectricityProblem, ElectricitySolution
+from strataq.problems.evolutionary import EvolutionaryProblem, EvolutionarySolution
+from strataq.problems.extensive import ExtensiveProblem, ExtensiveSolution
 from strataq.problems.pricing import PricingProblem, PricingSolution
+from strataq.problems.repeated import RepeatedProblem, RepeatedSolution
 from strataq.problems.routing import RoutingProblem, RoutingSolution, TollEffect
+from strataq.problems.situation import (
+    Alternative,
+    RivalView,
+    Sensitivity,
+    Situation,
+    SituationSolution,
+    solve_situation,
+)
 
 __all__ = [
     "AllocationProblem",
     "AllocationSolution",
+    "Alternative",
     "AuctionProblem",
     "AuctionSolution",
     "ConvergenceWarning",
@@ -38,14 +50,25 @@ __all__ = [
     "Diagnostics",
     "ElectricityProblem",
     "ElectricitySolution",
+    "EvolutionaryProblem",
+    "EvolutionarySolution",
+    "ExtensiveProblem",
+    "ExtensiveSolution",
     "LinearDemand",
     "LogitDemand",
     "PricingProblem",
     "PricingSolution",
     "Problem",
+    "RepeatedProblem",
+    "RepeatedSolution",
+    "RivalView",
     "RoutingProblem",
     "RoutingSolution",
+    "Sensitivity",
+    "Situation",
+    "SituationSolution",
     "Solution",
     "Summary",
     "TollEffect",
+    "solve_situation",
 ]

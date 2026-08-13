@@ -36,24 +36,37 @@ trajectory estimators --- and report three facts we did not predict.
 $\lambda$ --- equilibrium concentration kills the choice covariance faster than
 $\lambda$ amplifies it --- while harmonic games cross $\rho=1$ and stay there,
 opening a \emph{supercritical wedge} whose frontier descends in $\alpha$
-(median onset $\alpha=0.5$).
+(median onset $\alpha=0.5$ on the coarse $9\times11$ map; a bisected
+frontier on a finer sweep finds a crossing only for $\alpha\ge0.55$, with
+$\lambda_c$ descending $7.8\to3.0$ over $\alpha\in[0.55,0.80]$).
 (ii)~\emph{Decoupling}: dissipation and response asymmetry co-move almost
 perfectly along $\alpha$ ($\rho_S=0.993$ marginally) yet, conditional on
-$\alpha$, their correlation degrades and \emph{reverses} to $-0.355$ in the
-near-harmonic regime; a mechanism experiment shows this is structural --- the
-equilibrium susceptibility is a local derivative, the entropy production a
-global flux functional, and no renormalisation of the former recovers the
-latter's ordering. A repair hypothesis we proposed is refuted by its own
-preregistered test.
+$\alpha$, their correlation \emph{collapses} in the near-harmonic regime, and
+at $m=3$, $\lambda=1.2$, $N=2$ it crosses into negative territory
+($-0.355$). The collapse is the robust statement and it reproduces at every
+precision and action count tested; the negative \emph{sign} is scoped, moving
+with $\lambda$ and --- at fixed payoff scale --- with $m$, and it is quoted
+only with its $(m,\lambda,N)$ attached. A mechanism experiment shows the
+collapse is structural: the equilibrium susceptibility is a local derivative,
+the entropy production a global flux functional, and no renormalisation of the
+former recovers the latter's ordering. A repair hypothesis we proposed is
+refuted by its own preregistered test. \textbf{Everything in this arc is
+$N=2$}: at three and four players the meters do not couple at low $\alpha$
+either, so the stratified design has no baseline to collapse from and the
+result does not transfer.
 (iii)~\emph{Estimability, through to real data}: a $k$-th order Markov KLD
 estimator tracks the exact meter with rank correlation $1.0$; a debiased
 finite-time thermodynamic-uncertainty bound certifies dissipation from two
 cumulants of one current; and, pointed at a real power market (CAISO SP15,
 July 2026), the instruments deliver a verified detection --- day-ahead hourly
 prices violate pair-level detailed balance at $\approx 1.1$ nats/day,
-concentrated in scarcity weeks --- alongside an equally instructive certified
-at-null verdict for the 5-minute series and one documented retraction en
-route.
+concentrated in scarcity weeks --- alongside an equally instructive at-null
+verdict for the 5-minute series. That verdict is at-null \emph{in the matched
+(reversibilized-Markov) null class}, and deliberately not called certified: an
+intermediate ``certified null'' claim was \textbf{retracted} on adversarial
+review when the spectral surrogate classes were shown not to bracket the data's
+persistence, and what survives is a no-detection at $k=1$ and $k=2$ against a
+null that does match persistence.
 Every number regenerates from fixed seeds; every claim carries its confidence
 tier and its falsifier.
 \end{abstract}

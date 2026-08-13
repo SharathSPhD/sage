@@ -13,14 +13,40 @@ dissipation layer is \emph{reachable from data}: rank-exact recovery when the
 chain is observed, and a certified lower bound that survives partial
 observation, with its tightness itself carrying regime information.
 
-\paragraph{What would change our minds.} The wedge frontier could dissolve
-under payoff-scale folding (the $\alpha = 0$ peak at $\lambda \approx 1.7$ is
-suspiciously close to scale/2); the decoupling crossover at $\alpha \approx
-0.7$ could move materially with $\lambda$ or with action-space size, which
-would demote it from structural fact to small-game artefact; and the
-suspicious coincidence that F-0004's decoupling onset sits \emph{inside} the
-supercritical wedge deserves either a mechanism or a debunking. All three are
-queued as finer sweeps with committed seeds.
+\paragraph{Three things that would have changed our minds, and what happened
+when they were tested.} All three of v0.1's open questions have since been run,
+and two of them cost us a sentence each.
+\emph{(i) Payoff-scale folding.} The $\alpha = 0$ peak at $\lambda \approx 1.7$
+sat suspiciously close to scale/2, and the fold is now an exact identity checked
+sharply: $\sigma(\lambda, s\cdot u) = \sigma(s\cdot\lambda, u)$ holds to
+$0$, so the peak location is a scale statement and not a physical one.
+\emph{(ii) The crossover's $\lambda$- and size-dependence.} Measured (F-0010,
+F-0022, F-0024): the \emph{collapse} is universal across every $\lambda$ and
+action count tested, while the residual \emph{sign} moves with both, so the
+robust statement is decorrelation and the reversal is quoted only inside its
+scope.
+\emph{(iii) The ``suspicious coincidence'' with the supercritical wedge is
+\textbf{debunked}, not open.} F-0010's addendum tested it directly on the
+per-game data: \textbf{0 of 180 games are supercritical} at
+$\lambda\in\{0.8,1.2,2.0\}$, $\alpha=0.95$, consistent with a measured
+frontier whose $\lambda_c$ is still above $2$ at $\alpha = 0.95$. The
+decoupling and its $\lambda$-dependent sign therefore occur \emph{entirely
+outside} the wedge; wedge depth is not the driver, and what looked like a
+coincidence was an artefact of the coarse phase map's $\lambda$ range. A pooled
+across-$\lambda$ Spearman of $+0.89$ was computed and discarded as
+$\lambda$-confounded --- the same confound that produced the marginal-vs-
+conditional trap in the first place --- and is recorded so nobody re-runs the
+wrong cut. The remaining candidate driver is $\lambda$-dependent equilibrium
+concentration, which is a discussion point here and not a claim.
+
+\paragraph{What still would change our minds.} The decoupling's evidence base is
+\emph{two-player}: at $N \ge 3$ the meters do not couple at low $\alpha$ in the
+first place (F-0023), so the $\alpha$-stratified design that produced every
+number in this section cannot be run there, and a mechanism that predicted
+coupling at $N \ge 3$ would not be contradicted by anything we have measured.
+The sector-loading test named in F-0023 --- regress per-game $\R$ and $\EPR$ on
+the per-sector harmonic norms at $N = 3$ --- is the one pass over existing data
+that would settle why.
 
 \paragraph{Toward data.} The empirical programme (Stage 3 of the repository)
 points these meters at systems whose $\alpha$ nobody knows: retail pricing

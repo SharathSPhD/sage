@@ -1,0 +1,54 @@
+\paragraph{A number is not a result here until it has walked a fixed path.}
+Criteria are written into \texttt{config/experiments/<unit>.yaml} and
+\emph{committed before the run}, with the commit verified landed by
+\texttt{git log} --- a rule that exists because a pre-registration once aborted on
+a hook failure and a review caught the configuration staged but uncommitted while
+results already existed. The experiment then runs, writing a resolved
+configuration snapshot beside its artifact; the artifact lands in
+\texttt{benchmarks/results/} with metrics, effect sizes and intervals, $n$, an
+$n$-justification, the seed and the configuration reference. A \emph{gate}
+(\texttt{gates/<unit>.yaml}) checks five dimensions --- code (tests, strict types,
+lint, coverage, no stubs), domain (the artifact exists, reports \texttt{passed},
+carries a seed), statistical (effect sizes with intervals, justified $n$, recorded
+seeds), documentation, and adversarial (a red-team signoff plus a disposition for
+\emph{every} objection) --- and nothing marks a unit green except the
+deterministic gate runner observing those checks pass. Anti-gaming rules are
+mechanical: deleting or \texttt{xfail}-ing a failing test blocks the commit,
+weakening a domain gate requires a recorded architecture decision, and gate
+regressions fail CI. Where a gate was written after the measurement as a
+regression contract rather than as a prediction, the gate file says so at the top;
+where a unit is not signed off, the gate is \textbf{red on the board} rather than
+absent from it.
+
+\paragraph{One instructive failure (F-0018).} \emph{Twenty-three gates were green
+while every solver call in the shipped wheel was broken.} The packaged
+\texttt{strataq/core/base.yaml} fallback that \texttt{base\_config()} documents
+was never included in the distribution, so from an installed wheel every
+solver-touching entry point raised \texttt{FileNotFoundError} --- the toolkit's
+thermodynamics and rationality paths were dead for anyone outside the repository,
+and only the pure-\texttt{numpy} paths worked. Separately,
+\texttt{\_\_version\_\_} was a hand-edited literal that had drifted from
+\texttt{pyproject.toml}. Every one of those 23 gates was correct; nothing gated
+the packaging boundary, so the whole suite was true in-repo and false for
+outsiders.
+
+Both defects were caught by a pre-upload smoke test and fixed before publication.
+Four release-integrity tests exist because of it --- the config file is in the
+wheel, is byte-identical to the repository's, loads standalone through the schema,
+and \texttt{\_\_version\_\_} matches \texttt{pyproject.toml} --- together with a
+CI wheel smoke test that now exercises a \emph{solver} path rather than the
+\texttt{numpy}-only entry point the bug had hidden behind, and a standing rule:
+no release without an out-of-tree smoke of every public entry point. Installation
+from the public index into a clean virtual environment reproduces the committed
+empirical reading it is checked against.
+
+We report this at length because it is the most useful paragraph in the paper for
+another maintainer. A suite tells you only that the suite passed; before trusting
+one, ask what it would have to \emph{see} in order to fail, and whether it could
+see it. Ours could not see the wheel --- which is also why the skippable
+extensive-form oracle check is in Section~8 rather than implied by a green badge.
+
+\paragraph{Reproducing.} \texttt{uv sync --all-packages} then \texttt{make
+reproduce} regenerates every artifact in Table~\ref{tab:calib} from its recorded
+seed; \texttt{uv run python gates/run\_gates.py --check} re-runs every gate.
+Appendix~A maps each number in this paper to the artifact it came from.

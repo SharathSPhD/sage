@@ -130,6 +130,19 @@ descent (a structurally different algorithm) and with the damped solver at a $10
 tighter tolerance; the collapse is numerical if $|\Delta\rho_S|\ge0.05$ in any of the four
 comparisons. $\EPR$ is built from the generator and never touches the solver, so the solver
 can enter this correlation only through $\R$.
+\item[\textbf{H7}] \emph{Kill-shot, player count.} The high-$\alpha$ decorrelation is an
+$N=2$ artefact and coupling recovers at $N>2$. \emph{Test:} within-level $\rho_S$ at
+$N\in\{2,3,4\}$, $m=3$, $400$ games per cell, with a paired arm matching the median
+normalised precision across $N$ to within $10\%$; the claim \emph{dies} iff
+$\rho_S(\alpha{=}0.95)>0.35$ with its lower interval endpoint also above $0.35$ at some
+$N>2$, and \emph{holds} iff the upper interval endpoint is below $0.35$ at every $N$.
+\textbf{Precondition:} $\rho_S(\alpha{=}0.05)\ge0.55$ at every $N$---without a baseline
+coupling there is no collapse to measure. \textbf{H7b}: the onset does not drift upward in
+$N$ by more than $0.10$. \emph{Primary.}
+\item[\textbf{H8}] \emph{Kill-shot, ratio artefact across $m$.} H2a's refutation is an
+$m=3$ artefact. \emph{Test:} $\rho_S(\EPR,\|\chi-\chi^{\top}\|_F)$ at $\alpha=0.95$ for
+$m\in\{3,4,5,6\}$ at $N=2$, with the ratio computed on the identical games and their
+paired difference reported.
 \end{itemize}
 
 \noindent H5 and H6 were registered in a configuration file committed \emph{before} the

@@ -1,0 +1,79 @@
+unit: science.plane.nplayers
+claim: "R12, the N-scaling kill-shot on the two-coordinate claim (400 games per cell, 40 cells, 16000 solves, lambda = 1.2, percentile bootstrap 2000 resamples on every rho_S). THE HEADLINE IS A NEGATIVE ONE AND IT IS ABOUT THE INSTRUMENT, NOT THE CLAIM: low-alpha co-movement of EPR and R is a TWO-PLAYER fact. At matched effective precision rho_S(EPR,R) at alpha=0.05 falls +0.847 (N=2) -> +0.378 (N=3) -> +0.172 (N=4), so the registered precondition rho_lo >= 0.55 FAILS at N=3 and N=4 in both arms and kill-shot A is INDETERMINATE: a size with no baseline coupling has no collapse to measure, and the alpha-stratified design that produced F-0003, F-0004, F-0007, F-0010 and F-0022 does not exist at N >= 3. The ceiling itself is comfortably intact at N=3 and N=4 (worst ci_high +0.163 against 0.35), which is CONSISTENT with two independent coordinates but is not certification, and this unit declines to read absence-of-coupling-everywhere as confirmation. Kill-shot B HOLDS at every m in {3,4,5,6} at N=2: rho_S(EPR, ||chi-chi^T||_F) at alpha=0.95 is negative with a NEGATIVE upper interval endpoint in both arms (worst ci_high -0.0067 main, -0.1076 matched), and on identical games the numerator and the ratio agree to within 0.012 in rank ordering - the ratio-artefact objection is refuted with a paired bound rather than a point estimate. A-T2 (onset drift) PASSES VACUOUSLY and that is recorded as a defect of this registration, not repaired."
+tier: derived
+
+# THIS UNIT HAS EXACTLY ONE CRITERIA FILE AND WILL NEVER HAVE A SECOND.
+# config/experiments/plane_nplayers.yaml was committed at b9648f8 BEFORE
+# experiments/plane_nplayers.py existed (verified at commit time with git ls-files:
+# the config was in the tree, the experiment path was not). That is the direct
+# operational lesson of R11's red-team objection O-1 (see gates/science.plane.yaml),
+# and it is written into the config's own header.
+#
+# SELF-RAISED DEFECTS OF THIS REGISTRATION, recorded and deliberately NOT repaired
+# by writing a second criteria file (see the adversarial section for the full text):
+#   (b) A-T1's precondition makes the N sweep unadjudicable by construction once the
+#       low-alpha baseline turns out not to exist at N >= 3;
+#   (c) A-T2 is one-sided, so onset drifting DOWN passes it - which is what happened
+#       (onset 0.85 -> 0.05 -> 0.05, drift -0.80 against a +0.10 tolerance) because
+#       rho_S is already below 0.5 at the LOWEST alpha. The pass is uninformative.
+#
+# GATE STATUS: this gate is RED and is expected to be red. NO adversarial review of
+# this unit has taken place at all. It is written so that what is on main is on the
+# board with its honest status, per ADR-0015. Finding: F-0023 (with F-0024, the
+# correction it makes to F-0022).
+
+gates:
+  code:
+    tests_pass: true
+    coverage_min: 0.0        # sweep unit: no new library code; experiment-only
+    types_clean: true
+    lint_clean: true
+    no_todo_no_stub: true
+    paths:
+      - experiments/plane_nplayers.py
+      - config/experiments/plane_nplayers.yaml
+
+  domain:
+    - id: nplayers_a_indeterminate
+      spec: "KILL-SHOT A recorded as INDETERMINATE, not converted to a pass: the registered precondition rho_S(EPR,R at alpha=0.05) >= 0.55 FAILS at N=3 (+0.2821 fixed scale, +0.3776 lambda_bar-matched) and at N=4 (+0.1466, +0.1715). The DIES branch never came close (it required rho_hi > 0.35 with ci_low > 0.35 at some N > 2). verdict_a_indeterminate = 1"
+      artifact: benchmarks/results/plane_nplayers.json
+    - id: nplayers_ceiling_holds_at_N
+      spec: "Reported alongside the indeterminate verdict, never in place of it: the 0.35 ceiling holds at N in {2,3,4} in both arms with the widest margin the programme has recorded (worst ci_high +0.163), and no meter is degenerate - at matched lambda_bar median EPR is 1.20e-3/1.26e-3/1.21e-3 at alpha=0.05 and median R is 0.0187/0.0103/0.0054 across N=2/3/4"
+      artifact: benchmarks/results/plane_nplayers.json
+    - id: nplayers_b_numerator_ceiling
+      spec: "KILL-SHOT B HOLDS: rho_S(EPR, ||chi-chi^T||_F) at alpha=0.95 is negative with a negative ci_high at every m in {3,4,5,6} in BOTH arms (worst -0.0067 main, -0.1076 matched) against a 0.35 ceiling; precondition rho_num(alpha=0.05) >= 0.55 holds at every m (+0.773/+0.751/+0.667/+0.683); paired delta = numerator - ratio is bounded by 0.012 and shrinks with m"
+      artifact: benchmarks/results/plane_nplayers.json
+    - id: nplayers_paired_control
+      spec: "C1 is a BINDING paired lambda_bar-matched control, not a diagnostic: a_arms_agree = 1 and b_arms_agree = 1, lambda_bar matched to max |ratio - 1| = 0.0314 against a registered 0.10 tolerance, and the pairing is wired through the cell cache (max |delta rho| between each arm's reference cell and the main-arm cell = 0.00e+00)"
+      artifact: benchmarks/results/plane_nplayers.json
+    - id: nplayers_replication_anchors
+      spec: "All SEVEN replication anchors reproduce their published values to exactly 0.000000 on the first 100 games of every N=2, m=3 cell: F-0004's rho_S(EPR,R) at alpha in {0.85,0.95} and F-0007's rho_S(numerator,EPR) at all five swept levels. The m=3 rows are re-executions of the published readings, not fresh samples"
+      artifact: benchmarks/results/plane_nplayers.json
+
+  statistical:
+    effect_sizes_reported: true
+    confidence_intervals: true
+    n_justified: true
+    seeds_fixed_and_recorded: true
+
+  documentation:
+    files:
+      - docs/instruments/dissipation.md
+    claims_ledger_updated: true
+    changelog_entry: true
+
+  adversarial:
+    red_team_signoff: false   # NOT GRANTED, AND NOT SOUGHT. No adversarial review of this unit has taken place. The unit was merged to main un-gated on operator direction; ADR-0015 records the exception and the date by which the review must happen. Nothing here may be quoted outside this repository until it does.
+    objections:
+      - id: S-1
+        text: "SELF-RAISED (not red-team adjudicated): A-T1's registered precondition rho_lo >= 0.55 makes the N sweep unadjudicable by construction, because the low-alpha baseline the precondition demands is exactly the thing that turns out not to exist at N >= 3. A criterion for the N axis that does not depend on a low-alpha baseline is needed"
+        disposition: accepted
+        where: "Accepted as a defect of THIS registration and deliberately not repaired by writing a second criteria file for this unit (that is the R11 failure mode). Recorded in F-0023 chase item (b) and carried to the successor unit; the verdict stands as INDETERMINATE rather than being rescued"
+      - id: S-2
+        text: "SELF-RAISED: A-T2 (onset drift) is one-sided, so an onset moving DOWN passes it. Onset went 0.85 -> 0.05 -> 0.05 (drift -0.80 against a +0.10 tolerance) and the criterion passed - vacuously, because rho_S is already below 0.5 at the lowest swept alpha. A-T2 as registered is uninformative whenever the A-T1 precondition fails"
+        disposition: accepted
+        where: "Recorded in F-0023's verdict table as PASS, but VACUOUSLY, and in chase item (c). The pass is not counted as evidence anywhere in the papers"
+      - id: S-3
+        text: "SELF-RAISED: the sector-loading mechanism for why low-alpha co-movement is two-player-only (at N=2 there is exactly one non-trivial multi-player Hodge sector; four at N=3, eleven at N=4) is a HYPOTHESIS WITH A STATED TEST, not a result. It has not been run"
+        disposition: accepted
+        where: "Stated as a hypothesis with its test in F-0023 (regress per-game R and EPR on the per-sector harmonic norms at N=3 and compare loadings); carried as chase item (a). No paper states it as a mechanism"

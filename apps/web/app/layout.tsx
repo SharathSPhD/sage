@@ -80,6 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div>
               <h3>Read</h3>
               <ul>
+                <li><Link href="/demos">Demos</Link></li>
                 <li><Link href="/learn">Explainers</Link></li>
                 <li><Link href="/research">Research</Link></li>
                 <li><Link href="/findings">Findings</Link></li>
