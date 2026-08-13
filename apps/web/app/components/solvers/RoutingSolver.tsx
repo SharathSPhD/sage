@@ -9,39 +9,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useSolve, useSweep, type RoutingSolution } from "../../../lib/problems";
+import { NetworkMap } from "../charts/NetworkMap";
 import { Answer, Controls, Field, Figure, ModelLine, Sweep, count, money0, num } from "./ui";
-
-// TNTP SiouxFalls_node.tntp coordinates. Drawing only — every flow on screen
-// comes back from the solver.
-const NODES: [number, number][] = [
-  [-96.7704, 43.6128], [-96.7113, 43.6058], [-96.7743, 43.573], [-96.7472, 43.5637],
-  [-96.7316, 43.564], [-96.7116, 43.5876], [-96.6934, 43.5638], [-96.7114, 43.5623],
-  [-96.7312, 43.5486], [-96.7314, 43.5453], [-96.7468, 43.5441], [-96.7801, 43.5439],
-  [-96.7934, 43.4907], [-96.751, 43.5293], [-96.7315, 43.5294], [-96.7114, 43.5467],
-  [-96.7114, 43.5413], [-96.6941, 43.5467], [-96.7113, 43.5296], [-96.7112, 43.5153],
-  [-96.731, 43.5105], [-96.7312, 43.5149], [-96.7509, 43.5149], [-96.7492, 43.5032],
-];
 
 interface Link {
   from: number;
   to: number;
   free_flow: number;
   capacity: number;
-}
-
-const W = 560;
-const H = 640;
-
-function project(): (lon: number, lat: number) => [number, number] {
-  const lons = NODES.map((n) => n[0]);
-  const lats = NODES.map((n) => n[1]);
-  const [lo0, lo1] = [Math.min(...lons), Math.max(...lons)];
-  const [la0, la1] = [Math.min(...lats), Math.max(...lats)];
-  const pad = 45;
-  return (lon, lat) => [
-    pad + ((lon - lo0) / (lo1 - lo0)) * (W - 2 * pad),
-    pad + ((la1 - lat) / (la1 - la0)) * (H - 2 * pad),
-  ];
 }
 
 const TOLL_POINTS = [0, 5, 10, 20, 35, 50];
@@ -51,7 +26,6 @@ export function RoutingSolver() {
   const [precision, setPrecision] = useState(0.5);
   const [tollLink, setTollLink] = useState<number | null>(null);
   const [toll, setToll] = useState(10);
-  const toXY = useMemo(project, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -103,11 +77,12 @@ export function RoutingSolver() {
           .sort((a, b) => b.vc - a.vc)[0]
       : null;
 
-  const maxFlow = data ? Math.max(...data.flows, 1) : 1;
   const named = (i: number | null) => (i === null || !links[i] ? "—" : `${links[i].from} → ${links[i].to}`);
 
   const headline = !data
     ? "Solving…"
+    : tollLink === null && busiest && links[busiest.i]
+      ? `Start with ${named(busiest.i)} — it is running at ${(100 * busiest.vc).toFixed(0)}% of capacity. Click any road on the map to price it.`
     : tollLink === null
       ? `Total travel time ${count(data.total_cost)} vehicle-minutes with no toll.`
       : effect && effect.delta_total_cost < 0
@@ -142,48 +117,14 @@ export function RoutingSolver() {
       )}
 
       <div className="route-cols">
-        <svg
-          viewBox={`0 0 ${W} ${H}`}
-          className="route-map"
-          style={{ opacity: busy ? 0.7 : 1 }}
-          role="img"
-          aria-label="Sioux Falls road network. Line width is link flow; colour is flow as a share of capacity. Use the dropdown below to toll a link with the keyboard."
-        >
-          {links.map((l, i) => {
-            const [x1, y1] = toXY(...NODES[l.from - 1]);
-            const [x2, y2] = toXY(...NODES[l.to - 1]);
-            const flow = data ? data.flows[i] : 0;
-            const vc = flow / Math.max(l.capacity, 1);
-            const hue = vc > 0.9 ? "var(--red)" : vc > 0.55 ? "var(--amber)" : "var(--accent)";
-            const isTolled = tollLink === i;
-            return (
-              <line
-                key={i}
-                x1={x1}
-                y1={y1}
-                x2={x2}
-                y2={y2}
-                stroke={isTolled ? "var(--text)" : hue}
-                strokeWidth={0.6 + 5 * (flow / maxFlow)}
-                opacity={isTolled ? 1 : 0.75}
-                strokeDasharray={isTolled ? "5 3" : undefined}
-                style={{ cursor: "pointer" }}
-                onClick={() => setTollLink(isTolled ? null : i)}
-              />
-            );
-          })}
-          {NODES.map(([lon, lat], k) => {
-            const [x, y] = toXY(lon, lat);
-            return (
-              <g key={k}>
-                <circle cx={x} cy={y} r="7.5" fill="var(--panel)" stroke="var(--border-bright)" />
-                <text x={x} y={y + 3} textAnchor="middle" fontSize="7.5" fill="var(--text-dim)" fontFamily="var(--mono)">
-                  {k + 1}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
+        <NetworkMap
+          links={links}
+          flows={data ? data.flows : links.map(() => 0)}
+          travelTimes={data ? data.travel_times : undefined}
+          tolled={tollLink}
+          onToll={setTollLink}
+          busy={busy}
+        />
 
         <div>
           <Controls>

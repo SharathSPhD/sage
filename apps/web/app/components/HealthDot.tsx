@@ -2,18 +2,19 @@
 
 import { useEffect, useState } from "react";
 
+/** Whether the solver behind every number on this site is answering. */
 export function HealthDot() {
-  const [state, setState] = useState<"unknown" | "ok" | "down">("unknown");
-  const [version, setVersion] = useState("");
+  const [state, setState] = useState<"loading" | "ok" | "down">("loading");
+  const [version, setVersion] = useState<string | null>(null);
 
   useEffect(() => {
     let alive = true;
     fetch("/api/v1/health")
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
-      .then((d) => {
+      .then((d: { library?: string }) => {
         if (!alive) return;
+        setVersion(d.library ?? null);
         setState("ok");
-        setVersion(d.library ?? "");
       })
       .catch(() => alive && setState("down"));
     return () => {
@@ -22,9 +23,9 @@ export function HealthDot() {
   }, []);
 
   return (
-    <span className="status-dot" title={version ? `strataq ${version}` : "backend status"}>
+    <span className="status-dot" title={state === "ok" ? "The solver is answering." : "The solver is not answering."}>
       <span className="dot" data-state={state} />
-      {state === "ok" ? "live" : state === "down" ? "offline" : "…"}
+      {state === "ok" ? `strataq ${version ?? "live"}` : state === "down" ? "solver offline" : "…"}
     </span>
   );
 }

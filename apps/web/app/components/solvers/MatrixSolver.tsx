@@ -10,6 +10,7 @@
 
 import { useMemo, useState } from "react";
 import { useSolve, type QRESolution } from "../../../lib/problems";
+import { PayoffMatrix } from "../charts/PayoffMatrix";
 import { Answer, Bars, Controls, Field, Figure, ModelLine, num } from "./ui";
 
 interface Inputs {
@@ -83,7 +84,7 @@ export function MatrixSolver() {
       <Answer headline={best >= 0 ? `${YOURS[best]}.` : "Solving…"} busy={busy} error={error}>
         {values && (
           <>
-            <Figure label="Expected value" value={pts(values[best])} note="share points of the category per year" />
+            <Figure label="Expected value" value={pts(values[best])} tween={values[best]} format={pts} note="share points of the category per year" />
             <Figure
               label="Next best gives up"
               value={pts(ranked[0].value - ranked[1].value)}
@@ -105,6 +106,20 @@ export function MatrixSolver() {
           3 x 3 payoff table, both sides solved together, precision {num(v.precision, 2)}. Residual{" "}
           {data.residual.toExponential(1)} in {data.n_iter} iterations.
         </ModelLine>
+      )}
+
+      {data && (
+        <section className="card">
+          <h3>The table, and where the two of you land on it</h3>
+          <PayoffMatrix
+            rowLabels={YOURS}
+            colLabels={THEIRS}
+            payoffs={u1.map((row, i) => row.map((a, j) => [a, u2[i][j]] as [number, number]))}
+            rowMix={data.sigma[0]}
+            colMix={data.sigma[1]}
+            format={(x) => x.toFixed(1)}
+          />
+        </section>
       )}
 
       <div className="answer-cols">
@@ -133,7 +148,7 @@ export function MatrixSolver() {
         </section>
         <section className="card">
           <h3>What they are likely to do</h3>
-          {data && <Bars rows={data.sigma[1].map((p, j) => ({ label: THEIRS[j], p }))} />}
+          {data && <Bars rows={data.sigma[1].map((p, j) => ({ label: THEIRS[j], p }))} tone="rival" />}
         </section>
       </div>
 

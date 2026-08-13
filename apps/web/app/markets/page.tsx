@@ -3,7 +3,7 @@ import path from "node:path";
 import { MarketReading, type Series } from "./MarketReading";
 import { ResearchCrumb } from "../components/ResearchCrumb";
 
-export const metadata = { title: "Market reading — SAGE" };
+export const metadata = { title: "Market reading" };
 
 // Committed, gate-checked artifact (unit domains.electricity) — the app
 // draws the data behind F-0008/F-0009; it does not refetch or recompute.

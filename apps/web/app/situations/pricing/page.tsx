@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PricingSolver } from "../../components/solvers/PricingSolver";
 
 export const metadata: Metadata = {
-  title: "Pricing — SAGE",
+  title: "Pricing",
   description: "Set a price against a rival setting one too: price, profit, margin and elasticities.",
 };
 

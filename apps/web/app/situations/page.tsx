@@ -1,26 +1,31 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ProblemThumb } from "../components/ProblemThumb";
 import { PROBLEMS } from "../../lib/catalogue";
 
 export const metadata: Metadata = {
-  title: "Problems — SAGE",
+  title: "Problems",
   description:
-    "Pricing, auctions, electricity offers, traffic assignment, budget allocation and arbitrary payoff tables.",
+    "Pricing, auctions, electricity offers, traffic assignment, budget allocation and arbitrary payoff tables — one solver, six pages.",
 };
 
 export default function ProblemsIndex() {
   return (
-    <div className="wrap" style={{ paddingTop: "2.4rem" }}>
-      <h1 className="surface-title">Problems</h1>
+    <div className="wrap page">
+      <h1 className="surface-title">Problem types</h1>
       <p className="surface-lede">
-        Six problem types, one solver. Each page takes your numbers and returns the quantity you came for.
+        Six shapes of problem over one solver. Each page takes your numbers and returns the quantity you came for, with
+        a visual built for that problem rather than a generic chart.
       </p>
       <div className="gallery">
         {PROBLEMS.map((p) => (
           <Link key={p.id} href={p.href} className="card gallery-item">
+            <ProblemThumb id={p.id} />
             <h2>{p.name}</h2>
             <p className="gallery-decision">{p.question}</p>
-            <p className="gallery-setting">Returns {p.returns}</p>
+            <p className="gallery-setting">
+              {p.visual} Returns {p.returns}.
+            </p>
             <span className="badge">{p.endpoint}</span>
           </Link>
         ))}
@@ -30,8 +35,9 @@ export default function ProblemsIndex() {
         <p>
           The Python library takes the same problems plus arbitrary payoff tensors —{" "}
           <a href="https://sharathsphd.github.io/sage/">docs</a>,{" "}
-          <a href="https://github.com/SharathSPhD/sage">source</a>. To check whether this class of model fits your own
-          series before you use it, the <Link href="/diagnose">fit check</Link> takes a CSV.
+          <a href="https://github.com/SharathSPhD/sage">source</a>, and the{" "}
+          <Link href="/api">API console</Link> for calling them over HTTP. To solve on numbers of your own, start at{" "}
+          <Link href="/data">bring your own data</Link>.
         </p>
       </section>
     </div>

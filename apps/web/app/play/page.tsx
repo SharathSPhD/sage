@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Arena } from "./Arena";
 
 export const metadata: Metadata = {
-  title: "Backtest — SAGE",
+  title: "Backtest",
   description:
     "How five decision rules perform over repeated rounds against the same simulated rival on the same draws.",
 };

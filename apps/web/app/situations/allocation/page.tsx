@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AllocationSolver } from "../../components/solvers/AllocationSolver";
 
 export const metadata: Metadata = {
-  title: "Budget allocation — SAGE",
+  title: "Budget allocation",
   description: "Split a fixed budget across contested accounts: the split, win probability and expected value.",
 };
 

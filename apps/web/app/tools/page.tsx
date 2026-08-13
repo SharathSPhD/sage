@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ToolsPanel } from "./ToolsPanel";
 import { ResearchCrumb } from "../components/ResearchCrumb";
 
-export const metadata: Metadata = { title: "Your data — SAGE" };
+export const metadata: Metadata = { title: "Reciprocity and irreversibility panels" };
 
 export default function ToolsPage() {
   return (

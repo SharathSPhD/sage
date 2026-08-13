@@ -4,7 +4,7 @@ import { firstParagraph } from "../../lib/markdown";
 import { TAKEAWAYS } from "./takeaways";
 
 export const metadata = {
-  title: "Learn — SAGE",
+  title: "Learn",
   description:
     "Ten short explainers, each ending in what you would do differently on Monday. Including the strongest objection to the whole approach.",
 };

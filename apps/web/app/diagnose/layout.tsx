@@ -4,7 +4,7 @@ import type { Metadata } from "next";
    the route's metadata lives here — same pattern the other routes get from
    their server-side page.tsx. */
 export const metadata: Metadata = {
-  title: "Diagnose your data — SAGE",
+  title: "Diagnose your data",
   description:
     "Drop a series and get a position in the irreversibility plane: what kind of strategic system this is, what that changes, and what this data cannot tell you.",
 };

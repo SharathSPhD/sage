@@ -3,7 +3,7 @@ import Link from "next/link";
 import { RoutingSolver } from "../../components/solvers/RoutingSolver";
 
 export const metadata: Metadata = {
-  title: "Traffic assignment — SAGE",
+  title: "Traffic assignment",
   description: "Toll one link on the Sioux Falls network and read link flows, total travel time and toll revenue.",
 };
 

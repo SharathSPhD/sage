@@ -8,6 +8,7 @@
 
 import { useMemo, useState } from "react";
 import { gridLevels, sweepPoints, useSolve, useSweep, type ElectricitySolution } from "../../../lib/problems";
+import { OfferStack } from "../charts/OfferStack";
 import { Answer, Bars, Controls, Curve, Field, Figure, ModelLine, Sweep, money, money0, num, pct, sig } from "./ui";
 
 interface Inputs {
@@ -100,9 +101,9 @@ export function ElectricitySolver() {
       >
         {data && (
           <>
-            <Figure label="Expected clearing price" value={mwh(data.clearing_price)} note="uniform price paid to all dispatched capacity" />
-            <Figure label="Expected revenue" value={money0(data.revenue)} note="clearing price times your dispatch" tone="neutral" />
-            <Figure label="Dispatch probability" value={pct(data.dispatch_probability)} note="share of your capacity called" tone="neutral" />
+            <Figure label="Expected clearing price" value={mwh(data.clearing_price)} tween={data.clearing_price} format={mwh} note="uniform price paid to all dispatched capacity" />
+            <Figure label="Expected revenue" value={money0(data.revenue)} tween={data.revenue} format={money0} note="clearing price times your dispatch" tone="neutral" />
+            <Figure label="Dispatch probability" value={pct(data.dispatch_probability)} tween={data.dispatch_probability} format={(x) => pct(x)} note="share of your capacity called" tone="neutral" />
           </>
         )}
       </Answer>
@@ -114,6 +115,38 @@ export function ElectricitySolver() {
           precision {sig(data.precision)}. Expected profit {money0(data.profit)}.
           {data.success ? "" : ` ${data.message}`}
         </ModelLine>
+      )}
+
+      {data && (
+        <section className="card">
+          <h3>The stack, and where it crosses demand</h3>
+          <OfferStack
+            units={[
+              {
+                label: "you",
+                offer: data.offer,
+                cost: data.costs[data.generator],
+                capacity: data.capacities[data.generator],
+                mine: true,
+              },
+              {
+                label: "other unit",
+                offer: data.costs[1 - data.generator],
+                cost: data.costs[1 - data.generator],
+                capacity: data.capacities[1 - data.generator],
+                mine: false,
+              },
+            ]}
+            demand={data.demand}
+            clearingPrice={data.clearing_price}
+            formatPrice={(x) => money(x, 0)}
+            formatMW={(x) => `${num(x, 0)} MW`}
+          />
+          <p className="chart-note">
+            Only your offer is a decision here, so only your block carries a mark-up over cost; the other unit is drawn
+            at its own marginal cost. The horizontal rule is the expected clearing price returned by the solve.
+          </p>
+        </section>
       )}
 
       <div className="answer-cols">

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AuctionSolver } from "../../components/solvers/AuctionSolver";
 
 export const metadata: Metadata = {
-  title: "Auction and tender — SAGE",
+  title: "Auction and tender",
   description: "Sealed-bid tender or sale: the bid to submit, expected surplus and win probability.",
 };
 
