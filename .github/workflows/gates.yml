@@ -65,7 +65,11 @@ jobs:
 
       - name: Affected units only
         if: steps.scope.outputs.mode == 'targeted'
-        run: uv run python gates/run_gates.py $(tr '\n' ' ' < units.txt)
+        # --check matches the full sweep's semantics: fail on a REGRESSION of a
+        # previously-green unit, not on a unit that is red by design. Without it the
+        # targeted path was stricter than the sweep it replaces, and a deliberately
+        # red new unit turned main red while the full sweep passed on the same tree.
+        run: uv run python gates/run_gates.py --check $(tr '\n' ' ' < units.txt)
 
       - name: No gated unit touched
         if: steps.scope.outputs.mode == 'none'
