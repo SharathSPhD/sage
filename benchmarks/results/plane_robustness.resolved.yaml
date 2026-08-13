@@ -115,5 +115,21 @@ config:
     \ cost is 0.044 s/game at m=3 rising to 0.275 s/game at m=6, so the full design\
     \ is ~15 minutes; doubling n again would buy a sqrt(2) on intervals that are already\
     \ an order of magnitude inside the registered thresholds.\n"
+  post_review_conditions:
+    c1_superseded_delta_rho_hi_interval:
+      registered: '2026-08-13'
+      raised_as: O-8 (re-review of science.plane)
+      statistic: delta_rho_hi = rho_hi(m_max) - rho_hi(m_min) at alpha_hi, the superseded
+        (BINDING) registration's K2-T1 primary
+      n_resamples: 4000
+      ci_level: 0.95
+      resample: games within cell, with replacement; m_min and m_max cells resampled
+        in the same replicate
+      refute_bar: 0.4
+      survive_bar: 0.2
+      binding: false
+      report_rule: P(delta > refute_bar) >= 0.05 => report the refutation branch as
+        UNRESOLVED-AND-NEAR; otherwise report it as excluded at the 5% level. The
+        verdict stays INDETERMINATE in both cases.
 library_version: 0.1.0
-run_at: '2026-08-13T00:37:37+00:00'
+run_at: '2026-08-13T16:14:31+00:00'

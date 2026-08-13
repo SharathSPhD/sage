@@ -104,6 +104,16 @@ UNIT = "science.plane"
 # CI width; the interval it produces is reported, never adjudicated against.
 GAP_RATIO_RESAMPLES = 4000
 
+# CONDITION C-1 (re-review objection O-8), registered in
+# config/experiments/plane_robustness.yaml under `post_review_conditions`
+# BEFORE this statistic was computed. The SUPERSEDED (binding) registration's
+# K2-T1 primary, delta_rho_hi, reached adjudication as a bare point estimate
+# 0.036 below its 0.40 refutation bar - the same defect O-2 named for the
+# replacement's gap_ratio, left standing for the registration that binds.
+# DISCLOSURE ONLY: it cannot re-score K2-T1, which stays INDETERMINATE because
+# the point estimate clears neither bar.
+DELTA_RHO_HI_RESAMPLES = 4000
+
 
 def _now() -> str:
     return datetime.now(UTC).isoformat(timespec="seconds")
@@ -210,6 +220,56 @@ def _bootstrap_gap_ratio(
             "p_below_bar": float(jnp.mean(ratio < bar)),
         }
     return out
+
+
+def _bootstrap_delta_rho_hi(
+    cells: dict[int, dict[float, dict[str, Any]]],
+    m_values: list[int],
+    *,
+    a_hi: float,
+    key: jnp.ndarray,
+    n_resamples: int,
+    ci_level: float,
+    refute_bar: float,
+    survive_bar: float,
+) -> dict[str, float]:
+    """CONDITION C-1 (re-review O-8): interval on the BINDING registration's primary.
+
+    ``delta_rho_hi = rho_hi(m_max) - rho_hi(m_min)`` at ``alpha_hi`` is what
+    ``config/experiments/plane_finite_size.yaml`` - the registration that was
+    live when this unit's data first existed, and therefore the one that binds -
+    decides K2-T1 on. It reached adjudication with no interval, which is exactly
+    the defect red-team O-2 raised against the replacement's ``gap_ratio``.
+
+    The resampling scheme is the registered one: GAMES WITHIN THE CELL with
+    replacement, the (EPR, R) pairing inside a game never broken, and both the
+    ``m_min`` and ``m_max`` cells resampled in the SAME replicate so their shared
+    sampling variation is preserved rather than pretended away.
+
+    This is a DISCLOSURE statistic and is never adjudicated against. The
+    superseded registration decides refutation on the point estimate clearing
+    0.40 (its CI condition is an additional requirement, never a substitute) and
+    survival on it falling to 0.20; +0.3639 clears neither, so K2-T1 is
+    INDETERMINATE before and after this interval exists. Re-scoring a verdict
+    from a post-hoc interval is the move O-1 exists to prevent.
+    """
+    m_min, m_max = m_values[0], m_values[-1]
+    parts = []
+    for m_idx, m in enumerate((m_min, m_max)):
+        cell = cells[m][a_hi]
+        k = jax.random.fold_in(key, m_idx)
+        n = int(cell["r"].shape[0])
+        idx = jax.random.randint(k, (n_resamples, n), 0, n)
+        parts.append(_spearman_rows(cell["epr"][idx], cell["r"][idx]))
+    delta = parts[1] - parts[0]
+    tail = (1.0 - ci_level) / 2.0
+    return {
+        "ci_low": float(jnp.quantile(delta, tail)),
+        "ci_high": float(jnp.quantile(delta, 1.0 - tail)),
+        "sd": float(jnp.std(delta)),
+        "p_above_refute_bar": float(jnp.mean(delta > refute_bar)),
+        "p_at_or_below_survive_bar": float(jnp.mean(delta <= survive_bar)),
+    }
 
 
 # --------------------------------------------------------------------------
@@ -695,6 +755,26 @@ def run() -> int:
             flush=True,
         )
 
+    # ---- C-1 (re-review O-8): interval on the BINDING registration's primary -
+    dr = _bootstrap_delta_rho_hi(
+        main,
+        m_values,
+        a_hi=a_hi,
+        key=jax.random.PRNGKey(seed + int(boot["seed_offset"]) + 2),
+        n_resamples=DELTA_RHO_HI_RESAMPLES,
+        ci_level=ci_level,
+        refute_bar=float(sup_crit["recovery_delta_refute"]),
+        survive_bar=float(sup_crit["recovery_delta_survive"]),
+    )
+    print(
+        f"[C-1/O-8] superseded delta_rho_hi = {sup['delta_rho_hi']:+.4f} "
+        f"[{dr['ci_low']:+.3f}, {dr['ci_high']:+.3f}] sd={dr['sd']:.3f}  "
+        f"P(>{sup['refute_bar']:.2f}) = {dr['p_above_refute_bar']:.3f}  "
+        f"P(<={sup['survive_bar']:.2f}) = {dr['p_at_or_below_survive_bar']:.3f}  "
+        f"-- DISCLOSURE ONLY, verdict stays {sup['verdict']}",
+        flush=True,
+    )
+
     # ---- K2-T4: the INDETERMINATE guards -----------------------------------
     guard_fired = any(
         cell["near_critical_frac"] > max_near or cell["non_converged"] > 0 or cell["rejected"] > 0
@@ -745,6 +825,13 @@ def run() -> int:
         "superseded_verdict_survives": float(sup["verdict"] == "SURVIVES"),
         "superseded_verdict_refuted": float(sup["verdict"] == "REFUTED"),
         "superseded_delta_rho_hi": sup["delta_rho_hi"],
+        # C-1 (re-review O-8), POST-HOC and registered before computation:
+        # the binding registration's primary finally carries an interval.
+        "superseded_delta_rho_hi_ci_low": dr["ci_low"],
+        "superseded_delta_rho_hi_ci_high": dr["ci_high"],
+        "superseded_delta_rho_hi_sd": dr["sd"],
+        "superseded_delta_rho_hi_p_above_refute_bar": dr["p_above_refute_bar"],
+        "superseded_delta_rho_hi_p_at_or_below_survive_bar": dr["p_at_or_below_survive_bar"],
         "superseded_refute_bar": sup["refute_bar"],
         "superseded_survive_bar": sup["survive_bar"],
         "superseded_t2_collapse_ok": float(sup["t2_collapse_ok"]),
@@ -972,6 +1059,22 @@ def run() -> int:
             "of the replacement registration is not certified by its own T3 principle "
             "('a point estimate under the ceiling with a CI crossing it does not certify "
             "survival'), which was written for rho_S and applies here in substance. "
+            "C-1 / O-8 (POST-HOC, but REGISTERED in the config under "
+            "post_review_conditions BEFORE it was computed): the same defect O-2 named "
+            "was left standing for the registration that BINDS. The superseded file "
+            "decides K2-T1 on delta_rho_hi against 0.40 (refute) / 0.20 (survive), and "
+            f"this run measured {sup['delta_rho_hi']:+.4f} — {0.40 - sup['delta_rho_hi']:.3f} "
+            "below the refutation bar — with no interval, while BOTH of that "
+            "registration's other refutation conditions are MET on this data "
+            f"(monotone: {sup['monotone']}; ends disjoint: {sup['ends_disjoint']}). "
+            "That margin was therefore the whole of what separated INDETERMINATE from "
+            f"REFUTED. Bootstrapped now: delta_rho_hi 95% CI [{dr['ci_low']:+.3f}, "
+            f"{dr['ci_high']:+.3f}], sd = {dr['sd']:.3f}, P(delta > 0.40) = "
+            f"{dr['p_above_refute_bar']:.3f}, P(delta <= 0.20) = "
+            f"{dr['p_at_or_below_survive_bar']:.3f}. DISCLOSURE ONLY: the superseded "
+            "registration decides refutation on the POINT ESTIMATE clearing 0.40, "
+            "which it does not, so K2-T1 is INDETERMINATE before and after this "
+            "interval exists and no value of it re-scores the verdict. "
             "WHAT IS ROBUST AND CARRIES THE CLAIM: the CEILING criterion. High-alpha "
             "coupling never recovers at any tested m — worst ci_high = "
             f"{max(main_cis[m][a_hi][1] for m in m_values):+.4f} against the 0.35 "

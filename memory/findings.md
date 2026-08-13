@@ -336,6 +336,64 @@ Neither correction makes any month quotable: R8's C-3 rejection stands, and F-00
 - Chase status: chasing — (i) re-run D1 and D2 **paired** to the main arm at matched λ̄ by construction, which is the only way to settle how much of the m-effect is dimensional; (ii) the N-scaling kill-shot; (iii) a finite-size criterion that is resolvable at feasible n, since both the gap-ratio CI and the D2 margin say the present one is not.
 - Resolution / follow-up: artifacts `benchmarks/results/plane_robustness.json` + `plane_robustness.resolved.yaml`; the superseded registration is preserved at `config/experiments/plane_finite_size.yaml`, `experiments/plane_finite_size.py` and `benchmarks/results/plane_finite_size.resolved.yaml`, all now committed so the "config committed before the experiment" property is checkable rather than vacuous. **The flagship claim is not withdrawn and is not strengthened**: it rests on decorrelation at the ceiling, which is robust at every tested m, and no longer on a finite-size criterion whose two registrations disagree.
 
+### RE-REVIEW ADDENDUM, 2026-08-13 — the corrected unit was reviewed, and the binding registration's own primary turned out to have the defect O-2 named
+
+- The re-review that ADR-0014 and ADR-0015 recorded as owed was run on 2026-08-13 against the
+  artefact, config, experiment source and claim only. Verdict: **GRANTED-CONDITIONAL**, on the
+  ceiling claim with K2-T1 INDETERMINATE and the substitution disclosed, and on nothing stronger.
+  O-1, O-2, O-3 and O-6 were verified as addressed **in code and artifact rather than in this
+  prose** — in particular `_adjudicate_superseded` loads the superseded file's thresholds at run
+  time rather than transcribing them, and the `registrations_agree ? replacement : INDETERMINATE`
+  rule is what sets `verdict_indeterminate = 1.0`. Two new objections were raised (O-8, O-9) and
+  O-7 was closed by running the audit (F-0025). Full text in `gates/science.plane.yaml`.
+- **O-8, and it is the sharper of the pair: O-2's fix was never applied to the registration that
+  BINDS.** The superseded file decides K2-T1 on `delta_rho_hi` against 0.40 (refute) / 0.20
+  (survive). This run measured **+0.3639 — only 0.036 below the refutation bar** — with no
+  interval, while **both** of that registration's other refutation conditions are satisfied on the
+  same data: rho_hi is monotone non-decreasing within `mono_tol` (-0.352, -0.272, -0.244, +0.012)
+  and the end intervals are disjoint (ci_low(m=6) = -0.137 > ci_high(m=3) = -0.226). A 0.036
+  point-estimate margin was therefore the whole of what separated INDETERMINATE from **REFUTED**
+  under the binding registration, and this finding reported it without any measure of its
+  sampling error while criticising the replacement for exactly that.
+- **Condition C-1, registered in `config/experiments/plane_robustness.yaml` at commit `befd5f6`
+  BEFORE the statistic was computed** — including the rule for what each outcome would mean —
+  then run:
+
+  **delta_rho_hi = +0.3639, 95% CI [+0.168, +0.545], sd = 0.0974, P(delta > 0.40) = 0.356,
+  P(delta <= 0.20) = 0.050.** Margin to the refutation bar: **0.37 bootstrap SD.**
+
+  The registered report rule (a) fires because P(delta > 0.40) >= 0.05: **the binding
+  registration's refutation branch is UNRESOLVED-AND-NEAR, and K2-T1's INDETERMINATE is a
+  non-resolution rather than a comfortable miss.** More than a third of the bootstrap mass sits
+  above the refutation bar and a twentieth sits at or below the survival bar, so the finite-size
+  criterion **cannot discriminate in either direction at n = 200**. That is the third independent
+  confirmation of this finding's own chase item (iii), after the gap_ratio CI and the D2 margin.
+- **C-1 changes no verdict and could not have.** Refutation is decided on the point estimate
+  clearing 0.40, which it does not; survival on it falling to 0.20, which it also does not.
+  Re-scoring a verdict from a post-hoc interval is the move O-1 exists to prevent. Everything else
+  in the re-run reproduces bit-for-bit: all 53 rho_S metrics, every CI and the whole
+  `effect_sizes` block are byte-identical to the previous artifact, and the only other differences
+  are last-ULP wobble in median diagnostics (max relative change 1.9e-4 on a quantity of size
+  2.9e-13).
+- **O-9, accepted as unrepairable**: the superseded registration's criterion is adjudicated on the
+  *replacement's* design — 200 games per cell over five alpha levels, where `plane_finite_size.yaml`
+  registered 100 games over ten. No artifact from the first registration was ever written, so a
+  like-for-like adjudication does not exist and cannot be recovered. The record must therefore say
+  that the superseded registration's **criterion evaluated on this run's data** returns
+  INDETERMINATE, not that the registration "returned" anything. The mismatch cannot help the claim
+  (INDETERMINATE is already the weakest outcome, and C-1 shows the criterion is unresolvable in
+  both directions) and cannot touch the ceiling, which is byte-identical in both files.
+- **O-7 is CLOSED by F-0025**, and its outcome is not the one the un-run assessment assumed: the
+  nearest live game-theory work really is orthogonal (confirmed first-hand), but the *structural*
+  assertion behind the claim is established physics for Markov jump processes
+  (Baiesi-Maes-Wynants 2009) and false in a neighbouring class (Harada-Sasa 2005). The claim's
+  novelty is the instantiation and the measurement, and it must never be written as a structural
+  discovery.
+- Chase status update: item (iii) — "a finite-size criterion that is resolvable at feasible n" —
+  is now supported by three independent measurements rather than two, and is the single most
+  useful thing a successor unit could fix.
+
+
 ## F-0023 — The N-scaling kill-shot does not kill the plane, it kills the *instrument*: low-α co-movement of EPR and ℛ is a TWO-PLAYER fact. The numerator kill-shot passes at every m, and F-0022's "m=6 is indistinguishable from zero" does not survive a real λ̄ control
 
 - Date: 2026-08-13
@@ -432,6 +490,48 @@ N stops at 4 and m stops at 6, and the two axes were swept **separately** (A at 
 - Chase status: **chasing** — (a) the sector-loading regression named above, which is the mechanism test for why low-α co-movement is two-player-only; (b) a criterion for the N axis that does not depend on a low-α baseline, since this run shows that baseline does not exist at N ≥ 3 and A-T1's precondition therefore makes the N sweep unadjudicable by construction; (c) A-T2's one-sidedness, which lets onset drift *downward* into a vacuous pass. Items (b) and (c) are defects of **this** registration, recorded here and deliberately **not** repaired by writing a second criteria file for this unit.
 - Resolution / follow-up: artifacts `benchmarks/results/plane_nplayers.json` + `plane_nplayers.resolved.yaml`. p1_instruments gains "N = 2" on the instrument-scope table's α-regime row; p3_noneq's decoupling section gains the N-scaling result and the F-0022 correction; `memory/claims.md` C1 gains the N-scope qualifier.
 
+### RE-REVIEW ADDENDUM, 2026-08-13 — this unit's first adversarial review: GRANTED, with four objections
+
+- ADR-0015 recorded that **no adversarial review of this unit had taken place at all.** One was
+  run on 2026-08-13 against the artefact, config, experiment source and claim only, and returned
+  **GRANTED**. Full text in `gates/science.plane.nplayers.yaml`; the reviewer's provenance
+  disclosure is on the face of that gate and should be read with the signoff.
+- **Why it was granted.** The registration is the strongest in the repository and survives attack
+  on its own terms: one criteria file committed before the experiment existed; INDETERMINATE
+  defined in advance as a third outcome with seven named guards; a control that is BINDING with a
+  pre-stated arm-disagreement rule; intervals on every adjudicated statistic including the paired
+  numerator-minus-ratio difference. Decisively, **the primary kill-shot returned INDETERMINATE and
+  was not rescued**, even though `holds_raw` was TRUE in both arms and rescuing it would have
+  required only relaxing a precondition this unit itself wrote. Every number in the claim was
+  verified present in the artifact rather than taken from this text.
+- **The three self-raised defects were upheld, and S-1 was upheld as CORRECT rather than merely
+  disclosed.** A precondition that fires is a criterion working. `a_main_baseline_ok = 0.0`,
+  `a_ctl_baseline_ok = 0.0`, and `_adjudicate_ceiling` makes `baseline_ok` a conjunct of HOLDS, so
+  the INDETERMINATE is produced by the registered code path and not by narration.
+- **Four new objections, all dispositioned in the same pass:**
+  - **R-1 (addressed).** The N >= 3 ceiling was reported "with the widest margin the programme has
+    recorded". That margin is uninformative by this unit's own logic — it is measured on games
+    where the precondition FAILED, i.e. where rho_S is small at *every* swept alpha
+    (+0.28/+0.12/+0.08/+0.06/+0.06 at N=3), so a small rho_hi is what a system with no coupling
+    anywhere must produce. The phrase is deleted from the gate and from this finding's framing;
+    the number (+0.163) is kept, because suppressing it would be the opposite error. What does
+    establish that the meters carry signal at N >= 3 is a different number already in the
+    artifact: rho_S(R, 1/||chi+chi^T||) at alpha=0.95 is +0.9997 (N=3) and +0.9999 (N=4).
+  - **R-2 (addressed).** See the F-0024 addendum: the correction to F-0022 is driven by BOTH the
+    doubling of n and the lambda_bar control, and **the n effect is the one that crosses zero.**
+  - **R-3 (addressed).** The seven exact anchors establish reconstruction of the F-0004 seed stream
+    and library determinism **across two independently written experiment scripts** — a
+    reproducibility credential. They are not independent corroboration of F-0004's and F-0007's
+    numbers, since a systematic error in the shared library would reproduce exactly as well. Same
+    shape of over-read that F-0022 had to correct for K3.
+  - **R-4 (accepted).** C1's lambda_bar match is *estimated*, not exact: the scale is set from the
+    median payoff_range of a **disjoint** 200-game calibration draw (`PRNGKey(seed + 940000)`,
+    never solved, never entering a statistic), so the achieved match on the evaluation games is a
+    sampling estimate — 0.0314 against the registered 0.10 tolerance, comfortably inside it but
+    not zero. And it matches the median only, not the distribution, which was already registered
+    in advance as a limitation and is not repeated a third time.
+
+
 ## F-0018 — 23 gates green while every solver call in the shipped wheel was broken (retroactive entry)
 
 - Date of the event: 2026-08-12. **Date this entry was written: 2026-08-13.**
@@ -510,3 +610,146 @@ N stops at 4 and m stops at 6, and the two axes were swept **separately** (A at 
 - Resolution / follow-up: `papers/p2_plane` §Results and §Discussion carry the corrected
   statement and drop "indistinguishable from zero" as an unqualified claim; the gate
   `gates/science.plane.yaml` records it under objection O-6.
+
+### RE-REVIEW ADDENDUM, 2026-08-13 (objection R-2) — which of the two changes did what
+
+- This entry's title credits the lambda_bar control with the correction. **The decomposition in
+  the body is right and the emphasis is not.** Two things changed between F-0022's reading and
+  R12's, and the artifact says which one crosses zero:
+  - **the sample size.** The **fixed-scale** main arm at n = 400 gives
+    rho_S = **-0.1119 [-0.214, -0.016]** at m = 6 — an interval that **already excludes zero, with
+    no lambda_bar matching at all.** F-0022's +0.012 [-0.137, +0.156] was n = 200 on the same
+    games plus 200 fewer; each estimate lies inside the other's interval, so this is resolution,
+    not contradiction.
+  - **the control.** Matching lambda_bar then deepens it to **-0.2061 [-0.300, -0.105]**.
+- So: **crossing zero is the sample-size effect; the control's contribution is the depth**, worth
+  +0.095 of the +0.221 fixed-scale drift against +0.126 that survives matching. Both statements
+  are true and the pair of them is what supersedes F-0022's "indistinguishable from zero at
+  m = 6" — not the control alone. Corrected here, in `gates/science.plane.yaml` objection O-6, and
+  in `gates/science.plane.nplayers.yaml` objection R-2. **No number changes.**
+
+
+## F-0025 — The K4 prior-art re-audit (R11 objection O-7), run first-hand: the nearest live game-theory work is orthogonal as claimed, but the *structural* assertion is NOT novel — stochastic thermodynamics established it in 2009, and a neighbouring class of systems makes it FALSE
+
+- Date: 2026-08-13. **This is the K4 audit that ADR-0014 and ADR-0015 recorded as never run.**
+  It was registered for unit `science.plane` (R11) and is the objection that kept that gate red
+  independently of the criterion dispute. It is written up as a finding rather than a note because
+  its outcome is not the one the un-run assessment assumed, and it changes how the flagship claim
+  may be worded.
+- Instrument / experiment: none — this is a literature audit. Method: targeted search plus
+  **first-hand full-text term checks** of the candidate papers, rather than inheriting a verdict
+  from an earlier internal sweep. Every term check below was run against the paper's own PDF/HTML,
+  not against an abstract or a citation.
+
+### The question the audit had to answer
+
+Has anyone previously stated that **the local response asymmetry and the global dissipation of a
+strategic system are structurally inequivalent** — i.e. that a local derivative-level asymmetry
+meter and a global stationary-flux irreversibility meter are two coordinates rather than one?
+
+### What was searched, and what came back empty
+
+Query families run (all 2026-08-13):
+
+1. `entropy production rate game theory logit dynamics response asymmetry independent coordinates`
+2. `"quantal response equilibrium" OR "logit equilibrium" "entropy production" susceptibility matrix asymmetry Hodge decomposition`
+3. `Sandholm population games potential games reversible Markov "entropy production" OR "detailed balance" stochastic evolutionary dynamics`
+4. `harmonic games Glauber dynamics entropy production nonequilibrium steady state strategic games irreversibility measure`
+5. `"response asymmetry" "entropy production" independent coordinates plane not equivalent measure of irreversibility`
+6. `"entropy production" "evolutionary game" OR "game dynamics" nonequilibrium steady state Schnakenberg cycle affinity`
+7. `Onsager reciprocity violation nonreciprocal interactions entropy production not equivalent independent`
+8. `Harada Sasa "violation of fluctuation-dissipation" energy dissipation response correlation equality`
+
+**NEGATIVE — nothing in the game-theory or learning-in-games literature states it, in any of the
+eight query families.** The specific negatives, each verified first-hand rather than inferred:
+
+- **Legacci, Mertikopoulos & Pradelski, *A geometric decomposition of finite games: Convergence vs.
+  recurrence under exponential weights* (arXiv:2405.07224, ICML 2024)** — the nearest live work, and
+  the one the inherited assessment named. Read at the authors' own ICML PDF. Full-text check for
+  `entropy production`, `dissipation`, `thermodynamic`, `Schnakenberg`, `fluctuation-dissipation`,
+  `irreversibility`, `response matrix`, `susceptibility`, `reciprocity`, `Onsager`,
+  `detailed balance`: **none of the eleven terms appears.** Its content is a Shahshahani-metric
+  Helmholtz decomposition, the identification of *incompressible* with *harmonic* games, a constant
+  of motion for incompressible games, and Poincare recurrence of exponential weights on them.
+  **The inherited "orthogonal" verdict is CONFIRMED on first-hand reading** and is no longer
+  inherited.
+  **But record the terminological collision, because it points the opposite way.** Their
+  "incompressible" is *zero Shahshahani divergence of a deterministic payoff vector field* — a
+  conservation statement. Our harmonic games are the ones with the *largest* Schnakenberg EPR on
+  the stochastic Glauber chain. A reader who reads "harmonic => incompressible => conservative"
+  next to "harmonic => maximally dissipative" will conclude the two literatures contradict each
+  other. They do not: one is a deterministic flow's volume, the other a stochastic chain's
+  time-asymmetry. **Any paper of ours that cites 2405.07224 must say this in one sentence.**
+- **Candogan, Menache, Ozdaglar & Parrilo, *Flows and Decompositions of Games* (arXiv:1005.2405,
+  MOR 2011)** — read at the MIT-hosted PDF. Same eleven-term check plus `stationary distribution`
+  and `Markov chain`: **none appears.** The decomposition is purely static payoff-space; the only
+  dynamical remark is the standard one that fictitious play and best-response converge on potential
+  games. It supplies our alpha coordinate and says nothing about dissipation.
+- **Balduzzi et al., *The Mechanics of n-Player Differentiable Games* (arXiv:1802.05642, ICML 2018)**
+  — this is the **closest structural analogue to R that exists in the games literature**: it splits
+  the game Jacobian into a symmetric (potential) and an antisymmetric (Hamiltonian) part, which is
+  the same algebraic move as chi = 1/2(chi+chi^T) + 1/2(chi-chi^T). Its conservation law is
+  **Hamiltonian and deterministic**. No entropy production, no stochastic irreversibility, no
+  detailed balance, no thermodynamics of any kind. It has the local half of our pair and not the
+  global half, and it never asks whether the two are the same information.
+- **Sandholm (population games; deterministic and stochastic evolutionary dynamics)** — potential
+  games and the reversibility of Blume-style logit/Glauber dynamics on them are standard there, and
+  that standard result is what our shared-zero half instantiates. **No pairing of a
+  response-asymmetry meter with an entropy-production meter appears, and no claim about their
+  (in)equivalence.**
+- Adjacent hits that are *not* prior art: *Game-theoretical approach to minimum entropy productions
+  in information thermodynamics* (Phys. Rev. Research 6, 013023, 2024) and *Understanding entropy
+  production via a thermal zero-player game* (arXiv:2503.03769) both run the arrow the other way —
+  game theory used as a tool **for** thermodynamics, not thermodynamic meters placed **on** games.
+
+### POSITIVE — and this is the part the un-run audit would have missed
+
+The structural assertion is **already established in stochastic thermodynamics, for the same class
+of process our Glauber chain belongs to**, and it is **false in a neighbouring class**. Two
+references decide this:
+
+- **Baiesi, Maes & Wynants, *Fluctuations and response of nonequilibrium states*, Phys. Rev. Lett.
+  103, 010602 (2009) (arXiv:0902.3955).** For Markov jump processes the nonequilibrium response
+  function splits into a **time-antisymmetric (entropic, dissipative)** term and a
+  **time-symmetric (frenetic / dynamical-activity)** term. The immediate corollary is exactly our
+  structural assertion, one level of abstraction up: **response is not a functional of entropy
+  production alone.** Continuous-time Markov chain, the same object class as our generator.
+  **This is a genuine partial anticipation and it must be cited as such.**
+- **Harada & Sasa, *Equality connecting energy dissipation with a violation of the
+  fluctuation-response relation*, Phys. Rev. Lett. 95, 130602 (2005).** The converse: in Langevin
+  systems the integrated FDT violation **equals** the dissipation rate. So there is a well-known,
+  well-defined class in which the local response asymmetry and the global dissipation are **exactly
+  the same quantity**. Any statement of inequivalence must name the class it holds in and say why
+  Harada-Sasa does not apply — for us, because R is the *reciprocity defect of the static
+  equilibrium susceptibility* chi^eq = (I - SB)^-1 S on the tangent space, not a time-integrated
+  FDT violation, and EPR is Schnakenberg's cycle functional on a discrete chain with no velocity
+  variable for the Harada-Sasa integral to be built from.
+- The same message as Baiesi-Maes-Wynants recurs through the generalized-FDR strand (Seifert &
+  Speck 2010 and successors), so it is settled physics rather than one paper's position.
+
+### What this does to the claim — the audit's actual output
+
+- **The novelty is the instantiation, not the assertion.** "Local response asymmetry and global
+  dissipation are structurally inequivalent" is **not ours to claim as new**. What is ours is:
+  (i) instantiating both meters exactly on finite strategic-form games — R from the QRE resolvent
+  on the tangent space, EPR from Schnakenberg on the Glauber generator; (ii) an explicit **Hodge
+  coordinate alpha** along which the (in)equivalence can be traced; and (iii) the measurement that
+  the rank association between them **collapses at high alpha and does not recover at any tested
+  action count** (R11) — which is a quantitative, falsifiable statement neither physics paper makes
+  and neither games paper is equipped to make.
+- **Per the red-team standing brief, prior art on a novelty claim is a flag for tier review, and it
+  is flagged here rather than executed**: `memory/claims.md` R4 stays at `derived` for the
+  measurement, and gains a priority sentence naming Baiesi-Maes-Wynants and Harada-Sasa. Tiers are
+  the theory-verifier's to change; this finding does not change one.
+- **Wording rule, binding on the papers**: the inequivalence must be stated as *instantiated and
+  measured on strategic games*, with the stochastic-thermodynamics precedent cited, and never as a
+  structural discovery. A sentence of the form "we show that response and dissipation are distinct
+  observables" without that citation is now an overclaim by this repository's own standard.
+- Chase status: **resolved.** O-7 is closed by this entry. What remains open is a *citation*
+  obligation on `papers/p2_plane` and `papers/p3_noneq` (a different agent owns `papers/`), not a
+  measurement.
+- Resolution / follow-up: closes R11 objection **O-7**; recorded in `gates/science.plane.yaml`
+  under that objection and in `memory/claims.md` R4. **Registered negative-result caveat**: a
+  literature audit can only report what eight query families and four first-hand full-text checks
+  found. It is evidence of absence in proportion to the search, and the search is written down
+  above so a later reader can extend it rather than repeat it.

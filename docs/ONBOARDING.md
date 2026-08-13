@@ -232,13 +232,22 @@ carries an appended correction). 13 ADRs, ADR-0001…ADR-0013. 45 artifacts. Cha
 across findings: 6 chasing, 5 parked, 3 resolved, 1 superseded.
 
 > **SUPERSEDED 2026-08-13 — read this before quoting the paragraph above.** The counts are
-> stale and, more importantly, the sentence **"all GREEN, all with red-team signoff" is no
-> longer true and must not be repeated**. Current state: **28 units, 26 green and 2 red.**
-> The two red ones are `science.plane` (R11, F-0022) and `science.plane.nplayers` (R12,
-> F-0023/F-0024): both landed on `main` un-gated by operator direction, both now have gate
-> files, and both are red on `red_team_signoff` — R11's review returned WITHHELD and the
-> corrected unit was never re-reviewed (plus one genuinely open objection, the un-run
-> prior-art re-audit); R12 has had no adversarial review at all. See **ADR-0014** and
+> stale. Current state: **28 units, all 28 green.** The sentence "all GREEN, all with red-team
+> signoff" was untrue for part of 2026-08-13 and is true again as of the evening of that day, for
+> a reason worth knowing rather than a reason to relax: the two units that made it false were
+> reviewed rather than quietly re-scored.
+> The two that were red are `science.plane` (R11, F-0022) and `science.plane.nplayers` (R12,
+> F-0023/F-0024): both landed on `main` un-gated by operator direction, and both were red on
+> `red_team_signoff` — R11's review had returned WITHHELD and the corrected unit was never
+> re-reviewed (plus one genuinely open objection, the un-run prior-art re-audit); R12 had had no
+> adversarial review at all. **Both were reviewed on 2026-08-13**: R11 GRANTED-CONDITIONAL (its
+> one runnable condition, an interval on the *binding* registration's deciding statistic, was
+> registered in the config and only then computed — it returned +0.3639 [+0.168, +0.545] with
+> 35.6% of its mass above its own refutation bar, so K2-T1's INDETERMINATE is a non-resolution),
+> R12 GRANTED. The un-run K4 prior-art audit was run and is **F-0025**; its outcome is not the
+> one the inherited assessment assumed, and it constrains how the flagship claim may be worded.
+> **Read the `reviewer_note` on both gate files**: the reviews were artefact-only, but the
+> reviewer and the disposition-applier were the same agent, and the gates say so. See **ADR-0014** and
 > **ADR-0015**, the latter of which also names every piece of *product* code on `main` that
 > has tests but no gate (`problems/`, `solve_situation`, `fit`, `diagnose`, `viz`,
 > `repeated/`, `evolutionary/`, `extensive/`, the new API routes and the `/demos` pages),
