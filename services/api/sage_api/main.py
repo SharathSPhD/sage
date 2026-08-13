@@ -23,12 +23,14 @@ from strataq.core.dynamics.markov import glauber_generator, profile_space
 from strataq.core.dynamics.sample import sample_trajectories
 from strataq.core.solve.fixedpoint import logit_qre
 from strataq.core.solve.homotopy import logit_branch
+from strataq.diagnose import diagnose
 from strataq.estimate.lam import lambda_dispersion, lambda_mle
 from strataq.finite.decompose.hodge import hodge_decompose
 from strataq.finite.games.tensor import DenseTensorGame
 from strataq.finite.response.reciprocity import reciprocity_defect
 from strataq.finite.response.spectral import strategic_spectrum
 from strataq.finite.response.susceptibility import chi_equilibrium
+from strataq.fit import fit
 from strataq.thermo.estimators import (
     kld_epr,
     stationary_current_weights,
@@ -47,6 +49,7 @@ class Settings(BaseSettings):
     max_sample_steps: int = 20000
     max_sample_trajectories: int = 16
     max_sample_budget: int = 120_000  # n_steps * n_trajectories cap
+    max_tidy_rows: int = 200_000  # /v1/fit long-form ingestion cap
     model_config = {"env_prefix": "SAGE_API_"}
 
 
@@ -647,4 +650,193 @@ def blotto_read(payload: BlottoPayload) -> dict[str, Any]:
             f"joint space {n_states} exceeds the dense dynamics guard "
             f"({settings.max_profile_states}); alpha and R are exact, EPR omitted"
         )
+    return out
+
+
+# ---------------------------------------------------------------------------
+# /v1/diagnose and /v1/fit — the two product entry points over HTTP.
+#
+# `diagnose` is the whole-system verdict (COMPETITIVE_POSITION §5: "hand us
+# your data in your format and get a number with an uncertainty band and a
+# null-model comparison"); `fit` is the estimation workflow of Bland & Turocy
+# (GEB 2025). Both return the FULL library object — every coordinate with its
+# kind and bounds, every warning, every refusal — because the honesty
+# affordances are the product, and an API that drops them ships a bare number.
+# ---------------------------------------------------------------------------
+
+
+class DiagnosePayload(BaseModel):
+    """A game (``payoffs`` + ``lam``) or readings you already have (``chi`` / ``series``)."""
+
+    payoffs: list[Any] | None = None
+    lam: Annotated[float, Field(gt=0, le=100)] | None = None
+    chi: list[list[float]] | None = None
+    chi_se: list[list[float]] | None = None
+    series: list[float] | None = None
+    n_bins: Annotated[int, Field(ge=1, le=6)] = 3
+    n_surrogates: Annotated[int, Field(ge=20, le=500)] = 200
+    alpha_level: Annotated[float, Field(gt=0.0, lt=0.5)] = 0.01
+    seed: Annotated[int, Field(ge=0)] = 0
+
+
+@app.post("/v1/diagnose")
+def diagnose_reading(payload: DiagnosePayload) -> dict[str, Any]:
+    """Locate a system in the irreversibility plane: one quadrant, two bounded coordinates.
+
+    Returns the whole :class:`~strataq.diagnose.Diagnosis`: the verdict, the live
+    quadrant set when it cannot be narrowed to one, both coordinates with their
+    ``kind`` (point / interval / one-sided bound / absent) and their method text,
+    ``alpha``, ``lam``, every warning, every refusal, and provenance. Refusals are
+    bounds, not errors — a reading that cannot separate two quadrants says which
+    two rather than returning nothing.
+    """
+    if payload.payoffs is None and payload.chi is None and payload.series is None:
+        raise HTTPException(
+            status_code=422,
+            detail="supply payoffs= (with lam=), chi= (a measured response matrix), "
+            "or series= (an observed trajectory)",
+        )
+    game: DenseTensorGame | None = None
+    if payload.payoffs is not None:
+        if payload.lam is None:
+            raise HTTPException(status_code=422, detail="payoffs= requires lam=")
+        game = _game_from(GamePayload(payoffs=payload.payoffs, lam=payload.lam))
+        n_states = 1
+        for m in game.num_actions:
+            n_states *= m
+        if n_states > settings.max_profile_states:
+            raise HTTPException(
+                status_code=413,
+                detail=f"profile space {n_states} exceeds the dense generator limit "
+                f"{settings.max_profile_states}; supply series= and read dissipation "
+                "from the trajectory instead",
+            )
+    if payload.chi is not None:
+        n = len(payload.chi)
+        limit = settings.max_actions_per_player * settings.max_players
+        if n == 0 or any(len(row) != n for row in payload.chi):
+            raise HTTPException(status_code=422, detail="chi must be a non-empty square matrix")
+        if n > limit:
+            raise HTTPException(status_code=413, detail=f"chi capped at {limit}x{limit}")
+        if payload.chi_se is not None and (
+            len(payload.chi_se) != n or any(len(row) != n for row in payload.chi_se)
+        ):
+            raise HTTPException(status_code=422, detail="chi_se must match chi's shape")
+    if payload.series is not None and len(payload.series) > 20_000:
+        raise HTTPException(status_code=422, detail="series capped at 20000 points on this host")
+
+    try:
+        reading = diagnose(
+            game,
+            lam=payload.lam,
+            chi=payload.chi,
+            chi_se=payload.chi_se,
+            series=payload.series,
+            n_bins=payload.n_bins,
+            n_surrogates=payload.n_surrogates,
+            alpha_level=payload.alpha_level,
+            seed=payload.seed,
+        )
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    out = reading.as_dict()
+    out["headline"] = repr(reading)
+    out["snippet"] = reading.snippet()
+    if game is not None and payload.lam is not None:
+        out["provenance"] = {
+            **out["provenance"],
+            **_provenance(game, payload.lam).model_dump(),
+        }
+    return out
+
+
+class FitPayload(BaseModel):
+    """Observed choices for :func:`strataq.fit` — aggregated counts OR a tidy table.
+
+    ``data`` is the point of this endpoint: one row per observed choice, with the
+    subject / round / treatment columns your experiment software emitted, so the
+    panel structure survives into the likelihood and into the interval.
+    """
+
+    payoffs: list[Any]
+    counts: list[list[float]] | None = None
+    data: list[dict[str, Any]] | dict[str, list[Any]] | None = None
+    by: str | None = None
+    method: Literal["mle", "agreement", "bayes"] = "mle"
+    ci: Literal["bootstrap", "profile", "posterior", "none"] = "bootstrap"
+    n_boot: Annotated[int, Field(ge=1, le=2000)] = 200
+    n_grid: Annotated[int, Field(ge=8, le=400)] = 120
+    level: Annotated[float, Field(gt=0.0, lt=1.0)] = 0.95
+    seed: Annotated[int, Field(ge=0)] = 0
+    player: str | None = None
+    action: str | None = None
+    subject: str | None = None
+
+
+@app.post("/v1/fit")
+def fit_lambda(payload: FitPayload) -> dict[str, Any]:
+    """Estimate lambda with an interval that names its method, and both LR tests.
+
+    Returns lambda-hat (``null`` when the likelihood is flat — the refusal is a
+    bound, not a number), the interval and the method that produced it, n, the
+    log-likelihood, likelihood-ratio tests against Nash (lambda -> inf) and
+    uniform (lambda = 0) with df, p and the boundary caveat, per-group lambda and
+    a homogeneity test under ``by=``, every warning and refusal, provenance, and
+    the rendered ``summary`` text.
+    """
+    game = _game_from(GamePayload(payoffs=payload.payoffs, lam=1.0))
+    if (payload.counts is None) == (payload.data is None):
+        raise HTTPException(
+            status_code=422,
+            detail="supply exactly one of counts= (aggregated, one vector per player) or "
+            "data= (tidy, one row per observed choice)",
+        )
+    observed: Any
+    if payload.counts is not None:
+        total = sum(sum(c) for c in payload.counts)
+        if total <= 0:
+            raise HTTPException(status_code=422, detail="counts must contain observations")
+        if total > 10_000_000:
+            raise HTTPException(status_code=413, detail="count total exceeds service limit")
+        observed = payload.counts
+    else:
+        rows = payload.data
+        if isinstance(rows, list):
+            n_rows = len(rows)
+        else:
+            n_rows = len(next(iter(rows.values()))) if rows else 0
+        if n_rows == 0:
+            raise HTTPException(status_code=422, detail="data= is empty")
+        if n_rows > settings.max_tidy_rows:
+            raise HTTPException(
+                status_code=413,
+                detail=f"tidy table capped at {settings.max_tidy_rows} rows on this host",
+            )
+        observed = rows
+
+    try:
+        result = fit(
+            game,
+            observed,
+            by=payload.by,
+            method=payload.method,
+            ci=payload.ci,
+            n_boot=payload.n_boot,
+            seed=payload.seed,
+            level=payload.level,
+            player=payload.player,
+            action=payload.action,
+            subject=payload.subject,
+            n_grid=payload.n_grid,
+        )
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    out = result.as_dict()
+    out["summary"] = str(result.summary())
+    out["provenance"] = {
+        **out["provenance"],
+        **_provenance(game, result.lam_hat).model_dump(),
+    }
     return out

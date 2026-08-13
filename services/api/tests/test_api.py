@@ -1,5 +1,6 @@
 """API surface tests: every endpoint against calibration-known games."""
 
+import jax.numpy as jnp
 from fastapi.testclient import TestClient
 from sage_api.main import app
 
@@ -255,3 +256,219 @@ def test_blotto_large_budget_omits_epr_with_warning():
     assert body["epr"] is None
     assert body["warnings"]
     assert body["alpha"] > 0.0
+
+
+# ---------------------------------------------------------------------------
+# /v1/diagnose — the whole-system verdict, with every caveat that travels with it
+# ---------------------------------------------------------------------------
+
+_COORD_KEYS = {"name", "value", "lo", "hi", "kind", "method", "warnings"}
+
+
+def test_diagnose_game_route_returns_the_full_diagnosis_shape():
+    body = client.post("/v1/diagnose", json={"payoffs": RPS["payoffs"], "lam": 1.5}).json()
+    assert body["quadrant"] == "whirlpool"
+    assert body["live_quadrants"] == ["whirlpool"]
+    for coord in ("response", "dissipation"):
+        assert set(body[coord]) >= _COORD_KEYS
+        assert body[coord]["kind"] in ("point", "interval", "upper_bound", "lower_bound", "absent")
+        assert body[coord]["method"]
+    assert body["alpha"] > 0.9
+    assert body["lam"] == 1.5
+    assert body["tier"] == "certified"
+    assert body["warnings"]  # the lambda-scaling warning must travel over HTTP
+    assert body["refusals"] == []
+    assert body["provenance"]["library_version"]
+    assert body["provenance"]["payoff_range"] == 2.0
+    assert body["provenance"]["lambda_normalised"] == 3.0
+    assert "snippet" in body and "strataq" in body["snippet"]
+    assert "WHIRLPOOL" in body["headline"]
+
+
+def test_diagnose_potential_game_reads_landscape_with_zero_dissipation():
+    body = client.post("/v1/diagnose", json={"payoffs": COORD["payoffs"], "lam": 0.4}).json()
+    assert body["quadrant"] == "landscape"
+    assert body["response"]["kind"] == "point"
+    assert body["dissipation"]["value"] < 1e-12
+    assert body["alpha"] < 1e-9
+
+
+def test_diagnose_refuses_R_at_criticality_as_a_bound():
+    """The same potential game at lambda = 1.0 sits on its pitchfork: R is undefined
+    there, so the endpoint must refuse it as an absent coordinate with a live quadrant
+    set -- never return the rounding noise as a reading."""
+    body = client.post("/v1/diagnose", json={"payoffs": COORD["payoffs"], "lam": 1.0}).json()
+    assert body["quadrant"] == "undetermined"
+    assert body["response"]["kind"] == "absent"
+    assert body["refusals"] and any("criticality" in r for r in body["refusals"])
+    assert len(body["live_quadrants"]) == 2
+    assert body["provenance"]["rho_SB"] >= 1.0 - 1e-3
+
+
+def test_diagnose_readings_route_refuses_as_bounds_not_errors():
+    body = client.post("/v1/diagnose", json={"chi": [[1.0, 0.05], [0.01, 1.0]]}).json()
+    assert body["quadrant"] == "undetermined"
+    assert len(body["live_quadrants"]) > 1
+    assert body["dissipation"]["kind"] == "absent"
+    assert body["refusals"]  # no chi_se, no series: both are stated, neither raises
+    assert any("chi_se" in r for r in body["refusals"])
+
+
+def test_diagnose_series_route_gives_a_one_sided_epr_bound():
+    import numpy as np
+
+    series = list(np.cumsum(np.random.default_rng(3).normal(size=400)))
+    body = client.post(
+        "/v1/diagnose", json={"series": series, "n_surrogates": 60, "seed": 1}
+    ).json()
+    assert body["response"]["kind"] == "absent"
+    assert body["dissipation"]["kind"] in ("upper_bound", "lower_bound")
+    assert body["provenance"]["n_series"] == 400
+
+
+def test_diagnose_guards():
+    assert client.post("/v1/diagnose", json={}).status_code == 422
+    assert client.post("/v1/diagnose", json={"payoffs": RPS["payoffs"]}).status_code == 422
+    assert client.post("/v1/diagnose", json={"chi": [[1.0, 0.1]]}).status_code == 422
+    big = {"payoffs": [[[0.0] * 20 for _ in range(20)]] * 2, "lam": 1.0}
+    assert client.post("/v1/diagnose", json=big).status_code == 413
+
+
+def test_diagnose_dense_generator_guard():
+    """3 x 8 actions is inside the per-player cap but past the dense EPR guard (512 > 400)."""
+    payoffs = [[[[0.1 * (i + j + k) for k in range(8)] for j in range(8)] for i in range(8)]] * 3
+    assert client.post("/v1/diagnose", json={"payoffs": payoffs, "lam": 1.0}).status_code == 413
+
+
+# ---------------------------------------------------------------------------
+# /v1/fit — the estimation workflow, tidy data in
+# ---------------------------------------------------------------------------
+
+FIT_GAME = [
+    [[3.0, 0.0, 1.5], [1.0, 2.0, 0.5], [0.0, 1.0, 2.5]],
+    [[2.0, 1.0, 0.0], [0.5, 3.0, 1.0], [1.5, 0.0, 2.0]],
+]
+
+
+def _fit_counts(lam, n, seed):
+    import jax
+    from strataq.estimate.lam import sample_choices
+    from strataq.finite.games.tensor import DenseTensorGame
+
+    game = DenseTensorGame([jnp.asarray(u) for u in FIT_GAME])
+    return [[int(x) for x in c] for c in sample_choices(game, lam, n, jax.random.key(seed))]
+
+
+def _tidy_rows(lam, n, seed, treatment):
+    import numpy as np
+    from strataq.core.solve.fixedpoint import logit_qre
+    from strataq.finite.games.tensor import DenseTensorGame
+
+    game = DenseTensorGame([jnp.asarray(u) for u in FIT_GAME])
+    sigma = [np.asarray(s, dtype=float) for s in logit_qre(game, lam).sigma]
+    rng = np.random.default_rng(seed)
+    rows = []
+    for p, s in enumerate(sigma):
+        for i, a in enumerate(rng.choice(len(s), size=n, p=s / s.sum())):
+            rows.append(
+                {
+                    "subject": f"p{p}s{i % 25}",
+                    "player": p,
+                    "action": int(a),
+                    "treatment": treatment,
+                }
+            )
+    return rows
+
+
+def test_fit_from_counts_recovers_lambda_with_a_named_interval():
+    body = client.post(
+        "/v1/fit",
+        json={
+            "payoffs": FIT_GAME,
+            "counts": _fit_counts(1.2, 20_000, 11),
+            "ci": "profile",
+            "n_grid": 60,
+        },
+    ).json()
+    assert abs(body["lam_hat"] - 1.2) / 1.2 < 0.15
+    assert body["ci_low"] <= 1.2 <= body["ci_high"]
+    assert "profile likelihood" in body["ci_method"]
+    assert body["identified"] is True
+    assert body["n_obs"] == 40_000
+    assert body["loglik"] < 0
+    assert body["lr_uniform"]["df"] == 1 and body["lr_uniform"]["p"] < 1e-10
+    assert body["lr_nash"]["p"] < 1e-10
+    assert "boundary" in body["lr_uniform"]["note"]
+    assert body["warnings"]
+    assert "lambda_hat" in body["summary"]
+    assert body["provenance"]["library_version"]
+    assert body["provenance"]["payoff_range"] == 3.0
+
+
+def test_fit_from_tidy_data_keeps_subjects_and_splits_by_treatment():
+    rows = _tidy_rows(0.5, 3_000, 41, "low") + _tidy_rows(3.0, 3_000, 42, "high")
+    body = client.post(
+        "/v1/fit",
+        json={
+            "payoffs": FIT_GAME,
+            "data": rows,
+            "by": "treatment",
+            "n_grid": 60,
+            "n_boot": 80,
+            "seed": 2,
+        },
+    ).json()
+    assert body["n_subjects"] == 50
+    assert "cluster bootstrap on subject" in body["ci_method"]
+    keyed = {g["key"]: g for g in body["groups"]}
+    assert set(keyed) == {"low", "high"}
+    assert keyed["low"]["lam_hat"] < keyed["high"]["lam_hat"]
+    assert body["homogeneity"]["p"] < 1e-3
+    assert body["provenance"]["clustered_on"] == "subject"
+
+
+def test_fit_refuses_to_quote_a_flat_likelihood():
+    body = client.post(
+        "/v1/fit",
+        json={
+            "payoffs": RPS["payoffs"],
+            "counts": [[13400, 13300, 13300], [13350, 13350, 13300]],
+            "n_grid": 60,
+            "n_boot": 40,
+        },
+    ).json()
+    assert body["lam_hat"] is None
+    assert body["identified"] is False
+    assert body["kind"] == "unidentified"
+    assert body["refusals"] and "NOT IDENTIFIED" in body["refusals"][0]
+    assert body["ci_low"] == 0.05 and body["ci_high"] == 20.0
+
+
+def test_fit_guards():
+    counts = [[10, 10, 10], [10, 10, 10]]
+    assert client.post("/v1/fit", json={"payoffs": FIT_GAME}).status_code == 422
+    assert (
+        client.post(
+            "/v1/fit",
+            json={"payoffs": FIT_GAME, "counts": counts, "data": [{"player": 0, "action": 0}]},
+        ).status_code
+        == 422
+    )
+    assert (
+        client.post(
+            "/v1/fit", json={"payoffs": FIT_GAME, "counts": [[0, 0, 0], [0, 0, 0]]}
+        ).status_code
+        == 422
+    )
+    assert (
+        client.post("/v1/fit", json={"payoffs": FIT_GAME, "counts": [[1, 1, 1]]}).status_code == 422
+    )
+    big = {"payoffs": [[[0.0] * 20 for _ in range(20)]] * 2, "counts": [[1] * 20, [1] * 20]}
+    assert client.post("/v1/fit", json=big).status_code == 413
+    assert (
+        client.post(
+            "/v1/fit", json={"payoffs": FIT_GAME, "counts": counts, "by": "treatment"}
+        ).status_code
+        == 422
+    )
