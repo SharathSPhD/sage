@@ -91,3 +91,11 @@ Format per entry: Context · Options · Decision · Consequences · Date. Includ
 - **Decision**: fold p2 into p1 and p4 into p1+p3; delete the empty stubs. Revisit a dedicated empirical paper when new data arrives (the trigger is data, not writing time).
 - **Consequences**: two dense papers instead of four thin ones; p1 v0.2 (10pp) and p3 v0.2 (10pp) are the arXiv-track artifacts.
 - **Date**: 2026-08-12
+
+## ADR-0014 — R11 merged to main un-gated, by explicit operator direction
+- **Context**: `science.plane` (R11) produced the plane-robustness kill-shots. Red team returned **WITHHELD** (criterion substitution O-1, missing CI on the deciding statistic O-2, unpaired control arms O-6). Corrections were applied and committed (`f0268f3`, `b1b833d`, `dbdd6ec`), but the unit was **never re-reviewed**, has **no `gates/science.plane.yaml`**, and no `gates/status.json` entry. The standing merge policy is: merge to main only on fully green gates.
+- **Decision**: merge anyway, on the operator's explicit instruction, and record the exception here rather than let it pass silently. The alternative offered (re-review, then gate, then merge) was declined in favour of shipping.
+- **On main without a gate**: F-0022, `experiments/plane_robustness.py`, `benchmarks/results/plane_robustness.json`, and the superseded registration `plane_finite_size.*`. The headline is **INDETERMINATE on K2-T1**, not a survival; the load-bearing result is the ceiling criterion (worst `ci_high` +0.156 against a 0.35 ceiling, intervals disjoint at every m).
+- **Open objections carried, not closed**: O-3 (re-run D1/D2 paired to the main arm; they draw from independent keys, so the confound-control arm compares a 100-game sample against a 200-game sample), O-6 (D1 drives lambda_normalised +40% where the main arm drives it -32%, so the arms bracket the confound rather than controlling it), and the un-run K4 prior-art re-audit. N>2 is untested entirely.
+- **Consequences**: the gate suite no longer covers everything on main, so `run_gates.py --check` passing is now a weaker statement than it was. Required follow-up, in order: re-review the corrected unit, write `gates/science.plane.yaml`, register `science.plane.paired_controls` for O-3/O-6, and only then quote R11 outside this repository.
+- **Date**: 2026-08-13
