@@ -277,6 +277,11 @@ def irreversibility_test(
     )
 
 
+# Above this many joint profiles the dense Glauber generator (an n×n matrix plus a
+# stationary solve) stops being cheap; the read still runs, but it is warned about.
+_DENSE_GENERATOR_WARN_STATES = 256
+
+
 @dataclass(frozen=True)
 class GameThermoRead:
     """One-call dashboard for a written-down game at rationality λ."""
@@ -285,6 +290,9 @@ class GameThermoRead:
     r: float  # reciprocity defect of the equilibrium response
     epr: float  # entropy production rate of the joint revision dynamics
     verdict: str
+    # Added last, defaulted: every other facade return type carries its honesty text
+    # and this one did not. Existing positional constructions keep working.
+    warnings: tuple[str, ...] = ()
 
 
 def game_thermo(payoff_matrices: list[object], lam: float = 1.5) -> GameThermoRead:
@@ -300,4 +308,19 @@ def game_thermo(payoff_matrices: list[object], lam: float = 1.5) -> GameThermoRe
         verdict = "whirlpool: circulates forever, dissipating"
     else:
         verdict = "mixed: partial gradient structure with a circulating component"
-    return GameThermoRead(alpha=a, r=r, epr=epr, verdict=verdict)
+    warnings = [
+        "only the ZERO test of R is lambda-free: the MAGNITUDE of R scales with lambda, "
+        f"so this reading (lambda = {float(lam):g}) is comparable only against readings "
+        "taken at the same lambda — never quote R without it",
+    ]
+    n_states = 1
+    for m in game.num_actions:
+        n_states *= int(m)
+    if n_states > _DENSE_GENERATOR_WARN_STATES:
+        warnings.append(
+            f"joint profile space is {n_states} states: the dense Glauber generator is "
+            f"{n_states}x{n_states} and the stationary solve is O(n^3) — this read is "
+            "expensive and will get worse quickly; for larger games read dissipation "
+            "from an observed series via irreversibility_test instead"
+        )
+    return GameThermoRead(alpha=a, r=r, epr=epr, verdict=verdict, warnings=tuple(warnings))
