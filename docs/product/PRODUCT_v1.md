@@ -228,9 +228,9 @@ Three additions. Nothing else in `strataq` changes.
 
 ```python
 # 1. The one call. Three input shapes, one return type.
-strataq.diagnose(payoffs=..., lam=...)          # a game you specify
-strataq.diagnose(panel=df, roles={...})         # observed behaviour
-strataq.diagnose(chi=..., trajectory=...)       # readings you already have
+strataq.diagnose(payoffs=..., lam=...)  # a game you specify
+strataq.diagnose(panel=df, roles={...})  # observed behaviour
+strataq.diagnose(chi=..., trajectory=...)  # readings you already have
 # -> Diagnosis(quadrant, r, r_ci, epr, epr_ci, epr_null, lam, alpha,
 #              tier, warnings, refusals, provenance, reference_cloud)
 ```
@@ -241,9 +241,9 @@ strataq.diagnose(chi=..., trajectory=...)       # readings you already have
 
 ```python
 # 2. The estimation workflow the field is missing (Bland & Turocy 2025).
-fit = strataq.fit(game, data, by="subject")     # tidy frame in, panel structure kept
-fit.summary()      # lambda_hat, CI, LR vs Nash, LR vs uniform, n, method, warnings
-fit.plot()         # branch with lambda_hat marked and the data overlaid
+fit = strataq.fit(game, data, by="subject")  # tidy frame in, panel structure kept
+fit.summary()  # lambda_hat, CI, LR vs Nash, LR vs uniform, n, method, warnings
+fit.plot()  # branch with lambda_hat marked and the data overlaid
 ```
 
 ```python

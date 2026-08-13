@@ -107,7 +107,9 @@ def fig1_two_routes() -> None:
     ax.set_ylim(0, 42)
     ax.axis("off")
 
-    def box(x, y, w, h, label, fc="white", ec=PALETTE["ink"], fs=8.0, lw=0.8, style="round,pad=0.35"):
+    def box(
+        x, y, w, h, label, fc="white", ec=PALETTE["ink"], fs=8.0, lw=0.8, style="round,pad=0.35"
+    ):
         ax.add_patch(
             mpatches.FancyBboxPatch(
                 (x, y), w, h, boxstyle=style, linewidth=lw, edgecolor=ec, facecolor=fc
@@ -128,18 +130,48 @@ def fig1_two_routes() -> None:
     arrow(16, 21, 20, 21)
 
     # upper route: local derivative
-    box(41, 29, 21, 9, "$\\chi^{\\mathrm{eq}}=(I-SB)^{-1}S$\nlocal derivative at $\\sigma^*$",
-        ec=PALETTE["landscape"], lw=1.1)
-    box(67, 29, 15, 9, "$\\mathcal{R}$\nresponse\nasymmetry", ec=PALETTE["landscape"], lw=1.4,
-        fc="#EAF5F3")
+    box(
+        41,
+        29,
+        21,
+        9,
+        "$\\chi^{\\mathrm{eq}}=(I-SB)^{-1}S$\nlocal derivative at $\\sigma^*$",
+        ec=PALETTE["landscape"],
+        lw=1.1,
+    )
+    box(
+        67,
+        29,
+        15,
+        9,
+        "$\\mathcal{R}$\nresponse\nasymmetry",
+        ec=PALETTE["landscape"],
+        lw=1.4,
+        fc="#EAF5F3",
+    )
     arrow(35, 22.5, 41, 32, PALETTE["landscape"])
     arrow(62, 33.5, 67, 33.5, PALETTE["landscape"])
 
     # lower route: global flux
-    box(41, 4, 21, 9, "Glauber generator on\n$\\prod_i m_i$ profiles; $\\pi^*$, $J^*$",
-        ec=PALETTE["whirlpool"], lw=1.1)
-    box(67, 4, 15, 9, "$\\sigma_{\\mathrm{EP}}$\ndissipation", ec=PALETTE["whirlpool"], lw=1.4,
-        fc="#F8ECEC")
+    box(
+        41,
+        4,
+        21,
+        9,
+        "Glauber generator on\n$\\prod_i m_i$ profiles; $\\pi^*$, $J^*$",
+        ec=PALETTE["whirlpool"],
+        lw=1.1,
+    )
+    box(
+        67,
+        4,
+        15,
+        9,
+        "$\\sigma_{\\mathrm{EP}}$\ndissipation",
+        ec=PALETTE["whirlpool"],
+        lw=1.4,
+        fc="#F8ECEC",
+    )
     arrow(35, 19.5, 41, 10, PALETTE["whirlpool"])
     arrow(62, 8.5, 67, 8.5, PALETTE["whirlpool"])
 
@@ -147,14 +179,32 @@ def fig1_two_routes() -> None:
     arrow(82, 32, 88, 26)
     arrow(82, 8, 88, 15)
 
-    ax.text(52, 40.4, "local route  —  one equilibrium, a derivative", ha="center",
-            fontsize=7.8, color=PALETTE["landscape"], style="italic")
-    ax.text(52, 0.6, "global route  —  the whole profile space, a flux functional",
-            ha="center", fontsize=7.8, color=PALETTE["whirlpool"], style="italic")
     ax.text(
-        50, 21.0,
+        52,
+        40.4,
+        "local route  —  one equilibrium, a derivative",
+        ha="center",
+        fontsize=7.8,
+        color=PALETTE["landscape"],
+        style="italic",
+    )
+    ax.text(
+        52,
+        0.6,
+        "global route  —  the whole profile space, a flux functional",
+        ha="center",
+        fontsize=7.8,
+        color=PALETTE["whirlpool"],
+        style="italic",
+    )
+    ax.text(
+        50,
+        21.0,
         "both vanish $\\Longleftrightarrow$ the normalised game is potential",
-        ha="center", va="center", fontsize=7.6, color="#666666",
+        ha="center",
+        va="center",
+        fontsize=7.6,
+        color="#666666",
     )
 
     fig.savefig(OUT / "fig1_two_routes.pdf")
@@ -173,7 +223,7 @@ def fig2_plane() -> None:
     price = load("pricing_passthrough_R")["metrics"]
     caiso = load("electricity_irreversibility_dam")["metrics"]
     blotto = load("blotto_readings")["metrics"]
-    sioux = load("sioux_falls_calibration")["metrics"]
+    load("sioux_falls_calibration")["metrics"]
 
     r_med = np.array(
         [dec[f"alpha_{a:.2f}_median_num"] / dec[f"alpha_{a:.2f}_median_den"] for a in ALPHAS]
@@ -218,82 +268,186 @@ def fig2_plane() -> None:
         ((1.3, 4.5e-4), "stalled", "III  stalled whirlpool"),
         ((1.3, 1.7), "whirlpool", "IV  whirlpool"),
     ]:
-        ax.text(*xy, lab, fontsize=8.0, color=PALETTE[key], fontweight="bold",
-                ha="left" if xy[0] < 1e-2 else "right", va="bottom" if xy[1] < 1e-2 else "top",
-                zorder=6)
+        ax.text(
+            *xy,
+            lab,
+            fontsize=8.0,
+            color=PALETTE[key],
+            fontweight="bold",
+            ha="left" if xy[0] < 1e-2 else "right",
+            va="bottom" if xy[1] < 1e-2 else "top",
+            zorder=6,
+        )
 
     # the synthetic alpha-family: what a one-dimensional theory predicts
-    ax.plot(r_med, epr, "-o", color=PALETTE["ink"], lw=1.4, ms=3.4, zorder=4,
-            markerfacecolor="white", markeredgewidth=0.9)
-    for a, x, y in zip(ALPHAS, r_med, epr):
+    ax.plot(
+        r_med,
+        epr,
+        "-o",
+        color=PALETTE["ink"],
+        lw=1.4,
+        ms=3.4,
+        zorder=4,
+        markerfacecolor="white",
+        markeredgewidth=0.9,
+    )
+    for a, x, y in zip(ALPHAS, r_med, epr, strict=False):
         if a in (0.05, 0.45, 0.95):
-            ax.annotate(f"$\\alpha$={a:g}", (x, y), textcoords="offset points",
-                        xytext=(7, -8), fontsize=6.8, color=PALETTE["ink"])
+            ax.annotate(
+                f"$\\alpha$={a:g}",
+                (x, y),
+                textcoords="offset points",
+                xytext=(7, -8),
+                fontsize=6.8,
+                color=PALETTE["ink"],
+            )
 
     # measured systems, with partial coordinates drawn as bands rather than points
     def band_v(x, xlo, xhi, label, color, ytext):
         ax.add_patch(
-            mpatches.Rectangle((xlo, e_lo), xhi - xlo, e_hi - e_lo, facecolor=color,
-                               alpha=0.16, zorder=2, linewidth=0)
+            mpatches.Rectangle(
+                (xlo, e_lo),
+                xhi - xlo,
+                e_hi - e_lo,
+                facecolor=color,
+                alpha=0.16,
+                zorder=2,
+                linewidth=0,
+            )
         )
         ax.plot([x, x], [e_lo, e_hi], color=color, lw=1.1, ls=(0, (1, 2)), zorder=3)
-        ax.text(x, ytext, label, rotation=90, fontsize=6.9, color=color, ha="right",
-                va="bottom", zorder=6)
+        ax.text(
+            x,
+            ytext,
+            label,
+            rotation=90,
+            fontsize=6.9,
+            color=color,
+            ha="right",
+            va="bottom",
+            zorder=6,
+        )
 
     def band_h(y, label, color, xtext):
         ax.axhspan(y * 0.72, y * 1.38, facecolor=color, alpha=0.16, zorder=2, linewidth=0)
         ax.plot([r_lo, r_hi], [y, y], color=color, lw=1.1, ls=(0, (1, 2)), zorder=3)
-        ax.text(xtext, y * 1.45, label, fontsize=6.9, color=color, ha="left", va="bottom",
-                zorder=6)
+        ax.text(xtext, y * 1.45, label, fontsize=6.9, color=color, ha="left", va="bottom", zorder=6)
 
-    band_v(price["R_empirical"], price["R_ci_low"], price["R_ci_high"],
-           "Dominick's  $\\mathcal{R}$=0.0011  ($\\sigma_{\\mathrm{EP}}$ not read)",
-           PALETTE["landscape"], 6e-4)
-    band_h(caiso["kld_embed_per_hour"] * 24.0,
-           "CAISO day-ahead  1.07 nats/day  ($\\mathcal{R}$ not read)",
-           PALETTE["driven"], 6e-5)
+    band_v(
+        price["R_empirical"],
+        price["R_ci_low"],
+        price["R_ci_high"],
+        "Dominick's  $\\mathcal{R}$=0.0011  ($\\sigma_{\\mathrm{EP}}$ not read)",
+        PALETTE["landscape"],
+        6e-4,
+    )
+    band_h(
+        caiso["kld_embed_per_hour"] * 24.0,
+        "CAISO day-ahead  1.07 nats/day  ($\\mathcal{R}$ not read)",
+        PALETTE["driven"],
+        6e-5,
+    )
 
-    ax.plot([blotto["R_b3_k3"]], [blotto["epr_b2_k2_asym"]], "s", color=PALETTE["whirlpool"],
-            ms=5.5, zorder=7, markeredgecolor="white", markeredgewidth=0.7)
-    ax.annotate("Blotto\n($\\alpha$=0.69)", (blotto["R_b3_k3"], blotto["epr_b2_k2_asym"]),
-                textcoords="offset points", xytext=(9, 2), fontsize=6.9,
-                color=PALETTE["whirlpool"])
+    ax.plot(
+        [blotto["R_b3_k3"]],
+        [blotto["epr_b2_k2_asym"]],
+        "s",
+        color=PALETTE["whirlpool"],
+        ms=5.5,
+        zorder=7,
+        markeredgecolor="white",
+        markeredgewidth=0.7,
+    )
+    ax.annotate(
+        "Blotto\n($\\alpha$=0.69)",
+        (blotto["R_b3_k3"], blotto["epr_b2_k2_asym"]),
+        textcoords="offset points",
+        xytext=(9, 2),
+        fontsize=6.9,
+        color=PALETTE["whirlpool"],
+    )
 
-    ax.plot([r_lo * 1.35], [e_lo * 1.35], "^", color=PALETTE["landscape"], ms=6, zorder=7,
-            markeredgecolor="white", markeredgewidth=0.7, clip_on=False)
+    ax.plot(
+        [r_lo * 1.35],
+        [e_lo * 1.35],
+        "^",
+        color=PALETTE["landscape"],
+        ms=6,
+        zorder=7,
+        markeredgecolor="white",
+        markeredgewidth=0.7,
+        clip_on=False,
+    )
     ax.annotate(
         "Sioux Falls\n$\\mathcal{R}=5.6\\times10^{-17}$, $\\sigma_{\\mathrm{EP}}=0$ exactly",
-        (r_lo * 1.35, e_lo * 1.35), textcoords="offset points", xytext=(11, 3), fontsize=6.9,
+        (r_lo * 1.35, e_lo * 1.35),
+        textcoords="offset points",
+        xytext=(11, 3),
+        fontsize=6.9,
         color=PALETTE["landscape"],
     )
 
     ax.add_patch(
         mpatches.FancyBboxPatch(
-            (0.34, 6e-4), 1.9, 3.4e-3, boxstyle="round,pad=0.02",
-            facecolor="white", edgecolor=PALETTE["stalled"], lw=0.9, zorder=8,
+            (0.34, 6e-4),
+            1.9,
+            3.4e-3,
+            boxstyle="round,pad=0.02",
+            facecolor="white",
+            edgecolor=PALETTE["stalled"],
+            lw=0.9,
+            zorder=8,
             mutation_aspect=1,
         )
     )
-    ax.text(0.80, 1.42e-3, "unoccupied\n— the target", ha="center", va="center",
-            fontsize=7.2, color=PALETTE["stalled"], zorder=9)
+    ax.text(
+        0.80,
+        1.42e-3,
+        "unoccupied\n— the target",
+        ha="center",
+        va="center",
+        fontsize=7.2,
+        color=PALETTE["stalled"],
+        zorder=9,
+    )
 
     ax.set_xlabel("response asymmetry  $\\mathcal{R}$   (local, derivative)")
     ax.set_ylabel("dissipation  $\\sigma_{\\mathrm{EP}}$  (nats/step)\n(global, flux)")
 
     handles = [
-        Line2D([], [], color=PALETTE["ink"], marker="o", markerfacecolor="white", lw=1.4,
-               label="synthetic $\\alpha$-family (median over 100 games/level; "
-                     "$\\mathcal{R}$ at $\\lambda$=1.2, $\\sigma_{\\mathrm{EP}}$ at $\\lambda$=1.5)"),
+        Line2D(
+            [],
+            [],
+            color=PALETTE["ink"],
+            marker="o",
+            markerfacecolor="white",
+            lw=1.4,
+            label="synthetic $\\alpha$-family (median over 100 games/level; "
+            "$\\mathcal{R}$ at $\\lambda$=1.2, $\\sigma_{\\mathrm{EP}}$ at $\\lambda$=1.5)",
+        ),
         Line2D([], [], color=PALETTE["whirlpool"], marker="s", lw=0, label="calibration anchor"),
-        Line2D([], [], color="#777777", lw=1.1, ls=(0, (1, 2)),
-               label="measured system, one coordinate only"),
+        Line2D(
+            [],
+            [],
+            color="#777777",
+            lw=1.1,
+            ls=(0, (1, 2)),
+            label="measured system, one coordinate only",
+        ),
     ]
     ax.legend(handles=handles, loc="lower right", bbox_to_anchor=(1.0, 0.02), ncol=1)
 
     fig.savefig(OUT / "fig2_plane.pdf")
     plt.close(fig)
-    stamp("fig2", "decoupling_mechanism", "estimator_alpha_sweep", "pricing_passthrough_R",
-          "electricity_irreversibility_dam", "blotto_readings", "sioux_falls_calibration")
+    stamp(
+        "fig2",
+        "decoupling_mechanism",
+        "estimator_alpha_sweep",
+        "pricing_passthrough_R",
+        "electricity_irreversibility_dam",
+        "blotto_readings",
+        "sioux_falls_calibration",
+    )
 
 
 # --------------------------------------------------------------------------------------
@@ -315,13 +469,34 @@ def fig3_collapse() -> None:
 
     ax = axes[0]
     ax.axhline(marginal, color=PALETTE["bound"], ls=(0, (5, 3)), lw=1.1, zorder=2)
-    ax.text(0.07, marginal - 0.075, f"marginal $\\rho_S$ = {marginal:.3f}", fontsize=7.0,
-            color=PALETTE["bound"], va="top")
+    ax.text(
+        0.07,
+        marginal - 0.075,
+        f"marginal $\\rho_S$ = {marginal:.3f}",
+        fontsize=7.0,
+        color=PALETTE["bound"],
+        va="top",
+    )
     ax.axhline(0.0, color="#BBBBBB", lw=0.7, zorder=1)
-    ax.plot(ALPHAS, rho_ratio, "-o", color=PALETTE["primary"], zorder=4,
-            markerfacecolor="white", markeredgewidth=1.0)
-    ax.plot(ALPHAS, rho_num, "-^", color=PALETTE["refuted"], ls=(0, (4, 2)), zorder=3,
-            markerfacecolor="white", markeredgewidth=1.0)
+    ax.plot(
+        ALPHAS,
+        rho_ratio,
+        "-o",
+        color=PALETTE["primary"],
+        zorder=4,
+        markerfacecolor="white",
+        markeredgewidth=1.0,
+    )
+    ax.plot(
+        ALPHAS,
+        rho_num,
+        "-^",
+        color=PALETTE["refuted"],
+        ls=(0, (4, 2)),
+        zorder=3,
+        markerfacecolor="white",
+        markeredgewidth=1.0,
+    )
     ax.fill_between([0.7, 1.0], -0.6, 1.05, color="#CCCCCC", alpha=0.25, zorder=0, linewidth=0)
     ax.text(0.85, -0.5, "collapse\nregion", fontsize=7.0, color="#777777", ha="center")
     ax.set_xlim(0.0, 1.0)
@@ -332,12 +507,23 @@ def fig3_collapse() -> None:
 
     ax = axes[1]
     ax.axhline(0.0, color="#BBBBBB", lw=0.7, zorder=1)
-    ax.plot(ALPHAS, rho_invden, "-s", color=PALETTE["mechanism"], zorder=4,
-            markerfacecolor="white", markeredgewidth=1.0)
+    ax.plot(
+        ALPHAS,
+        rho_invden,
+        "-s",
+        color=PALETTE["mechanism"],
+        zorder=4,
+        markerfacecolor="white",
+        markeredgewidth=1.0,
+    )
     ax.annotate(
         f"{dec['h2_min_high_alpha_rho_ratio_invden']:.3f}",
-        (ALPHAS[-1], rho_invden[-1]), textcoords="offset points", xytext=(-6, -13),
-        fontsize=7.2, color=PALETTE["mechanism"], ha="right",
+        (ALPHAS[-1], rho_invden[-1]),
+        textcoords="offset points",
+        xytext=(-6, -13),
+        fontsize=7.2,
+        color=PALETTE["mechanism"],
+        ha="right",
     )
     ax2 = ax.twinx()
     ax2.spines["right"].set_visible(True)
@@ -354,13 +540,38 @@ def fig3_collapse() -> None:
     panel_title(ax, "The mechanism: $\\mathcal{R}$ becomes denominator-driven")
 
     handles = [
-        Line2D([], [], color=PALETTE["primary"], marker="o", markerfacecolor="white",
-               label="$\\mathcal{R}$ (the ratio)"),
-        Line2D([], [], color=PALETTE["refuted"], marker="^", ls=(0, (4, 2)),
-               markerfacecolor="white", label="numerator $\\|\\chi-\\chi^{\\top}\\|_F$ alone — the refuted repair (H1)"),
-        Line2D([], [], color=PALETTE["mechanism"], marker="s", markerfacecolor="white",
-               label="$1/$denominator (H2)"),
-        Line2D([], [], color=PALETTE["bound"], ls=(0, (5, 3)), label="marginal (unconditional) reference"),
+        Line2D(
+            [],
+            [],
+            color=PALETTE["primary"],
+            marker="o",
+            markerfacecolor="white",
+            label="$\\mathcal{R}$ (the ratio)",
+        ),
+        Line2D(
+            [],
+            [],
+            color=PALETTE["refuted"],
+            marker="^",
+            ls=(0, (4, 2)),
+            markerfacecolor="white",
+            label="numerator $\\|\\chi-\\chi^{\\top}\\|_F$ alone — the refuted repair (H1)",
+        ),
+        Line2D(
+            [],
+            [],
+            color=PALETTE["mechanism"],
+            marker="s",
+            markerfacecolor="white",
+            label="$1/$denominator (H2)",
+        ),
+        Line2D(
+            [],
+            [],
+            color=PALETTE["bound"],
+            ls=(0, (5, 3)),
+            label="marginal (unconditional) reference",
+        ),
         Line2D([], [], color="#999999", ls=":", label="median numerator"),
         Line2D([], [], color="#999999", ls="-.", label="median denominator"),
     ]
@@ -386,8 +597,15 @@ def fig4_frontier() -> None:
     fig, axes = plt.subplots(1, 2, figsize=(W_FULL, 2.9))
 
     ax = axes[0]
-    mesh = ax.pcolormesh(lams, als, rho, shading="nearest", cmap="magma", vmin=0.0,
-                         vmax=max(1.3, float(np.nanmax(rho))))
+    mesh = ax.pcolormesh(
+        lams,
+        als,
+        rho,
+        shading="nearest",
+        cmap="magma",
+        vmin=0.0,
+        vmax=max(1.3, float(np.nanmax(rho))),
+    )
     try:
         cs = ax.contour(lams, als, rho, levels=[1.0], colors="white", linewidths=1.4)
         ax.clabel(cs, fmt={1.0: r"$\rho=1$"}, fontsize=7.0)
@@ -410,14 +628,33 @@ def fig4_frontier() -> None:
             xs.append(a)
             ys.append(v)
     ax.axvspan(0.28, 0.525, color="#CCCCCC", alpha=0.35, linewidth=0, zorder=0)
-    ax.text(0.40, 6.6, "no crossing:\n$\\rho(SB)<1$ at every $\\lambda$", fontsize=7.0,
-            color="#666666", ha="center")
-    ax.plot(xs, ys, "-o", color=PALETTE["whirlpool"], markerfacecolor="white",
-            markeredgewidth=1.0, zorder=3)
-    for a, v in zip(xs, ys):
+    ax.text(
+        0.40,
+        6.6,
+        "no crossing:\n$\\rho(SB)<1$ at every $\\lambda$",
+        fontsize=7.0,
+        color="#666666",
+        ha="center",
+    )
+    ax.plot(
+        xs,
+        ys,
+        "-o",
+        color=PALETTE["whirlpool"],
+        markerfacecolor="white",
+        markeredgewidth=1.0,
+        zorder=3,
+    )
+    for a, v in zip(xs, ys, strict=False):
         if a in (0.55, 0.80):
-            ax.annotate(f"{v:.2f}", (a, v), textcoords="offset points", xytext=(4, 5),
-                        fontsize=6.9, color=PALETTE["whirlpool"])
+            ax.annotate(
+                f"{v:.2f}",
+                (a, v),
+                textcoords="offset points",
+                xytext=(4, 5),
+                fontsize=6.9,
+                color=PALETTE["whirlpool"],
+            )
     ax.set_yscale("log")
     ax.set_xlim(0.28, 0.84)
     ax.set_xlabel("harmonic fraction  $\\alpha$")
@@ -446,10 +683,24 @@ def fig5_observability() -> None:
 
     ax = axes[0]
     ax.plot(ALPHAS, exact, "-", color=PALETTE["bound"], ls=(0, (5, 3)), lw=1.3, zorder=4)
-    ax.plot(ALPHAS, kld, "-o", color=PALETTE["primary"], markerfacecolor="white",
-            markeredgewidth=1.0, zorder=3)
-    ax.plot(ALPHAS, tur, "-s", color=PALETTE["mechanism"], markerfacecolor="white",
-            markeredgewidth=1.0, zorder=3)
+    ax.plot(
+        ALPHAS,
+        kld,
+        "-o",
+        color=PALETTE["primary"],
+        markerfacecolor="white",
+        markeredgewidth=1.0,
+        zorder=3,
+    )
+    ax.plot(
+        ALPHAS,
+        tur,
+        "-s",
+        color=PALETTE["mechanism"],
+        markerfacecolor="white",
+        markeredgewidth=1.0,
+        zorder=3,
+    )
     ax.fill_between(ALPHAS, tur_lo, tur, color=PALETTE["mechanism"], alpha=0.18, linewidth=0)
     ax.set_xlim(0.0, 1.0)
     ax.set_xlabel("harmonic fraction  $\\alpha$")
@@ -458,10 +709,22 @@ def fig5_observability() -> None:
 
     ax = axes[1]
     ax.axhline(1.0, color=PALETTE["bound"], ls=(0, (5, 3)), lw=1.1)
-    ax.plot(ALPHAS, tur / exact, "-s", color=PALETTE["mechanism"], markerfacecolor="white",
-            markeredgewidth=1.0)
-    ax.plot(ALPHAS, kld / exact, "-o", color=PALETTE["primary"], markerfacecolor="white",
-            markeredgewidth=1.0)
+    ax.plot(
+        ALPHAS,
+        tur / exact,
+        "-s",
+        color=PALETTE["mechanism"],
+        markerfacecolor="white",
+        markeredgewidth=1.0,
+    )
+    ax.plot(
+        ALPHAS,
+        kld / exact,
+        "-o",
+        color=PALETTE["primary"],
+        markerfacecolor="white",
+        markeredgewidth=1.0,
+    )
     ax.set_xlim(0.0, 1.0)
     ax.set_ylim(0.4, 1.2)
     ax.set_xlabel("harmonic fraction  $\\alpha$")
@@ -470,10 +733,22 @@ def fig5_observability() -> None:
 
     handles = [
         Line2D([], [], color=PALETTE["bound"], ls=(0, (5, 3)), label="exact Schnakenberg EPR"),
-        Line2D([], [], color=PALETTE["primary"], marker="o", markerfacecolor="white",
-               label="$k$-block KLD estimator"),
-        Line2D([], [], color=PALETTE["mechanism"], marker="s", markerfacecolor="white",
-               label="debiased finite-time TUR bound (shaded: to CI low)"),
+        Line2D(
+            [],
+            [],
+            color=PALETTE["primary"],
+            marker="o",
+            markerfacecolor="white",
+            label="$k$-block KLD estimator",
+        ),
+        Line2D(
+            [],
+            [],
+            color=PALETTE["mechanism"],
+            marker="s",
+            markerfacecolor="white",
+            label="debiased finite-time TUR bound (shaded: to CI low)",
+        ),
     ]
     fig.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.5, -0.14), ncol=3)
     fig.savefig(OUT / "fig5_observability.pdf")
@@ -527,10 +802,18 @@ def fig6_robustness() -> None:
         lo = np.array([met[f"main_m{m_val}_a{a}_ci_low"] for a in levels])
         hi = np.array([met[f"main_m{m_val}_a{a}_ci_high"] for a in levels])
         ax.errorbar(
-            alphas, rho, yerr=np.vstack([rho - lo, hi - rho]),
-            fmt="-o", color=series_colors[i % len(series_colors)],
-            markerfacecolor="white", markeredgewidth=1.0, ms=3.6,
-            elinewidth=0.6, capsize=1.6, capthick=0.6, zorder=3 + i,
+            alphas,
+            rho,
+            yerr=np.vstack([rho - lo, hi - rho]),
+            fmt="-o",
+            color=series_colors[i % len(series_colors)],
+            markerfacecolor="white",
+            markeredgewidth=1.0,
+            ms=3.6,
+            elinewidth=0.6,
+            capsize=1.6,
+            capthick=0.6,
+            zorder=3 + i,
         )
     ax.set_xlim(0.0, 1.0)
     ax.set_xlabel("harmonic fraction  $\\alpha$")
@@ -548,19 +831,32 @@ def fig6_robustness() -> None:
         rho = np.array([met[f"{arm}_m{m_val}_a{a_hi}_rho_epr_r"] for m_val in xs])
         lo = np.array([met[f"{arm}_m{m_val}_a{a_hi}_ci_low"] for m_val in xs])
         hi = np.array([met[f"{arm}_m{m_val}_a{a_hi}_ci_high"] for m_val in xs])
-        lam = np.array(
-            [met[f"{arm}_m{m_val}_a{a_hi}_median_lambda_normalised"] for m_val in xs]
-        )
+        lam = np.array([met[f"{arm}_m{m_val}_a{a_hi}_median_lambda_normalised"] for m_val in xs])
         ax.errorbar(
-            xs, rho, yerr=np.vstack([rho - lo, hi - rho]), fmt=marker, ls=ls,
-            color=color, markerfacecolor="white", markeredgewidth=1.0, ms=4.0,
-            elinewidth=0.7, capsize=2.0, capthick=0.7, zorder=4,
+            xs,
+            rho,
+            yerr=np.vstack([rho - lo, hi - rho]),
+            fmt=marker,
+            ls=ls,
+            color=color,
+            markerfacecolor="white",
+            markeredgewidth=1.0,
+            ms=4.0,
+            elinewidth=0.7,
+            capsize=2.0,
+            capthick=0.7,
+            zorder=4,
         )
         dy = 13 if arm == "main" else -17
-        for x, y, lv in zip(xs, rho, lam):
+        for x, y, lv in zip(xs, rho, lam, strict=False):
             ax.annotate(
-                f"$\\bar\\lambda$={lv:.2f}", (x, y), textcoords="offset points",
-                xytext=(0, dy), ha="center", fontsize=6.4, color=color,
+                f"$\\bar\\lambda$={lv:.2f}",
+                (x, y),
+                textcoords="offset points",
+                xytext=(0, dy),
+                ha="center",
+                fontsize=6.4,
+                color=color,
             )
     ax.set_xticks(ms)
     ax.set_xlim(min(ms) - 0.45, max(ms) + 0.45)
@@ -569,14 +865,33 @@ def fig6_robustness() -> None:
     panel_title(ax, "The $m$-trend is temperature")
 
     handles = [
-        Line2D([], [], color=series_colors[i % len(series_colors)], marker="o",
-               markerfacecolor="white", label=f"$m={m_val}$")
+        Line2D(
+            [],
+            [],
+            color=series_colors[i % len(series_colors)],
+            marker="o",
+            markerfacecolor="white",
+            label=f"$m={m_val}$",
+        )
         for i, m_val in enumerate(ms)
     ] + [
-        Line2D([], [], color=PALETTE["ink"], marker="o", markerfacecolor="white",
-               label="fixed Frobenius scale (main arm)"),
-        Line2D([], [], color=PALETTE["stalled"], marker="s", ls=(0, (4, 2)),
-               markerfacecolor="white", label="constant per-entry RMS (registered control)"),
+        Line2D(
+            [],
+            [],
+            color=PALETTE["ink"],
+            marker="o",
+            markerfacecolor="white",
+            label="fixed Frobenius scale (main arm)",
+        ),
+        Line2D(
+            [],
+            [],
+            color=PALETTE["stalled"],
+            marker="s",
+            ls=(0, (4, 2)),
+            markerfacecolor="white",
+            label="constant per-entry RMS (registered control)",
+        ),
         Line2D([], [], color=PALETTE["bound"], ls=(0, (5, 3)), label="zero reference"),
     ]
     fig.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.5, -0.24), ncol=4)

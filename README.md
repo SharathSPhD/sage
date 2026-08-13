@@ -11,7 +11,7 @@ pip install strataq
 ```python
 import strataq
 
-game = strataq.games.rock_paper_scissors()          # or your own payoff arrays
+game = strataq.games.rock_paper_scissors()  # or your own payoff arrays
 print(strataq.diagnose(game, lam=1.5))
 ```
 
