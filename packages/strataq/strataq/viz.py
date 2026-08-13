@@ -265,7 +265,13 @@ def plot_branch(
     for j in range(sig2.shape[1]):
         ax.plot(lams, sig2[:, j], lw=1.2, alpha=0.9)
     tps = turning_points if turning_points is not None else getattr(branch, "turning_points", ())
-    for tp in tps or ():
+    # A traced ``Branch`` carries turning_points as a boolean MASK over ``lambdas``,
+    # not as a list of lambda values; a caller passing explicit values passes values.
+    # Accept both -- ``for tp in tps or ()`` on a jax bool array raises.
+    folds = np.asarray(() if tps is None else tps).reshape(-1)
+    if folds.size == lams.size and folds.dtype == bool:
+        folds = lams[folds]
+    for tp in np.asarray(folds, dtype=float):
         ax.axvline(float(tp), color=PALETTE["bound"], ls=(0, (5, 3)), lw=1.0, zorder=1)
     if mark_lambda is not None:
         ax.axvline(mark_lambda, color=PALETTE["refuted"], lw=1.3, zorder=2)

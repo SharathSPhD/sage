@@ -1,0 +1,412 @@
+# Unit science.plane.nplayers (R12) — TWO KILL-SHOTS the referee asks for next.
+#
+# THE CLAIM UNDER TEST (unchanged from R11). Response asymmetry
+# R = ||chi - chi^T||_F / ||chi + chi^T||_F, a LOCAL derivative at the QRE point
+# read off chi_eq = (I - SB)^-1 S on the tangent space, and the Schnakenberg
+# entropy production rate EPR of the Glauber chain, a GLOBAL stationary-flux
+# functional of the generator, share a zero but are otherwise INDEPENDENT
+# coordinates — a plane, not a line.
+#
+# WHERE THE CLAIM STANDS AFTER R11 (F-0022, corrected 2026-08-13). K2-T1 (finite
+# size in m) is INDETERMINATE — its pre-registration was substituted after two
+# runs had been launched, and the deciding statistic's post-hoc CI crosses its
+# bar. What survived R11 is the CEILING criterion: within-level rho_S(EPR, R) at
+# alpha = 0.95 never recovers above 0.35 at any tested m, with the WORST upper
+# interval endpoint at +0.156 against that ceiling, and the alpha = 0.05 and
+# alpha = 0.95 intervals disjoint at every m. F-0022 states in terms what is
+# still untested: "N = 2 throughout — nothing here speaks to N-scaling, which is
+# the obvious next kill-shot and is untested."
+#
+# THE TWO KILL-SHOTS REGISTERED HERE.
+#   A  N-SCALING. Every reading in the programme — F-0004, F-0007, F-0010,
+#      F-0022 — is TWO PLAYERS. A two-player game has a very particular response
+#      structure: B has exactly two off-diagonal blocks and chi_T is 2(m-1)
+#      square. If the high-alpha decorrelation is a property of that structure
+#      rather than of the response-vs-flux distinction, it is an N = 2 artefact
+#      and the flagship claim dies. Swept at fixed m = 3 over N in {2, 3, 4}.
+#      N = 4 gives 81 joint profile states, inside the 400-state guard the dense
+#      Glauber path carries (`strataq.core.dynamics.markov` builds a dense
+#      n_states x n_states generator; joint states = prod(m_i)); it is OUTSIDE
+#      the API surface guard of <= 3 players, so the N = 4 row is a
+#      library-level reading that cannot be served over HTTP. Recorded here so
+#      that limitation is not discovered later.
+#   B  THE NUMERATOR AT LARGER m. F-0007's refutation of the ratio-artefact
+#      objection (H1: "the collapse is only R's denominator shrinking; the
+#      numerator ||chi - chi^T||_F keeps tracking EPR") rests on
+#      rho_S(numerator, EPR) = -0.36775277527752775 at m = 3 and NOTHING ELSE.
+#      F-0022 then showed that the m = 3 SIGN of the RATIO's correlation does
+#      not generalise (it is +0.012 at m = 6). The numerator result is exposed to
+#      exactly the same objection, and if the numerator RECOVERS coupling at
+#      larger m while the ratio does not, then at that m the collapse IS a ratio
+#      artefact and F-0007's refutation is an m = 3 fact.
+#
+# ============================================================================
+# REGISTERED CRITERIA — THIS COMMIT LANDS BEFORE `experiments/plane_nplayers.py`
+# EXISTS. Verify with `git log --oneline`. ONBOARDING section 4 step 1.
+#
+# THIS IS THE ONLY CRITERIA FILE THIS UNIT WILL EVER HAVE. R11's defect
+# (red-team O-1, recorded in F-0022) was a SECOND registration of the same
+# kill-shot written after runs had been launched, which moved the deciding
+# statistic in the direction of survival. No second file will be written for
+# science.plane.nplayers; if these criteria turn out to be the wrong ones, that
+# is reported as a defect of this registration, not repaired by a replacement.
+# ============================================================================
+#
+# ---------------------------------------------------------------------------
+# WHAT IS DELIBERATELY REUSED, SO NOTHING HERE IS A FRESH THRESHOLD
+# ---------------------------------------------------------------------------
+#   survive_ceiling  = 0.35  — F-0010's registered collapse threshold, reused by
+#                             plane_finite_size.yaml AND plane_robustness.yaml
+#                             (the one number both R11 registrations agreed on,
+#                             which is exactly why it is the one that carries the
+#                             claim). Identical here, imposed in the identical CI
+#                             form: the UPPER interval endpoint must be under it.
+#   baseline_rho_min = 0.55  — the low-alpha coupling floor from F-0007/R11.
+#   onset_rho        = 0.5, onset_drift_tol = 0.10 — R11's K2-T2, verbatim.
+#   max_near_critical_frac = 0.10 — R11's diagnostic guard, verbatim.
+#   replication_tol  = 0.02  — R11's anchor tolerance, verbatim.
+#   lam = 1.2, scale = 2.0   — the reference artifact chain_comovement.json.
+#                              (R11 recorded that the "lambda = 1.5" quoted in
+#                              its tasking was a misstatement of that artifact.
+#                              1.2 is the value that makes the anchors exact.)
+#
+# WHAT IS DELIBERATELY *NOT* CARRIED OVER: the gap-ratio statistic. F-0022
+# established from two independent directions (the post-hoc CI on gap_ratio(6),
+# [+0.434, +0.749] across a 0.50 bar; and D2's 2.9-point margin) that a
+# gap-shrink criterion is NOT RESOLVABLE at feasible n. Re-registering an
+# unresolvable criterion would manufacture a second INDETERMINATE. gap(N) and
+# gap(m) are therefore computed and REPORTED WITH INTERVALS as data, and are
+# adjudicated against nothing. Stated before the run so this cannot be read as
+# dropping an inconvenient test after seeing it fail.
+#
+# ---------------------------------------------------------------------------
+# NOTATION (fixed here, before any run)
+# ---------------------------------------------------------------------------
+#   For a cell (arm, N, m, alpha) over `games_per_cell` games:
+#     R     = ||chi_T - chi_T^T||_F / ||chi_T + chi_T^T||_F   (reciprocity_defect_of)
+#     A     = ||chi_T - chi_T^T||_F                            (the NUMERATOR)
+#     D     = ||chi_T + chi_T^T||_F                            (the denominator)
+#     EPR   = thermo_read(game, lam).epr                       (Schnakenberg, exact)
+#   rho_ratio(cell) = Spearman(EPR, R);  rho_num(cell) = Spearman(EPR, A)
+#   alpha_lo = 0.05, alpha_hi = 0.95
+#   A-arm:  rho_hi(N)     = rho_ratio(main, N, m=3, 0.95)
+#           rho_lo(N)     = rho_ratio(main, N, m=3, 0.05)
+#   B-arm:  rho_num_hi(m) = rho_num(main, N=2, m, 0.95)
+#           rho_num_lo(m) = rho_num(main, N=2, m, 0.05)
+#           rho_rat_hi(m) = rho_ratio(main, N=2, m, 0.95)   [paired, same games]
+#
+# ---------------------------------------------------------------------------
+# A-T1 (PRIMARY — KILL-SHOT A). Does the high-alpha ceiling hold beyond N = 2?
+# ---------------------------------------------------------------------------
+#   HOLDS   iff  rho_hi(N) <= 0.35 AND ci_high(rho_hi(N)) < 0.35 at EVERY tested
+#                N in {2, 3, 4}.
+#   DIES    iff  at SOME N > 2: rho_hi(N) > 0.35 AND ci_low(rho_hi(N)) > 0.35.
+#                That is coupling RECOVERED above the ceiling with interval
+#                support. If it happens the two-coordinate claim is an N = 2
+#                artefact and the finding must say so in those words.
+#   Anything else is INDETERMINATE. The two branches are deliberately NOT
+#   exhaustive: a point estimate above the ceiling whose interval straddles it
+#   neither kills nor confirms, and there is no default to confirmation.
+#   At n = 400 (null SD 0.0501, CI half-width ~0.098 near rho = 0) the
+#   INDETERMINATE band is approximately rho_hi in [0.25, 0.45]. That resolving
+#   power is written down HERE, before the run, rather than discovered after it.
+#
+#   PRECONDITION (part of A-T1, not a get-out): rho_lo(N) >= 0.55 at every N.
+#   If low-alpha coupling is absent at some N there is no collapse to measure
+#   there, and that N is INDETERMINATE — not a pass.
+#
+#   ONE-SIDEDNESS, disclosed: the ceiling is one-sided, by house precedent
+#   (F-0010, both R11 registrations). A strongly NEGATIVE rho_hi passes it, yet
+#   strong anti-correlation is monotone dependence and is not what "independent
+#   coordinates" means either. Therefore a REPORTED FLAG, not a criterion:
+#   `strong_anticorrelation(N)` fires iff rho_hi(N) <= -0.55 (the same 0.55, not
+#   a new number). If it fires at any N the finding MUST state that the ceiling
+#   alone does not establish independence at that N. F-0004's -0.355 and
+#   F-0022's -0.352 do not trip it, so this is not a threshold chosen to be safe.
+#
+# ---------------------------------------------------------------------------
+# A-T2 (ONSET, SECONDARY). Where the collapse begins must not drift with N.
+# ---------------------------------------------------------------------------
+#   onset(N) = smallest alpha in `levels` with rho_ratio(main, N, m=3, alpha)
+#   < `onset_rho` = 0.5; sentinel `onset_none_sentinel` = 1.05 if none — a
+#   failure, not a missing value.
+#   CRITERION: onset(N) - onset(2) <= `onset_drift_tol` = 0.10 for every N.
+#   Reported PASS/FAIL independently; it CANNOT overturn A-T1, but A-T1 HOLDS
+#   with A-T2 FAIL is reported as HOLDS-NARROWED. Onset is a discrete grid
+#   readout and carries no interval; that is why it is secondary.
+#
+# ---------------------------------------------------------------------------
+# B-T1 (PRIMARY — KILL-SHOT B). Does the NUMERATOR's decoupling survive m?
+# ---------------------------------------------------------------------------
+#   Same ceiling, same CI form, applied to rho_num instead of rho_ratio.
+#   HOLDS   iff  rho_num_hi(m) <= 0.35 AND ci_high(rho_num_hi(m)) < 0.35 at
+#                EVERY m in {3, 4, 5, 6}. F-0007's refutation of the
+#                ratio-artefact objection then generalises in m.
+#   DIES    iff  at SOME m > 3: rho_num_hi(m) > 0.35 AND ci_low(rho_num_hi(m))
+#                > 0.35. The numerator has recovered coupling above the ceiling
+#                where the ratio has not; at that m the collapse of R IS a ratio
+#                artefact, F-0007 is an m = 3 fact, and the finding must say so.
+#   Anything else is INDETERMINATE.
+#   PRECONDITION: rho_num_lo(m) >= 0.55 at every m (F-0007 measured +0.768 at
+#   m = 3), else that m is INDETERMINATE.
+#   The same `strong_anticorrelation` flag applies at rho_num_hi(m) <= -0.55.
+#
+# ---------------------------------------------------------------------------
+# C1 (BINDING CONTROL — the PAIRED, lambda-bar-MATCHED arm)
+# ---------------------------------------------------------------------------
+#   THE CONFOUND. `make_family` unit-normalises each Hodge component and
+#   multiplies by `scale`, so a FIXED scale holds the JOINT FROBENIUS norm
+#   constant while the number of payoff entries is N * m^N. Per-entry payoff RMS
+#   therefore falls steeply with BOTH N and m, and effective precision
+#   lambda_bar = lam * payoff_range falls with it. A naive N-sweep at fixed scale
+#   confounds "more players" with "colder game", and F-0002/F-0010/F-0022 all
+#   show the meters are lambda-sensitive. The confound is LARGER in N than in m
+#   (entries grow like m^N), so it cannot be waved away here.
+#
+#   WHAT R11's D1 GOT WRONG, and what this fixes. F-0022 records D1 as the run's
+#   single biggest defect: it was UNPAIRED (different seed offset, 100 vs 200
+#   games) and it did not hold lambda_bar constant — it drove lambda_bar +40%
+#   while the main arm drove it -32%, so the two arms BRACKETED the confound
+#   instead of controlling it. F-0022's registered follow-up (i) is: "re-run D1
+#   and D2 PAIRED to the main arm at matched lambda_bar BY CONSTRUCTION, which is
+#   the only way to settle how much of the effect is dimensional." C1 is that
+#   run, for the N axis (C1a) and the m axis (C1b).
+#
+#   CONSTRUCTION. payoff_range is linear in `scale`, so lambda_bar is too. In a
+#   CALIBRATION PASS over `calibration.games` games drawn from a SEPARATE seed
+#   stream (`calibration.seed_offset`) and NEVER solved and NEVER entering any
+#   statistic, the median payoff_range at scale = 1 is measured per cell, and
+#      scale_matched(cell) = scale * median_range_unit(reference cell)
+#                                  / median_range_unit(cell)
+#   with the reference cell N = 2 (C1a) or m = 3 (C1b) at the same alpha. This
+#   fixes median lambda_bar across the sweep BY CONSTRUCTION rather than
+#   straddling it. Calibration is disjoint from evaluation, so `scale` is never
+#   tuned on the games it is measured on.
+#   PAIRING. C1 uses the IDENTICAL seed stream, level indices and game indices as
+#   the main arm: same source draws, same order, ONLY `scale` differs. At the
+#   reference cell the ratio is exactly 1, so the C1 cell at N = 2 (resp. m = 3)
+#   is byte-identical to the main-arm cell — a free wiring check, registered as
+#   T4(vi).
+#   LEVELS. C1 runs alpha in {0.05, 0.95} only: the ceiling and its precondition
+#   are the only things it must adjudicate. Onset is the main arm's job.
+#
+#   C1 IS BINDING, and the rule is stated in advance: A-T1 and B-T1 are
+#   adjudicated on the main arm AND, independently, on C1 with the identical
+#   criterion. IF THE TWO ARMS RETURN DIFFERENT VERDICTS, THAT PRIMARY IS
+#   INDETERMINATE and the disagreement is reported. The main arm is primary only
+#   because fixed scale = 2.0 is what every prior reading used and keeps this
+#   unit commensurable with F-0004/F-0007/F-0022; the disagreement rule means
+#   the choice cannot decide the outcome.
+#   MATCH VERIFICATION: the achieved ratio
+#   median lambda_bar(C1 cell) / median lambda_bar(reference cell) is reported
+#   for every C1 cell. If |ratio - 1| > `lambda_bar_match_tol` = 0.10 anywhere,
+#   the control was NOT ACHIEVED and T4(iv) fires — INDETERMINATE. A control
+#   that missed its target is not allowed to quietly become a second main arm.
+#
+# ---------------------------------------------------------------------------
+# T3 (INTERVALS). Every adjudicated statistic carries an interval. No exceptions.
+# ---------------------------------------------------------------------------
+#   Percentile bootstrap, `bootstrap.n_resamples` = 2000, resampling GAMES WITHIN
+#   THE CELL with replacement so the (EPR, R, A, D) tuple inside a game is never
+#   broken, `bootstrap.ci_level` = 0.95, on an explicitly threaded seed stream
+#   (seed + `bootstrap.seed_offset`, fold_in per arm, per cell).
+#   THE R11 LESSON (red-team O-2) IS BINDING HERE: in R11 the ONE statistic the
+#   refutation branch was decided on — gap_ratio — reached adjudication as a bare
+#   point estimate, because the registration demanded intervals on "every
+#   reported rho_S" and gap_ratio is not a rho_S. In this unit EVERY statistic
+#   named in A-T1, B-T1 and C1 is a within-cell Spearman and therefore is
+#   covered by the same bootstrap; the only registered quantity without an
+#   interval is the onset grid readout, which is explicitly SECONDARY and cannot
+#   overturn a primary. There is no statistic in this design that decides a
+#   primary verdict without a CI.
+#   PAIRED CONTRASTS, reported and not adjudicated, each with its own paired
+#   bootstrap (both statistics recomputed on the SAME resampled game indices, so
+#   the shared sampling variation is preserved rather than pretended away):
+#     delta_num_ratio(m) = rho_num_hi(m) - rho_rat_hi(m)   — the direct answer to
+#         "is the collapse a ratio artefact at this m", on identical games;
+#     gap(N) = rho_lo(N) - rho_hi(N), gap(m) likewise — reported as data only,
+#         for the reason given above.
+#
+# ---------------------------------------------------------------------------
+# T4 (INDETERMINATE GUARDS). Registered so no run can be read as confirmation by
+# default. The verdict is INDETERMINATE, and must be reported with that word, if:
+# ---------------------------------------------------------------------------
+#   (i)   a precondition fails: rho_lo(N) < 0.55 at any N (A), or
+#         rho_num_lo(m) < 0.55 at any m (B);
+#   (ii)  the intervals cannot discriminate: the criterion resolves to neither
+#         branch (this is just the non-exhaustiveness of A-T1/B-T1, named here
+#         so it is recognised as the designed third outcome);
+#   (iii) main and C1 arms disagree on that primary's verdict;
+#   (iv)  the lambda_bar match was not achieved (|ratio - 1| > 0.10 at any C1
+#         cell), so the binding control is not a control;
+#   (v)   a diagnostic guard fires in any cell of any arm: near-critical fraction
+#         > `max_near_critical_frac` = 0.10, any non-convergence, any
+#         `make_family` rejection, or any constructed game whose MEASURED
+#         harmonic fraction deviates from its target by more than
+#         `alpha_construction_tol` = 1.0e-8 (make_family's exactness is asserted
+#         for two players in its docstring; at N = 3 and N = 4 it is CHECKED,
+#         not assumed);
+#   (vi)  a wiring check fails: the C1 cell at the reference size is not
+#         byte-identical to the main-arm cell (|d rho| > 1.0e-12), which would
+#         mean the arms are not paired;
+#   (vii) a replication anchor fails (see below).
+#   INDETERMINATE is a THIRD outcome, not a soft pass. If it fires, the finding
+#   says INDETERMINATE and the claim's status is UNCHANGED, not strengthened.
+#
+# ---------------------------------------------------------------------------
+# T4(vii) REPLICATION ANCHORS. Both kill-shots are anchored to PUBLISHED numbers.
+# ---------------------------------------------------------------------------
+#   The seed stream reproduces the reference games EXACTLY: key =
+#   PRNGKey(seed_stream.root + seed_stream.offset), fold_in(level_idx) with
+#   level_idx indexing the CANONICAL TEN-LEVEL list `canonical_levels`, then
+#   fold_in(game_idx), then split(key, 2N) -> the first N arrays of shape (m,)*N
+#   are the potential source, the next N the harmonic source. At N = 2 that is
+#   split(key, 4) — bit-for-bit the `dynamics_calibration.py` draw. Therefore:
+#     * the FIRST 100 games of every N = 2, m = 3 cell are literally the F-0004 /
+#       F-0007 games (100 games/level);
+#     * the FIRST 200 are literally the plane_robustness main-arm games.
+#   ANCHOR A (kill-shot A, ratio at N = 2, m = 3, first `reference_n` = 100):
+#     rho_ratio must match F-0004's published values at alpha in {0.85, 0.95}
+#     within `replication_tol` = 0.02.
+#   ANCHOR B (kill-shot B, numerator at N = 2, m = 3, first 100):
+#     rho_num must match F-0007's published `decoupling_mechanism.json` values at
+#     ALL FIVE swept levels within 0.02. This is the stronger anchor: it is the
+#     exact quantity kill-shot B interrogates, at the exact m the objection says
+#     it is confined to.
+#   If any anchor fails the seed reconstruction is wrong, EVERY number in the run
+#   is uninterpretable, and the artifact records passed = false.
+#
+# ---------------------------------------------------------------------------
+# WHAT THIS UNIT CANNOT SETTLE (stated before the run, so no one reads the result
+# as bigger than it is)
+# ---------------------------------------------------------------------------
+#   * N stops at 4 and m stops at 6, and the two axes are swept SEPARATELY (A at
+#     m = 3, B at N = 2). Nothing here reads the (N, m) interior; a joint effect
+#     would be invisible.
+#   * The A sweep is at m = 3 only, so "the ceiling holds at N = 3" is a
+#     statement about 3x3x3, not about large games.
+#   * One lambda (1.2) in both arms. The C1 arms fix lambda_bar ACROSS the sweep;
+#     they do not sweep it. F-0010 already showed the SIGN at alpha = 0.95 is
+#     lambda-dependent, so no sign statement here generalises in lambda.
+#   * Only Gaussian-source Hodge families. Nothing here speaks to structured or
+#     empirical games.
+#   * The ceiling criterion certifies DECORRELATION, which is necessary for
+#     independence and not sufficient. A nonlinear non-monotone dependence would
+#     pass it. This is a limitation of the criterion the whole programme has been
+#     using, not a new one, and it is not repaired here.
+#   * C1 matches the MEDIAN lambda_bar per cell. It does not match the
+#     distribution, and it cannot control for anything else that changes with N
+#     or m (tangent dimension, joint state count, the number of Hodge sectors).
+#     "Matched lambda_bar" means exactly that and nothing more.
+
+defaults:
+  - _self_
+
+seed: 20260813
+lam: 1.2
+
+seed_stream:
+  # Reproduces the F-0004 / F-0007 games exactly at N = 2, m = 3.
+  root: 20260808
+  offset: 11
+  canonical_levels: [0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95]
+
+sweep:
+  levels: [0.05, 0.45, 0.75, 0.85, 0.95]   # indices 0, 4, 7, 8, 9 into canonical_levels
+  games_per_cell: 400
+  scale: 2.0
+
+kill_shot_a:                # N-scaling, fixed m
+  n_players: [2, 3, 4]
+  m: 3
+  reference_n_players: 2
+
+kill_shot_b:                # numerator vs EPR, fixed N
+  m_values: [3, 4, 5, 6]
+  n_players: 2
+  reference_m: 3
+
+solver:
+  tol: 1.0e-12              # exactly what dynamics_calibration / R11 used
+  max_iter: 100000
+
+control:                    # C1 — paired, lambda_bar-matched, BINDING
+  enabled: true
+  levels: [0.05, 0.95]
+
+calibration:                # sets scale_matched; never solved, never a statistic
+  games: 200
+  seed_offset: 940000
+
+criteria:
+  alpha_lo: 0.05
+  alpha_hi: 0.95
+  # A-T1 / B-T1 — the ceiling, in the identical CI form as R11
+  survive_ceiling: 0.35
+  baseline_rho_min: 0.55
+  # reported flag, not a criterion
+  strong_anticorrelation_at: -0.55
+  # A-T2
+  onset_rho: 0.5
+  onset_drift_tol: 0.10
+  onset_none_sentinel: 1.05
+  # C1
+  lambda_bar_match_tol: 0.10
+  pairing_tol: 1.0e-12
+  # T4(v)
+  alpha_construction_tol: 1.0e-8
+  # T4(vii)
+  replication_tol: 0.02
+  reference_n: 100
+  reference_rho_ratio:      # F-0004, from benchmarks/results/chain_comovement.json
+    "0.85": 0.32315631563156316
+    "0.95": -0.3546834683468347
+  reference_rho_num:        # F-0007, from benchmarks/results/decoupling_mechanism.json
+    "0.05": 0.7684608460846084
+    "0.45": 0.7571917191719172
+    "0.75": 0.5935193519351936
+    "0.85": 0.2900690069006901
+    "0.95": -0.36775277527752775
+
+bootstrap:
+  n_resamples: 2000
+  ci_level: 0.95
+  seed_offset: 880000
+
+diagnostics:
+  max_near_critical_frac: 0.10
+
+n_justification: >
+  400 games per cell, everywhere, in both kill-shots and both control arms. The
+  Spearman null SD at n = 400 is 1/sqrt(n-1) = 0.0501, so the 0.35 ceiling sits
+  7.0 null-SD from zero and the percentile-bootstrap CI half-width near rho = 0
+  is about 0.098. The consequence, stated before the run: a point estimate at or
+  below about 0.25 certifies HOLDS, a point estimate at or above about 0.45
+  certifies DIES, and rho_hi in roughly [0.25, 0.45] returns INDETERMINATE. That
+  is the honest resolving power of this design — it can detect a full recovery of
+  coupling and it cannot adjudicate a half-recovery, and the criteria are written
+  so a half-recovery reports as the third outcome instead of being absorbed into
+  either branch. n = 400 is 4x the F-0004/F-0007 design and 2x the R11 main arm,
+  and the first 100 games of every N = 2, m = 3 cell ARE the F-0004/F-0007 games
+  while the first 200 ARE the R11 main-arm games, so the anchors are exact
+  re-executions rather than fresh samples. COMPUTE, and why n is not larger: a
+  timing probe (wall-clock only; no correlation computed, run before this file
+  was written) measured 0.0123 s/game at N = 2 m = 3, 0.0439 at N = 3, 0.2412 at
+  N = 4, and 0.0238 / 0.0434 / 0.0710 at m = 4 / 5 / 6 with N = 2, all converged,
+  with make_family's constructed harmonic fraction exact to 1.1e-16 at every N.
+  The registered design is 40 distinct solved cells: kill-shot A main 3 N x 5
+  levels, kill-shot B main 3 new m x 5 levels (the m = 3 row IS the N = 2 row of
+  A and is computed once), C1a 2 new N x 2 levels, C1b 3 new m x 2 levels — 16000
+  games solved from 12000 distinct source draws (the C1 arms re-scale draws the
+  main arms already made, which is what "paired" means), plus 2400 calibration
+  draws that are never solved. That is about 22-26 minutes of Spark wall-clock
+  against a 45-minute budget. Doubling to n = 800 would buy sqrt(2) on intervals
+  already an order of magnitude inside nothing — the ceiling margin is what is at
+  stake, not precision — and would leave no budget for the C1 arms. F-0022 names
+  the unpaired, unmatched control as R11's single biggest defect and registers
+  re-running it paired and matched as this programme's follow-up obligation;
+  spending the marginal compute on a real control rather than on a tighter
+  interval is therefore a deliberate, pre-registered choice and not a shortfall.
+  n recorded in the artifact is 16000 = distinct constructed games solved; the
+  decomposition above is repeated there, because R11's registered n was wrong in
+  both directions (F-0022, red-team O-3) and this one is written to be checkable.

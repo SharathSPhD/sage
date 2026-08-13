@@ -335,3 +335,99 @@ Neither correction makes any month quotable: R8's C-3 rejection stands, and F-00
 - **What this cannot settle, restated from the pre-registration:** N = 2 throughout — nothing here speaks to N-scaling, which is the obvious next kill-shot and is untested. m stops at 6 (36 joint states; the dense Glauber generator is the binding cost, not a correctness limit). Only Gaussian-source Hodge families. K3 tests two solvers, not the space of solvers — and, per the framing correction above, tests them with a statistic that could not have detected a difference of the size they produce.
 - Chase status: chasing — (i) re-run D1 and D2 **paired** to the main arm at matched λ̄ by construction, which is the only way to settle how much of the m-effect is dimensional; (ii) the N-scaling kill-shot; (iii) a finite-size criterion that is resolvable at feasible n, since both the gap-ratio CI and the D2 margin say the present one is not.
 - Resolution / follow-up: artifacts `benchmarks/results/plane_robustness.json` + `plane_robustness.resolved.yaml`; the superseded registration is preserved at `config/experiments/plane_finite_size.yaml`, `experiments/plane_finite_size.py` and `benchmarks/results/plane_finite_size.resolved.yaml`, all now committed so the "config committed before the experiment" property is checkable rather than vacuous. **The flagship claim is not withdrawn and is not strengthened**: it rests on decorrelation at the ceiling, which is robust at every tested m, and no longer on a finite-size criterion whose two registrations disagree.
+
+## F-0023 — The N-scaling kill-shot does not kill the plane, it kills the *instrument*: low-α co-movement of EPR and ℛ is a TWO-PLAYER fact. The numerator kill-shot passes at every m, and F-0022's "m=6 is indistinguishable from zero" does not survive a real λ̄ control
+
+- Date: 2026-08-13
+- Instrument / experiment: `experiments/plane_nplayers.py` (unit `science.plane.nplayers`, R12). Two pre-registered kill-shots on the flagship claim that response asymmetry ℛ (local derivative, χ^eq = (I − SB)⁻¹S) and Schnakenberg EPR (global stationary-flux functional of the Glauber chain) are independent coordinates: **A** the high-α decorrelation is an N = 2 artefact; **B** F-0007's refutation of the ratio-artefact objection is an m = 3 artefact. λ = 1.2, 400 games per cell, percentile bootstrap 2000 resamples on every ρ_S, 40 distinct cells, 16000 games solved from 12000 distinct source draws, 19 minutes of Spark wall-clock.
+- Config: `config/experiments/plane_nplayers.yaml`, committed at **b9648f8** BEFORE `experiments/plane_nplayers.py` existed (verified at commit time with `git ls-files`: the config was in the tree, the experiment path was not). **This unit has exactly ONE criteria file and will never have a second** — that is the direct operational lesson of R11's red-team objection O-1 (F-0022), and it is written into the config's own header.
+
+### Verdicts against the registered criteria
+
+| criterion | verdict | why |
+|---|---|---|
+| **A-T1** (ceiling at N ∈ {2,3,4}, m = 3) | **INDETERMINATE** | the ceiling itself is *comfortably* intact — `holds_raw` is TRUE in **both** arms, worst ci_high **+0.163** against the 0.35 ceiling — but the registered **precondition ρ_lo ≥ 0.55 FAILS at N = 3 and N = 4 in both arms**, and a size with no baseline coupling has no collapse to measure. Registered as INDETERMINATE, reported as INDETERMINATE. |
+| **A-T2** (onset drift in N) | **PASS, but VACUOUSLY** | onset(2) = 0.85, onset(3) = onset(4) = 0.05, drift −0.80 against a tolerance of +0.10. The criterion is one-sided, so onset moving *down* passes it — but it moved down because ρ_S is already below 0.5 at the *lowest* α. **A-T2 as registered is uninformative whenever the A-T1 precondition fails**; that is a defect of this registration and it is recorded, not repaired. |
+| **B-T1** (ceiling on the NUMERATOR, m ∈ {3,4,5,6}, N = 2) | **HOLDS** | ρ_S(EPR, ‖χ−χᵀ‖) at α = 0.95 is **negative with a negative upper interval endpoint at every m in both arms** (worst ci_high **−0.0067** main, **−0.1076** matched) against a 0.35 ceiling; precondition ρ_num(α=0.05) ≥ 0.55 holds at every m in both arms. |
+| **C1** (binding paired λ̄-matched control) | **arms AGREE on both primaries** | `a_arms_agree = 1`, `b_arms_agree = 1`. λ̄ matched to **max \|ratio − 1\| = 0.0314** against the registered 0.10 tolerance. |
+| **T4(v)** diagnostics | **no guard fired** | zero near-critical games, zero non-convergences, zero `make_family` rejections across all 16000 solves; `make_family`'s constructed harmonic fraction is exact to ≤ 4.4e-16 at **N = 3 and N = 4**, where its docstring only asserts exactness for two players. |
+| **T4(vi)** pairing wiring | **PASS** | max \|Δρ\| between each C1 arm's reference cell and the main-arm cell = **0.00e+00** (resolved through the cell cache: they are literally the same solves). |
+| **T4(vii)** replication anchors | **EXACT** | all **seven** anchors reproduce their published values to **exactly 0.000000**: F-0004's ρ_S(EPR, ℛ) at α ∈ {0.85, 0.95} and F-0007's ρ_S(numerator, EPR) at **all five** swept levels, on the first 100 games of every N = 2, m = 3 cell. The m = 3 rows are re-executions of the published readings, not fresh samples. |
+| `strong_anticorrelation` flag (reported, not a criterion) | **did not fire** anywhere | most negative ρ_hi observed is −0.345 against a −0.55 trigger. |
+
+`passed = true` follows the house convention: the registered adjudication ran, the anchors hold, no data-quality guard fired. It is not a verdict.
+
+### KILL-SHOT A — the claim does NOT die, but the instrument that established it is two-player-only
+
+**The DIES branch never came close.** It required ρ_hi > 0.35 with ci_low > 0.35 at some N > 2. Measured ρ_hi at α = 0.95, m = 3:
+
+| N | arm | scale | λ̄(α=0.05) | ρ_S(α=0.05) [95% CI] | λ̄(α=0.95) | ρ_S(α=0.95) [95% CI] |
+|---|---|---|---|---|---|---|
+| 2 | main ≡ C1a | 2.0000 | 1.960 | **+0.8469** [+0.810, +0.878] | 1.855 | **−0.3325** [−0.418, −0.232] |
+| 3 | main (fixed) | 2.0000 | 1.202 | +0.2821 [+0.193, +0.373] | 1.217 | +0.0613 [−0.030, +0.152] |
+| 3 | **C1a (λ̄-matched)** | 3.1195 | **1.976** | **+0.3776** [+0.290, +0.459] | 1.898 | **+0.0703** [−0.028, +0.163] |
+| 4 | main (fixed) | 2.0000 | 0.722 | +0.1466 [+0.051, +0.245] | 0.729 | −0.0143 [−0.119, +0.090] |
+| 4 | **C1a (λ̄-matched)** | 5.1258 | **1.958** | **+0.1715** [+0.072, +0.264] | 1.867 | **−0.0089** [−0.105, +0.086] |
+
+High-α coupling is **absent, not recovered**, at N = 3 and N = 4, in both arms. On the ceiling alone the plane looks *more* like a plane at N > 2 than at N = 2.
+
+**But the precondition fails, and this is the finding.** ρ_S(EPR, ℛ) at α = 0.05 falls **+0.847 → +0.378 → +0.172** across N = 2, 3, 4 **at matched effective precision**. The full α profile at fixed scale shows the same thing — at N ≥ 3 the correlation is small at *every* α:
+
+| N | α=0.05 | α=0.45 | α=0.75 | α=0.85 | α=0.95 |
+|---|---|---|---|---|---|
+| 2 | +0.8469 | +0.8457 | +0.7045 | +0.4111 | −0.3325 |
+| 3 | +0.2821 | +0.1232 | +0.0815 | +0.0571 | +0.0613 |
+| 4 | +0.1466 | −0.0066 | +0.0398 | +0.1259 | −0.0143 |
+
+**The α-stratified collapse — the programme's central demonstration since F-0003/F-0004 — does not exist at N ≥ 3, because there is nothing to collapse from.** gap(N) = ρ_lo − ρ_hi with intervals: **+1.179** [+1.085, +1.273] at N = 2, **+0.221** [+0.093, +0.353] at N = 3, **+0.161** [+0.015, +0.300] at N = 4 (matched arm: +1.179 / +0.307 / +0.180). Reported as data — the gap-shrink family of criteria was **deliberately not registered** here, because F-0022 established it is not resolvable at feasible n.
+
+**It is not a temperature artefact, and it is not meter degeneracy.** Both were checked, both were pre-registered as things the control had to exclude:
+- **Temperature.** C1a fixes median λ̄ by construction from a disjoint calibration draw: λ̄ at α = 0.05 is 1.960 (N=2), 1.976 (N=3), 1.958 (N=4). Matching *raises* ρ_lo(3) only from +0.282 to +0.378 and ρ_lo(4) from +0.147 to +0.172 — nowhere near the 0.55 floor, let alone N = 2's +0.847.
+- **Degeneracy.** At matched λ̄ the meters have comparable magnitudes across N, so the decorrelation is not two near-constant columns: at α = 0.05, median EPR = 1.20e-3 / 1.26e-3 / 1.21e-3 and median ℛ = 0.0187 / 0.0103 / 0.0054 for N = 2 / 3 / 4; at α = 0.95, median EPR = 0.547 / 0.442 / 0.403 and median ℛ = 0.342 / 0.173 / 0.096. Median distance-to-criticality is 0.48–0.94 everywhere; nothing is near the wedge.
+
+**Reading.** ℛ is a local derivative on a Σ(mᵢ−1)-dimensional tangent space; EPR is a global flux functional on a ∏mᵢ-state chain. At N = 2 there is exactly one non-trivial multi-player Hodge sector, so a single harmonic modulator drives both meters and they co-move at ρ ≈ +0.85. At N = 3 there are four such sectors and at N = 4 eleven, and the two functionals weight them differently. **Hypothesis with a stated test** (not a claim): regress per-game ℛ and EPR on the per-sector harmonic norms at N = 3 and check whether the sector loadings differ; that is one pass over data this run already has the machinery to produce.
+
+### KILL-SHOT B — F-0007 generalises in m, and the numerator and the ratio turn out to be the *same statistic*
+
+ρ_S(EPR, ‖χ−χᵀ‖) at α = 0.95, N = 2, with the ratio on the **identical games** and their **paired** difference:
+
+| m | λ̄ | NUMERATOR ρ_S [95% CI] | RATIO ρ_S [95% CI] | δ = num − ratio [paired 95% CI] |
+|---|---|---|---|---|
+| 3 | 1.855 | **−0.3447** [−0.435, −0.254] | −0.3325 [−0.424, −0.235] | −0.0122 [−0.0158, −0.0091] |
+| 4 | 1.623 | **−0.2574** [−0.348, −0.163] | −0.2536 [−0.340, −0.161] | −0.0038 [−0.0056, −0.0023] |
+| 5 | 1.414 | **−0.1780** [−0.274, −0.080] | −0.1760 [−0.268, −0.081] | −0.0019 [−0.0035, −0.0007] |
+| 6 | 1.268 | **−0.1128** [−0.213, −0.007] | −0.1119 [−0.214, −0.016] | −0.0009 [−0.0019, +0.0001] |
+
+Baseline ρ_num(α = 0.05) = +0.773 / +0.751 / +0.667 / +0.683, all above the 0.55 floor. **B-T1 HOLDS**: the numerator's decoupling is not an m = 3 fact, and the ratio-artefact objection stays refuted at every tested m.
+
+**The sharper form of the refutation, which the paired design bought and F-0007 could not state.** δ(m) is not merely small, it is **bounded by 0.012 and shrinking with m**: the numerator and the ratio produce the *same rank ordering against EPR* to within about 1%, on identical games. The objection was that ℛ's collapse is its denominator misbehaving; the measurement is that removing the denominator changes the answer by less than one part in eighty.
+
+**Why**, and it generalises F-0007's H2 in both directions: ρ_S(ℛ, 1/‖χ+χᵀ‖) at α = 0.95 is **+0.9954 / +0.9942 / +0.9921 / +0.9919** across m = 3…6 and **+0.9954 / +0.9999 / +0.9999** across N = 2, 3, 4 — and at α = 0.05 it is ≈ 0 everywhere (−0.24 … +0.05). **F-0007's H2 (high-α denominator dominance of ℛ) is robust in m AND in N**, which is a free generalisation of a result that was also previously single-cell.
+
+### A correction to F-0022: the m = 6 "indistinguishable from zero" was largely a λ̄ artefact
+
+F-0022's narrowing said: *"The sign reversal is an m = 3–5 fact, not a general one: at m = 6 with fixed Frobenius scale ρ_S = +0.012 with CI [−0.137, +0.156]."* Under the **paired, λ̄-matched** control registered here (C1b), at n = 400:
+
+| m | scale | λ̄ | C1b ρ_S(EPR, ℛ) at α=0.95 [95% CI] | main-arm (fixed scale) ρ_S [95% CI] |
+|---|---|---|---|---|
+| 3 | 2.0000 | 1.855 | −0.3325 [−0.423, −0.246] | −0.3325 [−0.424, −0.235] |
+| 4 | 2.3535 | 1.909 | **−0.2966** [−0.387, −0.204] | −0.2536 [−0.340, −0.161] |
+| 5 | 2.6308 | 1.860 | **−0.2554** [−0.345, −0.160] | −0.1760 [−0.268, −0.081] |
+| 6 | 3.0171 | 1.913 | **−0.2061** [−0.300, −0.105] | −0.1119 [−0.214, −0.016] |
+
+At matched effective precision **the m = 6 interval excludes zero** and the sign reversal survives to m = 6. Two things moved the number: doubling n (R11's +0.012 at n = 200 and this run's −0.113 at n = 400 are the same games plus 200 more, and each lies inside the other's interval — no contradiction, just resolution), and controlling λ̄ (the fixed-scale arm drives λ̄ from 1.855 down to 1.268 across m; C1b holds it at 1.86–1.91). Of the fixed-scale drift in ρ_hi from m = 3 to m = 6, **+0.221 total, +0.126 survives matching and +0.095 is temperature**. F-0022's estimate of the residual was an interpolation between two unpaired arms; this is a paired, matched measurement, and it says F-0022's narrowing was too strong on this point. **F-0022's follow-up obligation (i) — "re-run D1 and D2 paired to the main arm at matched λ̄ by construction" — is DISCHARGED**, on the m axis by C1b and on the N axis by C1a; its follow-up (ii), the N-scaling kill-shot, is **EXECUTED** and is this finding.
+
+### What this does to the flagship claim
+
+**It does not die, it does not straightforwardly strengthen, and the honest summary is different on each axis.**
+
+- **On the m axis it is STRONGER.** Kill-shot B passed in both arms with the upper interval endpoint *negative* at every m; the ratio-artefact objection is refuted with a paired bound of 0.012 rather than a single point estimate; and the α = 0.95 anti-correlation is now m-robust to m = 6 at matched λ̄ instead of vanishing at m = 6.
+- **On the N axis it is NARROWED, and narrowed at the level of the evidence rather than the claim.** The ceiling holds at N = 3 and N = 4 with the widest margin the programme has recorded (worst ci_high +0.163), which is *consistent* with two independent coordinates. But the α-stratified collapse — the design that made the claim persuasive, and the source of every number in F-0003, F-0004, F-0007, F-0010 and F-0022 — **is a two-player instrument**. At N ≥ 3 the meters do not couple at low α, so the collapse cannot be demonstrated, and this run declines to certify the claim at N > 2 rather than reading absence-of-coupling-everywhere as confirmation.
+- **The claim's status is therefore UNCHANGED at N > 2 and its supporting narrative is narrowed to N = 2.** The papers must not say "EPR and ℛ co-vary while a potential component modulates both, and part company when it vanishes" without attaching **N = 2** to it, in the same way F-0022 required (m, λ̄) attached to the sign reversal.
+
+### Registered limitations, restated
+
+N stops at 4 and m stops at 6, and the two axes were swept **separately** (A at m = 3, B at N = 2) — the (N, m) interior is unread. One λ in both arms; F-0010 already showed the α = 0.95 sign is λ-dependent, so no sign statement here generalises in λ. Only Gaussian-source Hodge families. C1 matches the **median** λ̄ per cell, not the distribution, and controls for nothing else that changes with N or m (tangent dimension, ∏mᵢ joint states, the number of Hodge sectors). The ceiling criterion certifies **decorrelation**, which is necessary and not sufficient for independence — a non-monotone dependence would pass it, and that limitation belongs to the whole programme, not to this run. N = 4 (81 joint states) is inside the dense-dynamics 400-state guard but **outside the API's ≤ 3-player surface guard**, so the N = 4 row is a library-level reading that cannot be served.
+
+- Chase status: **chasing** — (a) the sector-loading regression named above, which is the mechanism test for why low-α co-movement is two-player-only; (b) a criterion for the N axis that does not depend on a low-α baseline, since this run shows that baseline does not exist at N ≥ 3 and A-T1's precondition therefore makes the N sweep unadjudicable by construction; (c) A-T2's one-sidedness, which lets onset drift *downward* into a vacuous pass. Items (b) and (c) are defects of **this** registration, recorded here and deliberately **not** repaired by writing a second criteria file for this unit.
+- Resolution / follow-up: artifacts `benchmarks/results/plane_nplayers.json` + `plane_nplayers.resolved.yaml`. p1_instruments gains "N = 2" on the instrument-scope table's α-regime row; p3_noneq's decoupling section gains the N-scaling result and the F-0022 correction; `memory/claims.md` C1 gains the N-scope qualifier.

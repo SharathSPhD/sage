@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Gauge } from "../components/Gauge";
 import { GuessLambda } from "../components/panels/GuessLambda";
+import { ResearchCrumb } from "../components/ResearchCrumb";
 
 /* The Lab is a research instrument: pick a game, slide λ, every meter updates
    from the live API (heavy compute never runs in the browser). All requests go
@@ -225,6 +226,7 @@ export default function Lab() {
 
   return (
     <div className="wrap" style={{ paddingTop: "2.2rem" }}>
+      <ResearchCrumb />
       <h1 style={{ marginBottom: "0.3rem" }}>Lab</h1>
       <p style={{ color: "var(--text-dim)", maxWidth: "44rem", marginTop: 0 }}>
         Every number below is computed on request by the deployed solver — float64 JAX on the

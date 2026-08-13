@@ -10,6 +10,8 @@ gate-closed library calls — no science in the API layer.
 
 from __future__ import annotations
 
+import warnings
+from collections.abc import Callable
 from typing import Annotated, Any, Literal
 
 import jax.numpy as jnp
@@ -23,12 +25,24 @@ from strataq.core.dynamics.markov import glauber_generator, profile_space
 from strataq.core.dynamics.sample import sample_trajectories
 from strataq.core.solve.fixedpoint import logit_qre
 from strataq.core.solve.homotopy import logit_branch
+from strataq.diagnose import diagnose
 from strataq.estimate.lam import lambda_dispersion, lambda_mle
 from strataq.finite.decompose.hodge import hodge_decompose
 from strataq.finite.games.tensor import DenseTensorGame
 from strataq.finite.response.reciprocity import reciprocity_defect
 from strataq.finite.response.spectral import strategic_spectrum
 from strataq.finite.response.susceptibility import chi_equilibrium
+from strataq.fit import fit
+from strataq.problems import (
+    AllocationProblem,
+    AuctionProblem,
+    DemandModel,
+    ElectricityProblem,
+    LinearDemand,
+    LogitDemand,
+    PricingProblem,
+    RoutingProblem,
+)
 from strataq.thermo.estimators import (
     kld_epr,
     stationary_current_weights,
@@ -47,6 +61,7 @@ class Settings(BaseSettings):
     max_sample_steps: int = 20000
     max_sample_trajectories: int = 16
     max_sample_budget: int = 120_000  # n_steps * n_trajectories cap
+    max_tidy_rows: int = 200_000  # /v1/fit long-form ingestion cap
     model_config = {"env_prefix": "SAGE_API_"}
 
 
@@ -648,3 +663,474 @@ def blotto_read(payload: BlottoPayload) -> dict[str, Any]:
             f"({settings.max_profile_states}); alpha and R are exact, EPR omitted"
         )
     return out
+
+
+# ---------------------------------------------------------------------------
+# /v1/diagnose and /v1/fit — the two product entry points over HTTP.
+#
+# `diagnose` is the whole-system verdict (COMPETITIVE_POSITION §5: "hand us
+# your data in your format and get a number with an uncertainty band and a
+# null-model comparison"); `fit` is the estimation workflow of Bland & Turocy
+# (GEB 2025). Both return the FULL library object — every coordinate with its
+# kind and bounds, every warning, every refusal — because the honesty
+# affordances are the product, and an API that drops them ships a bare number.
+# ---------------------------------------------------------------------------
+
+
+class DiagnosePayload(BaseModel):
+    """A game (``payoffs`` + ``lam``) or readings you already have (``chi`` / ``series``)."""
+
+    payoffs: list[Any] | None = None
+    lam: Annotated[float, Field(gt=0, le=100)] | None = None
+    chi: list[list[float]] | None = None
+    chi_se: list[list[float]] | None = None
+    series: list[float] | None = None
+    n_bins: Annotated[int, Field(ge=1, le=6)] = 3
+    n_surrogates: Annotated[int, Field(ge=20, le=500)] = 200
+    alpha_level: Annotated[float, Field(gt=0.0, lt=0.5)] = 0.01
+    seed: Annotated[int, Field(ge=0)] = 0
+
+
+@app.post("/v1/diagnose")
+def diagnose_reading(payload: DiagnosePayload) -> dict[str, Any]:
+    """Locate a system in the irreversibility plane: one quadrant, two bounded coordinates.
+
+    Returns the whole :class:`~strataq.diagnose.Diagnosis`: the verdict, the live
+    quadrant set when it cannot be narrowed to one, both coordinates with their
+    ``kind`` (point / interval / one-sided bound / absent) and their method text,
+    ``alpha``, ``lam``, every warning, every refusal, and provenance. Refusals are
+    bounds, not errors — a reading that cannot separate two quadrants says which
+    two rather than returning nothing.
+    """
+    if payload.payoffs is None and payload.chi is None and payload.series is None:
+        raise HTTPException(
+            status_code=422,
+            detail="supply payoffs= (with lam=), chi= (a measured response matrix), "
+            "or series= (an observed trajectory)",
+        )
+    game: DenseTensorGame | None = None
+    if payload.payoffs is not None:
+        if payload.lam is None:
+            raise HTTPException(status_code=422, detail="payoffs= requires lam=")
+        game = _game_from(GamePayload(payoffs=payload.payoffs, lam=payload.lam))
+        n_states = 1
+        for m in game.num_actions:
+            n_states *= m
+        if n_states > settings.max_profile_states:
+            raise HTTPException(
+                status_code=413,
+                detail=f"profile space {n_states} exceeds the dense generator limit "
+                f"{settings.max_profile_states}; supply series= and read dissipation "
+                "from the trajectory instead",
+            )
+    if payload.chi is not None:
+        n = len(payload.chi)
+        limit = settings.max_actions_per_player * settings.max_players
+        if n == 0 or any(len(row) != n for row in payload.chi):
+            raise HTTPException(status_code=422, detail="chi must be a non-empty square matrix")
+        if n > limit:
+            raise HTTPException(status_code=413, detail=f"chi capped at {limit}x{limit}")
+        if payload.chi_se is not None and (
+            len(payload.chi_se) != n or any(len(row) != n for row in payload.chi_se)
+        ):
+            raise HTTPException(status_code=422, detail="chi_se must match chi's shape")
+    if payload.series is not None and len(payload.series) > 20_000:
+        raise HTTPException(status_code=422, detail="series capped at 20000 points on this host")
+
+    try:
+        reading = diagnose(
+            game,
+            lam=payload.lam,
+            chi=payload.chi,
+            chi_se=payload.chi_se,
+            series=payload.series,
+            n_bins=payload.n_bins,
+            n_surrogates=payload.n_surrogates,
+            alpha_level=payload.alpha_level,
+            seed=payload.seed,
+        )
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    out = reading.as_dict()
+    out["headline"] = repr(reading)
+    out["snippet"] = reading.snippet()
+    if game is not None and payload.lam is not None:
+        out["provenance"] = {
+            **out["provenance"],
+            **_provenance(game, payload.lam).model_dump(),
+        }
+    return out
+
+
+class FitPayload(BaseModel):
+    """Observed choices for :func:`strataq.fit` — aggregated counts OR a tidy table.
+
+    ``data`` is the point of this endpoint: one row per observed choice, with the
+    subject / round / treatment columns your experiment software emitted, so the
+    panel structure survives into the likelihood and into the interval.
+    """
+
+    payoffs: list[Any]
+    counts: list[list[float]] | None = None
+    data: list[dict[str, Any]] | dict[str, list[Any]] | None = None
+    by: str | None = None
+    method: Literal["mle", "agreement", "bayes"] = "mle"
+    ci: Literal["bootstrap", "profile", "posterior", "none"] = "bootstrap"
+    n_boot: Annotated[int, Field(ge=1, le=2000)] = 200
+    n_grid: Annotated[int, Field(ge=8, le=400)] = 120
+    level: Annotated[float, Field(gt=0.0, lt=1.0)] = 0.95
+    seed: Annotated[int, Field(ge=0)] = 0
+    player: str | None = None
+    action: str | None = None
+    subject: str | None = None
+
+
+@app.post("/v1/fit")
+def fit_lambda(payload: FitPayload) -> dict[str, Any]:
+    """Estimate lambda with an interval that names its method, and both LR tests.
+
+    Returns lambda-hat (``null`` when the likelihood is flat — the refusal is a
+    bound, not a number), the interval and the method that produced it, n, the
+    log-likelihood, likelihood-ratio tests against Nash (lambda -> inf) and
+    uniform (lambda = 0) with df, p and the boundary caveat, per-group lambda and
+    a homogeneity test under ``by=``, every warning and refusal, provenance, and
+    the rendered ``summary`` text.
+    """
+    game = _game_from(GamePayload(payoffs=payload.payoffs, lam=1.0))
+    if (payload.counts is None) == (payload.data is None):
+        raise HTTPException(
+            status_code=422,
+            detail="supply exactly one of counts= (aggregated, one vector per player) or "
+            "data= (tidy, one row per observed choice)",
+        )
+    observed: Any
+    if payload.counts is not None:
+        total = sum(sum(c) for c in payload.counts)
+        if total <= 0:
+            raise HTTPException(status_code=422, detail="counts must contain observations")
+        if total > 10_000_000:
+            raise HTTPException(status_code=413, detail="count total exceeds service limit")
+        observed = payload.counts
+    else:
+        rows = payload.data
+        if isinstance(rows, list):
+            n_rows = len(rows)
+        else:
+            n_rows = len(next(iter(rows.values()))) if rows else 0
+        if n_rows == 0:
+            raise HTTPException(status_code=422, detail="data= is empty")
+        if n_rows > settings.max_tidy_rows:
+            raise HTTPException(
+                status_code=413,
+                detail=f"tidy table capped at {settings.max_tidy_rows} rows on this host",
+            )
+        observed = rows
+
+    try:
+        result = fit(
+            game,
+            observed,
+            by=payload.by,
+            method=payload.method,
+            ci=payload.ci,
+            n_boot=payload.n_boot,
+            seed=payload.seed,
+            level=payload.level,
+            player=payload.player,
+            action=payload.action,
+            subject=payload.subject,
+            n_grid=payload.n_grid,
+        )
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    out = result.as_dict()
+    out["summary"] = str(result.summary())
+    out["provenance"] = {
+        **out["provenance"],
+        **_provenance(game, result.lam_hat).model_dump(),
+    }
+    return out
+
+
+# ---------------------------------------------------------------------------
+# /v1/solve/* — the problem API over HTTP. One endpoint per problem type; the
+# body mirrors the Python constructor and the response is the Solution as JSON
+# (domain-named fields, plus ``diagnostics`` only when asked for). Bad input is
+# a 422 carrying the library's own message; a solve that misses tolerance
+# returns ``success: false`` and says so in ``warnings`` rather than raising.
+#
+# Grids arrive either as explicit levels (``grid=[1.0, 1.1, ...]``) or as a
+# range (``grid_range=[start, stop, step]``) — exactly one, so the JSON is never
+# ambiguous the way a bare three-element list would be.
+# ---------------------------------------------------------------------------
+
+MAX_SOLVE_PROFILES = 20_000
+MAX_SOLVE_LEVELS = 60
+MAX_SOLVE_EDGES = 200
+MAX_SOLVE_OD = 20
+
+GridInput = tuple[float, float, float] | list[float]
+
+
+def _run_solve(build: Callable[[], Any], diagnostics: bool) -> dict[str, Any]:
+    """Solve, collect ordinary Python warnings, and shape the JSON response."""
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        try:
+            solution = build()
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        except OSError as exc:  # dataset fetch
+            raise HTTPException(status_code=503, detail=f"dataset unavailable: {exc}") from exc
+    body: dict[str, Any] = dict(solution.as_dict())
+    body["warnings"] = [str(w.message) for w in caught]
+    if diagnostics:
+        body["diagnostics"] = solution.diagnostics.as_dict()
+    return body
+
+
+def _grid(levels: list[float] | None, span: list[float] | None, name: str) -> GridInput:
+    """Exactly one of an explicit level list or a ``[start, stop, step]`` range."""
+    if (levels is None) == (span is None):
+        raise HTTPException(
+            status_code=422,
+            detail=f"supply exactly one of {name}= (explicit levels) or "
+            f"{name}_range= ([start, stop, step])",
+        )
+    if span is not None:
+        if len(span) != 3:
+            raise HTTPException(status_code=422, detail=f"{name}_range must be [start, stop, step]")
+        start, stop, step = span
+        if step <= 0 or stop < start:
+            raise HTTPException(
+                status_code=422, detail=f"{name}_range needs step > 0 and stop >= start"
+            )
+        if (stop - start) / step + 1 > MAX_SOLVE_LEVELS:
+            raise HTTPException(
+                status_code=413, detail=f"{name} exceeds {MAX_SOLVE_LEVELS} levels (sync API)"
+            )
+        return (start, stop, step)
+    assert levels is not None
+    if len(levels) > MAX_SOLVE_LEVELS:
+        raise HTTPException(
+            status_code=413, detail=f"{name} exceeds {MAX_SOLVE_LEVELS} levels (sync API)"
+        )
+    return list(levels)
+
+
+def _n_levels(spec: GridInput) -> int:
+    if isinstance(spec, tuple):
+        start, stop, step = spec
+        return int((stop - start) / step) + 1
+    return len(spec)
+
+
+class DemandPayload(BaseModel):
+    """A demand system. ``CustomDemand`` is Python-only — it takes a callable."""
+
+    kind: Literal["logit", "linear"] = "logit"
+    price_sensitivity: float | None = None
+    quality: list[float] | None = None
+    market_size: float = 1.0
+    outside_option: bool = True
+    intercept: list[float] | None = None
+    own_slope: float | None = None
+    cross_slope: float = 0.0
+
+    def build(self) -> DemandModel:
+        if self.kind == "logit":
+            if self.price_sensitivity is None or self.quality is None:
+                raise HTTPException(
+                    status_code=422, detail="logit demand needs price_sensitivity= and quality="
+                )
+            return LogitDemand(
+                self.price_sensitivity,
+                self.quality,
+                market_size=self.market_size,
+                outside_option=self.outside_option,
+            )
+        if self.intercept is None or self.own_slope is None:
+            raise HTTPException(
+                status_code=422, detail="linear demand needs intercept= and own_slope="
+            )
+        return LinearDemand(self.intercept, self.own_slope, self.cross_slope)
+
+
+class PricingPayload(BaseModel):
+    costs: list[float] = Field(min_length=1, max_length=3)
+    demand: DemandPayload
+    grid: list[float] | None = None
+    grid_range: list[float] | None = None
+    precision: Annotated[float, Field(gt=0, le=1000)] = 1.0
+    firm: Annotated[int, Field(ge=0)] = 0
+    diagnostics: bool = False
+
+
+@app.post("/v1/solve/pricing")
+def solve_pricing(payload: PricingPayload) -> dict[str, Any]:
+    """Recommended price, expected profit, rival price distribution, elasticities."""
+    grid = _grid(payload.grid, payload.grid_range, "grid")
+    if _n_levels(grid) ** len(payload.costs) > MAX_SOLVE_PROFILES:
+        raise HTTPException(status_code=413, detail="price grid too large for the sync API")
+    demand = payload.demand.build()
+    return _run_solve(
+        lambda: PricingProblem(
+            costs=payload.costs,
+            grid=grid,
+            demand=demand,
+            precision=payload.precision,
+            firm=payload.firm,
+        ).solve(),
+        payload.diagnostics,
+    )
+
+
+class AuctionPayload(BaseModel):
+    values: list[float] | None = None
+    costs: list[float] | None = None
+    grid: list[float] | None = None
+    grid_range: list[float] | None = None
+    n_bidders: Annotated[int, Field(ge=1, le=4)] | None = None
+    reserve: float | None = None
+    precision: Annotated[float, Field(gt=0, le=1000)] = 1.0
+    bidder: Annotated[int, Field(ge=0)] = 0
+    diagnostics: bool = False
+
+
+@app.post("/v1/solve/auction")
+def solve_auction(payload: AuctionPayload) -> dict[str, Any]:
+    """Recommended bid, expected surplus, win probability, rival-bid distribution."""
+    grid = _grid(payload.grid, payload.grid_range, "grid")
+    listed = payload.values if payload.values is not None else payload.costs
+    count = payload.n_bidders or (len(listed) if listed is not None else 1)
+    if _n_levels(grid) ** count > MAX_SOLVE_PROFILES:
+        raise HTTPException(status_code=413, detail="bid grid too large for the sync API")
+    return _run_solve(
+        lambda: AuctionProblem(
+            grid=grid,
+            values=payload.values,
+            costs=payload.costs,
+            n_bidders=payload.n_bidders,
+            reserve=payload.reserve,
+            precision=payload.precision,
+            bidder=payload.bidder,
+        ).solve(),
+        payload.diagnostics,
+    )
+
+
+class EdgePayload(BaseModel):
+    origin: int
+    destination: int
+    free_flow: float
+    capacity: float
+    b: float = 0.15
+    power: float = 4.0
+
+
+class ODPayload(BaseModel):
+    origin: int
+    destination: int
+    trips: float
+
+
+class RoutingPayload(BaseModel):
+    network: Literal["sioux_falls"] | list[EdgePayload] = "sioux_falls"
+    demand: list[ODPayload] | None = None
+    tolls: dict[int, float] | None = None
+    precision: Annotated[float, Field(gt=0, le=100)] = 0.5
+    k_routes: Annotated[int, Field(ge=1, le=6)] = 3
+    max_od: Annotated[int, Field(ge=1, le=MAX_SOLVE_OD)] = 12
+    diagnostics: bool = False
+
+
+@app.post("/v1/solve/routing")
+def solve_routing(payload: RoutingPayload) -> dict[str, Any]:
+    """Link flows, travel times, total cost, and what a toll did to them."""
+    if isinstance(payload.network, list) and len(payload.network) > MAX_SOLVE_EDGES:
+        raise HTTPException(status_code=413, detail=f"max {MAX_SOLVE_EDGES} edges (sync API)")
+    if payload.demand is not None and len(payload.demand) > MAX_SOLVE_OD:
+        raise HTTPException(status_code=413, detail=f"max {MAX_SOLVE_OD} OD pairs (sync API)")
+    network: Any = payload.network
+    if isinstance(network, list):
+        network = [
+            {
+                "from": edge.origin,
+                "to": edge.destination,
+                "free_flow": edge.free_flow,
+                "capacity": edge.capacity,
+                "b": edge.b,
+                "power": edge.power,
+            }
+            for edge in network
+        ]
+    demand = (
+        None
+        if payload.demand is None
+        else {(od.origin, od.destination): od.trips for od in payload.demand}
+    )
+    return _run_solve(
+        lambda: RoutingProblem(
+            network=network,
+            demand=demand,
+            tolls=payload.tolls,
+            precision=payload.precision,
+            k_routes=payload.k_routes,
+            max_od=payload.max_od,
+        ).solve(),
+        payload.diagnostics,
+    )
+
+
+class AllocationPayload(BaseModel):
+    budget: Annotated[int, Field(ge=1, le=12)]
+    field_values: list[float] | None = None
+    n_fields: Annotated[int, Field(ge=2, le=4)] | None = None
+    rival_budget: Annotated[int, Field(ge=1, le=12)] | None = None
+    precision: Annotated[float, Field(gt=0, le=1000)] = 1.0
+    diagnostics: bool = False
+
+
+@app.post("/v1/solve/allocation")
+def solve_allocation(payload: AllocationPayload) -> dict[str, Any]:
+    """Recommended Blotto allocation, win probability, and both sides' mixes."""
+    return _run_solve(
+        lambda: AllocationProblem(
+            budget=payload.budget,
+            field_values=payload.field_values,
+            n_fields=payload.n_fields,
+            rival_budget=payload.rival_budget,
+            precision=payload.precision,
+        ).solve(),
+        payload.diagnostics,
+    )
+
+
+class ElectricityPayload(BaseModel):
+    costs: list[float] = Field(min_length=2, max_length=2)
+    offers: list[float] | None = None
+    offers_range: list[float] | None = None
+    capacities: list[float] | None = None
+    demand: Annotated[float, Field(gt=0)] = 1.0
+    precision: Annotated[float, Field(gt=0, le=1000)] = 1.0
+    generator: Annotated[int, Field(ge=0, le=1)] = 0
+    diagnostics: bool = False
+
+
+@app.post("/v1/solve/electricity")
+def solve_electricity(payload: ElectricityPayload) -> dict[str, Any]:
+    """Offer curve, expected clearing price, expected revenue for one generator."""
+    offers = _grid(payload.offers, payload.offers_range, "offers")
+    return _run_solve(
+        lambda: ElectricityProblem(
+            costs=payload.costs,
+            offers=offers,
+            capacities=payload.capacities,
+            demand=payload.demand,
+            precision=payload.precision,
+            generator=payload.generator,
+        ).solve(),
+        payload.diagnostics,
+    )

@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ToolsPanel } from "./ToolsPanel";
+import { ResearchCrumb } from "../components/ResearchCrumb";
 
-export const metadata: Metadata = { title: "Your data — SAGE Labs" };
+export const metadata: Metadata = { title: "Your data — SAGE" };
 
 export default function ToolsPage() {
   return (
     <div className="wrap" style={{ paddingTop: "2.2rem" }}>
+      <ResearchCrumb />
       <p className="superseded">
         <strong>There is a better way in now.</strong>
         <span>
