@@ -59,3 +59,7 @@ apps/web/node_modules/
 apps/web/.next/
 apps/web/next-env.d.ts
 .coverage.*
+
+# latexmk build state
+*.fdb_latexmk
+*.fls
